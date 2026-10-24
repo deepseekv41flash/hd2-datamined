@@ -187,6 +187,7 @@ Helldivers 2 的资产按 **toc 包**（package）组织，引擎**按需**加�
 | 写入 | `MISSIONS. REINFORCEMENT BEACON`（`0x6FDC`）与 `TUTORIAL REINFORCEMENT BEACON`（`0x1247C`）的 **`+0xA8` = `0x750605CFC0173701`** |
 | 离线 | `tools/stratagem_package.py`，G1–G7 全 PASS；哈希 `0x04BBE33EF809862A` 不变；封包 sha256 `8c70575a…` |
 | 盘上回读 | 两行 `+0xA8` == 该包 id；全表差异只有这 2×8 B + 2 个校正字 |
+| **实机** | **✓ 成立**：FLAM-40 与 P-72 Crisper 的 `+0x70` 都指向该粒子后，两把枪从"灰色占位方块"变成**正常喷出雾状气流** ⇒ `+0xA8` 挂包对**粒子资源**同样有效（消费方不限于物品） |
 
 **包 id 空间校验**：`srkit-names.json` 的 `package` 字段就是本表要的 u64 toc 包 id ——
 拿已证的 GP-20 例子对：包 `b779a2f9d0928e03` 里确实有 `GP-20 Ultimatum` 资源，与写进 `+0xA8` 的
