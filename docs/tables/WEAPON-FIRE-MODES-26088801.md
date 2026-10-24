@@ -218,31 +218,99 @@
 ⇒ **喷火器/毒气枪属于 `Spray`**：它不发射任何 projectile，而是"喷一段带伤害类型的锥形流"，
 伤害与命中由 `+200` 那个小枚举决定，视觉由行内若干哈希（粒子/材质）决定。
 
-### 5.6.2 本 build 实测（`SprayWeaponComponentData` @`0x2CD4E50`，46 槽 + 23 行 × 224 B）
+### 5.6.2 布局与 24 行实测（`SprayWeaponComponentData` @`0x2CD4E50`）
 
-| 武器 | 行 | `+200` | 备注 |
-|---|---:|---:|---|
-| **FLAM-40 Flamethrower** | 20 | **20** | 装备侧用 `WeaponMagazineComponentData`（弹匣，不是 Rounds） |
-| FLAM-66 Torcher | 17 | 21 | |
-| **P-72 Crisper** | 13 / 18 | **22** | 与 **Stoker 的喷火下挂**共用同一行（`0x992B6F65A5BAB53D` → row 13） |
-| **TX-41 Sterilizer**（毒气） | 19 | **35** | 实体 `0x88F61AFFF48AC8A4`；`func/attack` 图里标 `kind: Spray` |
-| G-142 Pyrotech | 10 | 32 | |
-| 其它未命名行 | 3 / 7 / 11 / 15 / 16 / 21 / 22 | 591 / 24 / 24 / 21 / 36 / 23 / 23 | 敌人喷火（`flamer/conscript_flamer` 等）与未发布武器 |
+payload **6,112 B** = `ComponentIndexData` **736 B**（46 槽 × 16 B，槽 = `{u64 实体键, u32 行号, u32 0}`）
++ `SprayWeaponComponent` 数组 **5,376 B**（**24 行 × 224 B**，自 `+0x2E0` 起；23 行被引用，第 23 行空）。
 
-### 5.6.3 行内结构（FLAM-40，224 B）
+> ⚠ 上一版记的「46 槽 + 23 行」差一行：24 来自 typelib 的 `5376 / 224`，不是数出来的。
 
-```
-+0x00 f32 = 0.7        +0x04 f32 = 10
-+0x0C / +0x18 / +0x1C  三个哈希（粒子 / 音效 / 材质之类）
-+0x30 / +0x68 / +0xA0  ★ 三段重复结构，每段 (f32 2.0, f32 5.0, hash, hash, ...)
-                          ⇒ 像是"近/中/远"或"起始/持续/收尾"三段喷流参数（⚠ 未证）
-+0xC0 =1  +0xC8 = ★DamageInfoType  +0xCC =2  +0xD0 =1
-+0xD4 / +0xD8 两个哈希  +0xDC =3
-```
+武器名由 `refs/entity-locid-names.json`（`EncyclopediaEntryComponentData` 名称槽）解出，**23/23 全部有名字**。
 
-⚠ `+200` 的取值（20/21/22/35 …）**不在** `names-all.json` 的 `DamageInfoType` 全局 id 空间里
-（那份名表 252 条、id 6..661，其中 `12 = DamageInfoType_Projectile_Flamethrower`）。
-⇒ 它是 **`SprayWeapon` 组件自己的小枚举**（含义 = 火焰/毒气/酸等），**命名尚未解出**。
+| 行 | 武器 / 实体 | kind | `+0x00` warmup | `+0x04` cooldown | `+0xC8` damage | `+0x70` firing 粒子 |
+|---:|---|---|---:|---:|---:|---|
+| 0 | Bile Titan | enemy | 0 | 0.05 | 0 | `0x55C957DC1C76D67A` |
+| 1 | Caustic Spewer | unit | 0 | 0.05 | 0 | `0x55C957DC1C76D67A` |
+| 2 | Septic Breath | unit | 0 | 0.05 | 0 | `0x55C957DC1C76D67A` |
+| 3 | Caustic Spewer | unit | 0 | 0.01 | 591 | `0x255CA77E5A3919FF` |
+| 4 | Hunter | unit | 0 | 0.05 | 0 | `0x55C957DC1C76D67A` |
+| 5 | 未知 | unit | 1 | 1 | 0 | `0xBAD1C3CCBB6617B3` |
+| 6 | 未知 | unit | 1 | 1 | 0 | `0xBAD1C3CCBB6617B3` |
+| 7 | 未知（火焰炮台变体？`+0xC8`=24 与 Sentry 同） | unit | 0.7 | 10 | 24 | `0xE3D15622A42863C4` |
+| 8 | Bile Titan | enemy | 0 | 0.05 | 0 | `0xE5F398FCBB669946` |
+| 9 | Nursing Spewer | unit | 0 | 0.05 | 0 | `0x77FA0EE04F89E492` |
+| 10 | G-142 Pyrotech（投掷物） | throwable | 0 | 0 | 32 | `0x172E1E5393DC59FF` |
+| 11 | **A/FLAM-40 Flame Sentry** | unit | 0.7 | 10 | 24 | `0xE3D15622A42863C4` |
+| 12 | 未知（毒气交互物） | interactable | 0.7 | 15 | 0 | `0x70690ADA12804044` |
+| 13 | 未知（**Stoker 喷火下挂** `0x992B6F65A5BAB53D`） | unit | 0.7 | 10 | 22 | `0xEE2AA1974FBF52AF` |
+| 14 | 未知（毒气） | interactable | 0.7 | 15 | 0 | `0x70690ADA12804044` |
+| 15 | 未知（Torcher 变体） | interactable | 0.7 | 10 | 21 | `0xC22C03EC68E8DBCE` |
+| 16 | 未知（毒气 `+0xC8`=36） | interactable | 0 | 15 | 36 | `0x035E79D1D898362B` |
+| 17 | **FLAM-66 Torcher** | primary_weapon | 0.7 | 10 | 21 | `0xC22C03EC68E8DBCE` |
+| 18 | **P-72 Crisper** | sidearm | 0.7 | 10 | 22 | `0xA252B7821AAB37D7` |
+| 19 | **TX-41 Sterilizer**（毒气） | support_weapon | **0** | **15** | 35 | `0xA3D15A3BBC56DE55` |
+| 20 | **FLAM-40 Flamethrower** | support_weapon | 0.7 | 10 | 20 | `0xA252B7821AAB37D7` |
+| 21 | **B/FLAM-80 Cremator**（左管） | support_weapon | 0.7 | 10 | 23 | `0xA4F17DABA8ECD8E5` |
+| 22 | **B/FLAM-80 Cremator**（右管） | support_weapon | 0.7 | 10 | 23 | `0x7E2D445495989701` |
+| 23 | *(未引用)* | — | — | — | — | — |
+
+三条一眼可见的分组：
+
+- **火焰组**（10 以外的全部 `+0x00`=0.7 行）：`warmup=0.7 s`、`cooldown=10 s`；
+- **毒气组**（12/14/16/19）：`warmup=0`、`cooldown=15 s`；
+- **敌人/占位行**：`+0xC8`(damage)=0（行 3 例外 = 591，Bile Titan 的毒雾）。
+
+**FLAM-40 与 P-72 Crisper 共用同一个 firing 粒子 `0xA252B7821AAB37D7`**；
+Cremator 的两行各一个粒子（双管）；Pyrotech 的 `+0xC8`=32 但 `warmup/cooldown` 全 0（它是投掷物，没有导引火）。
+
+装备侧：喷火器的弹药走 **`WeaponMagazineComponentData`（弹匣制）**，不吃 `WeaponRoundsComponentData`；
+它们也**没有 `ProjectileWeaponComponentData`** —— 一个武器只有一个输出族，喷火器占的是 Spray。
+
+### 5.6.3 行内结构：16 个字段**全部有名字**（社区 schema × typelib 对位）
+
+`data/components/SprayWeaponComponent.json`（`shalzuth/HelldiversData`，`master` 分支）按**声明顺序**
+列出 16 个成员，与 typelib `SprayWeaponComponent`（rec 224）的偏移**逐一严丝合缝**：
+
+| 偏移 | 类型 | 字段 | 语义（社区原文） |
+|---|---|---|---|
+| `+0x000` | f32 | `warmup_time` | 从冷枪扣扳机到真正喷出之间的时间（= 导引火预热） |
+| `+0x004` | f32 | `cooldown_time` | 停火后多久算"冷"（冷了就又要预热） |
+| `+0x008` | f32 | `firenode_pose_limit` | 瞄准位姿允许偏离 firenode 的角度（0 = 不限制） |
+| `+0x00C` | u32 | `audio_node` | [string] 播 warmup/fire/cooldown 音效的挂点 |
+| `+0x010` | f32 | `spray_capsule_radius` | **>0 时改用物理胶囊重叠判定**替代"靠粒子命中"（实验性） |
+| `+0x018` | struct | `warmup` | `SprayWeaponStateInfo`（预热态） |
+| `+0x050` | struct | `firing` | `SprayWeaponStateInfo`（喷射态） |
+| `+0x088` | struct | `cooldown` | `SprayWeaponStateInfo`（冷却态） |
+| `+0x0C0` | u32 | `ammo_cost` | 每"团"喷雾扣多少弹药（本 build 全 1） |
+| `+0x0C4` | ProjectileType | `projectile_type` | **非 None 就改用弹丸**（喷火/毒气全 0 ⇒ 没有弹丸） |
+| `+0x0C8` | DamageInfoType | `damage_info_type` | 碰撞事件用的伤害类型（= 旧称 `+200`） |
+| `+0x0CC` | HitEffectDamageType | `effect_type` | 命中特效的伤害类型（全 2） |
+| `+0x0D0` | u8 | `particle_collision_trigger_mines` | 粒子碰撞是否引爆地雷（火焰 1 / 毒气 0） |
+| `+0x0D4` | u32 | `last_drop_owner_vo_event` | 打完最后一发给持枪者的 VO |
+| `+0x0D8` | u32 | `dry_fire_audio_event` | 空仓扣扳机的音效 |
+| `+0x0DC` | FireTemplate | `particle_collision_fire_template` | 粒子打在**地形**上留的火焰模板（火焰 3 / 毒气 0 / Pyrotech 2） |
+
+`SprayWeaponStateInfo`（56 B，三段同构）：
+
+| 偏移 | 类型 | 字段 |
+|---|---|---|
+| `+0x00` | `WeaponCameraShakeInfo`（32 B） | `shake`：3×u64 抖动模板 + f32 **2.0** + f32 **5.0** |
+| `+0x20` | u64 | **`muzzle_effect`** —— [particles] 该状态的枪口粒子（**视觉与伤害的实际载体**） |
+| `+0x28` | u32 | `callout_event_start` |
+| `+0x2C` | u32 | `audio_event_start` |
+| `+0x30` | u32 | `audio_event_stop` |
+| `+0x34` | WindEffectTemplate | `wind_template` —— 风影响模板（**只有毒气 = 7**） |
+
+⇒ 旧版把 `+0x30/+0x68/+0xA0` 的 `(2.0, 5.0)` 猜成"近/中/远三段喷流"：**错**，那是**相机抖动**的强度/时长，
+所有行都相同 `(2, 5)` 正说明"抖动是统一的"；`+0x0C` 也不是哈希而是 `audio_node`。
+
+**三处 wiki 事实与字段名互证（独立第三方，全部对上）**：
+
+| 字段 | 数据 | wiki 原文 | 判 |
+|---|---|---|---|
+| `warmup_time` | 火焰 **0.7** · 毒气 **0** | FLAM-40「Before firing, the pilot light must be lit by holding the fire button」；TX-41「doesn't have a firing delay due to the **lack of a pilot light**」 | **✓** |
+| `cooldown_time` | 火焰 **10** · 毒气 **15** | 「The pilot light will extinguish automatically after a roughly **12-second** period of disuse」 | **✓** 同量级 |
+| `wind_template` | 毒气 **7** · 火焰 **0** | 「The Sterilizer's spray is **affected by wind**」；1.006.300「Will be affected by wind less by **60%**」 | **✓✓** |
 
 ### 5.6.3b 字段含义：`+200` 是**伤害表的 type 键**（SHODAN + hd2runtime 双证）
 
@@ -308,41 +376,88 @@ TX-41 STERILIZER S            kind=Spray   role=primary
 | 火/毒的分界 = 伤害行 `+44` 状态槽的 id（火 5/6/68 · 毒 44/46） | **✓ 离线**（FLAM-40 / Torcher / Crisper / TX-41 / Pyrotech 五把对照） |
 | 状态 id 68 / 44 / 46 在状态表里的行 | **⚠ 未定位**（组 stride 175 疑非标准布局） |
 | hd2runtime 不能写 spray（INCOMPATIBLE_OUTPUT_FAMILY） | **✓ 离线**（官方 docs；SHODAN 走伤害行所以能改） |
-| `+0x30/+0x68/+0xA0` 三段结构的语义 | **⚠ 未证**（推测近/中/远或起/续/收；但**所有行都是 (2,5)**，不像按武器调） |
-| 喷火器射程 = `SprayWeapon +0x04`（火焰统一 10 · 毒气 15） | **⚠ 待 run 10**（FLAM-40 改 30） |
+| 16 个字段名（`warmup_time` … `particle_collision_fire_template`） | **✓ 离线**（社区 schema 声明顺序 × typelib 偏移逐一对应） |
+| `+0x00` / `+0x04` = `warmup_time` / `cooldown_time`（不是射程） | **✓ 离线 + wiki 三处互证**（导引火 / 无延迟 / 12 s 熄灭） |
+| `+0x30/+0x68/+0xA0` 的 `(2.0, 5.0)` = **相机抖动** | **✓ 离线**（`WeaponCameraShakeInfo`，全表同一值） |
+| 喷火器射程 = `SprayWeapon +0x04` | **✗ 否证**（`+0x04` 是 `cooldown_time`；Cremator 25 m 与 FLAM-40 20 m 该值都是 10） |
+| 表内存在"射程"标量字段 | **✗ 否证**（Cremator 与 FLAM-40 的**全部 16 个标量完全相同**，只有粒子 id 不同） |
+| 射程 = `firing.muzzle_effect` 指向的粒子资源 | **⚠ 待 run 11**（FLAM-40 ← Cremator 粒子；Crisper ← TX-41 粒子） |
 | 毒气的"中毒"来自 Status 攻击而非 Spray | **✓ 离线**（TX-41 的 attack graph） |
 
-### 5.6.6 喷火器的「射程」：候选字段 `+0x04`（**run 10 已装盘待实机**）
+### 5.6.6 喷火器的「射程」：**不在数据表里**，在 `firing.muzzle_effect` 的粒子资源里
 
-把 23 行 SprayWeapon 全摊开后，**只有两个字段**在火焰/毒气之间成组变化：
+**结论**：`SprayWeaponComponent` 的 16 个字段里**没有射程**。射程由 `firing.muzzle_effect`（`+0x70`，
+一个 [particles] 资源 id）指向的**粒子资源内部的参数**（粒子速度 / 寿命 / 阻力）决定；
+数据表侧只能决定"引用哪个粒子"。
 
-| 类别 | `+0x00` | **`+0x04`** | `+200` |
+#### 证据 1：wiki 射程 vs 表内数据（五点对照）
+
+| 武器 | wiki 射程 | `firing.muzzle_effect` | 粒子所在包（`refs/srkit-names.json`） |
 |---|---|---|---|
-| **玩家火焰喷流**（FLAM-40 · Torcher · Crisper · Cremator …） | **0.7** | **10** | 20–23 |
-| **毒气**（TX-41 · 另两行） | 0 或 0.7 | **15** | 35 / 36 |
-| Pyrotech | 0 | 0 | 32 |
-| 敌人 / 占位行（`+200`=0） | 0 / 1 | 0.05 / 0.01 / 1 | 0 |
+| **FLAM-40 Flamethrower** | **20 m**（「measured in first person view」） | `0xA252B7821AAB37D7` | `a37891d879cb3b1d` |
+| **P-72 Crisper** | 20 m（「same damage, firing range … as the Torcher」） | `0xA252B7821AAB37D7`（**与 FLAM-40 同一个**） | `a37891d879cb3b1d` |
+| **FLAM-66 Torcher** | **20 m**（「Like the basic Flamethrower, it has a range of 20m」） | `0xC22C03EC68E8DBCE` | `49fd919a67a5db66` |
+| **B/FLAM-80 Cremator** | **≈25 m**（「roughly 25 meters … 25% more than the FLAM-40's 20-meter range」） | `0xA4F17DABA8ECD8E5` / `0x7E2D445495989701`（双管各一） | `df16f5c644edc2b1` / `784671f2b3a4da79` |
+| **TX-41 Sterilizer** | **47 m**（「measured in first person」） | `0xA3D15A3BBC56DE55` | `750605cfc0173701` |
 
-判读：
+另外：**warmup / cooldown 两个状态的枪口粒子在全部火焰武器上是同一个**
+（`0x8B729322F53729F4` / `0x0B844F68DBA4F310`），毒气为 **0**（没有导引火）——
+"导引火是一簇通用小火苗、喷流才是各枪自己的"这件事本身也自洽。
 
-- **`+0x04` 最像「射程（米）」**：全部火焰 = **10**、毒气 = **15**（TX-41 在游戏里确实比喷火器打得远）；
-  敌人那些 0.01–1 的行 `+200` 都是 0，属占位/空行，不能当反例。
-- `+0x00` = **0.7** 只出现在火焰类 ⇒ 更像**喷流宽度/密度**（非射程）。
-- `+0x30 / +0x68 / +0xA0` 三段重复结构在所有行都是 `(2, 5, …)` **完全相同** ⇒ 不是按武器调的射程。
+#### 证据 2：三重否证 —— 表内没有射程标量
 
-⚠ **尚未证实**：`+0x04` 是不是就是命中判定用的射程（也可能只是"粒子喷射的初速/寿命"）。
-另外**火焰类彼此都是 10** ⇒ 说明这几把枪的**射程参数在原版就是同一个值**，
-它们的手感差异来自别处（散布/粒子/伤害），不是射程字段。
+1. **Pyrotech `+0x04` = 0**（用户的第一直觉）：它是个**投掷物**（`kind: throwable`，`warmup/cooldown` 全 0），
+   根本不"喷"，拿它当"射程 0"会讲不通 —— 现在已知那是 `cooldown_time`。
+2. **Cremator（25 m）与 FLAM-40（20 m）的全部 16 个标量完全相同**：
+   `warmup 0.7` · `cooldown 10` · 其余 `0 / 1 / 2 / 3`，逐字节一致；
+   **唯一差别就是 `firing.muzzle_effect`**（以及音效 / 抖动模板那些纯听感字段）。
+   差 25% 的射程却找不到任何标量差 ⇒ 射程不在标量里。
+3. **Crisper 与 FLAM-40 共用同一个 firing 粒子，两者 wiki 射程也相同（20 m）** ⇒
+   "粒子 ↔ 射程"有正相关，"标量 ↔ 射程"没有。
 
-**run 10（已装盘）**：**FLAM-40 `SprayWeapon +0x04`：`10` → `30`**（TX-41 的 15 未动）。
-离线 G1–G9 全 PASS、哈希 `0x8E49771B181FFAA1` 不变、封包 sha256 `ed6328c9…`。
+#### 证据 3：结构上只能由粒子承担
 
-| 实机结果 | 结论 |
+- `projectile_type`（`+0xC4`）= **0** ⇒ 没有弹丸可承载射程；
+- `spray_capsule_radius`（`+0x10`）= **0** ⇒ 没开"物理胶囊重叠判定"；
+- ⇒ 命中判定只剩"**粒子碰撞**"一条路（schema 里 `damage_info_type` 的注释正是
+  *"If not set to None（且没有弹丸），this will use **collision events**"*），
+  而"粒子"就是 `muzzle_effect`。wiki 也说过 FLAM-40「Its stream of fire deals continuous damage
+  throughout its travel」——伤害是**跟着粒子飞**的。
+
+#### run 10 的真实语义（已撤回，不是失败实验）
+
+run 10 改的 `+0x04` 是 **`cooldown_time`：10 → 30 s**，即
+「开火后多久算冷」。可观测预测：**停火 20 秒后再扣扳机，喷火器仍然"是热的"，不用重新点导引火**
+（原版 `cooldown=10 s` 与 wiki「导引火约 12 秒不用会自动熄灭」吻合）。
+这张盘已由 run 11 覆盖（`+0x04` 回原值 10）。
+
+#### run 11（已装盘）：换粒子 = 换射程？
+
+单变量 ×两把枪，各借一个更远的供体粒子：
+
+| 武器 | `+0x70` 原值 | 改成 | 预期射程 |
+|---|---|---|---|
+| **FLAM-40**（行 20） | `0xA252B7821AAB37D7` | `0xA4F17DABA8ECD8E5`（Cremator 左管，同色火焰） | **20 → ≈25 m** |
+| **P-72 Crisper**（行 18） | `0xA252B7821AAB37D7` | `0xA3D15A3BBC56DE55`（TX-41，雾状） | **20 → ≈47 m** |
+
+其余所有字段回原版；TX-41 未动（作为 47 m 基准对照）。
+离线 G1–G9 全 PASS、哈希 `0x8E49771B181FFAA1` 不变、封包 sha256 `67c7f62c…`、已装盘并读回一致。
+
+| 实机现象 | 结论 |
 |---|---|
-| 火焰**明显喷得更远**、伤害也在更远处生效 | **`+0x04` = 射程**（该组件唯一的射程旋钮） |
-| 只有**视觉变远**、伤害范围没变 | `+0x04` 只管粒子寿命/初速，命中判定在别处（引擎侧或状态效果半径） |
-| **完全没变化** | `+0x04` 不是射程 ⇒ 射程由粒子资产或 `Status` 的半径决定 |
-| 火焰变成"一段直线喷射"或异常 | 该字段是喷流形态参数（长度/段数），需要按比例调 |
+| 两把枪射程分别变成 **≈25 m / ≈47 m**（外观也变成供体的样子） | **射程 = 粒子资源**；换粒子就能改射程，且**跨包粒子在实战里能加载** |
+| 外观变、射程不变 | 粒子只是视觉 ⇒ 伤害判定半径在别处（下一步查 Status / 爆炸半径 / 引擎） |
+| 连外观都没变 | 供体粒子**不在内存**（跨包不驻留，见 [LIMITED-CROSS-PACKAGE-LOADING](../engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md)）⇒ 要么把供体武器也带进图，要么走资源替换 |
+| **没有火焰 / 没有伤害** | 同上的极端形态：伤害载体（粒子）没加载 ⇒ 反过来证明"伤害由粒子给" |
+
+#### 能力边界（射程这一项）
+
+| 想做的事 | 手段 | 判 |
+|---|---|---|
+| 把某把喷火器的射程借成"另一把枪的射程" | 改 `firing.muzzle_effect` 的 u64（表内一行一字段） | **⚠ 待 run 11** |
+| 把射程调成"任何我想要的米数" | 改**粒子资源**内部的速度/寿命（`.particle`，资源路线，非 `dl_bin`） | **✗ 数据表做不到** |
+| 让火焰"命中范围更宽/判定不同" | `spray_capsule_radius`（`+0x10`）> 0 打开物理胶囊重叠判定 | **⚠ 未试**（schema 自标 Experimental） |
+| 让火焰更持久 / 更易点燃 | 伤害行 `+44` 状态槽（status 5/6/68）与状态表 | ✓ 见 §5.6.3b |
 
 ---
 
