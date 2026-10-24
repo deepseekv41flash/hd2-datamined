@@ -171,6 +171,42 @@ Helldivers 2 的资产按 **toc 包**（package）组织，引擎**按需**加�
 `+0xA8` / `+0xF8`（u64）。它的 G6 白名单必须按**写入宽度**展开（u64 = 8 字节），否则 `+0xAC`
 会被误报成"漂移"（本轮实际踩过一次）。
 
+## 4.6 实战例（2026-10-24）：给**粒子资源**做驻留（新消费方）
+
+前面的例子都在"物品"（武器 / 背包）这一层。这次出现了一个**新的消费方**：
+`SprayWeaponComponentData` 行里的 `firing.muzzle_effect`（`[particles]` 资源 id）。
+把喷火器的该字段改成另一把枪的粒子后，游戏里喷出来的是
+**灰色半透明方块 + 完全没有火焰** —— 这正是"资源不在内存"的兜底渲染
+（详见 `docs/tables/WEAPON-FIRE-MODES-26088801.md` §5.6.6 run 11）。
+
+驻留做法与 §4.5 同一套：把**粒子所在包**声明到每局必叫的 Reinforce 上。
+
+| 项 | 值 |
+|---|---|
+| 目标粒子 | TX-41 的 firing 粒子 `0xA3D15A3BBC56DE55`，所在包 `0x750605CFC0173701`（24 个资源：该粒子 + 6 贴图 + 2 材质 + 模型/动画/音频） |
+| 写入 | `MISSIONS. REINFORCEMENT BEACON`（`0x6FDC`）与 `TUTORIAL REINFORCEMENT BEACON`（`0x1247C`）的 **`+0xA8` = `0x750605CFC0173701`** |
+| 离线 | `tools/stratagem_package.py`，G1–G7 全 PASS；哈希 `0x04BBE33EF809862A` 不变；封包 sha256 `8c70575a…` |
+| 盘上回读 | 两行 `+0xA8` == 该包 id；全表差异只有这 2×8 B + 2 个校正字 |
+
+**包 id 空间校验**：`srkit-names.json` 的 `package` 字段就是本表要的 u64 toc 包 id ——
+拿已证的 GP-20 例子对：包 `b779a2f9d0928e03` 里确实有 `GP-20 Ultimatum` 资源，与写进 `+0xA8` 的
+`0xB779A2F9D0928E03` 完全一致。
+
+**一个 `+0xA8` 只能装一个包** —— 本 build 里 `+0xA8 == 0` 的空槽普查：
+
+| 行 | 偏移 | 备注 |
+|---|---|---|
+| `MISSIONS. REINFORCEMENT BEACON` | `0x006FDC` | 每局必叫（R3 已证"关卡加载即驻留"） |
+| `TUTORIAL REINFORCEMENT BEACON` | `0x01247C` | 与上面填同一个包才是已证形状 |
+| `MISSIONS. SOS Beacon` | `0x0072FC` | 空槽；但要玩家装备并**叫出来**才可能请求 |
+| `[TUTORIAL] EXTRACTION` | `0x01260C` | 教学关专用 |
+
+⇒ 现在**一次只能可靠驻留一个包**。要多装一个，得指望玩家装备/叫出 SOS Beacon 那一行。
+
+⚠ 工具坑（本轮踩到）：`--host` 必须给更精确的子串 —— 默认 `NOT USED` 会命中
+`ADDITIONAL STRAFING RUNS` 与 `AIR-TO-AIR MISSLES` 两行而报"宿主不唯一"；
+另外链式写入换目录时，`dl_library.dl_typelib` 要跟着拷到 `--plain` 同目录（工具按兄弟路径找它）。
+
 ## 5. 一条命令
 
 ```bash
