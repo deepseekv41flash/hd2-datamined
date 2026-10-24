@@ -408,10 +408,10 @@ TX-41 STERILIZER S            kind=Spray   role=primary
 
 1. **Pyrotech `+0x04` = 0**（用户的第一直觉）：它是个**投掷物**（`kind: throwable`，`warmup/cooldown` 全 0），
    根本不"喷"，拿它当"射程 0"会讲不通 —— 现在已知那是 `cooldown_time`。
-2. **Cremator（25 m）与 FLAM-40（20 m）的全部 16 个标量完全相同**：
-   `warmup 0.7` · `cooldown 10` · 其余 `0 / 1 / 2 / 3`，逐字节一致；
-   **唯一差别就是 `firing.muzzle_effect`**（以及音效 / 抖动模板那些纯听感字段）。
-   差 25% 的射程却找不到任何标量差 ⇒ 射程不在标量里。
+2. **Cremator（25 m）与 FLAM-40（20 m）之间，16 个字段里只有三处不同**：
+   `damage_info_type`（`0x14`→`0x17`，伤害身份）、六处音效事件 id、**`firing.muzzle_effect`（粒子）**；
+   **没有任何数值/行为标量差** —— `warmup/cooldown/capsule_radius/firenode_limit/ammo_cost/mines/fire_template`
+   全同，三段状态里的 `wind_template` 与抖动强度也全同。差 25% 射程却找不到任何标量差 ⇒ 射程不在标量里。
 3. **Crisper 与 FLAM-40 共用同一个 firing 粒子，两者 wiki 射程也相同（20 m）** ⇒
    "粒子 ↔ 射程"有正相关，"标量 ↔ 射程"没有。
 
