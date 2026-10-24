@@ -459,6 +459,81 @@ run 10 改的 `+0x04` 是 **`cooldown_time`：10 → 30 s**，即
 | 让火焰"命中范围更宽/判定不同" | `spray_capsule_radius`（`+0x10`）> 0 打开物理胶囊重叠判定 | **⚠ 未试**（schema 自标 Experimental） |
 | 让火焰更持久 / 更易点燃 | 伤害行 `+44` 状态槽（status 5/6/68）与状态表 | ✓ 见 §5.6.3b |
 
+### 5.6.7 粒子资源本身：**没有表**，只有资源（射程的赌注压在这里）
+
+**结论：`firing.muzzle_effect` 指向的是一个 package 里的 `particles` 资源，没有任何 settings 表描述它的内部参数。**
+
+#### ① 全表搜索：7 个 muzzle 粒子 id 在 55 张明文表里只出现在 spray 行
+
+| 粒子 | id | 命中位置 |
+|---|---|---|
+| FLAM-40 / Crisper firing | `0xA252B7821AAB37D7` | `generated_entities` ×2（两行各一处） |
+| Torcher firing | `0xC22C03EC68E8DBCE` | `generated_entities` ×2 |
+| TX-41 firing | `0xA3D15A3BBC56DE55` | `generated_entities` ×1 |
+| Cremator 左/右管 | `0xA4F17DABA8ECD8E5` / `0x7E2D445495989701` | `generated_entities` ×1 各 |
+| 导引火 warmup / cooldown | `0x8B729322F53729F4` / `0x0B844F68DBA4F310` | `generated_entities` ×11 / ×13（全部火焰武器共用） |
+
+⇒ **除 spray 组件行以外，零命中**。`generated_damage_settings` / `generated_status_effect_settings` /
+`generated_explosion_settings` 里都没有它们。
+
+#### ② 表里只有"对粒子的引用"，没有"粒子的参数"
+
+按 8 字节 u64 扫一遍（对齐 4）能反解到 `srkit-names.json` 里 `particles` 类型资源 id 的表：
+
+| 表 | distinct 粒子引用 |
+|---|---:|
+| `generated_surface_effect_settings` | 404 |
+| `generated_explosion_settings` | 151 |
+| `generated_destruction_settings` | 151 |
+| `generated_hit_effect_settings` | 134 |
+| `generated_unit_effect_settings` | 109 |
+| `generated_animation_event_trigger_settings` | 53 |
+| `generated_distant_war_effect_settings` | 23 |
+
+这些表回答的是"**哪个效果配哪个粒子**"；速度/寿命/阻力这类参数在资源里，表里没有。
+而且 **spray 连这种引用表都不走** —— 它的粒子直接写死在 `SprayWeaponStateInfo +0x20`。
+
+社区 schema 也停在引用级：`data/components/` 里与粒子相关的只有
+`ParticleEffectSetting`（`effect` + `id` + 孤儿策略）、`DestructionEffectSpawnParticles`
+（`particle_effect` + 偏移 + 旋转 + `duration`）、`VehicleEffectParticleInfo`（`name` + 挂点 + 对齐），
+**没有一个字段是"粒子飞多快/活多久"**。
+
+#### ③ 资源本体：能取出来，但**没有字段图**
+
+`srkit extract --id <id> --type particles` 可以直接把六把枪的粒子抠出来（本 build）：
+
+| 粒子 | 文件大小 | 头部 `ver` | 头部 extent | 模块数 |
+|---|---:|---:|---|---:|
+| FLAM-40 firing（20 m） | 28,428 B | 115 | 30 × 30 | 12 |
+| FLAM-66 Torcher firing（20 m） | 28,428 B | 115 | 30 × 30 | 12 |
+| TX-41 firing（47 m） | 10,848 B | 115 | 30 × 30 | 9 |
+| B/FLAM-80 Cremator 左管（25 m） | 32,360 B | 115 | **64 × 64** | 14 |
+| B/FLAM-80 Cremator 右管（25 m） | 32,360 B | 115 | **102 × 102** | 14 |
+| 导引火（共用） | 8,448 B | 115 | 1 × 1 | 4 |
+
+- **同族同版本**：`u32 115` 版号 + 一个 u32 哈希 `0x5368D4A5` 六把全同 ⇒ 同一种导出格式；
+- extent 与"覆盖面积"同向（导引火 1×1 最小、Cremator 翻倍再翻倍，wiki 也说 Cremator "increased range **and coverage**"），
+  但 **TX-41 与 FLAM-40 的 extent 同为 30×30 却是 47 m / 20 m** ⇒ **extent 不是射程**；
+- FLAM-40 与 Torcher 的粒子**同尺寸、只差 205 字节（0.72%）** ⇒ 同模板只改颜色/参数，是最理想的差分样本；
+- 资源内**没有可读字段名**，`srkit codecs` 对 `particles`（`0xA8193123526FAD64`）是 **`no (raw fallback)`**；
+  `dl_library.dl_typelib` 里也只有 3 个粒子相关类型名（全是"组件"，不是粒子自身）⇒ **粒子格式不在 DataLibrary 里**。
+
+#### ④ 所以射程这一项的三条路
+
+| 路 | 做法 | 成本 / 判 |
+|---|---|---|
+| **A** | 改 `firing.muzzle_effect` 指向别的粒子（run 11 已装盘） | 表内一行一 u64；**先证明"粒子决定射程"** |
+| **B** | 差分粒子资源找速度/寿命那一格（FLAM-40 vs Torcher 只差 205 B；再叠 Cremator / TX-41 三档） | 需要自己写粒子解码/差分，**无字段图**；可行但工程量大 |
+| **C** | `spray_capsule_radius`（`+0x10`）> 0 改命中判定方式 | 表内字段、最便宜，but schema 自标 Experimental |
+
+| 结论 | 态 |
+|---|---|
+| 没有"粒子参数表"（55 张全扫，粒子 id 只在 spray 行） | **✓ 离线** |
+| 无效效果表能反解粒子引用（surface 404 / explosion 151 …） | **✓ 离线** |
+| 粒子资源同族同版（`ver 115` + 固定哈希 + extent + 模块数） | **✓ 离线**（六把实测） |
+| 资源内字段语义（速度/寿命在哪） | **⚠ 未解**（无字段名、无 schema、codec raw） |
+| 射程 = 粒子（run 11 假设） | **⚠ 待实机** |
+
 ---
 
 ## 6 三态 / 未解
