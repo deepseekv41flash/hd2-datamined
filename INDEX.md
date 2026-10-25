@@ -45,7 +45,7 @@
 | **只给某一件甲加效果** | [ARMOR-PASSIVE-STATS](docs/tables/ARMOR-PASSIVE-STATS-26088801.md) | **§2 单件级（改 kit 的 `+0x1C`）· §6 配方 · §2 末尾「没有空被动」的否证** | `26088801` |
 | **投送舱送什么（战备空投舱换载荷）** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§1 槽位结构 · §2 前 N 个槽才生成 · §3 换物品配方** | `26088801` |
 | **换进来的物品只有紫问号 / 网格材质不加载** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§4 两个包槽（`+0xA8` + `+0xF8`）· §5 item→包解析表** | `26088801` |
-| **有限数量的跨包加载（通用产出）** | [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) | **§2 三个可编辑量 · §3 解析链 · §5 一条命令 · §7 边界** | `26088801` |
+| **有限数量的跨包加载（通用产出）** | [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) | **§2 三个可编辑量 · §3 解析链 · §5 一条命令 · §6.9 补丁路线（不受口上限）· §7 边界** | `26088801` |
 
 ### 理解原理
 
@@ -143,7 +143,7 @@
 | [GUI-HUD-25988413](docs/engine/GUI-HUD-25988413.md) | 纯 Lua 自绘屏幕文字：`Gui.*` 真实签名（三次崩溃换来） | `25988413` |
 | [LOADER-SPEC-25988413](docs/engine/LOADER-SPEC-25988413.md) | 共享加载器必须满足什么，含 `package.loadlib` + 原生 DLL 的最终否证 | `25988413` |
 | [PATCH-LOADER-DESIGN-26088801](docs/engine/PATCH-LOADER-DESIGN-26088801.md) | 数据文件路线不需要执行权：用离线合成器替掉 boot 覆盖 | `26088801` |
-| ★ [LIMITED-CROSS-PACKAGE-LOADING-26088801](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) | **没有 runtime/ffi 之后怎么有限地跨包加载资源**：`+0xA8`+`+0xF8` 双声明口 / 解析链 / 判定矩阵 / 边界 | `26088801` |
+| ★★ [LIMITED-CROSS-PACKAGE-LOADING-26088801](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) | **跨包加载全账**：`+0xA8`+`+0xF8` 双声明口 / 解析链 / 「行在不在**普通任务栏**」是唯一判据（教学关行 138 ✗） / `+0xC8` 额外战备链把口带进栏（✓✓） / **§6.9 补丁路线：资源级 79 KB 顶掉 68 MB 包、整包 50/51 条搬进「共享基础包」与注册表包都生效（✓✓ 实机）** | `26088801` |
 
 ### `tables/`
 
@@ -171,7 +171,7 @@
 | ★ [STRATAGEM-SETTINGS-DECODED](docs/tables/STRATAGEM-SETTINGS-DECODED.md) | 战备表 400 B 行 / 12 组解码，含三处旧结论的自我否证 | `25988413` |
 | ★ [STRATAGEM-FIELDS-26088801](docs/tables/STRATAGEM-FIELDS-26088801.md) | 战备字段总表：面板公式（先预测后实测）、散布、**Eagle 回收（§5.4）**、条目 ID 重复=崩溃 | `26088801` |
 | ★ [DAMAGE-SETTINGS-26088801](docs/tables/DAMAGE-SETTINGS-26088801.md) | 伤害表 76 B 行字段图：5 张引用表 / 共享伤害行 / **行内零 padding 的宿主策略** / 完整改值链 | `26088801` |
-| ★ [POD-RACK-26088801](docs/tables/POD-RACK-26088801.md) | 投送舱换载荷：rack 568 B 行 / 槽位语义 / **`+0xA8`+`+0xF8` 双包声明** / item→包解析表 / 六轮实机 | `26088801` |
+| ★ [POD-RACK-26088801](docs/tables/POD-RACK-26088801.md) | 投送舱换载荷：rack 568 B 行 / 槽位语义 / **`+0xA8`+`+0xF8` 双包声明** / item→包解析表 / 六轮实机 / **§8 整包补丁驻留（✓✓：一个舱三件、两个零声明）** | `26088801` |
 | ★ [WEAPON-AMMO-RESERVE-26088801](docs/tables/WEAPON-AMMO-RESERVE-26088801.md) | 三种供弹模型 / `Rounds` 与 `Magazine` **两套备弹字段** / 五把背包武器改成自带备弹（已实机）/ 清空槽位的坑 | `26088801` |
 | ★ [PROJECTILE-PROXIMITY-26088801](docs/tables/PROJECTILE-PROXIMITY-26088801.md) | **近炸引信字段**（弹丸行 `+0x94` 半径 / `+0x88` 阈值角 / `+0xA0` 保险距离）；AC-8 在备弹 289 上 | `26088801` |
 | [STRATAGEM-REFERENCE-CHAIN-25988413](docs/tables/STRATAGEM-REFERENCE-CHAIN-25988413.md) | 战备→弹丸→爆炸：只有弹丸↔爆炸一跳，战备→弹丸是否证 | `25988413` |
@@ -205,7 +205,7 @@
 | ★ [MOD-MERGER-26088801](docs/cases/MOD-MERGER-26088801.md) | **多个 mod 改同一文件不同字段怎么共存**：抽语义 / 剔哈希脚手架 / 逐字节判冲突 / 逐字节等价证明 | `26088801` |
 | ★ [RECON-ARMOR-MULTI-PASSIVE](docs/cases/RECON-ARMOR-MULTI-PASSIVE.md) | **第三方「护甲多被动」只读侦察**：`passive_bonuses` 的 payload 布局（pm/sm 双数组）、**效果在 sm 行**、全表只有 7 个 stat 槽、描述隐藏=末 4 B 清零、它的堆叠配方与安全设计 | `25988413`（结构在 `26088801` 已逐字段核对一致） |
 | ★ [RECON-STERILIZER-HEAL](docs/cases/RECON-STERILIZER-HEAL-26088801.md) | **第三方「Sterilizer 改治疗」只读侦察**：改的是**伤害行**的 4 组字段（状态槽 0/1 的 type+value、`element`、damage）；附带**伤害行 76 B 完整字段图**与**状态效果表解码**（73×160 B + 名字 blob → id↔名字全表） | `26088801` |
-| ★★ [RECON-P11-SELF-HEAL](docs/cases/RECON-P11-SELF-HEAL-26088801.md) | **C 档样板（代码型）**：P-11 Self-Heal v1.0.4 = 运行时 `player_fired` 事件 + `Player:heal`（**一条数据都没改**，413 行源码）；「开火即回血」数据侧没有事件钩子 ⇒ **C · 不可实现**；替代 = 数据侧**治疗爆**（孤儿爆炸 254 + 治疗行 446，打脚下 2 m 内回血 ✓ 实机 / >2 m 不回血 ✓ 实机） | `26088801` |
+| ★★ [RECON-P11-SELF-HEAL](docs/cases/RECON-P11-SELF-HEAL-26088801.md) | **C 档样板（代码型）**：P-11 Self-Heal v1.0.4 = 运行时 `player_fired` 事件 + `Player:heal`（**一条数据都没改**，413 行源码）；「开火即回血」数据侧没有事件钩子 ⇒ **C · 不可实现**；替代 = 数据侧**治疗爆**（孤儿爆炸 254 + 治疗行 446，打脚下 2 m 内回血 ✓ 实机 / >2 m 不回血 ✓ 实机 / **顺带修部位 ✓ 实机**） | `26088801` |
 | ★★ [RECON-SHODAN-EXTRA-STRATAGEM](docs/cases/RECON-SHODAN-EXTRA-STRATAGEM-26088801.md) | **额外战备 = `StratagemInfo +0xC8`**（另一条战备的 `+0` id，不占 4 个配装位，引擎跟链、成环崩）：SHODAN v4.1.0 源码级定位 + 本 build 153 行核对（Eagle 全 = 51 `EAGLE. REARM`）；**M-104 Incinerator FRV = id 138 / 实体 `frv_flamer` 本 build 完整存在**；工具 `stratagem_extra.py`（G1–G7 含环检测）；**✓ 实机**：带 Resupply 链式送 `Precision Strike → M-104`，两件都出现在战备条且可呼叫 ⇒ 未发布战备走数据路线进任务 | `26088801` |
 | ★ [NETWORK-READ-QUICKREF](docs/cases/NETWORK-READ-26088801-QUICKREF.md) | **网络复制层读取一页速查**：正确调用形态、六道闸、字段字典（16 条 hash↔名字）、能力边界 | `26088801` |
 | ★ [PROBE-READ-GUARDED](docs/cases/PROBE-READ-GUARDED-26088801.md) | 自建探针 run4–run8 全记录：名字形态、batched 语义、seat 70 = 被击倒、时间线纪律 | `26088801` |
@@ -223,7 +223,7 @@
 | 我想… | 工具 |
 |---|---|
 | 把当前 build 的表解封成明文 | `build_cache.py` · `dlbin_seal.py open-key` |
-| 改几个字节但保住内容哈希 | `plain_edit.py`（通用）· `stratagem_tune.py`（战备）· `expl_set.py`（爆炸）· `proj_copy_row.py`（弹丸整行）· `entities_modeb.py`（实体）· `pod_rack_swap.py`（投送舱槽位） |
+| 改几个字节但保住内容哈希 | `plain_edit.py`（通用）· `stratagem_tune.py`（战备）· `expl_set.py`（爆炸）· `proj_copy_row.py`（弹丸整行）· `entities_modeb.py`（实体）· `pod_rack_swap.py` / `rack_edit.py`（投送舱槽位） |
 | 查某张表的几何 / 字段偏移 | `table_dictionary.py` · `typelib.py` |
 | 查某行的名字 / 本地化文本 | `table_row_names.py` · `table_locid_scan.py` · `stratagem_display_names.py` · `entity_locid_scan.py` |
 | 更新后对比到底变了什么 | `build_diff.py` · `build_geometry_diff.py` |
@@ -281,6 +281,7 @@
 | `entities_modeb.py` | 实体表：武器单元格编辑、可选弹种（模式 A/B）、双弹药池、hashmap 维护 | `murmur64.py` | ✓✓ 已实机（主宰/惩罚者/扫荡者） |
 | `proj_copy_row.py` | 整行搬运 272 B 射弹行（换弹头），带 5 道门禁 | `murmur64.py` | ✓✓ 已实机（Eruptor 弹头 → 主宰） |
 | `pod_rack_swap.py` | 改 `HellpodRackComponentData` 槽位物品（投送舱换载荷），tail 宿主 + 9 道门禁 + 变异自检 | `murmur64.py`、`typelib.py` | ✓✓ 已实机（2026-10-23，六轮） |
+| `rack_edit.py` | **投送舱 rack 任意槽位 + `+0x22C spawn` 一次写完**（`--slot N=item` 可重复、`--spawn N`）；补 `pod_rack_swap.py` 只能改 slot0/slot1 的空白；G1–G7 门禁 + 保 Murmur 锚点 | `murmur64.py`、`pod_rack_swap.py`、`typelib.py` | ✓ 离线（G1–G7 全过；用于 §18 的三件 rig，✓✓ 实机） |
 | `mount_table.py` | **载具挂载 / 座位表**：`MountComponentData`（328 槽 + 165 × 120 B）与 `SeatCollectionComponentData`（112 槽 + 56 × 424 B）的读/查/换件；`swap` 只写 `MountInfo.item` 的 8 字节，tail 宿主保 Murmur64A，**10 道门禁**（含「全表只有目标槽变了」）；`show` 直接给出五件套 + 两条否决项的离线判据 | 标准库 + `murmur64.py`、`pod_rack_swap.py`、`typelib.py` | ✓ 离线（G1–G10 全过；sealed round-trip 逐字节相等；实机待验） |
 | `pod_loadout.py` | **投送舱换载荷 + 有限数量的跨包加载的通用产出**：名字→包/LOE id→自动判单包/双包→出可装文件（不部署） | `pod_rack_swap.py`、`plain_edit.py`、`dlbin_seal.py` | ✓ 产物与实机验证件逐字节一致 |
 | `strat_slot_census.py` | **战备表 153 行的装包口普查**：按 typelib 结构穷举（不是按值搜，空槽才看得见），分「两槽已满 / 仅 `+0xA8` 空 / 仅 `+0xF8` 空 / 两槽全空」四类并给出行基址 | `pod_loadout.py`、`typelib.py` | ✓ 离线：只有 `+0xA8` 命中包集合（114/114），空槽 155 个 |
@@ -385,7 +386,7 @@
 | **投送舱换载荷**：改 rack 槽位决定空投舱送什么 | **✓✓ 实机**（`26088801`：rack 29 → GL-21+B-1 / GL-28 双件 / Nova+Warp 双件；**四件版 Nova+Warp+GL-28+GL-28 背包（`+556`=4）四件全出**）—— 见 [POD-RACK](docs/tables/POD-RACK-26088801.md) |
 | **武器自带备弹**：把背包供弹武器改成自带备弹、不需要背包 | **✓✓ 实机**（两套模型：`Rounds` 用 `+0x50/+0x54/+0x58`（AC-8），`Magazine` 用 `+0x88/+0x8C/+0x94`（GR-8 / Spear / RL-77 / W.A.S.P. 四把一次全绿）；rack `+556` 2→1 → 只出武器）—— 见 [WEAPON-AMMO-RESERVE](docs/tables/WEAPON-AMMO-RESERVE-26088801.md) |
 | **背包供弹武器（第四种模型）怎么办** | ✓✓ **连背包一起投送**（GL-28 + 它的背包同包，`+556`=4 四件全出、能开火）；**改弹药模型/插新组件都走不通**：插弹匣行不被采纳、删联动弹药键直接崩溃（与「给 AR-23 强塞双弹池」同类）—— 见 [WEAPON-AMMO-RESERVE §4b](docs/tables/WEAPON-AMMO-RESERVE-26088801.md) |
-| **有限数量的跨包加载**（每行最多两个包）：`+0xA8`（物品包）+ `+0xF8`（武器的 LoadoutEntry）双声明口 ⇒ `pod_loadout.py` 一条命令出可装文件 | **✓✓ 实机**（同一 rack、同一对物品，只换 `+0xA8` → 谁出模型就跟着换；双包版两件全亮）—— 见 [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) |
+| **跨包加载**：`+0xA8`（物品包）+ `+0xF8`（武器的 LoadoutEntry）双声明口；口不够时接 `+0xC8` 额外战备链（不占位）；**或走补丁把资源/整包塞进常驻包（不受口上限）** | **✓✓ 实机**（只换 `+0xA8` → 谁出模型跟着换；`+0xC8` 链带进 4 条战备；补丁：79 KB 顶掉 68 MB 包、整包 50/51 条进**共享基础包**与注册表包、舱里三件零声明全出）—— 见 [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) §6.9 |
 | **空声明槽普查**：153 行战备里 **133 行没填满**，空槽存量 **155 个**（两槽全空 22 行 / 仅 `+0xA8` 空 17 行 / 仅 `+0xF8` 空 94 行）⇒ `strat_slot_fill.py` 按名字填空槽 | **✓✓ 实机**（R3：把 Warp 的包填进 `Reinforce` 的 `+0xA8` ⇒ **关卡加载即驻留**，不叫、不带、不死；投送舱里两件不同包的物品同时正常，**三个包并存**）。`+0xF8` 另有否证（R1：不授予武器的战备上不读它）—— 见 [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) §6.6 |
 | 解锁未发布物品（`LoadoutEntry.selectable`） | ✗ 已否证（发布数据里没有这个开关） |
 

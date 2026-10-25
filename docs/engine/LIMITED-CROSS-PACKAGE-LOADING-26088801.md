@@ -575,13 +575,79 @@ rack 29 三个槽（Nova / Warp Pack / GL-28 Belt-Fed，`+556` 设 3），三个
 > 查表命令：`python tools/strat_slot_census.py`（全表）、`--free`（只看有空槽）、`--both`（只看两槽全空）、
 > `--row N`（单行详情，含绝对偏移）、`--json out.json`。
 
+### 6.9 资源层驻留（`.patch_N`）—— 声明口之外的第二条路（**✓✓ 实机 2026-10-25 晚**）
+
+> 本节回答的是「声明口不够用怎么办」。答案不是"找更多行"，而是**换一层**：
+> 补丁把**资源**塞进**已经常驻**的包，按 `file_id` 全局可查 ⇒ **不受口数限制**。
+> 补偿的是"包要不要加载"，不是"资源在哪"。
+
+**机制**
+
+- 文件 `data/<包名>.patch_N`；引擎启动时按**连续序号**合并进**那一个包**（缺号则后面全部不生效）。
+- 条目按 `file_id` 进资源索引；同一个 id 只要有一个**已加载**的包里有，就能解析（故 62,915 个 id ↔ 322,711 条条目）。
+- 类型不挑：`patch_0/1/2/4` = `lua`、`patch_3` = `texture`（+`.gpu_resources`）+ `bones`、第三方 FRV 防翻 mod = `physics`、
+  本轮 = `particles` / `material`，以及整包的 `mesh` / `unit` / `bones` / `animation` / `state_machine` / `texture`。
+- 带 GPU / stream 负载的类型（`texture`、`mesh`、`geometry_group`…）要把负载写进同名 `.gpu_resources` / `.stream`；
+  `particles` / `material` 只有 toc，不需要伴生。
+
+**实测（同一晚三轮，单变量）**
+
+| 轮 | 补丁 | 宿主包 | 条目 | 读数 |
+|---|---|---|---:|---|
+| **P1 资源级** | `9ba626afa44a3aa3.patch_5`（82,864 B）| 注册表包 | 19（3 `particles` + 16 `material`，载荷 79.3 KB）| 把 `SOS Beacon` 59 的 `+0xA8` **清零**后，火箭炮塔的**拖尾 / 命中爆炸 / 枪口全在** ⇒ 一个 68 MB 的包被 **79 KB 资源**顶掉 |
+| **P2 整包·基础包** | `f6fb08cc02d24255.patch_0`（3.52 MB toc + 1.84 MB gpu + 2.65 MB stream）| **共享基础包** `f6fb08cc02d24255`（782 资源，必然常驻）| 50（LIFT-182 Warp Pack 整包：mesh/unit/bones/material/texture/physics/animation/state_machine…）| 舱里 **Warp Pack 正常渲染**，且**没有任何 `+0xA8` 声明它** |
+| **P3 整包·注册表包** | `9ba626afa44a3aa3.patch_6`（2.74 MB + 6.06 MB + 4.19 MB）| 注册表包 `9ba626afa44a3aa3` | 51（GL-28 Belt-Fed 整包）| 舱里 **GL-28 正常渲染**，同样零声明 |
+
+**验收 rig（✓✓ 实机：三件全出）**：StA-X3 投送舱（rack 29）三件、`spawn=3` ——
+Nova 走**舱行** `+0xA8`（基准，已知可）、Warp 走**共享基础包补丁**、GL-28 走**注册表包补丁**；
+两个补丁在战备表里一个字都没写。
+
+⇒ 本轮最重要的两条新事实：
+
+1. **宿主不限于注册表包**：`data/<任意包>.patch_N` 都会被读（P2）。
+2. **整包（含 mesh/unit/bones 与纹理 GPU）也能这样驻留**（P2/P3），所以"整包驻留"不再只有
+   `+0xA8` 一条路 —— 但对**被引擎主动请求**这件事，仍然只有 `+0xA8` / `+0xF8`。
+
+**上限与代价**
+
+| 项 | 现状 |
+|---|---|
+| 补丁体积 | 3.52 MB / 2.74 MB toc 已通（旧已知最大 2.2 MB）；**上限仍未测** |
+| 条目数 | 50 / 51 条已通；本轮资源级 19 条 |
+| 序号 | **必须连续**（0…N），中间缺号后面全部不生效 |
+| 同 id 冲突 | **高号胜**（✓✓ 实机，[SAMEID-PATCH-PRIORITY](../cases/SAMEID-PATCH-PRIORITY-26088801.md)）|
+| 内存 | 驻留 = 真加载；200 MB 级特效包会明显掉帧（旧档 §86.6）|
+| 能力边界 | 只解决"资源在不在"，**不解决"包在不在"**：要让引擎请求某包仍用 `+0xA8`/`+0xF8` |
+
+**两条配方**
+
+```bash
+# A) 资源级（P1）：给若干 (type,id,payload)，宿主用注册表包
+srkit extract --id <id> --type <type> --package <src> -o payload "<game>/data"
+#   组装：以现有补丁为模板（Package.parse → 清条目 → add_entry → to_bytes；别新建容器）
+python tools/resource_patch.py list  data/9ba626afa44a3aa3.patch_5      # 核条目
+python tools/resource_patch.py repack data/9ba626afa44a3aa3.patch_4 -o /tmp/r4 --index 4   # 写入器回归（要 IDENTICAL）
+
+# B) 整包级（P2/P3）
+srkit unpack "<game>/data" -o ws --package <src> --raw
+srkit pack ws -o out --name <host-package>.patch_<N>
+```
+
+工具：`tools/resource_patch.py`（list/dump/repack/build）、`srkit unpack/pack/check/list`。
+
+> **工具坑（本轮新增）**：实体库容器与普通表**不是同一种 LDLD** ——
+> 实体：`u32 type | 'LDLD' | ver | type | payload | …`（payload 尺寸在 `head+16`，头 28 B）；
+> 普通表：`'LDLD' | ver | type | payload | wide | extra`（尺寸在 `head+12`，头 24 B）。
+> 所以 `plain_edit.py` 改不了实体库；本轮补了 `tools/rack_edit.py`（任意 `--slot N=item` + `--spawn`，G1–G7 门禁）。
+
 ## 7. 能力边界（为什么叫「有限数量」）
 
 **能做的**
 
 - 把任意**合法拾取物**（`Interactable` + 对应组件）放进投送舱的槽位；
-- 让**最多两个**不同包的物品同时渲染；
-- 用 `+0xF8` 顺带改变「这发战备授予的武器」。
+- 同一舱放 3~4 件**不同包**的物品（`+556 spawn` 上限 4；R10/R12/G 轮，以及 §6.9 的 P2/P3）；
+- 用 `+0xF8` 顺带改变「这发战备授予的武器」；
+- **把资源（甚至整包资源）塞进常驻包，绕开声明口上限**（§6.9，✓✓ 实机）。
 
 **做不到 / 未验证**
 
