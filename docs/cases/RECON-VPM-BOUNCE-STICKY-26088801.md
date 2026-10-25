@@ -81,7 +81,7 @@ vanilla_flags = { 2, 2, 0, 0, 2, … }   -- 按 kind 索引的期望值
 | mod | 能不能用数据路线（dl_bin）等价实现？ |
 |---|---|
 | **BetterStratagemBounce** | **能**。`generated_stratagem_settings` 每行 `+0x170` 就是我们的字段，直接清 bit `0x02` 即可（`plain_edit.py` / `stratagem_tune.py` 那套保哈希流程），**不需要 loader**。⚠ 两点：① 105 行一起变，影响面大；② 清 bit 之后的实际观感要实机确认 |
-| **StickyGrenadeHandles** | **不能**。材质库是运行时 havok 对象；数据路线的对应物是 **material 资源**（`.material` / `hknpMaterial` 的 userData），要走资源替换，且跨包 |
+| **StickyGrenadeHandles** | **dl_bin 不能，但资源路线可以**（B · 跨载体等价）。它改的是 havok 材质库条目的 `userData` —— 属于 **`physics` 资源族**：我们已逆出 Havok 2019.01 tagfile 载荷布局并改过同族的 mass 字段（`CASE-STUDY-20261021.md` §17–§18），所以"能改"这件事有同族实证；⚠ 但"这一个 userData 落在哪份资源、偏移多少"**尚未针对本条验证** |
 
 ## 6 三态
 
@@ -92,4 +92,5 @@ vanilla_flags = { 2, 2, 0, 0, 2, … }   -- 按 kind 索引的期望值
 | 该 mod 在 build 26088801 会拒绝执行（`vanilla_flags` 表 74/148 不匹配） | **✓ 离线**（本 build 逐 kind 比对） |
 | `+0x170` 的枚举含义（0/1/2/3 各代表什么） | **⚠ 未证**（抽样像投放类别，无社区命名） |
 | `StickyGrenadeHandles` = 改 `sticky_grenade_handle` 材质 userData | **✓ 离线**（源码注释 + 唯一写点） |
-| 数据路线能复刻"粘手柄" | **✗ 不能**（材质库不在 dl_bin 里） |
+| 数据路线（dl_bin）能复刻"粘手柄" | **✗ 不能**（材质库不在任何 dl_bin 里） |
+| 资源路线能复刻"粘手柄"（havok 材质 userData） | **⚠ 未针对本条验证**；同族（`physics` 载荷 mass 字段）已有实证 ⇒ 置信度 **中** |

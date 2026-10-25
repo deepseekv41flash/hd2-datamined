@@ -149,7 +149,7 @@
 | 文档 | 一句话 | build |
 |---|---|---|
 | ★ [WEAPON-FIRE-MODES-26088801](docs/tables/WEAPON-FIRE-MODES-26088801.md) | **射击模式 / 射速档位**:`FireMode` 四连槽 `+0x90…0x9C` + `function_info` 选择键（`Firemode=3` / `ROF=2`）；枚举 1 自动 / 2 半自动 / 3 连发 / **4 齐射 / 5 安全 / 6 不安全 / 7 全射**（**槽位上限 3**）；任意枪可加全自动与全射（均已实机） | `26088801` |
-| ★ [PLAYBOOK-LUA-MOD-TO-DLBIN](docs/cases/PLAYBOOK-LUA-MOD-TO-DLBIN.md) | **老 mod → 数据路线等价修复版**：五步流水线（开包/读载荷/归层 L1–L4/映射/实现）+ 跨 build 常量重取规则 + 三个样板案例 + 报告骨架；配套工具 `lua_payload_dump.py`、技能 `skills/hd2-lua-mod-to-dlbin` | 跨 build |
+| ★ [PLAYBOOK-LUA-MOD-TO-DLBIN](docs/cases/PLAYBOOK-LUA-MOD-TO-DLBIN.md) | **老 mod → 数据路线等价修复版**：五步流水线（开包/读载荷/归层 L1–L4/映射/实现）+ **A/B/C 三档判定（dl_bin 等价 / 跨载体等价 / 不可实现，禁用「不可等价」）** + 载体能力表 + 跨 build 常量重取规则 + 三个样板案例 + 报告骨架；配套工具 `lua_payload_dump.py`、技能 `skills/hd2-lua-mod-to-dlbin` | 跨 build |
 | ★ [RECON-VPM-BOUNCE-STICKY](docs/cases/RECON-VPM-BOUNCE-STICKY-26088801.md) | **VanillaPlus Megapack 两件侦察**：`BetterStratagemBounce` 改的是**战备表 `+0x170` 的 bit 0x02**（不是 sticky，且在本 build 会拒绝执行）；`StickyGrenadeHandles` 改的是**物理材质库 userData**（4 B），`ThrowableComponent+0x54/+0x164` 只读 | `26088801` |
 | [STICKY-COMPONENT-26088801](docs/tables/STICKY-COMPONENT-26088801.md) | **粘附组件全解**：38 槽 + 19 行 × 76 B；`+0x2C` = 粘住时的命中伤害行（飞刀 648）、`+0x3C/+0x40` = 两个 AbilityId、`+0x08` 附着旋转全表 -90°；热熔的 sticky 是最小配置 | `26088801` |
 | ★ [STATUS-EFFECTS-26088801](docs/tables/STATUS-EFFECTS-26088801.md) | **状态效果表全解**：73×160 B + 名字 blob（id↔名字↔每跳伤害行全表）；全库只有 10 处能施加状态；**Thermite = id 13**（tick 行 533）却无人引用 | `26088801` |
