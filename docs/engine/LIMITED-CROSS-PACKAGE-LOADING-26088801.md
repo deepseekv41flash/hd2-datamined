@@ -464,6 +464,31 @@ R5 用 `Eagle Rearm`（行 `0x2d70`，两槽全空）做了两次任务 —— �
 | **占 4 个战备位之一** | 17 个支援武器行（`+0xA8` 空）等 | 一个战备位 | ⚠ **正在测（R7）** |
 | ✗ **不在栏里** | `EXTRACTION BEACON`（54）、`EMERGENCY EXTRACTION BEACON`（56）、`TEAM WEAPONS. MINIGUN`（124，未带） | — | ✗ R6 / R4 否证 |
 
+> ## ⚠ 更正（2026-10-25 晚）：**行 138 不是常驻口**，12 个「块」是**分类**不是池
+>
+> R3 当时**一次把包写进了 57 和 138 两行**，读数「Warp 正常」，于是记成「两行都常驻」。
+> 现在按容器结构重新看：`generated_stratagem_settings` 的 **12 个块 = 12 个分类**
+> （`BACKPACK` / `CONSUMABLES` / `EAGLE` / `EMPLACEMENTS` / 特例 / `MISSIONS` / `ORBITAL` /
+> `PRESIDENT REWARDS` / `TEAM WEAPONS` / `SENTRYS` / **`TUTORIAL`** / `VEHICLES`），
+> 而 **行 138 = `TUTORIAL REINFORCEMENT BEACON`（块 10，`0x1247C`）**，只在**教学关**里用；
+> 普通任务的增援信标是 **行 57 = `MISSIONS. REINFORCEMENT BEACON`（块 5，`0x6FDC`）**。
+> ⇒ R3 的阳性读数来自 **57**，138 是同一轮里写的死行（被误当成第二个免费口）。
+>
+> **佐证（同一批数据）**：§11 的敌人炮塔曳光修复把 `FDF011DAECF24312` 写在**行 59（SOS Beacon）**
+> ⇒ 曳光出来了；而火箭炮塔那几轮把同一个包写在**行 138** ⇒ 拖尾/命中爆炸一直不出现。
+> 同一包、同一件弹丸、唯一变量就是「写在哪一行」。
+>
+> **修正后的免费/半免费口**：
+>
+> | 行 | 真身 | 什么时候被读 |
+> |---|---|---|
+> | **57** `0x6FDC` | `MISSIONS. REINFORCEMENT BEACON`（块 5） | ✓ 普通任务常驻（R3 实际验证的就是这行）|
+> | **59** `0x72FC` | `MISSIONS. SOS Beacon`（块 5） | ✓ 单人默认栏（R9 ✓ 实机）|
+> | **23** `0x2D70` | `EAGLE. REARM`（块 2） | ✓ 带一发 Eagle 时（R5-B ✓）|
+> | ~~138~~ `0x1247C` | `TUTORIAL REINFORCEMENT BEACON`（**块 10**） | ✗ 教学关才读 ⇒ **普通任务里等于没写** |
+>
+> 查块归属：`python tools/strat_slot_census.py --row N`（工具已按块枚举，但**旧档把「块」当成了「池」**）。
+
 R5-B 的第二个读数同样重要：**`+0xA8` 是纯增量声明**。Eagle Rearm 的 `+0xA8` 被换成 Warp 的包后，
 按 4-4-4-4 回收**照常工作** —— 说明它**不是**「这发战备载荷的资产包」，换掉不会让战备本身坏掉。
 §6.6.8 里那条最大的风险（填错会破坏本战备载荷）就此划掉。
