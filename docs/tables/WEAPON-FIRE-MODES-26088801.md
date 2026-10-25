@@ -330,20 +330,44 @@ status_rows(weapon, 'Damage', '', drow, 'hit')                            -- ←
 
 实测（本 build）：
 
-| 武器 | `+200` | 伤害行 | 伤害 / 耐久 | 3×AP | 状态槽（`+44` 起 4×{type u32, value f32}） |
-|---|---:|---:|---:|---|---|
-| **FLAM-40** | **20** | 24 | 2 / 2 | 4,4,4 | **(5, 2.0) · (68, 1.0) · (6, 3.0)** |
-| FLAM-66 Torcher | 21 | 28 | 2 / 2 | 4,4,4 | (5, 2.0) · (6, 3.0) · (68, 1.0) |
-| P-72 Crisper | 22 | 29 | 2 / 2 | 4,4,4 | (5, 2.0) · (68, 0.5) · (6, 2.0) |
-| **TX-41（毒气）** | **35** | 34 | 1 / 1 | 5,5,5 | **(44, 0.5) · (46, 0.5)** |
-| G-142 Pyrotech | 32 | 31 | 0 / 0 | 7,7,7 | (5, 3.0) |
+| 武器 | `+200` | 伤害行 | 伤害 / 耐久 | `element`(`+40`) | 4×AP | 状态槽（`+44` 起 4×{type u32, value f32}） |
+|---|---:|---:|---:|---:|---|---|
+| **FLAM-40** | **20** | 24 | 2 / 2 | 1 Fire | 4,4,4,4 | **(5 Fire, 2.0) · (68 FlamerSlowed, 1.0) · (6 Fire_Panic, 3.0)** |
+| FLAM-66 Torcher | 21 | 28 | 2 / 2 | 1 | 4,4,4,0 | (5, 2.0) · (6, 3.0) · (68, 1.0) |
+| P-72 Crisper | 22 | 29 | 2 / 2 | 1 | 4,4,4,0 | (5, 2.0) · (68, 0.5) · (6, 2.0) |
+| **TX-41（毒气）** | **35** | 34 | 1 / 1 | **5 Gas** | 5,5,5,0 | **(44 Gas, 0.5) · (46 Gas_Confusion, 0.5)** |
+| G-142 Pyrotech | 32 | 31 | 0 / 0 | 1 | 7,7,7,7 | (5, 3.0) |
 
 ⇒ **"火 vs 毒"的真正分界是状态 id**：火焰走 **5 / 6 / 68**，毒气走 **44 / 46**。
-`+200` 那 2 点伤害只是"每次判定的直伤"，**真正的燃烧/中毒来自伤害行上的状态槽**
-（状态效果表 `generated_status_effect_settings.dl_bin`，组 `0xC63E0B22`，73 行）。
+`+200` 那 2 点伤害只是"每次判定的直伤"，**真正的燃烧/中毒来自伤害行上的状态槽**。
 
-⚠ 状态表的行索引还没完全对上（该组 stride 算出来是 175，疑非标准布局）：只确认 **id 5 / 6 存在**，
-**68 / 44 / 46 尚未定位**。
+**状态名已经解出来了**（2026-10-25，见
+[RECON-STERILIZER-HEAL](../cases/RECON-STERILIZER-HEAL-26088801.md) §4）：
+`generated_status_effect_settings.dl_bin` 组 `0xC63E0B22` = **73 行 × 160 B + 1,096 B 名字 blob**
+（第 i 条名字 = 第 i 行），不是之前算的"stride 175":
+
+| id | 名字 | 谁在用 |
+|---:|---|---|
+| 5 | `Fire` | FLAM-40 槽0（值 2.0 ↦ wiki「强度 2」） |
+| 6 | `Fire_Panic` | FLAM-40 槽2（值 3.0 ↦ wiki「强度 3」） |
+| **68** | **`FlamerSlowed`** | FLAM-40 槽1（值 1.0 ↦ wiki「强度 1」） |
+| 43 / 44 | `Gas` / `Gas` | TX-41 用 **44** |
+| 45 / 46 | `Gas_Confusion` / `Gas_Confusion` | TX-41 用 **46** |
+| 28 / 29 | `Stim Heal` / `Stim Pistol Heal` | 治疗状态（第三方 Sterilizer-Heal mod 用的就是这一档） |
+
+⇒ 名字 × 数值 × wiki **三方互证**，§5.6 的"状态 id 未定位"这一项结案。
+
+**伤害行（76 B）的完整字段图**（同一份侦察核出，补上此前漏掉的 `element`）：
+
+| 偏移 | 字段 |
+|---:|---|
+| `+0` | `type`（DamageInfoType，主键） |
+| `+4` / `+8` | `damage` / `durable` |
+| `+12..+27` | `ap[4]`（四档角度穿甲） |
+| `+28` / `+32` / `+36` | `demo` / `force`（硬直）/ `impulse`（推力） |
+| **`+40`** | **`element`**（1 = Fire · 5 = Gas · 0 = None） |
+| `+44..+75` | 4 × {`u32 status_type`, `f32 value`} |
+
 
 **hd2runtime 侧的说法**（`docs/attack-outputs.md`、`docs/enemy-authoring.md`）：
 - `spray | SprayWeaponComponent | +200 DamageInfoType` —— 与上面一致；
@@ -374,7 +398,7 @@ TX-41 STERILIZER S            kind=Spray   role=primary
 | `+200` = 喷流的伤害/命中类型 | **✓ 离线**（与社区 `+200 DamageInfoType` 一致；数值分火焰组 vs 毒气组） |
 | `+200` = 伤害表的 `type` 键（不是无名小枚举） | **✓ 离线**（SHODAN 的查法 + 本 build 661 行伤害表按 type 键） |
 | 火/毒的分界 = 伤害行 `+44` 状态槽的 id（火 5/6/68 · 毒 44/46） | **✓ 离线**（FLAM-40 / Torcher / Crisper / TX-41 / Pyrotech 五把对照） |
-| 状态 id 68 / 44 / 46 在状态表里的行 | **⚠ 未定位**（组 stride 175 疑非标准布局） |
+| 状态 id 68 / 44 / 46 的名字与所在行 | **✓ 离线**（状态表 73×160 B + 名字 blob 解码：`68 FlamerSlowed` · `44 Gas` · `46 Gas_Confusion`，见 [RECON-STERILIZER-HEAL](../cases/RECON-STERILIZER-HEAL-26088801.md)） |
 | hd2runtime 不能写 spray（INCOMPATIBLE_OUTPUT_FAMILY） | **✓ 离线**（官方 docs；SHODAN 走伤害行所以能改） |
 | 16 个字段名（`warmup_time` … `particle_collision_fire_template`） | **✓ 离线**（社区 schema 声明顺序 × typelib 偏移逐一对应） |
 | `+0x00` / `+0x04` = `warmup_time` / `cooldown_time`（不是射程） | **✓ 离线 + wiki 三处互证**（导引火 / 无延迟 / 12 s 熄灭） |
