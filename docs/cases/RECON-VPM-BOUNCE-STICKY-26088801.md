@@ -122,14 +122,31 @@ python -m srkit hash sticky_grenade_handle throwable
 ⚠ **但这条不能当成"数据里没有"**：bundle 里只有一部分 havok 载荷是未压缩的（`hknpCompoundShape` 只有 17 次，
 而 physics 资源有 39,172 份）⇒ grep 只覆盖**未压缩那部分**。
 
-### 7.4 现在能下的结论（三态）
+### 7.5 有界提取扫描的结果（2026-10-25）：**physics 载荷里没有材质库**
+
+取样方式：`srkit list --type physics` 全库 → **4,684 个去重资源**（38,691 行含跨包重复）→
+按体积分 9 档（140 B … 1.1 MB）每档抽 6 个，共 **100 份**逐个 `srkit extract` 后 grep：
+
+| 检测串 | 命中 |
+|---|---|
+| `hknpMaterialLibrary` / `hknpMaterial` | **0 / 100** |
+| `sticky_grenade_handle` / `surface_material` | **0 / 100** |
+
+这 100 份覆盖了从 140 B 的贴花物理到 1.1 MB 的碰撞体、从环境道具到敌人尸体 —— **没有一份带材质库类型表**。
+脚本与产物：`D:\modecon\sticky-material\sweep2.py`、`…\phys_all.txt`、`…\sweep\`。
+
+另外顺手确认：`level` 型资源全部是**无名字的 hash 资源**（第 3 方无法按名字挑），也不是明显的材质库候选。
+
+### 7.4 现在能下的结论（三态，含 7.5 扫描后修订）
 
 | 结论 | 态 |
 |---|---|
 | `sticky_grenade_handle` / `throwable` 的 hash 算法与取值 | **✓ 离线**（`srkit hash`，与 mod 常量逐位一致） |
 | 这两个材质在 G-123 的 `physics` 资源里被**引用**（`+0x154` / `+0xC4`） | **✓ 离线** |
-| 该资源的 `userData`（4 B）**定义**在哪份资源 | **⚠ 未定位**（不在该 physics 资源、不在其渲染材质、不在未压缩载荷的 grep 范围里） |
-| "材质库是引擎启动时构建的" 这一假设 | **⚠ 未证**（若成立，则这条 B 档需要用引擎侧数据/资源替换以外的手段） |
+| 该资源的 `userData`（4 B）**定义**在哪份资源 | **⚠ 未定位**（不在该 physics 资源、不在其渲染材质、不在 100 份分层抽样、不在未压缩载荷 grep） |
+| 材质库**不在** physics 资源里 | **✓ 离线（强）**：100/100 分层抽样零命中；同族"改 physics 载荷里的 mass"的实证**不能套用**到这里（mass 在载荷内，userData 不在） |
+| 材质库在别的可改载体里（config / level / 压缩载荷） | **⚠ 未证**（`config` 型资源全库只有 3 份；`level` 型全是无名 hash） |
+| 这一条到底能不能**用资源路线等价** | **⚠ 存疑（B 档置信度下调：中 → 中偏低）**；若要坐实需把 4,684 个去重 physics 资源全量扫完（后台约 80 分钟），或改判为"C 档：只能运行时内存补丁" |
 
 **下一步（有界、只读）**：把 base/boot 相关包里的 `physics` 资源逐个 `srkit extract` 出来 grep
 `hknpMaterialLibrary` / `hknpMaterial`（每份 extract 约 1 s，先扫 base 包，命中即停）；
