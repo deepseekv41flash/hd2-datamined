@@ -346,3 +346,61 @@ python tools/dlbin_deploy.py restore --file generated_stratagem_settings.dl_bin
 python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed "D:\mod\out\enemy-turret\generated_entities.enemy-turret.dl_bin"
 python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin --sealed "D:\mod\out\enemy-turret\generated_stratagem_settings.enemy-pkg.sealed.dl_bin"
 ```
+
+---
+
+## 12 复核：光明族光束炮头「借 40mm 站壳」这条老路线，现在还行得通吗（2026-10-25，**✓ 离线可行 / 实机未验**）
+
+### 12.1 老路线是什么（旧档 + 记忆）
+
+旧实验（`25480438`/`25988413` 时代，见工作区 `VEHICLE-MOUNT-ITEMS.md` §6.0b 与
+`D:\mod\docs\` 下的记忆条目「光明族光束炮塔挂载实验」）：
+
+1. 光明族炮头本身**有网格但位置错**（美术原点照臂关节设计，挂到车顶就缩在车底）；
+2. 于是把它的**壳**（`UnitComponentData +0`）换成 **40mm 炮塔站的壳** ⇒ 模型变成 40mm 站、**光束从车顶炮管位置打出**；
+3. 代价：**炮管不跟瞄准转**（`TurretComponentData` 的偏航/俯仰/枢轴是按原壳骨骼写的）；
+4. 当时另试了原生车顶炮塔形态的件（`5D142C3A73EBC634` tank_turret_rocketlauncher）——位置对、**能转**，
+   但那是"换件"不是"换壳"，光明族这件本身绕不过骨骼问题。
+5. 另有两条副作用记档：**behaviour 改 658 会让这件 `STATUS_INVALID_DISPARITY` 崩**；
+   特效包装上后偶发资源压力崩溃。
+
+### 12.2 本 build 里这些件还在不在（**✓ 离线**）
+
+`BeamWeaponComponentData`（`0xF0721C2C`）共 **23 行**，光明族三件都在，且字段齐：
+
+| 件 | unit（壳） | Faction | Behaviour | 组件 |
+|---|---|---|---|---|
+| **`0xF196069E7E14C497`**（旧档里的 **F196**） | `0x4E342031A9D5C4F9` | **4**（光明族） | **284** | 20 个，含 `BeamWeapon` ✓ `Turret` ✓ `Wieldable`+`WeaponWielder` ✓ |
+| `0x4E342031A9D5C4F9`（炮身/壳本体） | 自身 | 4 | 283 | 同上 |
+| `0x7ACB4BD753B71DE0` | `0x4E342031A9D5C4F9` | 4 | 285 | 同上 |
+
+壳与特效的包也都还在（目录里能查到）：
+
+| 资源 | 包 | 备注 |
+|---|---|---|
+| `0x4E342031A9D5C4F9`（光明族壳） | `dd43ebba60a66968`（mesh 317 KB，很轻） | 借壳后**不再需要** |
+| **`0x9872EEB31A5F88FD`（40mm 站壳）** | **`f6fb08cc02d24255`（基础共享包）** | 40mm 站实验一直能用 ⇒ 基本常驻 |
+| **`0x63520CD25548948A`（光束粒子，旧档更正后的正解）** | `046d4441a6dae0a9` / `d448a6c8eb991f1a` | **要声明其中一个**，否则"无光束特效"复现 |
+
+### 12.3 结论：**技术上可行，但两处硬伤照旧**
+
+| 方面 | 现在能不能做 | 说明 |
+|---|---|---|
+| 借壳（模型 = 40mm 站、炮口位置对） | **✓ 能，且是纯数据**：`UnitComponentData +0` 一个 u64 改掉（`entity_field_set.py --block 0x4437574D --key 0xF196069E7E14C497 --field 0 --type u64 --value 0x9872EEB31A5F88FD`） | 比当年的 `--shell` 更干净 |
+| 阵营 4 → 1 | ✓ 同 §10（`FactionComponentData +0`） | — |
+| 光束特效 | ✓ 能，**但必须声明粒子包**（旧档"无特效"的根因） | 需要一个 `+0xA8` 常驻口 |
+| **炮管跟瞄准转** | **✗ 不能**（老限制原样存在） | 转动绑壳骨骼；借壳必丢。除非改资产重挂骨骼，或改选原生车顶炮塔件 |
+| 玩家可操控 | **⚠ 未知且危险** | 这件上 **behaviour 658 会崩**（`STATUS_INVALID_DISPARITY`）；要么保持 284（AI 行为、非玩家），要么试别的玩家行为 id（如 670）——未证、有崩风险；**别照搬 §10 的 658** |
+
+### 12.4 如果要实际装一版，口位怎么排
+
+现盘上三个常驻口已给敌人炮塔（`4F3D304001614B38` / `0C37E83A8D16B67A` / `FDF011DAECF24312`）。
+光束实验**至少还要一个口**给 `046d4441a6dae0a9`。可选：
+
+1. **二选一**：先把敌人炮塔那条线收起来，SOS 行改给光束粒子包（最省）；
+2. **共存**：再找一个"进栏且 `+0xA8` 恒为 0"的行（例如带一发 Eagle 时的 `Eagle Rearm` 行 23）——
+   这属于"进栏才读"，要玩家配合带对应战备；
+3. 40mm 壳包（基础共享包）**不用声明**。
+
+⇒ 一句话：**路线还在，但只能复现"位置对 + 有光束"，转动依旧拿不到**；
+这条线的价值现在主要是"拿一个外观/演出"，不是"拿一门能转的光束炮"。
