@@ -81,7 +81,7 @@ vanilla_flags = { 2, 2, 0, 0, 2, … }   -- 按 kind 索引的期望值
 | mod | 能不能用数据路线（dl_bin）等价实现？ |
 |---|---|
 | **BetterStratagemBounce** | **能**。`generated_stratagem_settings` 每行 `+0x170` 就是我们的字段，直接清 bit `0x02` 即可（`plain_edit.py` / `stratagem_tune.py` 那套保哈希流程），**不需要 loader**。⚠ 两点：① 105 行一起变，影响面大；② 清 bit 之后的实际观感要实机确认 |
-| **StickyGrenadeHandles** | **dl_bin 不能，但资源路线可以**（B · 跨载体等价）。它改的是 havok 材质库条目的 `userData` —— 属于 **`physics` 资源族**：我们已逆出 Havok 2019.01 tagfile 载荷布局并改过同族的 mass 字段（`CASE-STUDY-20261021.md` §17–§18），所以"能改"这件事有同族实证；⚠ 但"这一个 userData 落在哪份资源、偏移多少"**尚未针对本条验证** |
+| **StickyGrenadeHandles** | **dl_bin 不能，但资源路线可以**（B · 跨载体等价，**置信度高**）。§7.6 已把 mod 写的 4 B `userData` 定位到具体载荷的具体偏移：`physics 0xC5C05FCB5747C799`（G-123）`+0x15C`、`physics 0x3FA94F58F596BC0B`（G-109）`+0xCC` —— 即物理资源内联的 20 B 材质记录里第 3 个 u32。⚠ 只剩实机判定：写 `throwable` 的 hash（`0xC4692706`）后是否真的粘手柄 |
 
 ## 7 追加侦察（2026-10-25）：`sticky_grenade_handle` 的 userData 在哪份资源里？
 
@@ -122,36 +122,81 @@ python -m srkit hash sticky_grenade_handle throwable
 ⚠ **但这条不能当成"数据里没有"**：bundle 里只有一部分 havok 载荷是未压缩的（`hknpCompoundShape` 只有 17 次，
 而 physics 资源有 39,172 份）⇒ grep 只覆盖**未压缩那部分**。
 
-### 7.5 有界提取扫描的结果（2026-10-25）：**physics 载荷里没有材质库**
+### 7.5 全量扫描（4,839 个去重 physics 载荷）：**Havok 材质库确实不存在**
 
-取样方式：`srkit list --type physics` 全库 → **4,684 个去重资源**（38,691 行含跨包重复）→
-按体积分 9 档（140 B … 1.1 MB）每档抽 6 个，共 **100 份**逐个 `srkit extract` 后 grep：
+先做过一次 100 份分层抽样（9 个体积档各抽 6 个，`hknpMaterial*` / `sticky_grenade_handle` 全 0/100）；
+现在把**全部 4,839 个去重 physics 载荷**（覆盖 `srkit list --type physics` 的 39,016 行、145.7 MB）逐个读完：
 
-| 检测串 | 命中 |
-|---|---|
-| `hknpMaterialLibrary` / `hknpMaterial` | **0 / 100** |
-| `sticky_grenade_handle` / `surface_material` | **0 / 100** |
+| needle | 命中资源数 | 出现次数 |
+|---|---:|---:|
+| `hknpMaterialLibrary` / `hknpMaterial` | **0** | 0 |
+| `sticky_grenade_handle` / `surface_material` / `throwable` | **0** | 0 |
+| `hkpPhysicsData` / `hkStringPtr` | **0** | 0 |
 
-这 100 份覆盖了从 140 B 的贴花物理到 1.1 MB 的碰撞体、从环境道具到敌人尸体 —— **没有一份带材质库类型表**。
-脚本与产物：`D:\modecon\sticky-material\sweep2.py`、`…\phys_all.txt`、`…\sweep\`。
+2,968 个载荷确实带 Havok 类型表，但类型名只有 shape / convex / compound / LOD / mass-properties（211 种），
+**没有任何 material 类**。补充侦察（另 13 类 / 17,638 载荷 / 266 MB）同样 0 个 `hknpMaterialLibrary`
+（只有 `ragdoll_profile` 186/186 带 `hknpMaterial` **类型表**，物料内联在 ragdoll 里）。
 
-另外顺手确认：`level` 型资源全部是**无名字的 hash 资源**（第 3 方无法按名字挑），也不是明显的材质库候选。
+⚠ 两个口径修正（它们让「0 命中」变得可信）：
+① 去重集合是 **4,839** 而不是 4,684 —— 旧脚本用 `split()` 解析清单时跳过了名称含空格的 155 行
+（`G-10 Incendiary` 之类）；改右对齐解析后全量覆盖。
+② 为在预算内读完全库，改用 srkit `Repository` 按 entry 偏移直接读载荷（19 s），
+与 `srkit extract` 产物**逐字节一致**（46/46 md5 相同 + 4 个现场抽检）。
 
-### 7.4 现在能下的结论（三态，含 7.5 扫描后修订）
+报告：`D:\mod\recon\sticky-material\SWEEP-RESULT.md` / `.json` / `SWEEP-SUPPLEMENT.md` / `MATERIAL-RECORDS.md`；
+载荷副本 `…\sweep\`；脚本 `sweep_all.py` / `analyze_material_records.py` / `scan_supplement.py`。
+
+### 7.6 ★ 真正的落点：physics 载荷内联的 **20 B 材质记录**
+
+材质定义就在 physics 载荷里，只是**不是 Havok 的库段** —— Stingray 自己序列化了一张
+「库名 + 材质名」表，名字只存 **murmur32**（所以按名字 grep 必然 0 命中）：
+
+```
++0x00  u32  0x00001002        记录标志（另有 0x1000 变体）
++0x04  u32  材质名 hash       0x9A056E1C = murmur32("sticky_grenade_handle")
++0x08  u32  库名 hash         0xB03B6BFF = murmur32("grenade")
++0x0C  u32  4 B 数据          ← **userData 强候选**（mod 运行时写的就是这个字段）
++0x10  f32  1.0              摩擦
+```
+
+全库 **108 个载荷 / 156 条记录**；`0x9A056E1C` 只出现在两条 —— 正是 mod 前提检查的那两个实体：
+
+| 资源（= mod 检查的实体 id） | 原盘包 | 记录起点 | 名 `+0x04` | 库 `+0x08` | **数据 `+0x0C`** | 数据值 |
+|---|---|---:|---|---|---|---|
+| `physics 0xC5C05FCB5747C799`（G-123 Thermite） | `fc5b6bff0db90aab`（另有 `dfb81f9917285965` 副本） | `0x150` | `0x154` | `0x158` | **`0x15C`** | `0xAEB35C56` |
+| `physics 0x3FA94F58F596BC0B`（G-109 Urchin） | `2cb3f69ab9bc1297` | `0xC0` | `0xC4` | `0xC8` | **`0xCC`** | `0x4F551346` |
+
+现场字节（G-123 `0x150`）：`02 10 00 00 | 1c 6e 05 9a | ff 6b 3b b0 | 56 5c b3 ae | 00 00 80 3f`
+
+⇒ **mod 在内存里写 `userData = 0xC4692706`（`throwable` 的 hash），数据侧等价物就是这两个 u32**
+（`0x15C` / `0xCC`）。同一张表里 `throwable` 材质自己的记录数据是 `0xCAE4EE78`（156 条里最常见，28 次），
+说明这 4 B 是**按材质配置的自由标签**，不是算出来的量。
+
+资源路线配方（B 档，待实机）：
+
+```bash
+python -m srkit extract <包> <physics id>     # 取载荷（两处副本都要处理）
+# 改 +0x15C（G-123）/ +0xCC（G-109）→ 0xC4692706（LE: 06 27 69 c4）
+python -m srkit pack …                        # 打进 patch_N 资源包
+```
+
+⚠ 未证：写 `throwable` hash 后**真的会粘手柄**（语义待实机）；以及 `dfb81f9917285965` 那份副本是否也被加载
+（稳妥做法：两份都覆盖）。
+
+### 7.4 现在能下的结论（三态，含全量扫描后修订）
 
 | 结论 | 态 |
 |---|---|
 | `sticky_grenade_handle` / `throwable` 的 hash 算法与取值 | **✓ 离线**（`srkit hash`，与 mod 常量逐位一致） |
-| 这两个材质在 G-123 的 `physics` 资源里被**引用**（`+0x154` / `+0xC4`） | **✓ 离线** |
-| 该资源的 `userData`（4 B）**定义**在哪份资源 | **⚠ 未定位**（不在该 physics 资源、不在其渲染材质、不在 100 份分层抽样、不在未压缩载荷 grep） |
-| 材质库**不在** physics 资源里 | **✓ 离线（强）**：100/100 分层抽样零命中；同族"改 physics 载荷里的 mass"的实证**不能套用**到这里（mass 在载荷内，userData 不在） |
-| 材质库在别的可改载体里（config / level / 压缩载荷） | **⚠ 未证**（`config` 型资源全库只有 3 份；`level` 型全是无名 hash） |
-| 这一条到底能不能**用资源路线等价** | **⚠ 存疑（B 档置信度下调：中 → 中偏低）**；若要坐实需把 4,684 个去重 physics 资源全量扫完（后台约 80 分钟），或改判为"C 档：只能运行时内存补丁" |
+| 这两个材质在 G-123 / G-109 的 `physics` 资源里被**引用** | **✓ 离线**（`+0x154` / `+0xC4`） |
+| 材质定义落在**哪份资源、哪个偏移** | **✓ 离线（强）**：physics 载荷内联 20 B 记录，数据字 `+0x15C` / `+0xCC`（全库唯一两处） |
+| Havok 意义上的 `hknpMaterialLibrary` 存在 | **✗ 否证**（4,839 个 physics 载荷 + 另 13 类 17,638 个载荷全 0 命中；类型表无 material 类） |
+| 按字符串名在全库找这个材质 | **✗ 否证**（22,477 个载荷里名字一次都没出现；只有 murmur32） |
+| 改这 4 B 就能复刻「粘手柄」 | **⚠ 待实机**（语义未证，是本条 B 档剩下的唯一缺口） |
+| 这一条能不能**用资源路线等价** | **✓ 能**（B · 跨载体等价，置信度 **高**：落点已定位 + 同族 mass 字段改过并实机过） |
 
-**下一步（有界、只读）**：把 base/boot 相关包里的 `physics` 资源逐个 `srkit extract` 出来 grep
-`hknpMaterialLibrary` / `hknpMaterial`（每份 extract 约 1 s，先扫 base 包，命中即停）；
-若全库仍无，则结论改为"运行时构建"，B 档要改走别的等价物（例如**换 unit 的材质绑定**或**给手柄换一个
-材质 tag** 的数据侧等价物）。
+**下一步（唯一缺口）**：改 G-123 `+0x15C` / G-109 `+0xCC` → `0xC4692706`，重打包（两处副本都覆盖），
+实机看手柄是否粘墙；或运行时对 `0x9A056E1C` 定位 material 对象、比对 `userData`，一次定死字段语义。
 
 ## 6 三态
 
@@ -163,4 +208,5 @@ python -m srkit hash sticky_grenade_handle throwable
 | `+0x170` 的枚举含义（0/1/2/3 各代表什么） | **⚠ 未证**（抽样像投放类别，无社区命名） |
 | `StickyGrenadeHandles` = 改 `sticky_grenade_handle` 材质 userData | **✓ 离线**（源码注释 + 唯一写点） |
 | 数据路线（dl_bin）能复刻"粘手柄" | **✗ 不能**（材质库不在任何 dl_bin 里） |
-| 资源路线能复刻"粘手柄"（havok 材质 userData） | **⚠ 未针对本条验证**；同族（`physics` 载荷 mass 字段）已有实证 ⇒ 置信度 **中** |
+| 资源路线能复刻"粘手柄"（physics 载荷内联材质记录的数据字） | **✓ 离线（强）**：`+0x15C` / `+0xCC`，全库唯一两处；⚠ **实机待验**（写入值 = `throwable` hash） |
+| 「按名字 grep 0 命中」曾读成"数据里没有" | **✗ 否证**：只存 murmur32，名字串全库不存在 |

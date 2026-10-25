@@ -103,7 +103,7 @@
 |---|---|---|---|
 | **Sterilizer-Heal v1.0** | L1（伤害行：状态槽 0/1 + `element` + damage） | `dmg_row_edit.py` 7 字段 → `heal29.dl_bin` | **✓ 已装盘 + ✓ 实机**（TX-41 喷脚下 → 自己回血）⇒ A 档完整闭环样板 |
 | **BetterStratagemBounce v15.4.1** | L1（战备表 `+0x170` 清 bit `0x02`，105/153 行） | `plain_edit.py` 同字段 | **可等价，未装** |
-| **StickyGrenadeHandles v1.0.1** | **L3**（havok 材质库 `userData` 4 B） | havok 材质属 `physics` 资源族，我们逆过同族载荷并改过 mass | **B · 跨载体等价**（⚠ 未针对本条验证） |
+| **StickyGrenadeHandles v1.0.1** | **L3**（材质 `userData` 4 B） | `physics` 载荷内联 20 B 材质记录的第 3 个 u32：G-123 `+0x15C` / G-109 `+0xCC`（全库唯一两处，4,839 个 physics 载荷全量扫完定位） | **B · 跨载体等价**（置信度 **高**：落点已定位；⚠ 实机待验） |
 
 ## 7 报告骨架（照抄这个结构）
 
