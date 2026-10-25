@@ -14,7 +14,7 @@
 | 想亲手改一张表 | **[改盘上数据的完整工作流](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md)** —— 主线文档，8 步链 + 锚点哈希 + 93 条坑 |
 | 想让**代理**去做 | **[skills/hd2-file-route-mod](skills/hd2-file-route-mod/SKILL.md)** —— Agent Skills，只给方法论（每步的目的 / 判据 / 停的条件）+ 指回本页 |
 | 想查某个字段 / 某个数 | [§1 按问题找](#1-按问题找) |
-| 想按类型看全部 64 篇 | [§2 按类型浏览](#2-按类型浏览64-篇) |
+| 想按类型看全部 65 篇 | [§2 按类型浏览](#2-按类型浏览65-篇) |
 | 想找某个工具 / 看它验证到哪一步 | [§3 工具清单](#3-工具清单tools) |
 | 刚更新完游戏 | [BUILDS.md §3](BUILDS.md)（三步 + §3.1 锚点复验） |
 | 什么都没有、只想先摸摸 | [§4 无密钥也能练](#4-无密钥也能练) |
@@ -29,6 +29,7 @@
 | **Eagle 回收时间** | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | **§5.4 `EAGLE. REARM` 独立行** | `26088801` |
 | **Eagle 冷却 / 回收的升级公式** | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | **§5.4.4**（两个公式都已实机解开） | `26088801` |
 | 爆炸半径 / 破片数 / 粒子 / 震屏 / 外观移植 · 状态爆 | [EXPLOSION-VISUAL](docs/explosions/EXPLOSION-VISUAL-26088801.md) | §1 字段图 · §4 无主行账本（265/424，✓ 实机用过 254）· §5 `+0xA8` 跨包加载 | `26088801` |
+| **给载具换武器 / 往空槽加件** | [MOUNT-SEATS](docs/tables/MOUNT-SEATS-26088801.md) | **§2 `MountInfo` 24 B（只写 item）· §4 五件套 + 两条否决项 · §7 换件配方与 G1–G10 · §8 能力判定** | `26088801` |
 | 换弹头（整行搬运）/ 换爆炸效果 | [EXPLOSION-PROJECTILE](docs/explosions/EXPLOSION-PROJECTILE-25988413.md) | 全文 | `25988413` |
 | 武器数值 / 可选弹种 / 独立弹药池 | [ENTITY-TABLE](docs/tables/ENTITY-TABLE-25988413.md) | §9 | `25988413` |
 | 武器配件与槽位 | [WEAPON-CUSTOMIZATION-DECODED](docs/tables/WEAPON-CUSTOMIZATION-DECODED.md) | 全文 | `25988413` |
@@ -99,13 +100,13 @@
 | **多个 mod 改同一份文件的不同字段，想同时用** | [MOD-MERGER](docs/cases/MOD-MERGER-26088801.md) | **§1 算法 · §2 用法 · §3 逐字节等价证明 · §4 前提与边界** | `26088801` |
 | 社区包怎么做 / 能不能共存 | [CASE-STUDY](docs/cases/CASE-STUDY-20261021.md) · [COMMUNITY-MODS-COMPAT](docs/cases/COMMUNITY-MODS-COMPAT-26088801.md) · [PATCH-SALVAGE](docs/builds/PATCH-SALVAGE-25988413.md) |
 
-## 2. 按类型浏览（64 篇）
+## 2. 按类型浏览（65 篇）
 
 | 类别 | 放什么 | 篇数 |
 |---|---|---:|
 | [`builds/`](docs/builds/) | 每个 build 的总体变化、差异、路线取舍 | 4 |
 | [`engine/`](docs/engine/) | 引擎侧：格式封装、API 面、Lua 运行时、探针、加载器、**有限数量的跨包加载** | 10 |
-| [`tables/`](docs/tables/) | 数据表与实体库的解码 / 改写 | 21 |
+| [`tables/`](docs/tables/) | 数据表与实体库的解码 / 改写 | 22 |
 | [`explosions/`](docs/explosions/) | 爆炸与弹头（玩法层 + 外观层） | 2 |
 | [`boundaries/`](docs/boundaries/) | 被挡住的路：进程内存、虚拟机 | 2 |
 | [`cases/`](docs/cases/) | 案例与外部参照：社区包、贴图委托、wiki 数据、**完整工作流**、**老 mod→数据路线修复版 playbook（含两个 C 档样板）**、**第三方护甲多被动 / Sterilizer 改治疗 / P-11 Self-Heal / VanillaPlus 两件 / SHODAN 额外战备 侦察**、**网络复制层探针系列**、**实体表在线改写实机证明** | 25 |
@@ -161,6 +162,7 @@
 | ★ [TABLE-DICTIONARY-25988413](docs/tables/TABLE-DICTIONARY-25988413.md) | **全表字典**：55 张表几何 + 类型库字段偏移（1,208 类型 / 7,349 成员） | `25988413` |
 | ★ [ENTITY-TABLE-25988413](docs/tables/ENTITY-TABLE-25988413.md) | 47 MB 实体库离线改写：组件块、哈希闸门、校正字、可选弹种、LoadoutEntry 否证 | `25988413` |
 | [ENTITY-LOCID-26088801](docs/tables/ENTITY-LOCID-26088801.md) | 实体 → 游戏内名字的唯一出处（`EncyclopediaEntry`，643 行可解） | `26088801` |
+| ★ [MOUNT-SEATS-26088801](docs/tables/MOUNT-SEATS-26088801.md) | **载具挂载 / 座位两表全解**：Mount = 328 槽 + 165 × 120 B（`MountComponent` = 5 × `MountInfo`，`MountSide` 已有资源名直证）；SeatCollection = 112 槽 + 56 × 424 B（`TransitionId` + `Passenger[16]` + `ActiveAimConstraint[22]`）；**122 件挂载件分桶与 memmod 旧账逐桶吻合**（16/4/1/**11**/37/53）+ 四条旧实测交叉；`mount_table.py` 换件保哈希（G1–G10）+ 两个 sealed 工件 | `26088801` |
 | [LOCID-NAMES-25988413](docs/tables/LOCID-NAMES-25988413.md) | 32 位本地化 ID：`.strings` 全局 ID→文本表怎么打通六张表的名字 | `25988413` |
 | [ROW-NAMING-25988413](docs/tables/ROW-NAMING-25988413.md) | 逐行名字的两条取法、判据、以及位置法取错过名的两张表 | `25988413` |
 | ★ [WEAPON-CUSTOMIZATION-DECODED](docs/tables/WEAPON-CUSTOMIZATION-DECODED.md) | 武器配件总表：88 B 行、九类槽位枚举、252 行可读导出 | `25988413` |
@@ -208,7 +210,7 @@
 
 ## 3. 工具清单（`tools/`）
 
-**68 个脚本，全部在库**（§3.5 另列「文档里提到但仓库故意没有」的，不计入这 68 个）。
+**82 个脚本（`tools/*.py` 实数），全部在库**（§3.5 另列「文档里提到但仓库故意没有」的，不计入这个数）。
 
 本目录全部工具**只读 / 离线**：没有一个会读游戏进程内存、注入或改内存数值。改数据走「解封装 → 改字节 → 解校正字 → 保哈希 → 重新封装」这条资源侧路线（原理见 [DLBIN-SEALED-BOX](docs/engine/DLBIN-SEALED-BOX.md)）。
 依赖列是**可选**的：核心表工具只需标准库（外加同目录的 `murmur64.py` / `dlbin_seal.py`）。凡是打了「自检」的，都能直接 `python tools/<名字> --selftest` 复跑，**不需要游戏文件**。
@@ -226,6 +228,7 @@
 | 立论或否证一次扫描 | `table_xref_scan.py` · `probe_*` · `find_bombs_salvos_pair.py` |
 | 查 wiki 的原始解码数据 | `wiki_query.py` · `wiki_build_db.py` · `fetch_wiki_modules.py` |
 | 算 / 解 Murmur64A | `murmur64.py`（库）· `murmur64a.py`（CLI） |
+| 给载具换武器 / 改挂载槽 | `mount_table.py`（`list` / `show` / `seats` / `find` / `swap` / `verify`） |
 | 离线合成一个数据 mod 补丁 | `patch_compose.py` |
 
 ### 3.1 数据表 / 封装
@@ -275,6 +278,7 @@
 | `entities_modeb.py` | 实体表：武器单元格编辑、可选弹种（模式 A/B）、双弹药池、hashmap 维护 | `murmur64.py` | ✓✓ 已实机（主宰/惩罚者/扫荡者） |
 | `proj_copy_row.py` | 整行搬运 272 B 射弹行（换弹头），带 5 道门禁 | `murmur64.py` | ✓✓ 已实机（Eruptor 弹头 → 主宰） |
 | `pod_rack_swap.py` | 改 `HellpodRackComponentData` 槽位物品（投送舱换载荷），tail 宿主 + 9 道门禁 + 变异自检 | `murmur64.py`、`typelib.py` | ✓✓ 已实机（2026-10-23，六轮） |
+| `mount_table.py` | **载具挂载 / 座位表**：`MountComponentData`（328 槽 + 165 × 120 B）与 `SeatCollectionComponentData`（112 槽 + 56 × 424 B）的读/查/换件；`swap` 只写 `MountInfo.item` 的 8 字节，tail 宿主保 Murmur64A，**10 道门禁**（含「全表只有目标槽变了」）；`show` 直接给出五件套 + 两条否决项的离线判据 | 标准库 + `murmur64.py`、`pod_rack_swap.py`、`typelib.py` | ✓ 离线（G1–G10 全过；sealed round-trip 逐字节相等；实机待验） |
 | `pod_loadout.py` | **投送舱换载荷 + 有限数量的跨包加载的通用产出**：名字→包/LOE id→自动判单包/双包→出可装文件（不部署） | `pod_rack_swap.py`、`plain_edit.py`、`dlbin_seal.py` | ✓ 产物与实机验证件逐字节一致 |
 | `strat_slot_census.py` | **战备表 153 行的装包口普查**：按 typelib 结构穷举（不是按值搜，空槽才看得见），分「两槽已满 / 仅 `+0xA8` 空 / 仅 `+0xF8` 空 / 两槽全空」四类并给出行基址 | `pod_loadout.py`、`typelib.py` | ✓ 离线：只有 `+0xA8` 命中包集合（114/114），空槽 155 个 |
 | `strat_slot_fill.py` | **把包填进战备行的空槽**：名字→行（同名全改）→拒绝覆盖已占用槽→一次 tail 宿主写完→读回校验→可选封装 | `strat_slot_census.py`、`plain_edit.py`、`dlbin_seal.py` | ✓ 离线门禁通过（6 处填空槽，整份只 +8 B） |

@@ -54,7 +54,7 @@ python tools/plain_edit.py --plain tables/generated_projectile_settings.dl_bin \
 ```
 INDEX.md   ★ 唯一索引入口：按问题找 / 按类型浏览 / 能力明细 / 已验证结论
 BUILDS.md  换 build 的操作手册：三步 / 判读规则 / 锚点复验 / 基线存放（记录在 INDEX §2 builds/）
-docs/      65 篇文档（INDEX 按类收录 64 篇 + 目录说明；案例全在 cases/）
+docs/      66 篇文档（INDEX 按类收录 65 篇 + 目录说明；案例全在 cases/）
 tools/     离线工具链（解析 / 改字节 / 保哈希 / 行级编辑 + 门禁）
 tables/    三张很小的明文参数表，供离线验证解析器
 refs/      字段图与索引：表几何 / 行名 / 本地化名 / 弹头引用链 / 组件块类型名
