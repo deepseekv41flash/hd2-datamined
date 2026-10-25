@@ -149,7 +149,7 @@
 
 | 文档 | 一句话 | build |
 |---|---|---|
-| ★ [FACTION-BEHAVIOR-26088801](docs/tables/FACTION-BEHAVIOR-26088801.md) | **阵营与 AI 行为回到明文表**：`FactionComponentData 0x5653EA91 +0` 位掩码（实测补 **2=终结者**）· `BehaviorComponentData 0xBA9B803D +0` = behaviour id（旧 `AIBEH` 的 645→658 双向对上：658 的持有者就是 TD-110 烟幕件） | `26088801` |
+| ★★ [FACTION-BEHAVIOR-26088801](docs/tables/FACTION-BEHAVIOR-26088801.md) | **阵营/AI 行为/外来件/特效的全线台账**：`Faction +0` 位掩码（2=终结者 4=光明族 8=自动化 1=超级地球）· `Behavior +0`（645→658 把 AI 领走）· 挂载换件 · **§17 特效根因：粒子包写在教学关行 138 ⇒ 普通任务不读；搬到 SOS 行 59 后拖尾/命中爆炸全出（✓ 实机）** · `+0xC8` 额外战备链把声明口带进栏（✓ 实机） | `26088801` |
 | ★ [EXO-ARM-VARIANTS-26088801](docs/tables/EXO-ARM-VARIANTS-26088801.md) | **机甲臂件变体普查**：社区编号 MK2/MK3 对应哪些实体键；200 发机炮件与原版只差「弹匣 100→200 + 默认射速 175→300 rpm」；真正的 `_MK2` 类型在导弹家族（伤害/AP/爆炸逐项对照） | `26088801` |
 | ★ [WEAPON-FIRE-MODES-26088801](docs/tables/WEAPON-FIRE-MODES-26088801.md) | **射击模式 / 射速档位**:`FireMode` 四连槽 `+0x90…0x9C` + `function_info` 选择键（`Firemode=3` / `ROF=2`）；枚举 1 自动 / 2 半自动 / 3 连发 / **4 齐射 / 5 安全 / 6 不安全 / 7 全射**（**槽位上限 3**）；任意枪可加全自动与全射（均已实机） | `26088801` |
 | ★ [PLAYBOOK-LUA-MOD-TO-DLBIN](docs/cases/PLAYBOOK-LUA-MOD-TO-DLBIN.md) | **老 mod → 数据路线等价修复版**：五步流水线（开包/读载荷/归层 L1–L4/映射/实现）+ **A/B/C 三档判定（dl_bin 等价 / 跨载体等价 / 不可实现，禁用「不可等价」）** + 载体能力表 + 跨 build 常量重取规则 + **五个样板案例（A×2 / B / C×2：代码型 P-11 Self-Heal、数据边界型 锁定锥角）** + 报告骨架；配套工具 `lua_payload_dump.py`、技能 `skills/hd2-lua-mod-to-dlbin` | 跨 build |

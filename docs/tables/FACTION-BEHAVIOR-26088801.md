@@ -481,10 +481,10 @@ econ\REPORT-xref-hmg-station-2026-10-18.md`）后，结论相反：
 | 能力 | 手段（全纯数据，不用 runtime） | 实机 |
 |---|---|---|
 | 把任意外来件装到任意载具挂载槽 | `MountComponentData` → `MountInfo.item`（`mount_table.py swap`，G1–G10） | ✓ 多次（40 mm 站 / 运输机炮塔 / 地堡炮塔 / 机甲臂 / 光明族炮头） |
-| 让外来件的包驻留 | 战备行 `+0xA8`（**替换**语义）：载具自己的 **live 行**给 1 个口，其余借**账号常驻行**（`Reinforce` 57/138、`SOS Beacon` 59） | ✓ |
+| 让外来件的包驻留 | 战备行 `+0xA8`：载具自己的 live 行给 1 个口；其余借**普通任务在栏**的行 —— `REINFORCEMENT BEACON` 57（常驻）、`SOS Beacon` 59（单人默认栏）、`EAGLE. REARM` 23（带鹰时）。⚠ **行 138 是教学关行，普通任务不读**（§17）。另：`+0xC8` 能把别的战备**连同它的 `+0xA8` 一起带进栏**（§17.9）| ✓✓ |
 | 敌人件给玩家用 | `FactionComponentData +0`：`2/4/8 → 1`（Terminid/Illuminate/Automaton → Super Earth） | ✓（地堡炮塔、光明族炮头） |
 | 把 AI 从炮塔上"领走" | `BehaviorComponentData +0` → **658**（玩家武器行为；当年 `AIBEH` 运行时那一步） | ✓（运输机炮塔、地堡炮塔、光明族炮头） |
-| 补弹丸拖尾/光束特效 | 声明**特效包**（曳光 `fdf011daecf24312`、光束粒子 `046d4441a6dae0a9`） | ✓（两者都在本会话验过） |
+| 补弹丸拖尾/命中爆炸/光束特效 | 把**粒子所在的包**声明在**普通任务在栏**的行上：曳光＋命中爆炸＝`FDF011DAECF24312`（**唯一副本**）、光束＝`046D4441A6DAE0A9`。**一个包就够**；缺特效先查"行在不在栏"，再查包 | ✓✓（火箭炮塔 2026-10-25） |
 | 借壳换外观/炮口位置 | `UnitComponentData +0` 指向目标壳（如 40 mm 站 `9872EEB31A5F88FD`） | ✓（光明族炮头） |
 | 座位侧行为（准星/装填/相机夹制） | **数据层做不到**：属座位/相机/引擎代码侧 | ✓ 已分离（[MOUNT-SEATS §4.7](MOUNT-SEATS-26088801.md)） |
 
@@ -493,19 +493,24 @@ econ\REPORT-xref-hmg-station-2026-10-18.md`）后，结论相反：
 | 限制 | 原因 | 出路 |
 |---|---|---|
 | **借壳后炮管不跟瞄准转** | 转动/枢轴绑**壳的骨骼**（三次否证） | 改资产重挂骨骼；或换"原生车顶炮塔形态"的件（`5D142C3A73EBC634` 那类可两全） |
-| 一台载具要 2 个以上外来包时只能借行 | `+0xA8` 是替换、live 行只有 1 个口 | 借常驻行（已验证 3 口够用）；或让外来件与原生件同包 |
+| ~~一台载具要 2 个以上外来包时只能借行~~ | ✓ **口从来不是瓶颈**（本会话实测：3 个在栏行 × 各 1 口 ＋ `+0xC8` 链可再加 4 口）；真正的坑是**把包写到普通任务不读的行上**（教学关行 138，§17） | 先确认行在栏；要更多口就接 `+0xC8` 链 |
 | 只改一台（实例级） | 我们改的是**件级**行 | 走运行时（本 build 无稳定通道） |
 | 缺包时"先开火试试" | 紫问号状态开火**会崩** | 先确认没有紫问号再开火（[EXO-ARM-VARIANTS §10.2](../tables/EXO-ARM-VARIANTS-26088801.md)） |
 
 ### 14.3 当前盘上状态（可直接玩）
 
+> ⚠ 本表随每轮构建更新。**最新一次（2026-10-25 22:0x）= 火箭炮塔最小化版**，见
+> **§17.10**。
+
 | 文件 | sha256 | 内容 |
 |---|---|---|
-| `generated_entities.dl_bin` | `c49fab20a65029e6` | TD-110 槽 2（驾驶位）= 光明族光束炮头 + 40 mm 壳；阵营 1；行为 658。TD-110 槽 0/1 = 原版主炮/炮塔环；EXO-45 双臂 = 原版 |
-| `generated_stratagem_settings.dl_bin` | `f1809694e1c19e0d` | `Reinforce` 57 → 光束粒子包 · 138 → 40 mm 壳共享包 · `SOS` 59 → 光明族壳包 |
+| `generated_entities.dl_bin` | **`4f766dc7b2ec9496`** | TD-110 槽 2（驾驶位）= **Barrager 车顶火箭炮塔 `0x5D142C3A73EBC634`**；`Faction +0` 8→1；`Behavior +0` 79→658。TD-110 槽 0/1 = 原版主炮/炮塔环；EXO-45 双臂 = 原版 |
+| `generated_stratagem_settings.dl_bin` | **`47ea41fce172b9bf`** | **只有两口**：`REINFORCEMENT BEACON` 57 → `1A3DC966179BD5A4`（炮塔本体）· `SOS Beacon` 59 → `FDF011DAECF24312`（拖尾＋命中爆炸粒子）。其余 6 个 `+0xA8`、两条 `+0xC8` 链全清 |
 
-回滚：`python tools/dlbin_deploy.py restore --file <两个文件>`
-（`generated_entities.dl_bin` / `generated_stratagem_settings.dl_bin`）。
+回滚（任意一个文件）：`python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`
+／`... --file generated_stratagem_settings.dl_bin`（备份在 `D:\modackups\dlbin-deploy\game\`）。
+上一版（8 口全开、已实机确认特效全在）：`install --sealed D:\mod\out
+ocket-turret\generated_stratagem_settings.rocket9.sealed.dl_bin`。
 
 ### 14.4 与 memmod 时代的对照（这条线的意义）
 
@@ -544,6 +549,10 @@ econ\REPORT-xref-hmg-station-2026-10-18.md`）后，结论相反：
 | ③ | 行为 | `Behavior +0`：**79 → 658**（归玩家；不换的话 AI 会自己打） | G1–G8 ✓ |
 
 ### 15.3 特效包（旧档 §86.2 给的清单，本轮按 3 个口裁剪）
+
+> ⚠ **2026-10-25 晚更正**：这一节的口位分配和"必需包"判断都不对 —— 真正必需的是 **2 口**：
+> `57` = 本体包、`59` = `FDF011DAECF24312`（拖尾＋命中爆炸粒子）；贴图包 `6a3eec` 与 `be01f152`
+> 都不是必需（弹体贴图一直可见）。原因是当时把粒子包写在了**教学关行 138** 上。见 **§17**。
 
 | 口 | `+0xA8` | 内容 | 覆盖 |
 |---|---|---|---|
@@ -803,7 +812,12 @@ econ\REPORT-xref-hmg-station-2026-10-18.md`）后，结论相反：
 > [LIMITED-CROSS-PACKAGE §6.6.7](../engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) 的"一局能声明几个包"，
 > 这条把上限从 16 抬到"每多一个在栏的行就多 1 个口"，且**支援武器行（119/98/128/107…）可以整条链带进来**。
 
-### 17.10 已安装：最小化版 `rocket-min`（2026-10-25 22:0x，⚠ 待这一局读数）
+### 17.10 ✓ 实机收线：最小化版 `rocket-min`（2026-10-25 22:0x）
+
+> **读数（用户）**：「拖尾 + 命中爆炸仍在，HUD 不再多出四个战备。」
+> ⇒ **最小配方成立：两个声明口 + 一个包**（`57` 本体 / `59` FDF011），驻留量回到 ~2 MB。
+> 也顺带证明：`be01f152`(201 MB)、`9e430d`(69 MB)、`6a3eec`(33 MB)、`318c6255`、`4F3D`、`0C37`
+> 这 6 个包对"模型＋拖尾＋命中爆炸＋枪口"**全都不需要**。
 
 | 项 | 内容 |
 |---|---|
