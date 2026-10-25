@@ -101,9 +101,12 @@ def main() -> int:
     row_off, stride, r = row_of(original, lib, block, key)
 
     if a.command == "show":
-        w = min(a.width, stride)
+        start = int(str(a.field), 0) if a.field else 0
+        if start >= stride:
+            raise SystemExit(f"✗ --field +0x{start:X} 超出 stride {stride}")
+        w = min(a.width, stride - start)
         print(f"块 0x{block:08X}  键 0x{key:016X} → 行 {r}  行基址 0x{row_off:X}  stride {stride}")
-        for off in range(0, w, 4):
+        for off in range(start, start + w, 4):
             u = struct.unpack_from("<I", original, row_off + off)[0]
             i = struct.unpack_from("<i", original, row_off + off)[0]
             f = struct.unpack_from("<f", original, row_off + off)[0]
