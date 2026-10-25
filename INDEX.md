@@ -14,7 +14,7 @@
 | 想亲手改一张表 | **[改盘上数据的完整工作流](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md)** —— 主线文档，8 步链 + 锚点哈希 + 92 条坑 |
 | 想让**代理**去做 | **[skills/hd2-file-route-mod](skills/hd2-file-route-mod/SKILL.md)** —— Agent Skills，只给方法论（每步的目的 / 判据 / 停的条件）+ 指回本页 |
 | 想查某个字段 / 某个数 | [§1 按问题找](#1-按问题找) |
-| 想按类型看全部 61 篇 | [§2 按类型浏览](#2-按类型浏览61-篇) |
+| 想按类型看全部 62 篇 | [§2 按类型浏览](#2-按类型浏览62-篇) |
 | 想找某个工具 / 看它验证到哪一步 | [§3 工具清单](#3-工具清单tools) |
 | 刚更新完游戏 | [BUILDS.md §3](BUILDS.md)（三步 + §3.1 锚点复验） |
 | 什么都没有、只想先摸摸 | [§4 无密钥也能练](#4-无密钥也能练) |
@@ -99,7 +99,7 @@
 | **多个 mod 改同一份文件的不同字段，想同时用** | [MOD-MERGER](docs/cases/MOD-MERGER-26088801.md) | **§1 算法 · §2 用法 · §3 逐字节等价证明 · §4 前提与边界** | `26088801` |
 | 社区包怎么做 / 能不能共存 | [CASE-STUDY](docs/cases/CASE-STUDY-20261021.md) · [COMMUNITY-MODS-COMPAT](docs/cases/COMMUNITY-MODS-COMPAT-26088801.md) · [PATCH-SALVAGE](docs/builds/PATCH-SALVAGE-25988413.md) |
 
-## 2. 按类型浏览（61 篇）
+## 2. 按类型浏览（62 篇）
 
 | 类别 | 放什么 | 篇数 |
 |---|---|---:|
@@ -108,7 +108,7 @@
 | [`tables/`](docs/tables/) | 数据表与实体库的解码 / 改写 | 20 |
 | [`explosions/`](docs/explosions/) | 爆炸与弹头（玩法层 + 外观层） | 2 |
 | [`boundaries/`](docs/boundaries/) | 被挡住的路：进程内存、虚拟机 | 2 |
-| [`cases/`](docs/cases/) | 案例与外部参照：社区包、贴图委托、wiki 数据、**完整工作流**、**老 mod→数据路线修复版 playbook**、**第三方护甲多被动 / Sterilizer 改治疗 / VanillaPlus 两件侦察**、**网络复制层探针系列**、**实体表在线改写实机证明** | 23 |
+| [`cases/`](docs/cases/) | 案例与外部参照：社区包、贴图委托、wiki 数据、**完整工作流**、**老 mod→数据路线修复版 playbook（含两个 C 档样板）**、**第三方护甲多被动 / Sterilizer 改治疗 / P-11 Self-Heal / VanillaPlus 两件侦察**、**网络复制层探针系列**、**实体表在线改写实机证明** | 24 |
 
 ### `builds/`
 
@@ -149,7 +149,7 @@
 | 文档 | 一句话 | build |
 |---|---|---|
 | ★ [WEAPON-FIRE-MODES-26088801](docs/tables/WEAPON-FIRE-MODES-26088801.md) | **射击模式 / 射速档位**:`FireMode` 四连槽 `+0x90…0x9C` + `function_info` 选择键（`Firemode=3` / `ROF=2`）；枚举 1 自动 / 2 半自动 / 3 连发 / **4 齐射 / 5 安全 / 6 不安全 / 7 全射**（**槽位上限 3**）；任意枪可加全自动与全射（均已实机） | `26088801` |
-| ★ [PLAYBOOK-LUA-MOD-TO-DLBIN](docs/cases/PLAYBOOK-LUA-MOD-TO-DLBIN.md) | **老 mod → 数据路线等价修复版**：五步流水线（开包/读载荷/归层 L1–L4/映射/实现）+ **A/B/C 三档判定（dl_bin 等价 / 跨载体等价 / 不可实现，禁用「不可等价」）** + 载体能力表 + 跨 build 常量重取规则 + **四个样板案例（含 C 档填满样板：锁定锥角 ✗ + 距离/时间 ✓ 替代）** + 报告骨架；配套工具 `lua_payload_dump.py`、技能 `skills/hd2-lua-mod-to-dlbin` | 跨 build |
+| ★ [PLAYBOOK-LUA-MOD-TO-DLBIN](docs/cases/PLAYBOOK-LUA-MOD-TO-DLBIN.md) | **老 mod → 数据路线等价修复版**：五步流水线（开包/读载荷/归层 L1–L4/映射/实现）+ **A/B/C 三档判定（dl_bin 等价 / 跨载体等价 / 不可实现，禁用「不可等价」）** + 载体能力表 + 跨 build 常量重取规则 + **五个样板案例（A×2 / B / C×2：代码型 P-11 Self-Heal、数据边界型 锁定锥角）** + 报告骨架；配套工具 `lua_payload_dump.py`、技能 `skills/hd2-lua-mod-to-dlbin` | 跨 build |
 | ★ [RECON-VPM-BOUNCE-STICKY](docs/cases/RECON-VPM-BOUNCE-STICKY-26088801.md) | **VanillaPlus Megapack 两件侦察**：`BetterStratagemBounce` 改的是**战备表 `+0x170` 的 bit 0x02**（不是 sticky，且在本 build 会拒绝执行）；`StickyGrenadeHandles` 改的是材质 `userData`（4 B）——**已定位**到 physics 载荷内联 20 B 材质记录的数据字（G-123 `+0x15C` / G-109 `+0xCC`，全量 4,839 载荷扫完），`ThrowableComponent+0x54/+0x164` 只读 | `26088801` |
 | [STICKY-COMPONENT-26088801](docs/tables/STICKY-COMPONENT-26088801.md) | **粘附组件全解**：38 槽 + 19 行 × 76 B；`+0x2C` = 粘住时的命中伤害行（飞刀 648）、`+0x3C/+0x40` = 两个 AbilityId、`+0x08` 附着旋转全表 -90°；热熔的 sticky 是最小配置 | `26088801` |
 | ★ [STATUS-EFFECTS-26088801](docs/tables/STATUS-EFFECTS-26088801.md) | **状态效果表全解**：73×160 B + 名字 blob（id↔名字↔每跳伤害行全表）；全库只有 10 处能施加状态；**Thermite = id 13**（tick 行 533）却无人引用；§7 **状态爆 = 孤儿爆炸行 → 伤害行 → 状态槽**（265 条无主爆炸 + P-11 治疗爆配方，**✓ 实机**：脚下回血、>2 m 不回血） | `26088801` |
@@ -199,6 +199,7 @@
 | ★ [MOD-MERGER-26088801](docs/cases/MOD-MERGER-26088801.md) | **多个 mod 改同一文件不同字段怎么共存**：抽语义 / 剔哈希脚手架 / 逐字节判冲突 / 逐字节等价证明 | `26088801` |
 | ★ [RECON-ARMOR-MULTI-PASSIVE](docs/cases/RECON-ARMOR-MULTI-PASSIVE.md) | **第三方「护甲多被动」只读侦察**：`passive_bonuses` 的 payload 布局（pm/sm 双数组）、**效果在 sm 行**、全表只有 7 个 stat 槽、描述隐藏=末 4 B 清零、它的堆叠配方与安全设计 | `25988413`（结构在 `26088801` 已逐字段核对一致） |
 | ★ [RECON-STERILIZER-HEAL](docs/cases/RECON-STERILIZER-HEAL-26088801.md) | **第三方「Sterilizer 改治疗」只读侦察**：改的是**伤害行**的 4 组字段（状态槽 0/1 的 type+value、`element`、damage）；附带**伤害行 76 B 完整字段图**与**状态效果表解码**（73×160 B + 名字 blob → id↔名字全表） | `26088801` |
+| ★★ [RECON-P11-SELF-HEAL](docs/cases/RECON-P11-SELF-HEAL-26088801.md) | **C 档样板（代码型）**：P-11 Self-Heal v1.0.4 = 运行时 `player_fired` 事件 + `Player:heal`（**一条数据都没改**，413 行源码）；「开火即回血」数据侧没有事件钩子 ⇒ **C · 不可实现**；替代 = 数据侧**治疗爆**（孤儿爆炸 254 + 治疗行 446，打脚下 2 m 内回血 ✓ 实机 / >2 m 不回血 ✓ 实机） | `26088801` |
 | ★ [NETWORK-READ-QUICKREF](docs/cases/NETWORK-READ-26088801-QUICKREF.md) | **网络复制层读取一页速查**：正确调用形态、六道闸、字段字典（16 条 hash↔名字）、能力边界 | `26088801` |
 | ★ [PROBE-READ-GUARDED](docs/cases/PROBE-READ-GUARDED-26088801.md) | 自建探针 run4–run8 全记录：名字形态、batched 语义、seat 70 = 被击倒、时间线纪律 | `26088801` |
 | [HUDPLUS-0.5.3-LIVE-PROOF](docs/cases/HUDPLUS-0.5.3-LIVE-PROOF-26088801.md) | HUD+ 0.5.3 实机可用 + 从它反推出的正确 API 形态；含 7 个 frag 模块解码 | `26088801` |
