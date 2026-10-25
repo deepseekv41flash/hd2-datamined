@@ -169,9 +169,12 @@ python tools/dlbin_deploy.py restore --file generated_entities.dl_bin
 行值是 `25.0 / 0.5 / 5.0 / 90.0 / 180.0` 这类**角色视角 / 索敌**参数，与「距离 / 锥角 / 锁定时序」无一对应。
 ⇒ 改它不会改玩家锁定，别按名字误伤。
 
-`crosshair_type`（**本 build 在 `WeaponDataComponentData +0x194`**，值 **16 = Javelin**；旧 build 行宽 1232 时是 `+0x190`，
-本 build 行宽 1240 后段整体后移 4 B —— 实测 P-92/P-33/Spear/WASP = 16、`MLS-4X Commando` = 0、AR-23 = 4）仍然成立，但它只给**准星样式**，
+`crosshair_type`（**本 build 在 `WeaponDataComponentData +0x194`**，值 **16 = Javelin** ——
+实测 P-92/P-33/Spear/WASP = 16、`MLS-4X Commando` = 0、AR-23 = 4）仍然成立，但它只给**准星样式**，
 **不给锁定能力** —— 真正的开关是 `SensorEye.distance` + `GuidanceTarget` 行。
+
+> 2026-10-25 更正：`+0x194` 已用 typelib 直证（该成员 `type_id = 0x323880BA` 落在**枚举** id 表、实名 `CrosshairWeaponType`），
+> 不再依赖「旧 build 行宽 1232 → 后移 4 B」的推断；行宽、全表普查、载具位准星问题见 **§11**。
 
 ---
 
@@ -422,3 +425,63 @@ dot 退回**原版 0.95**（去掉 run 2 那个「候选过多」的混淆因素
   同一 mode 内过滤不同 ⇒ 过滤在引擎侧。
 
 ⇒ **锁定这条线上的数据表能力边界：距离 ✓ 可改（实机已证）；锥角 ✗；目标集合 ✗（不可读亦不可改）。**
+
+## 11 追加：`crosshair_type` 在本 build 的准确定位 +「载具位上的 40 mm 站没有准星」（2026-10-25）
+
+### 11.1 定位（**✓ 离线，typelib 直证，不再靠约定**）
+
+§6 里写的 `+0x194` 这次用 typelib 本身钉死了，不依赖「旧 build 1232 → 本 build 1240」的推断：
+
+| 事实 | 值 | 态 |
+|---|---|---|
+| `WeaponDataComponentData` = `0x88E4DBB1`，行结构 `0xD25FC7F7`，**stride 1240**，373 行 | — | ✓ 离线 |
+| 行结构里 **offset 404 = `0x194`** 的成员，其 `type_id` = **`0x323880BA`** | `0x323880BA` 在 typelib 的**枚举 id 表**里（不在类型表里） | ✓ 离线 |
+| `0x323880BA` 的实名 = **`CrosshairWeaponType`** | 来自 `dl-type-names.json`（6696 条已发布名表） | ✓ 离线 |
+| 枚举成员（16 个，名字齐全） | `Default / CrosshairNever / CrosshairAlways / AssaultRifle / PumpShotgun / AutoShotgun / Pistol / Revolver / Laser / LaserCannon / LaserPulseCannon / Railgun / Javelin / Throwable / Physgun / None` | ✓ 离线 |
+| 实测 373 行的 `+0x194` 取值分布 | `0`×226、`1`×1、`2`×24、`3`×3、`4`×72、`5`/`6`×1、`8`×4、`9`×5、`10`×6、`11`/`12`×2、`14`×2、`15`×5、**`16`×4**、`17`×14、`20`×1 | ✓ 离线 |
+| **值为 16 的正好是那四把锁定武器** | `Spear`(row341) / `W.A.S.P.`(row342) / `P-92 Warrant`(row190) / `P-33 Missile Pistol`(row191) | ✓ 离线 |
+
+⇒ 公开研究「`crosshair_type` = 16 → Javelin，且用 16 的是四把锁定武器」与本地数据**两次独立吻合**，
+`+0x194` 就是本 build 的 `crosshair_type`（4 字节枚举）。
+
+### 11.2 准星相关的**全部**行内字段（`WeaponDataComponentData`）
+
+| 偏移 | 字段 | 本 build 实测 | 态 |
+|---|---|---|---|
+| `+0xC0` | `Crosshair`（`stingray.Hash` 8 B） | **373 行全是 `0x2D4AE6FD3E95EB30`**，一把都没个性 | ✓ 离线 |
+| `+0xC8` | `AlwaysShowCrosshair`（u8） | **373 行全是 0** | ✓ 离线 |
+| `+0x181` / `+0x182` | `AllowFPV` / `AllowAiming` | 40 mm 站 = `0 / 1`，和坦克炮、手持枪**一样** | ✓ 离线 |
+| `+0x190` | **无名 1 字节**（typelib 里 `type_id = 0`，未覆盖区间 `[401,404)` 证明只占 1 B） | **只有两行 = 1**：`40 mm 炮塔站`(row66)、`孤儿炮塔站`(row83)；其余 371 行 = 0 | ✓ 离线 |
+| `+0x194` | **`crosshair_type`** = `enum.CrosshairWeaponType` | 40 mm 站 = **2**；TD-110 主炮(row87) = 2；TD-110 槽1(row86) = 2；TD-110 槽2 原装烟幕(row89) = **1**；AR-23/MG-206 = 4；四把锁定武器 = 16 | ✓ 离线 |
+| `+0x198…+0x1C7` | `FirstPersonSightNodes[4]`，每个 12 B = `{WeaponFunctionType, u32, CrosshairWeaponType}` | 上表这些武器**四个节点全 0**（没有瞄具覆盖） | ✓ 离线 |
+
+### 11.3 结论：字段有，而且已经和坦克炮同值 —— 所以「改样式」不是解法
+
+`40 mm 站` 的 `crosshair_type = 2`，与 `TD-110 主炮` / `TD-110 槽1` **完全相同**；
+`Crosshair` 哈希、`AlwaysShowCrosshair`、`AllowAiming` 也全都一样。
+**唯一**把 40 mm 站与「其它全部 371 个武器行」区分开的，是 `+0x190` 这个**无名 1 字节 = 1**
+（另一个 1 是同网格的孤儿炮塔站）。
+
+⇒ 两个候选解释，用一次单变量实验就能分开：
+
+| # | 假设 | 判据 |
+|---|---|---|
+| H1 | `+0x190 = 1` 是「站点/炮塔站」标记，载具 HUD 见到它就走**站点准星**分支（而载具位上没有那条分支）→ 不画准星 | 把 40 mm 站 `+0x190` 1 → 0，驾驶员位出现准星 |
+| H2 | 准星是**载具 HUD 侧**画的，和武器行无关（武器只决定风格）→ 数据层无解，只能走 HUD/Lua | 改完仍无准星 |
+
+### 11.4 已造并装盘的测试补丁（**⚠ 未证**）
+
+| 项 | 值 |
+|---|---|
+| 变量 | `WeaponDataComponentData` row 66（`0x9872EEB31A5F88FD` = 40 mm 炮塔站）`+0x190`：**1 → 0** |
+| 基底 | 上一节 v2（TD-110 槽2 = 40 mm 站、容量 1001、起始备匣 5、TD-220 双炮 yaw ±180） |
+| 差异 | 只 1 个字段字节 + 末块校正字（`entity_field_set.py` G1–G8 全 PASS，Murmur64A `0x8E49771B181FFAA1` 不变） |
+| 文件 | `D:\mod\out\td110-40mm-crosshair\generated_entities.td110-40mm-crosshair.dl_bin`（47,259,520 B，sha256 `97433921a2fdd167`） |
+| 装盘 | ✓ 已装（`open-key` 回读字节级一致） |
+| 待验 | 驾驶员位进 40 mm 站，屏幕中央是否出现准星（同时可验上一节的弹容 1000 / 装填） |
+| 回滚 | `python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`（回原版）；回 v2 则重装 `D:\mod\out\td110-40mm-spare\generated_entities.td110-40mm-cap1001-spare5.dl_bin` |
+
+### 11.5 若 H1 成立后还要做的
+
+`+0x194` 的 16 个成员里，载具位可用的风格大概率是 `2`（坦克炮）之外的某几个；
+到时候按「改 `+0x194` 逐个试」就能把 40 mm 站的准星样式调到想要的样子（这一步纯长相，不影响机制）。
