@@ -383,7 +383,7 @@ TX-41 STERILIZER S            kind=Spray   role=primary
 | 表内存在"射程"标量字段 | **✗ 否证**（Cremator 与 FLAM-40 的**全部 16 个标量完全相同**，只有粒子 id 不同） |
 | `firing.muzzle_effect` = 引擎真正读的粒子字段 | **✓ 实机**（run 11：改 id 外观当场变——变成灰色占位方块） |
 | 跨包粒子不驻留（缺包 ⇒ 灰色半透明方块） | **✓ 实机**（run 11：FLAM-40 / Crisper 都变方块） |
-| 射程 = `firing.muzzle_effect` 指向的粒子资源 | **✓ 实机**（同粒子 ⇒ 同射程[run 14]；换成 TX-41 粒子 ⇒ 变长[run 12]） |
+| 射程 = `firing.muzzle_effect` 指向的粒子资源 | **✓✓ 实机**（同粒子同射程[run 14]；换成 TX-41 粒子 ⇒ 35 m 处可点火[run 15]） |
 | 毒气的"中毒"来自 Status 攻击而非 Spray | **✓ 离线**（TX-41 的 attack graph） |
 
 ### 5.6.6 喷火器的「射程」：**不在数据表里**，在 `firing.muzzle_effect` 的粒子资源里
@@ -530,18 +530,34 @@ run 14 配置 = **纯原版**（两把枪都在 `0xA252B7821AAB37D7`；Reinforce
 战备侧：Reinforce 两行 `+0xA8` = TX-41 包（否则 Crisper 变灰方块）。
 盘上：实体 `77924977…`（哈希 `0x8E49771B181FFAA1`）、战备 `8c70575a…`（哈希 `0x04BBE33EF809862A`），回读一致。
 
-| 观察 | 结论 |
+**run 15 结果（✓✓ 实机）：射程真的变长了，而且是"能点着地"的真射程。**
+
+玩家实测：**Crisper 能点着 35 米外的地面；站在同一地点用 FLAM-40 点同一块地面，点不着。**
+
+这条结果的含金量在于"**点着地面**"不是视觉效果：
+地面火是**粒子碰撞命中**之后由 `particle_collision_fire_template`（Crisper = 3）生成的
+⇒ 粒子确实飞到了 35 m 并发生了碰撞判定，**命中判定跟着粒子走**。
+
+| 结论 | 态 |
 |---|---|
-| Crisper 气流 ≈ **2 倍**于 FLAM-40 火焰 | **射程 = 粒子** ✓✓，且粒子决定的是**实际射程**（不是只有视觉） |
-| 在 **35–45 m** 处用 Crisper 烧到敌人（着火掉血） | **命中判定也跟着粒子走** ⇒ 完整闭环 |
-| 只看得长、远处打不出伤害 | 视觉与判定分家：判定另有其源（下一步查 Status/碰撞事件） |
+| 换 `firing.muzzle_effect` ⇒ 射程随之变（20 m → **≥35 m**） | **✓✓ 实机** |
+| 粒子承载的是**命中/碰撞**（不只是外观） | **✓✓ 实机**（35 m 处地面被点燃） |
+| 伤害类型没被粒子带跑（仍是火焰，`+0xC8`/伤害行未动） | **✓ 实机**（点着 = 火焰行为） |
+| 可达到的上限 | **⚠ 未测**（TX-41 粒子原版 47 m；35 m 只是这次测试距离） |
+
+#### run 16（建议，二选一）：上限量化 / 反向验证
+
+| 选项 | 做法 | 能回答什么 |
+|---|---|---|
+| **A 上限** | 保持现配置，在 **45 m** 处再点一次地面 | 借来的射程是"≈47 m"还是被武器侧截短 |
+| **B 反向** | 把 **TX-41** 的 `+0x70` 换成火焰粒子 `0xA252B7821AAB37D7`（在 FLAM-40 自己的包里，随 FLAM-40 装备即驻留） | 47 m 的枪换短粒子后射程是否**掉回 20 m** ⇒ "粒子单向决定射程"的完整剂量-反应曲线 |
 
 #### 能力边界（射程这一项）
 
 | 想做的事 | 手段 | 判 |
 |---|---|---|
 | 让某把喷火器用上另一把枪的粒子（外观） | 改 `firing.muzzle_effect` 的 u64 + **把供体的包驻留**（Reinforce `+0xA8`） | **✓ 实机**（run 12：两把枪都雾状气流） |
-| 用换粒子把射程借长 | 同上 | **✓ 实机**（Crisper 借到 TX-41 档并明显变长；量化见 run 15） |
+| 用换粒子把射程借长 | 同上 | **✓✓ 实机**（Crisper 借到 TX-41 档：35 m 处能点着地面，同点 FLAM-40 点不着） |
 | 把射程调成"任何我想要的米数" | 改**粒子资源**内部的速度/寿命（`.particle`，资源路线，非 `dl_bin`） | **✗ 数据表做不到** |
 | 让火焰"命中范围更宽/判定不同" | `spray_capsule_radius`（`+0x10`）> 0 打开物理胶囊重叠判定 | **⚠ 未试**（schema 自标 Experimental） |
 | 让火焰更持久 / 更易点燃 | 伤害行 `+44` 状态槽（status 5/6/68）与状态表 | ✓ 见 §5.6.3b |
@@ -622,7 +638,7 @@ run 14 配置 = **纯原版**（两把枪都在 `0xA252B7821AAB37D7`；Reinforce
 | 跨包粒子不驻留 ⇒ 灰色占位方块 | **✓ 实机**（run 11） |
 | Reinforce `+0xA8` 能驻留**粒子资源**这个消费方 | **✓ 实机**（run 12：雾状气流出现） |
 | 换粒子能换外观 | **✓ 实机**（run 12） |
-| 射程 = 粒子（同粒子同射程 + 换粒子换射程） | **✓ 实机**（run 14 + run 12 互锁） |
+| 射程 = 粒子（同粒子同射程 + 换粒子换射程） | **✓✓ 实机**（run 14 同粒子等长 + run 15 换粒子后 35 m 可点火） |
 | 第二因子（枪侧影响射程） | **✗ 否证**（run 14：同粒子两把枪等长；WeaponData 也无射程量级字段） |
 
 ### 5.6.8 火焰粒子的共用关系：**只有一对共用**
@@ -675,6 +691,54 @@ run 14 配置 = **纯原版**（两把枪都在 `0xA252B7821AAB37D7`；Reinforce
 | 改行内 `+0x70`（引用 id） | **只影响那一把枪**（run 13/15 实测：只改 Crisper，FLAM-40 不受影响） |
 | 改**粒子资源本体**（资源路线） | **所有引用者一起变** ⇒ 改 `0xA252B7821AAB37D7` 会同时改 FLAM-40 与 Crisper |
 | 想改一把 ↛ 波及另一把 | 先把其中一把的 `+0x70` 指向一个等价副本（该粒子在 3 个包里都有） |
+
+---
+
+### 5.6.9 配方：把任何一把喷火器的射程换成"供体档位"
+
+链路（每一步的工具都在本仓库、且都实机验证过）：
+
+```bash
+# 1) 目标武器行改 +0x70（引用新粒子；只影响这一把枪）
+python tools/entity_field_set.py set \
+  --plain refs/dlbin/plaintext-26088801/generated_entities.dl_bin \
+  --block 0x8E551126 --key 0x3F92BA65EF65CCA9 \
+  --field 0x70 --type u64 --value 0xA3D15A3BBC56DE55 \
+  --expect-old 0xA252B7821AAB37D7 --out out/step1.plain
+
+# 2) 供体粒子不在目标武器自己的包里时：用 Reinforce 两行声明供体包（否则灰方块）
+python tools/stratagem_package.py \
+  --plain refs/dlbin/plaintext-26088801/generated_stratagem_settings.dl_bin \
+  --row "MISSIONS. REINFORCEMENT BEACON" --set-a8 0x750605CFC0173701 \
+  --host "ADDITIONAL STRAFING RUNS" --out out/s1.plain
+python tools/stratagem_package.py --plain out/s1.plain \
+  --row "TUTORIAL REINFORCEMENT BEACON" --set-a8 0x750605CFC0173701 \
+  --host "ADDITIONAL STRAFING RUNS" --out out/s2.plain
+
+# 3) 封包 + 装盘（游戏必须关着）；4) 回滚
+python tools/dlbin_seal.py seal-key --key refs/dlbin/keys/recipient.pk --out out/x.dl_bin out/step1.plain
+python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed out/x.dl_bin
+python tools/dlbin_deploy.py restore --file generated_entities.dl_bin
+```
+
+供体档位（本 build）：
+
+| 供体 | 粒子 | 大致射程 | 要挂包吗 |
+|---|---|---|---|
+| **TX-41 Sterilizer** | `0xA3D15A3BBC56DE55` | **47 m** | **要**（只有 `750605cfc0173701` 一份） |
+| P-72 Crisper ⟷ **FLAM-40**（互为一档） | `0xA252B7821AAB37D7` | 20 m | 不用（FLAM-40 自己的包里有；Cremator R 包里也有副本） |
+| FLAM-66 Torcher | `0xC22C03EC68E8DBCE` | 20 m | 视情况（2 个包，其一随 Torcher 装备） |
+| B/FLAM-80 Cremator 左管 / 右管 | `0xA4F17DABA8ECD8E5` / `0x7E2D445495989701` | ≈25 m | 左：要；右：2 个包 |
+| G-142 Pyrotech | `0x172E1E5393DC59FF` | 投掷物（不适用） | 要 |
+
+已知副作用（均实测）：
+
+| 项 | 行为 |
+|---|---|
+| 外观 | **变成供体的样子**（借 TX-41 粒子 = 喷毒雾状气流） |
+| 伤害类型 | **不变**（仍在伤害行 `+44` 状态槽里；借毒气粒子不会变中毒） |
+| 射程 | **跟供体走**（35 m 处可点燃地面；同点 FLAM-40 原版点不着） |
+| 影响范围 | 只影响这一把枪；只有改**粒子资源本体**才会连带共用同一粒子的武器 |
 
 ---
 
