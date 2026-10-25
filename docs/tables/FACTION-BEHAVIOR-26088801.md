@@ -462,7 +462,7 @@ econ\REPORT-xref-hmg-station-2026-10-18.md`）后，结论相反：
 
 | 观察 | 判定 |
 |---|---|
-| 模型 = **40mm 站**，光束**从炮管/车顶打出**，能开火有伤害 | ✓ 借壳路线复现（位置对） |
+| 模型 = **40mm 站**，光束**从炮管/车顶打出**，能开火有伤害 | **✓ 实机通过（2026-10-25）** —— 用户原话：「模型变成 40mm 站，光束从车顶炮管位置打出、有伤害」 |
 | **炮管不跟瞄准转** | **预期如此**（§12.3 的硬伤，三次否证） |
 | 有光束观感 | ✓ 粒子包声明生效 |
 | 没有光束 | 粒子包不是引擎要的那份 ⇒ 换 `d448a6c8eb991f1a` |
@@ -471,3 +471,51 @@ econ\REPORT-xref-hmg-station-2026-10-18.md`）后，结论相反：
 回滚：`restore` 两个文件；回上一版（地堡炮塔 + 曳光）：
 `install --sealed D:\mod\out\enemy-turret-vfx\generated_entities.enemy-vfx.dl_bin` +
 `install --sealed D:\mod\out\enemy-turret-vfx\generated_stratagem_settings.vfx3.sealed.dl_bin`。
+
+---
+
+## 14 收尾（2026-10-25）：这一整条线现在的能力边界
+
+### 14.1 实机已证（**✓**）
+
+| 能力 | 手段（全纯数据，不用 runtime） | 实机 |
+|---|---|---|
+| 把任意外来件装到任意载具挂载槽 | `MountComponentData` → `MountInfo.item`（`mount_table.py swap`，G1–G10） | ✓ 多次（40 mm 站 / 运输机炮塔 / 地堡炮塔 / 机甲臂 / 光明族炮头） |
+| 让外来件的包驻留 | 战备行 `+0xA8`（**替换**语义）：载具自己的 **live 行**给 1 个口，其余借**账号常驻行**（`Reinforce` 57/138、`SOS Beacon` 59） | ✓ |
+| 敌人件给玩家用 | `FactionComponentData +0`：`2/4/8 → 1`（Terminid/Illuminate/Automaton → Super Earth） | ✓（地堡炮塔、光明族炮头） |
+| 把 AI 从炮塔上"领走" | `BehaviorComponentData +0` → **658**（玩家武器行为；当年 `AIBEH` 运行时那一步） | ✓（运输机炮塔、地堡炮塔、光明族炮头） |
+| 补弹丸拖尾/光束特效 | 声明**特效包**（曳光 `fdf011daecf24312`、光束粒子 `046d4441a6dae0a9`） | ✓（两者都在本会话验过） |
+| 借壳换外观/炮口位置 | `UnitComponentData +0` 指向目标壳（如 40 mm 站 `9872EEB31A5F88FD`） | ✓（光明族炮头） |
+| 座位侧行为（准星/装填/相机夹制） | **数据层做不到**：属座位/相机/引擎代码侧 | ✓ 已分离（[MOUNT-SEATS §4.7](MOUNT-SEATS-26088801.md)） |
+
+### 14.2 做不到 / 需要换思路（**✗**）
+
+| 限制 | 原因 | 出路 |
+|---|---|---|
+| **借壳后炮管不跟瞄准转** | 转动/枢轴绑**壳的骨骼**（三次否证） | 改资产重挂骨骼；或换"原生车顶炮塔形态"的件（`5D142C3A73EBC634` 那类可两全） |
+| 一台载具要 2 个以上外来包时只能借行 | `+0xA8` 是替换、live 行只有 1 个口 | 借常驻行（已验证 3 口够用）；或让外来件与原生件同包 |
+| 只改一台（实例级） | 我们改的是**件级**行 | 走运行时（本 build 无稳定通道） |
+| 缺包时"先开火试试" | 紫问号状态开火**会崩** | 先确认没有紫问号再开火（[EXO-ARM-VARIANTS §10.2](../tables/EXO-ARM-VARIANTS-26088801.md)） |
+
+### 14.3 当前盘上状态（可直接玩）
+
+| 文件 | sha256 | 内容 |
+|---|---|---|
+| `generated_entities.dl_bin` | `c49fab20a65029e6` | TD-110 槽 2（驾驶位）= 光明族光束炮头 + 40 mm 壳；阵营 1；行为 658。TD-110 槽 0/1 = 原版主炮/炮塔环；EXO-45 双臂 = 原版 |
+| `generated_stratagem_settings.dl_bin` | `f1809694e1c19e0d` | `Reinforce` 57 → 光束粒子包 · 138 → 40 mm 壳共享包 · `SOS` 59 → 光明族壳包 |
+
+回滚：`python tools/dlbin_deploy.py restore --file <两个文件>`
+（`generated_entities.dl_bin` / `generated_stratagem_settings.dl_bin`）。
+
+### 14.4 与 memmod 时代的对照（这条线的意义）
+
+| 当年（memmod） | 现在（纯数据） |
+|---|---|
+| HD2Runtime `require_assets` 现场请包 | 战备行 `+0xA8` 声明 |
+| `--faction 1` 运行时写阵营记录 | `FactionComponentData +0` 改一格 |
+| `AIBEH` 写 behaviour + `PIN` 每帧兜底 | `BehaviorComponentData +0` 改一格，**一劳永逸** |
+| `--shell` 运行时借壳 | `UnitComponentData +0` 改一格 |
+| 特效靠 9 个包一起 warm | 只声明**真正用到的那几个**包（曳光 1 个、光束 1 个） |
+
+⇒ **整条"外来件当玩家武器站"的路线已经全部从运行时搬到数据文件上**，且稳定性更好（无每帧写、无页保护、无 `HELD` 轮询）。
+唯一搬不过去的是**座位侧能力**（准星/装填/相机夹制）与**骨骼绑定的转动**——这两条是引擎代码与资产层的事。
