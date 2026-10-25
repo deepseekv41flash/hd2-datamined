@@ -354,8 +354,9 @@ status_rows(weapon, 'Damage', '', drow, 'hit')                            -- ←
 | 43 / 44 | `Gas` / `Gas` | TX-41 用 **44** |
 | 45 / 46 | `Gas_Confusion` / `Gas_Confusion` | TX-41 用 **46** |
 | 28 / 29 | `Stim Heal` / `Stim Pistol Heal` | 治疗状态（第三方 Sterilizer-Heal mod 用的就是这一档） |
+| 13 | `Thermite` | tick 伤害行 533（150/AP7）；**全库无人引用**，见 [STATUS-EFFECTS](STATUS-EFFECTS-26088801.md) |
 
-⇒ 名字 × 数值 × wiki **三方互证**，§5.6 的"状态 id 未定位"这一项结案。
+⇒ 名字 × 数值 × wiki **三方互证**，§5.6 的"状态 id 未定位"这一项结案。**全表（73 条 id↔名字↔每跳伤害行）另见 [STATUS-EFFECTS-26088801](STATUS-EFFECTS-26088801.md)。**
 
 **伤害行（76 B）的完整字段图**（同一份侦察核出，补上此前漏掉的 `element`）：
 
