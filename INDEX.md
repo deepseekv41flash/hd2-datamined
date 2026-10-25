@@ -14,7 +14,7 @@
 | 想亲手改一张表 | **[改盘上数据的完整工作流](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md)** —— 主线文档，8 步链 + 锚点哈希 + 92 条坑 |
 | 想让**代理**去做 | **[skills/hd2-file-route-mod](skills/hd2-file-route-mod/SKILL.md)** —— Agent Skills，只给方法论（每步的目的 / 判据 / 停的条件）+ 指回本页 |
 | 想查某个字段 / 某个数 | [§1 按问题找](#1-按问题找) |
-| 想按类型看全部 62 篇 | [§2 按类型浏览](#2-按类型浏览62-篇) |
+| 想按类型看全部 63 篇 | [§2 按类型浏览](#2-按类型浏览63-篇) |
 | 想找某个工具 / 看它验证到哪一步 | [§3 工具清单](#3-工具清单tools) |
 | 刚更新完游戏 | [BUILDS.md §3](BUILDS.md)（三步 + §3.1 锚点复验） |
 | 什么都没有、只想先摸摸 | [§4 无密钥也能练](#4-无密钥也能练) |
@@ -99,7 +99,7 @@
 | **多个 mod 改同一份文件的不同字段，想同时用** | [MOD-MERGER](docs/cases/MOD-MERGER-26088801.md) | **§1 算法 · §2 用法 · §3 逐字节等价证明 · §4 前提与边界** | `26088801` |
 | 社区包怎么做 / 能不能共存 | [CASE-STUDY](docs/cases/CASE-STUDY-20261021.md) · [COMMUNITY-MODS-COMPAT](docs/cases/COMMUNITY-MODS-COMPAT-26088801.md) · [PATCH-SALVAGE](docs/builds/PATCH-SALVAGE-25988413.md) |
 
-## 2. 按类型浏览（62 篇）
+## 2. 按类型浏览（63 篇）
 
 | 类别 | 放什么 | 篇数 |
 |---|---|---:|
@@ -108,7 +108,7 @@
 | [`tables/`](docs/tables/) | 数据表与实体库的解码 / 改写 | 20 |
 | [`explosions/`](docs/explosions/) | 爆炸与弹头（玩法层 + 外观层） | 2 |
 | [`boundaries/`](docs/boundaries/) | 被挡住的路：进程内存、虚拟机 | 2 |
-| [`cases/`](docs/cases/) | 案例与外部参照：社区包、贴图委托、wiki 数据、**完整工作流**、**老 mod→数据路线修复版 playbook（含两个 C 档样板）**、**第三方护甲多被动 / Sterilizer 改治疗 / P-11 Self-Heal / VanillaPlus 两件侦察**、**网络复制层探针系列**、**实体表在线改写实机证明** | 24 |
+| [`cases/`](docs/cases/) | 案例与外部参照：社区包、贴图委托、wiki 数据、**完整工作流**、**老 mod→数据路线修复版 playbook（含两个 C 档样板）**、**第三方护甲多被动 / Sterilizer 改治疗 / P-11 Self-Heal / VanillaPlus 两件 / SHODAN 额外战备 侦察**、**网络复制层探针系列**、**实体表在线改写实机证明** | 25 |
 
 ### `builds/`
 
@@ -200,13 +200,14 @@
 | ★ [RECON-ARMOR-MULTI-PASSIVE](docs/cases/RECON-ARMOR-MULTI-PASSIVE.md) | **第三方「护甲多被动」只读侦察**：`passive_bonuses` 的 payload 布局（pm/sm 双数组）、**效果在 sm 行**、全表只有 7 个 stat 槽、描述隐藏=末 4 B 清零、它的堆叠配方与安全设计 | `25988413`（结构在 `26088801` 已逐字段核对一致） |
 | ★ [RECON-STERILIZER-HEAL](docs/cases/RECON-STERILIZER-HEAL-26088801.md) | **第三方「Sterilizer 改治疗」只读侦察**：改的是**伤害行**的 4 组字段（状态槽 0/1 的 type+value、`element`、damage）；附带**伤害行 76 B 完整字段图**与**状态效果表解码**（73×160 B + 名字 blob → id↔名字全表） | `26088801` |
 | ★★ [RECON-P11-SELF-HEAL](docs/cases/RECON-P11-SELF-HEAL-26088801.md) | **C 档样板（代码型）**：P-11 Self-Heal v1.0.4 = 运行时 `player_fired` 事件 + `Player:heal`（**一条数据都没改**，413 行源码）；「开火即回血」数据侧没有事件钩子 ⇒ **C · 不可实现**；替代 = 数据侧**治疗爆**（孤儿爆炸 254 + 治疗行 446，打脚下 2 m 内回血 ✓ 实机 / >2 m 不回血 ✓ 实机） | `26088801` |
+| ★★ [RECON-SHODAN-EXTRA-STRATAGEM](docs/cases/RECON-SHODAN-EXTRA-STRATAGEM-26088801.md) | **额外战备 = `StratagemInfo +0xC8`**（另一条战备的 `+0` id，不占 4 个配装位，引擎跟链、成环崩）：SHODAN v4.1.0 源码级定位 + 本 build 153 行核对（Eagle 全 = 51 `EAGLE. REARM`）；**M-104 Incinerator FRV = id 138 / 实体 `frv_flamer` 本 build 完整存在**；工具 `stratagem_extra.py`（G1–G7 含环检测）+ 已封包补丁，**⚠ 未发布目标待实机** | `26088801` |
 | ★ [NETWORK-READ-QUICKREF](docs/cases/NETWORK-READ-26088801-QUICKREF.md) | **网络复制层读取一页速查**：正确调用形态、六道闸、字段字典（16 条 hash↔名字）、能力边界 | `26088801` |
 | ★ [PROBE-READ-GUARDED](docs/cases/PROBE-READ-GUARDED-26088801.md) | 自建探针 run4–run8 全记录：名字形态、batched 语义、seat 70 = 被击倒、时间线纪律 | `26088801` |
 | [HUDPLUS-0.5.3-LIVE-PROOF](docs/cases/HUDPLUS-0.5.3-LIVE-PROOF-26088801.md) | HUD+ 0.5.3 实机可用 + 从它反推出的正确 API 形态；含 7 个 frag 模块解码 | `26088801` |
 
 ## 3. 工具清单（`tools/`）
 
-**67 个脚本，全部在库**（§3.5 另列「文档里提到但仓库故意没有」的，不计入这 67 个）。
+**68 个脚本，全部在库**（§3.5 另列「文档里提到但仓库故意没有」的，不计入这 68 个）。
 
 本目录全部工具**只读 / 离线**：没有一个会读游戏进程内存、注入或改内存数值。改数据走「解封装 → 改字节 → 解校正字 → 保哈希 → 重新封装」这条资源侧路线（原理见 [DLBIN-SEALED-BOX](docs/engine/DLBIN-SEALED-BOX.md)）。
 依赖列是**可选**的：核心表工具只需标准库（外加同目录的 `murmur64.py` / `dlbin_seal.py`）。凡是打了「自检」的，都能直接 `python tools/<名字> --selftest` 复跑，**不需要游戏文件**。
@@ -283,6 +284,7 @@
 | `entity_hashmap_insert.py` | **给实体新增一种组件**：往组件哈希图里插一条 `(键 → 行)`，可整行复制孤儿行；哈希图是 `键 % 槽数` 线性探测（§ENTITY-LOCID 10），8 道门禁 | `pod_loadout.py`、`murmur64.py` | ✓ 离线门禁全过；**但「新增组件」这条用法已实机否证**（GL-28 插弹匣行不被采纳，删联动键后崩溃）—— 只用于读写已存在组件 |
 | `dlbin_merge.py` | **mod 合并器**：多个保哈希 mod 取并集、剔除脚手架、判冲突、重解一个校正字；含 `--report-only` / `--on-conflict` | `murmur64.py` | ✓✓ 已实机（第一次上机：rack 三件 rig × GL-28 弹药行 → 合并后四件照常全出） |
 | `expl_set.py` | 写爆炸行字段（半径 / 破片数 `+80` / 破片射弹 `+84`），带 6 道门禁 | `murmur64.py` | ✓✓ 已实机（毒气爆炸加 30 破片） |
+| **`stratagem_extra.py`** | 战备表**额外战备** `+0xC8`：`--show` 全表 153 行 / `--find` 按名找 id / 写入（tail 宿主保哈希）+ **G7 环检测** + `--seal` | `murmur64.py`、`dlbin_seal.py` | ✓ 离线（G1–G7 全 PASS；未发布目标待实机） |
 | **`expl_orphans.py`** | **爆炸表孤儿普查**：重算 memmod 时代判据（无射弹行 `+0x90`/`+0x9C` 指向它）→ 424 行里 265 条无主 / 98 条伤害行独占；`--list` 全表、`--type N` 单行、`--json` 机器可读 | 标准库 | ✓ 离线（`refs/explosion-names-chain.json` 交叉验证 0 冲突） |
 | `stratagem_tune.py` | 改战备表的 `+80` uses / `+84` call-in / `+104` cooldown；`--edit` 可重复，一次封装改多行。**默认 tail 宿主**保内容哈希；`--host-mode row` 已知会崩，永不传 | 标准库（`murmur64.py` + `typelib.py`） | ✓✓ 已实机：EAGLE. AIRSTRIKE `+104` 15→4 + EAGLE. REARM 150→5，整份只差 5 字节、哈希仍复原，面板 7→2 秒 / 任务内回收 150→3 秒多（`26088801`） |
 | `patch_compose.py` | 数据路线 mod 的离线合成器：`scan` 查各包槽位与空洞、`merge` 求并集（同 id 不同内容=冲突，默认拒绝）+ 逐条回读验证、`install` 只写下一个连续槽位 | 标准库 + `srkit.container` | ✓ 实测把 bones/material/texture/lua 共 7 条合进一个补丁，toc 与 gpu 附流逐条一致 |
