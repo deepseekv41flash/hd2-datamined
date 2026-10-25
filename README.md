@@ -43,7 +43,7 @@ python tools/plain_edit.py --plain tables/generated_projectile_settings.dl_bin \
 
 **要动自己机器上的游戏文件** → 从 [改盘上数据的完整工作流](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md) 入手（8 步链 + 锚点哈希 + 93 条坑）。
 **要让代理自动做** → 用技能 [skills/hd2-file-route-mod](skills/hd2-file-route-mod/SKILL.md)（只给方法论，知识一律指回本仓库）。
-**案例在哪** → [`docs/cases/`](docs/cases)（25 篇）· 战备/未发布内容在 [`docs/tables/`](docs/tables) · 总入口 [INDEX](INDEX.md)。
+**案例在哪** → [`docs/cases/`](docs/cases)（26 篇）· 战备/未发布内容在 [`docs/tables/`](docs/tables) · 总入口 [INDEX](INDEX.md)。
 
 > **两条前置，动手之前必须确认**：
 > ① **密钥** —— `recipient.pk` / `recipient.sk` 不随仓库提供，但**可以自己解出来**：一份旧 build 的全量内存转储 + [DLBIN-SEALED-BOX §10](docs/engine/DLBIN-SEALED-BOX.md) 的 RVA / XOR 常数 / seek 工具 / 三重验证。
@@ -54,7 +54,7 @@ python tools/plain_edit.py --plain tables/generated_projectile_settings.dl_bin \
 ```
 INDEX.md   ★ 唯一索引入口：按问题找 / 按类型浏览 / 能力明细 / 已验证结论
 BUILDS.md  换 build 的操作手册：三步 / 判读规则 / 锚点复验 / 基线存放（记录在 INDEX §2 builds/）
-docs/      66 篇文档（INDEX 按类收录 65 篇 + 目录说明；案例全在 cases/）
+docs/      67 篇文档（INDEX 按类收录 66 篇 + 目录说明；案例全在 cases/）
 tools/     离线工具链（解析 / 改字节 / 保哈希 / 行级编辑 + 门禁）
 tables/    三张很小的明文参数表，供离线验证解析器
 refs/      字段图与索引：表几何 / 行名 / 本地化名 / 弹头引用链 / 组件块类型名

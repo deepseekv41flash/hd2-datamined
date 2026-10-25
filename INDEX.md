@@ -14,7 +14,7 @@
 | 想亲手改一张表 | **[改盘上数据的完整工作流](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md)** —— 主线文档，8 步链 + 锚点哈希 + 93 条坑 |
 | 想让**代理**去做 | **[skills/hd2-file-route-mod](skills/hd2-file-route-mod/SKILL.md)** —— Agent Skills，只给方法论（每步的目的 / 判据 / 停的条件）+ 指回本页 |
 | 想查某个字段 / 某个数 | [§1 按问题找](#1-按问题找) |
-| 想按类型看全部 65 篇 | [§2 按类型浏览](#2-按类型浏览65-篇) |
+| 想按类型看全部 66 篇 | [§2 按类型浏览](#2-按类型浏览66-篇) |
 | 想找某个工具 / 看它验证到哪一步 | [§3 工具清单](#3-工具清单tools) |
 | 刚更新完游戏 | [BUILDS.md §3](BUILDS.md)（三步 + §3.1 锚点复验） |
 | 什么都没有、只想先摸摸 | [§4 无密钥也能练](#4-无密钥也能练) |
@@ -100,7 +100,7 @@
 | **多个 mod 改同一份文件的不同字段，想同时用** | [MOD-MERGER](docs/cases/MOD-MERGER-26088801.md) | **§1 算法 · §2 用法 · §3 逐字节等价证明 · §4 前提与边界** | `26088801` |
 | 社区包怎么做 / 能不能共存 | [CASE-STUDY](docs/cases/CASE-STUDY-20261021.md) · [COMMUNITY-MODS-COMPAT](docs/cases/COMMUNITY-MODS-COMPAT-26088801.md) · [PATCH-SALVAGE](docs/builds/PATCH-SALVAGE-25988413.md) |
 
-## 2. 按类型浏览（65 篇）
+## 2. 按类型浏览（66 篇）
 
 | 类别 | 放什么 | 篇数 |
 |---|---|---:|
@@ -109,7 +109,7 @@
 | [`tables/`](docs/tables/) | 数据表与实体库的解码 / 改写 | 22 |
 | [`explosions/`](docs/explosions/) | 爆炸与弹头（玩法层 + 外观层） | 2 |
 | [`boundaries/`](docs/boundaries/) | 被挡住的路：进程内存、虚拟机 | 2 |
-| [`cases/`](docs/cases/) | 案例与外部参照：社区包、贴图委托、wiki 数据、**完整工作流**、**老 mod→数据路线修复版 playbook（含两个 C 档样板）**、**第三方护甲多被动 / Sterilizer 改治疗 / P-11 Self-Heal / VanillaPlus 两件 / SHODAN 额外战备 侦察**、**网络复制层探针系列**、**实体表在线改写实机证明** | 25 |
+| [`cases/`](docs/cases/) | 案例与外部参照：社区包、贴图委托、wiki 数据、**完整工作流**、**老 mod→数据路线修复版 playbook（含两个 C 档样板）**、**第三方护甲多被动 / Sterilizer 改治疗 / P-11 Self-Heal / VanillaPlus 两件 / SHODAN 额外战备 侦察**、**网络复制层探针系列**、**实体表在线改写实机证明**、**EXO-45 换臂（memmod 复现）** | 26 |
 
 ### `builds/`
 
@@ -192,6 +192,7 @@
 
 | 文档 | 一句话 | build |
 |---|---|---|
+| ★ [EXO45-ARM-SWAP-26088801](docs/cases/EXO45-ARM-SWAP-26088801.md) | **EXO-45 换臂（memmod 复现）**：左臂 ← 突破者盾、右臂 ← 伐木者加农炮；换件只写 `MountInfo.item`，包驻留用**两个免费常驻行**的 `+0xA8`（`Reinforce` 57/138 + `SOS Beacon` 59）—— 不用 runtime、不用携带源机甲 | `26088801` |
 | ★ [FILE-ROUTE-WORKFLOW-26088801](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md) | **知识库主管线**：完整 8 步链、5 张表锚点、宿主三选（含三次崩溃归因）、**93 条坑**、EAGLE 双行案例、未决清单 | `26088801`（流程跨 build） |
 | [CASE-STUDY-20261021](docs/cases/CASE-STUDY-20261021.md) | 三个社区包拆出来的路：`.patch_N` 能替换任意资源类型，纯资产 mod 不需要 loader | `25988413` |
 | [TEXTURE-SWAP-10X-APEX](docs/cases/TEXTURE-SWAP-10X-APEX.md) | 一次贴图替换委托：BC1 往返误差、材质槽判定、`patch_3` 部署与回滚 | 跨 build |
