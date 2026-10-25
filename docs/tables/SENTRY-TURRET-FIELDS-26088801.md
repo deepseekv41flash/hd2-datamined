@@ -118,8 +118,36 @@
 产物：`generated_stratagem_settings.code10.sealed.dl_bin`（`f02d51612437ccc8`；明文 `0220411ba395355a`，82,520 B）。
 门禁 G1/G1b/G2/G2b/G3/G4/G5/G6 全 PASS（邻居 code 复查：加特林 4、迫击炮 5、激光 6 未变）。
 
-判读：HUD 若显示 **10 个 ↓** 并能叫出来 ⇒ 长度上限至少 10（SHODAN 的自设上限 9 只是它 UI 的限制）；
-若只显示 9 个或叫不出来 ⇒ 引擎侧有上限/校验，记下实际截断到几。
+**✓✓ 实机（2026-10-25 23:3x）**：10 个 ↓ 的版本**HUD 照常显示 10 个箭头、也能正常叫出来**
+⇒ 呼叫码长度上限 **≥10**，SHODAN 的 `MAX=9` 只是它自己的 UI 限制；重排在战备表上也成立。
+
+### 2.2 两个战备共用同一个呼叫码（2026-10-25，⚠ 待实机）
+
+**先看原版数据**：153 行里**本来就存在 9 组同码**（多数是"同一发战备在不同池里"）：
+
+| 码 | 重名的两行 |
+|---|---|
+| `CONSUMABLES. RESUPPLY` = `PRESIDENT REWARDS. AMMO CACHE` | 真·不同战备 |
+| `EAGLE. AIR SUPPORT` = `EAGLE. (NOT USED) ADDITIONAL STRAFING RUNS` | 真·不同战备 |
+| JUMPPACK / EXTRACTION / RAISE FLAG / EXTRACTION BEACON / REINFORCEMENT BEACON / COMBAT WALKER / MACHINEGUN | 同族/任务池副本 |
+
+⇒ 数据层**允许**同码；真正的问号是「**两条都在配装里时按这个码叫，会叫出谁**」。
+
+**本轮测试件**：把 MG-43 哨戒的码改回 3 个箭头、内容 = `ORBITAL. PRECISION STRIKE` 的 `[2,2,1] →→↑`
+（复用上一轮追加在 payload 尾部的数组，`+0x48 = 3`）：
+
+| 文件 | sha256 | 内容 |
+|---|---|---|
+| `generated_stratagem_settings.code_dup.sealed.dl_bin` | **`a94c95226cda89fb`** | MG-43 = →→↑（与 Precision Strike 同码）|
+
+判读（同时带两发进任务）：
+
+| 现象 | 结论 |
+|---|---|
+| 战备栏两发都显示 →→↑，按码叫出**其中一发**（另一发仍可用/或不可用） | 引擎按"第一个匹配"解析 ⇒ 记录谁优先（很可能是配装栏里靠前的那发）|
+| 按码**叫不出任何一发** | 同码冲突被拒 ⇒ 记档 |
+| **两发同时下来** | 码→多发的映射 ⇒ 记档（少见）|
+| 把两发在配装栏里**换位置**再叫 → 谁出来跟着变 | 确认"先到先得"是按栏位顺序 |
 
 判读：战备栏里 MG-43 图标下的箭头串**变了** ⇒ 这串数据就是 HUD 的来源；按 **↑↑↓↓↑** 能叫出来 ⇒ 完全通了；
 箭头串没变、但按 ↑↑↓↓↑ 能叫 ⇒ HUD 另有来源（下一步查 UI/armory 资源）；两者都不变 ⇒ 叫码在别处（再查 `StratagemType` 资源）。
