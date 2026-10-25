@@ -715,3 +715,38 @@ econ\REPORT-xref-hmg-station-2026-10-18.md`）后，结论相反：
 | 弹体（贴图）仍空 | 说明 `CHEM GUN` 那条链没生效（宿主 57 的 `+0xC8` 没被读）⇒ 把 `6A3EEC` 挪到 59/23 上 |
 | 枪口特效消失 | 说明 `318c6255` 这次比 §16 时更"必要"了（它现在在 `LASER RIFLE ION` 行）⇒ 换回 59 |
 | HUD 战备条多出 Sterilizer / Speargun / Nova / Commando | 说明 `+0xC8` 链生效（多几个=哪条链生效），**这是本轮的自诊断读数** |
+
+### 17.7 附：40mm 站能不能当"资源加载口"（**✗ 否证**，2026-10-25 晚）
+
+想法：40mm 武器站 `0x9872EEB31A5F88FD` 是"必定加载"的，且我们不用它 ⇒ 借它的加载接口装我们的包。
+
+**数据侧的答复：它没有加载接口可借。**
+
+| 检查 | 结果 |
+|---|---|
+| 153 条战备行里有没有哪一行的 `+0xA8` = 它的包 `F6FB08CC02D24255` | **0 行**（`strat_slot_census` 全表）|
+| 它有没有 `LoadoutEntry` 条目（`+0xF8` 那条路的前提） | **没有**（`refs/loadout-entry.json` 547 条里查不到 `9872EEB31A5F88FD`）|
+| 它为什么"必定加载" | 它的 unit / mesh / bones / physics / state_machine **全在共享基础包** `F6FB08CC02D24255`（782 资源：645 wwise_stream、24 texture、16 material、15 mesh、6 bones、6 state_machine、1 geometry_group）—— 每个任务为 hellpod / 穿梭机 / 武器架载入的是**那个包**，不是"40mm 站被加载"|
+
+而引擎在数据层能装包的口只有两个（§6.5 全库普查）：战备行 `+0xA8`（自由包）与 `+0xF8`（授予武器 → 那件物品的 `LoadoutPackage`）—— 两者都不属于 40mm 站。
+
+**它确实能借出两样东西（都可做，但都换不来"加载我们的包"）：**
+
+1. **借壳**：`UnitComponentData +0` → `9872EEB31A5F88FD` ⇒模型来自常驻基础包、零声明，于是
+   本体包 `1A3DC966179BD5A4` 的那一口可以腾出来给第 8 个包。已备好：
+   `D:\mod\out\rocket-turret\e4-shell40mm.plain`（从 `r3-beh658.plain` 起改，哈希锚点 `8E49771B181FFAA1` 保持，G1–G8 全 PASS）。
+   ⚠ 代价：壳换了 ⇒ 车顶炮塔的**转动/枪口锚点**跟着换（骨骼属于壳），只适合做诊断。
+2. **借常驻粒子**：把弹丸 `+0x48` / 爆炸 `+0x38` 指向**已在内存**的粒子（旧档 `--projfx` 思路）。但本轮查证：
+   基础包里**没有 particles 类型**（只有 texture/material/mesh/bones/wwise），40mm 自己的曳光
+   `0534FF3653CC0CEE`（38 个包有副本）**不在**基础包、也不在任务效果包 `7ED1F941859987B4` 里 ⇒
+   想要"真免费"的替换粒子，得先做一次**常驻粒子普查**（`particle_census.py`），不能想当然。
+
+**顺手发现的运维问题（重要）**：实体文件的哈希在最后一跳漂了 ——
+`r1-slot2-rocket.plain` / `r2-faction1.plain` / `r3-beh658.plain` 的 Murmur 都还是锚点
+`0x8E49771B181FFAA1`，但多出 48 B 的 `generated_entities.rocket.dl_bin` 变成了 `0x193A0FDA7DA07072`。
+⇒ 以后改实体一律从 **`r3-beh658.plain`** 起（本轮 40mm 壳版本就是这么起的），否则
+`entity_field_set.py` / `mount_table.py` 会以「base 不干净」拒绝。
+
+**`rocket10`（40mm 壳版，已备好未安装）**：`entities = e4-shell40mm.plain` ＋
+`stratagem_settings = rocket10.sealed`（`88b637811b99a81e`；本体包那一口腾出来，把 `0C37E83A8D16B67A`
+从死行 138 挪到活行 57）。一句话即可换上/换回。
