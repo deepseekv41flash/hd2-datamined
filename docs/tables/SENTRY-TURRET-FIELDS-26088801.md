@@ -363,6 +363,56 @@ AC-8 关键字段：`Faction 1`（不用改）· `Behavior 5→658` · `Unit +0 
 会不会 150 s（`HellpodPayload`）自己消失。若模型仍陷进车里，就说明**原点/挂点**对不上——
 下一步可走「借车顶形态壳」（`Unit +0` 换成 40mm 站或火箭炮塔那种车顶壳）或调 `MountInfo` 的 offset。
 
+### 3.8.4 ✓✓ 实机：改 `state_machine` 的默认态，把"未展开"的哨戒修好（2026-10-26 00:0x）
+
+**结论**：空投舱炮塔类壳的折叠/展开由 **`state_machine` 资源的 `layer.DefaultState`** 决定；
+把它改成"展开"那一档，挂到载具上时**直接以展开形态出场**——AC-8 挂 M-102 炮手位实测：
+**模型展开、原点正确、开火点在炮管上、开火动画正常**（用户原话：展开本来就有一个往上伸的动作，现在全对）。
+
+**格式（来自 [xypwn/filediver](https://github.com/xypwn/filediver) 的 `stingray/state_machine`，BSD-3）**
+
+```
+头 15×u32: unk00 | 组数 | 组表偏移 | 事件哈希数 | 事件偏移 | 变量数 | 变量映射偏移
+           | 骨骼透明数 | 骨骼透明偏移 | unk0 数量/偏移 | unk1 数量/偏移 | unk2 数量/偏移
+组表 @组表偏移: count(u32) + offsets[]
+每层 @组表偏移+off: Magic(u32) | ★DefaultState(u32) | Count(u32) | Offsets[Count]
+每个 state: 名字(Hash64) 类型(0=Clip 1=Empty 2=Blend 3=Time 5=Ragdoll)
+            动画哈希表+权重 | Loop | Additive | 过渡表 Link{Index,BlendTime,Type,Beat}
+            | EmitEndEvent | EndTransitionTime | …
+过渡类型: Immediate / WaitEnd / SyncBeatClosestImmediate / WaitUntilBeat / Sync% / SyncInverse%
+```
+
+**AC-8 的实际读数**（`state_machine CBFE1FC7158347F3`，3,372 B，来自包 `54dc633a67baa93d`）：
+6 层；layer0 4 个状态，默认 3；两段动画各有"过渡态 + 循环态"（`3168C572…` / `314AE842…`）：
+state0（loop=0, endT=0.20, 带发射事件）、state1（loop=0）、state2（loop=1, `314AE842`）、
+state3（loop=1, `3168C572`）←原默认。
+
+**改法**（一层一个 u32，layer0 在文件偏移 **`0x74`**）：
+
+```bash
+python tools/state_machine_edit.py --show --layer 0 sm.bin          # 看层/状态/默认
+python tools/state_machine_edit.py --set 0=2 --out sm_new.bin sm.bin # ③→②（换成另一族的循环态）
+# 打成补丁（资源层）：entry type = A486D4045106165C(state_machine)，id = 该 SM 的 file_id
+python tools/resource_patch.py build spec.json -o out --index 7
+cp out/9ba626afa44a3aa3.patch_7* "<game>/data/"
+```
+
+**本轮已装（✓✓ 实机）**
+
+| 文件 | 值 | 用途 |
+|---|---|---|
+| `data/9ba626afa44a3aa3.patch_7`（3,568 B） | entry `state_machine CBFE1FC7158347F3`，`0x74: 3→2` | 让 AC-8 以展开形态出场 |
+| `generated_entities.dl_bin` | **`02b740fef30a7f7a`** | FRV 炮手位（行 19/119 槽 0）= AC-8 **自己的 `aa_turret` 壳**；`Behavior 5→658`；TD-110 槽 2 回原版烟幕 |
+| `generated_stratagem_settings.dl_bin` | `081e7879cb6575e2` | 行 57/59 声明 AC-8 的两个包 |
+
+⇒ 上一版"借 40mm 壳"只是绕过；**正解是改状态机默认态**——外观、原点、炮口一次到位，且不用改壳（各哨戒外观/数值保持原生）。
+
+**剩下的**：
+① 其它 8 个哨戒各有自己的 SM（如 MG-43 = `37CDE43876BA26BB`，在 `154bd6143819df7d`/`fc5b6bff0db90aab`），
+要各自找"展开"那档（layer0 通常是 4 个状态、两族循环态：逐个试 0/2/3，一局一个）；
+② 状态名是 64-bit 哈希、没语料可解，只能按结构推断 + 试；
+③ 若想"部署时也保持展开"，可从部署动画的过渡态直接切默认态（未验）。
+
 ## 4 怎么改
 
 ### 4.1 一条命令（保内容哈希）
