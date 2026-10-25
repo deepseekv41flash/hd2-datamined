@@ -201,7 +201,7 @@
 
 ## 3. 工具清单（`tools/`）
 
-**64 个脚本，全部在库**（§3.5 另列「文档里提到但仓库故意没有」的，不计入这 64 个）。
+**65 个脚本，全部在库**（§3.5 另列「文档里提到但仓库故意没有」的，不计入这 65 个）。
 
 本目录全部工具**只读 / 离线**：没有一个会读游戏进程内存、注入或改内存数值。改数据走「解封装 → 改字节 → 解校正字 → 保哈希 → 重新封装」这条资源侧路线（原理见 [DLBIN-SEALED-BOX](docs/engine/DLBIN-SEALED-BOX.md)）。
 依赖列是**可选**的：核心表工具只需标准库（外加同目录的 `murmur64.py` / `dlbin_seal.py`）。凡是打了「自检」的，都能直接 `python tools/<名字> --selftest` 复跑，**不需要游戏文件**。
@@ -281,6 +281,7 @@
 | `stratagem_tune.py` | 改战备表的 `+80` uses / `+84` call-in / `+104` cooldown；`--edit` 可重复，一次封装改多行。**默认 tail 宿主**保内容哈希；`--host-mode row` 已知会崩，永不传 | 标准库（`murmur64.py` + `typelib.py`） | ✓✓ 已实机：EAGLE. AIRSTRIKE `+104` 15→4 + EAGLE. REARM 150→5，整份只差 5 字节、哈希仍复原，面板 7→2 秒 / 任务内回收 150→3 秒多（`26088801`） |
 | `patch_compose.py` | 数据路线 mod 的离线合成器：`scan` 查各包槽位与空洞、`merge` 求并集（同 id 不同内容=冲突，默认拒绝）+ 逐条回读验证、`install` 只写下一个连续槽位 | 标准库 + `srkit.container` | ✓ 实测把 bones/material/texture/lua 共 7 条合进一个补丁，toc 与 gpu 附流逐条一致 |
 | `dmg_edit.py` / `dmg_custom_row.py` / `dmg_refs.py` | 伤害行编辑 / 自制伤害行 / 跨表引用查询 | `murmur64.py` | ✓ 离线门禁通过 |
+| **`dmg_row_edit.py`** | **伤害行任意字段编辑**：`damage/durable/ap[4]/demo/force/impulse/element` + **4 个状态槽**（`--slot N:TYPE:VALUE`），7 道门禁 + `--seal` | `murmur64.py` `dmg_edit.py` `dlbin_seal.py` | ✓ 离线门禁通过（G1–G7 全 PASS，实机待验） |
 | `name_rows.py` | 用跨 build 指纹给爆炸/射弹行恢复名字 | 标准库 | ✓ |
 
 ### 3.2 补丁 / 资源

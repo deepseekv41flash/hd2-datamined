@@ -104,9 +104,35 @@ mod 注释明确写了「Nothing else is touched (Dog Breath type 29 keeps its g
 | `+52` 槽1 type | 46 | **0** |
 | `+56` 槽1 value | 0.5 | **0.0** |
 
-流程与本仓库既有的伤害行编辑一致（保内容哈希）：
-`tools/dmg_edit.py` 目前只写 `damage/durable`，要写状态槽 / `element` 需要扩一个小工具
-（同一套"末块 tail 宿主 / 空状态槽当校正字"的做法，`dmg_refs.py` 已能列出哪些行没人引用、可当宿主）。
+**工具已扩好：`tools/dmg_row_edit.py`**（`dmg_edit.py` 的超集，一次调用可改任意组合，仍用"未引用行的空状态槽"当校正字）：
+
+```bash
+# 看一行
+python tools/dmg_row_edit.py show --type 35
+# 列可当哈希宿主的行（带 --refs 会标出没人引用的）
+python tools/dmg_row_edit.py hosts --refs out/dmgrefs.json
+# 一次改完并封包（7 道门禁 + 往返校验）
+python tools/dmg_row_edit.py set --type 35 --damage 0 --durable 0 --element 0     --slot 0:29:1.0 --slot 1:0:0 --host-type 240 --out out/heal29.plain --seal
+```
+
+门禁（全 PASS 才会写盘）：`G1` 长度不变 · `G2` 差异 ⊆ 声明字段 ∪ 校正字 · `G3` 重算哈希 == 原值 ·
+`G4` 字段读回 == 目标 · `G5` 宿主行除校正字外未变 · `G6` 目标行未声明字节未变 ·
+`G7` 校正字 8 对齐且落在宿主的**空**槽里。
+
+**哈希宿主怎么选**：必须"任何表都不用"的行。本 build 的 typed 引用面 =
+弹丸 `+?` / 爆炸 / **spray 组件 `+0xC8`** / **状态表 `+0x2C`（每个状态的每跳伤害行！）**。
+⚠ 过去常用的 `537` 其实被状态 25（`Pure Damage`）引用着，不是真空行；
+本轮的宿主选了 **type 240**（4 个空槽、四类引用全 0）。
+
+**已生成的产物 + 已装盘**（`heal29`）：
+
+| 产物 | 大小 / sha256 | 说明 |
+|---|---|---|
+| `out/spray-5/heal29.dl_bin` | 50,384 B / `91f3655c…` | **已装盘**（槽0 = 29 `Stim Pistol Heal`，值 1.0） |
+| `out/spray-5/heal28.dl_bin` | 50,384 B / `e576217d…` | 备选（槽0 = 28 `Stim Heal`），一条命令换装 |
+| 盘上回读 | 哈希 `D03587CCBD2FECFC` 不变 | type 35 = `dmg 0 · dur 0 · elem 0 · slot0 (29,1.0)`；**type 36 原样保留毒气** ✓ |
+
+回滚：`python tools/dlbin_deploy.py restore --file generated_damage_settings.dl_bin`
 
 ⚠ 注意 **共享行**：`44/46` 这对槽值是 damage 35 与 36 共用的**语义**，但行是分开的
 （每行自己存一份槽），所以改 35 不会影响 36 —— 与其它"共享行"场景不同，这里天然隔离。
