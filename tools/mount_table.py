@@ -548,7 +548,8 @@ def swap(env: Env, entity: str, slot: int, item_text: str, out: str,
         if lim or old_lim:
             def _yaw(x):
                 return f"±{x['yaw_max']:g}" if x and abs(x['yaw_min'] + x['yaw_max']) < 1e-3                     else (f"{x['yaw_min']:g}…{x['yaw_max']:g}" if x else "无 Turret")
-            print(f"  射界(yaw): 原 {_yaw(old_lim)} → 新 {_yaw(lim)}")
+            print(f"  射界(yaw): 原 {_yaw(old_lim)} → 新 {_yaw(lim)}"
+                  f"（只是机械层；玩家实际能转多少 = 机械层与相机 preset 取小，见文档 §4.7）")
         if fp["geometry"] == "none":
             print("  ⚠ 几何：没有 mesh（骨骼引用型或非武器件）—— 装上看不到模型，但可能能瞄/能打")
 
@@ -706,7 +707,8 @@ def cmd_show(env: Env, args) -> int:
         lim = info["turret_limits"]
         if lim:
             print(f"      射界: pitch {lim['pitch_min']:g}…{lim['pitch_max']:g}  "
-                  f"yaw {lim['yaw_min']:g}…{lim['yaw_max']:g}（Turret 行 {lim['row']}）")
+                  f"yaw {lim['yaw_min']:g}…{lim['yaw_max']:g}（Turret 行 {lim['row']}；"
+                  f"机械层，玩家实际还受相机 preset 夹制）")
     if not any_slot:
         print("  （空记录：5 个槽全 0）")
     return 0
