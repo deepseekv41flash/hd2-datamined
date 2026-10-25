@@ -116,6 +116,8 @@ def main() -> int:
     ap.add_argument("--plain", default=VANILLA)
     ap.add_argument("--show", action="store_true", help="列出全表：id / 名字 / 当前额外战备")
     ap.add_argument("--find", metavar="NAME", help="按名字子串找 id")
+    ap.add_argument("--chain", metavar="HOST:A,B,C",
+                    help="一次挂一整条链：HOST 的额外=A、A 的额外=B、B 的额外=C（测试多件时一局看完）")
     ap.add_argument("--host", type=int, help="宿主战备 id（带上它时送额外）")
     ap.add_argument("--host-name", help="宿主战备名字子串（与 --host 二选一）")
     ap.add_argument("--extra", type=int, help="额外战备 id（0 = 清除）")
@@ -159,6 +161,67 @@ def main() -> int:
         if len(hit) > 1:
             raise SystemExit(f"✗ 名字子串 {name!r} 匹配多行：{hit}，请用 --find 看清后给 id")
         return hit[0]
+
+    if a.chain:
+        # --chain 34:119,138 → 34→119→138（链式；一局能带出多件）
+        head, _, rest = a.chain.partition(":")
+        ids = [int(x, 0) for x in rest.split(",") if x.strip()]
+        if not ids:
+            raise SystemExit("✗ --chain 形如 HOST:A,B,C")
+        first = resolve(int(head, 0), None)
+        seq = [first] + [resolve(i, None) for i in ids]
+        for i, sid in enumerate(seq):
+            if sid not in by_id:
+                raise SystemExit(f"✗ 战备 id {sid} 不在表里")
+        # 环检测：seq 里不得有重复
+        if len(set(seq)) != len(seq):
+            raise SystemExit(f"✗ G7 环：链里有重复 id {seq}")
+        tgt_list = [(seq[i], seq[i + 1]) for i in range(len(seq) - 1)]
+        pad8 = (8 - len(data) % 8) % 8
+        tail_len = pad8 + TAIL
+        edited = bytearray(rebuild(data, gs, tail_len))
+        for host, extra in tgt_list:
+            struct.pack_into("<I", edited, by_id[host][1]["abs"] + EXTRA_OFF, extra)
+        word_at = len(data) + pad8
+        h0 = murmur64(data)
+        edited[word_at:word_at + TAIL] = padding_word_for_hash(bytes(edited), word_at, h0)
+        print(f"明文 {len(data):,} B → {len(edited):,} B  hash=0x{h0:016X}")
+        for host, extra in tgt_list:
+            print(f"  {host} ({label(by_id[host][0], nm)}) +0xC8: {u32(by_id[host][1]['row'], EXTRA_OFF)} → {extra} ({label(by_id[extra][0], nm)})")
+        diff = {i for i in range(min(len(data), len(edited))) if data[i] != edited[i]}
+        allowed = set()
+        for host, _e in tgt_list:
+            t0 = by_id[host][1]["abs"] + EXTRA_OFF
+            allowed |= set(range(t0, t0 + 4))
+        allowed |= set(range(gs[-1]["at"] + 12, gs[-1]["at"] + 16)) | set(range(word_at, word_at + TAIL))
+        ok = True
+        def chk(tag, cond, detail=""):
+            nonlocal ok
+            ok = ok and bool(cond)
+            print(f"  {'PASS' if cond else 'FAIL'}  {tag}{('  ' + detail) if detail else ''}")
+        chk("G1 长度", len(edited) == len(data) + tail_len, f"{len(data):,} -> {len(edited):,}")
+        chk("G2 差异集合", diff <= allowed, f"diff={len(diff)}")
+        got = murmur64(bytes(edited))
+        chk("G3 哈希复原", got == h0, f"0x{got:016X}")
+        chk("G4 读回", all(struct.unpack_from("<I", edited, by_id[h][1]["abs"] + EXTRA_OFF)[0] == e for h, e in tgt_list))
+        chk("G5 其余未动", diff <= allowed)
+        try:
+            groups(bytes(edited)); okp = True
+        except Exception as exc:                              # noqa: BLE001
+            okp = False; print("     ", exc)
+        chk("G6 容器自洽", okp)
+        if not ok:
+            return 1
+        if not a.out:
+            raise SystemExit("✗ 门禁全过，但缺 --out")
+        open(a.out, "wb").write(bytes(edited))
+        print(f"✓ 明文 {a.out}")
+        if a.seal:
+            sealed = a.out[:-6] + ".dl_bin" if a.out.endswith(".plain") else a.out + ".dl_bin"
+            subprocess.run([sys.executable, os.path.join(HERE, "dlbin_seal.py"), "seal-key", a.out,
+                            "--key", a.pk, "--out", sealed], check=True)
+            print(f"✓ 封包 {sealed}")
+        return 0
 
     if a.host is None and not a.host_name:
         raise SystemExit("✗ 要写就用 --host/--host-name；只想看用 --show")

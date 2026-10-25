@@ -14,7 +14,7 @@
 | 想亲手改一张表 | **[改盘上数据的完整工作流](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md)** —— 主线文档，8 步链 + 锚点哈希 + 92 条坑 |
 | 想让**代理**去做 | **[skills/hd2-file-route-mod](skills/hd2-file-route-mod/SKILL.md)** —— Agent Skills，只给方法论（每步的目的 / 判据 / 停的条件）+ 指回本页 |
 | 想查某个字段 / 某个数 | [§1 按问题找](#1-按问题找) |
-| 想按类型看全部 63 篇 | [§2 按类型浏览](#2-按类型浏览63-篇) |
+| 想按类型看全部 64 篇 | [§2 按类型浏览](#2-按类型浏览64-篇) |
 | 想找某个工具 / 看它验证到哪一步 | [§3 工具清单](#3-工具清单tools) |
 | 刚更新完游戏 | [BUILDS.md §3](BUILDS.md)（三步 + §3.1 锚点复验） |
 | 什么都没有、只想先摸摸 | [§4 无密钥也能练](#4-无密钥也能练) |
@@ -99,13 +99,13 @@
 | **多个 mod 改同一份文件的不同字段，想同时用** | [MOD-MERGER](docs/cases/MOD-MERGER-26088801.md) | **§1 算法 · §2 用法 · §3 逐字节等价证明 · §4 前提与边界** | `26088801` |
 | 社区包怎么做 / 能不能共存 | [CASE-STUDY](docs/cases/CASE-STUDY-20261021.md) · [COMMUNITY-MODS-COMPAT](docs/cases/COMMUNITY-MODS-COMPAT-26088801.md) · [PATCH-SALVAGE](docs/builds/PATCH-SALVAGE-25988413.md) |
 
-## 2. 按类型浏览（63 篇）
+## 2. 按类型浏览（64 篇）
 
 | 类别 | 放什么 | 篇数 |
 |---|---|---:|
 | [`builds/`](docs/builds/) | 每个 build 的总体变化、差异、路线取舍 | 4 |
 | [`engine/`](docs/engine/) | 引擎侧：格式封装、API 面、Lua 运行时、探针、加载器、**有限数量的跨包加载** | 10 |
-| [`tables/`](docs/tables/) | 数据表与实体库的解码 / 改写 | 20 |
+| [`tables/`](docs/tables/) | 数据表与实体库的解码 / 改写 | 21 |
 | [`explosions/`](docs/explosions/) | 爆炸与弹头（玩法层 + 外观层） | 2 |
 | [`boundaries/`](docs/boundaries/) | 被挡住的路：进程内存、虚拟机 | 2 |
 | [`cases/`](docs/cases/) | 案例与外部参照：社区包、贴图委托、wiki 数据、**完整工作流**、**老 mod→数据路线修复版 playbook（含两个 C 档样板）**、**第三方护甲多被动 / Sterilizer 改治疗 / P-11 Self-Heal / VanillaPlus 两件 / SHODAN 额外战备 侦察**、**网络复制层探针系列**、**实体表在线改写实机证明** | 25 |
@@ -153,6 +153,7 @@
 | ★ [RECON-VPM-BOUNCE-STICKY](docs/cases/RECON-VPM-BOUNCE-STICKY-26088801.md) | **VanillaPlus Megapack 两件侦察**：`BetterStratagemBounce` 改的是**战备表 `+0x170` 的 bit 0x02**（不是 sticky，且在本 build 会拒绝执行）；`StickyGrenadeHandles` 改的是材质 `userData`（4 B）——**已定位**到 physics 载荷内联 20 B 材质记录的数据字（G-123 `+0x15C` / G-109 `+0xCC`，全量 4,839 载荷扫完），`ThrowableComponent+0x54/+0x164` 只读 | `26088801` |
 | [STICKY-COMPONENT-26088801](docs/tables/STICKY-COMPONENT-26088801.md) | **粘附组件全解**：38 槽 + 19 行 × 76 B；`+0x2C` = 粘住时的命中伤害行（飞刀 648）、`+0x3C/+0x40` = 两个 AbilityId、`+0x08` 附着旋转全表 -90°；热熔的 sticky 是最小配置 | `26088801` |
 | ★ [STATUS-EFFECTS-26088801](docs/tables/STATUS-EFFECTS-26088801.md) | **状态效果表全解**：73×160 B + 名字 blob（id↔名字↔每跳伤害行全表）；全库只有 10 处能施加状态；**Thermite = id 13**（tick 行 533）却无人引用；§7 **状态爆 = 孤儿爆炸行 → 伤害行 → 状态槽**（265 条无主爆炸 + P-11 治疗爆配方，**✓ 实机**：脚下回血、>2 m 不回血） | `26088801` |
+| ★★ [UNRELEASED-STRATAGEMS-26088801](docs/tables/UNRELEASED-STRATAGEMS-26088801.md) | **未发布战备候选名单**：153 行逐行分类（85 已发布 / 41 任务子项 / 9 载具 / 2 个 `(NOT USED)` / 彩蛋）；T1 七条可按优先级试（**M-104 = 138 ✓ 实机可带可叫**，36/150/64/145/50/119 待测）；`--chain` 一次带 3 件的配方 + 判读表 | `26088801` |
 | ★ [CHARGE-WEAPONS-26088801](docs/tables/CHARGE-WEAPONS-26088801.md) | **蓄力武器**：`WeaponChargeComponentData`（20 槽 + 11 行 × 216 B）三档状态（`ChargeTime`+`ProjType`）+ 12 倍率；**蓄满时间 ✓ 实机**（ARC-3 按下几乎立刻放电）；「不蓄满能否开火」= `Min.ProjType` 非 0（6/6）；过蓄伤害 = `DamageMin→DamageOver`（Railgun 1.0→2.5）· 过蓄自毁 = 爆炸 type 326→伤害行 362（2000 伤害 / 0.4-2-3 m） | `26088801` |
 | ★ [LOCKON-TARGETING-26088801](docs/tables/LOCKON-TARGETING-26088801.md) | **锁定/制导武器（✓ 结项）**：可改 = 距离（`SensorEye.distance`）+ 锁定时间（`lock_on_target_time`，均实机）；改不动 = 锥角（四路否证）+ 可锁集合（标签位图无映射）；含 7 轮实验台账与武器→投射物→制导行映射 | `26088801` |
 | ★ [ENTITIES-TABLE-LIVE-EDIT-26088801](docs/cases/ENTITIES-TABLE-LIVE-EDIT-26088801.md) | **实体表在线改写 ✓ 实机**：47 MB `generated_entities.dl_bin` 可改 + 重新封装 + 引擎接受；完整证据链（解封/锚点哈希/门禁/盘上回读/实机） | `26088801` |

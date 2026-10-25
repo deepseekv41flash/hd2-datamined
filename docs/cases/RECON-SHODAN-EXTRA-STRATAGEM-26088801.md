@@ -146,6 +146,8 @@ python tools/stratagem_extra.py --plain out/s1.plain --host 121 --extra 138 --ou
 
 ### 5.2 本 build 里还有哪些「游戏有但没提供」的战备行（候选）
 
+> 完整分层名单（153 行逐行分类 + 测试配方）见 [UNRELEASED-STRATAGEMS](../tables/UNRELEASED-STRATAGEMS-26088801.md)。
+
 | id | 内部名 | 备注 |
 |---:|---|---|
 | 36 | `EAGLE. (NOT USED) ADDITIONAL STRAFING RUNS` | 原版未用，`+0xC8` 已自带 51 |
