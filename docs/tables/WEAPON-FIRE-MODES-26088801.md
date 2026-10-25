@@ -394,6 +394,7 @@ TX-41 STERILIZER S            kind=Spray   role=primary
 
 | 结论 | 态 |
 |---|---|
+| **伤害行的状态槽 = 「让任意武器施加任意状态」的入口** | **✓ 实机**（把 TX-41 的槽0 写成 `(29 Stim Pistol Heal, 1.0)`、槽1 清 0、`element` 清 0、damage 清 0 ⇒ 喷自己脚下会**回血**） |
 | 存在第 4 个远程输出族 `SprayWeaponComponentData` | **✓ 离线**（社区模型 + 本 build 23 行实测，喷火/毒气/敌人喷火全在其中） |
 | 喷火器不发射 projectile | **✓ 离线**（没有 ProjectileWeapon 组件；只有 Spray + Magazine） |
 | `+200` = 喷流的伤害/命中类型 | **✓ 离线**（与社区 `+200 DamageInfoType` 一致；数值分火焰组 vs 毒气组） |

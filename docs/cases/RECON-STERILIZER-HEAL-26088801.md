@@ -128,7 +128,7 @@ python tools/dmg_row_edit.py set --type 35 --damage 0 --durable 0 --element 0   
 
 | 产物 | 大小 / sha256 | 说明 |
 |---|---|---|
-| `out/spray-5/heal29.dl_bin` | 50,384 B / `91f3655c…` | **已装盘**（槽0 = 29 `Stim Pistol Heal`，值 1.0） |
+| `out/spray-5/heal29.dl_bin` | 50,384 B / `91f3655c…` | **已装盘 + ✓ 实机**（槽0 = 29 `Stim Pistol Heal`，值 1.0）：**对着自己脚下喷 → 自己回血** |
 | `out/spray-5/heal28.dl_bin` | 50,384 B / `e576217d…` | 备选（槽0 = 28 `Stim Heal`），一条命令换装 |
 | 盘上回读 | 哈希 `D03587CCBD2FECFC` 不变 | type 35 = `dmg 0 · dur 0 · elem 0 · slot0 (29,1.0)`；**type 36 原样保留毒气** ✓ |
 
@@ -145,8 +145,8 @@ python tools/dmg_row_edit.py set --type 35 --damage 0 --durable 0 --element 0   
 | 手段是运行时内存改写 + 定时校验重写 | **✓ 离线**（`WriteProcessMemory` + 300 帧校验） |
 | 本 build 对应行 = damage type **35**（第 34 行），字段值与旧 build 28 号行一致 | **✓ 离线** |
 | 状态表解码：73 行 × 160 B + 名字 blob，id→名字全表可查 | **✓ 离线**（Fire/Fire_Panic/FlamerSlowed/Gas/Gas_Confusion/Stim* 三方互证） |
-| 本 build 的治疗状态 = 29（`Stim Pistol Heal`，备选 28 `Stim Heal`） | **⚠ 待实机**（两档在本 build 被拆开，哪个生效要试） |
-| 用数据路线改完 = 同样的治疗效果 | **⚠ 待实机** |
+| 本 build 的治疗状态 = **29**（`Stim Pistol Heal`；28 `Stim Heal` 未试） | **✓ 实机**（TX-41 对脚下喷 → 自己回血，说明 29 生效且**能作用于自己**） |
+| 用数据路线改完 = 同样的治疗效果 | **✓ 实机**（`heal29` 装盘后当场验证；无需 loader、无需内存补丁） |
 
 ## 7 风险与注意
 

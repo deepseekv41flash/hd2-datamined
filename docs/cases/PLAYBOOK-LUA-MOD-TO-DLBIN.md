@@ -101,7 +101,7 @@
 
 | 案例 | 老 mod 的层 | 我们的等价实现 | 结论 |
 |---|---|---|---|
-| **Sterilizer-Heal v1.0** | L1（伤害行：状态槽 0/1 + `element` + damage） | `dmg_row_edit.py` 7 字段 → `heal29.dl_bin` | **✓ 已装盘**（`91f3655c…`，待实机） |
+| **Sterilizer-Heal v1.0** | L1（伤害行：状态槽 0/1 + `element` + damage） | `dmg_row_edit.py` 7 字段 → `heal29.dl_bin` | **✓ 已装盘 + ✓ 实机**（TX-41 喷脚下 → 自己回血）⇒ A 档完整闭环样板 |
 | **BetterStratagemBounce v15.4.1** | L1（战备表 `+0x170` 清 bit `0x02`，105/153 行） | `plain_edit.py` 同字段 | **可等价，未装** |
 | **StickyGrenadeHandles v1.0.1** | **L3**（havok 材质库 `userData` 4 B） | havok 材质属 `physics` 资源族，我们逆过同族载荷并改过 mass | **B · 跨载体等价**（⚠ 未针对本条验证） |
 
