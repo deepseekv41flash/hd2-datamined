@@ -519,3 +519,61 @@ econ\REPORT-xref-hmg-station-2026-10-18.md`）后，结论相反：
 
 ⇒ **整条"外来件当玩家武器站"的路线已经全部从运行时搬到数据文件上**，且稳定性更好（无每帧写、无页保护、无 `HELD` 轮询）。
 唯一搬不过去的是**座位侧能力**（准星/装填/相机夹制）与**骨骼绑定的转动**——这两条是引擎代码与资产层的事。
+
+---
+
+## 15 试装：Barrager Tank 车顶火箭炮塔（**唯一能同时拿位置+转动的外来件**，⚠ 待验）
+
+### 15.1 这件是什么
+
+`0x5D142C3A73EBC634` = 自动化军团 **Barrager Tank**（`0x63DF3D07B7424588` 行 94 槽 0）的**车顶火箭炮塔**
+（资源名 `tank_turret_rocketlauncher`，百科名 `Ballistic Missile`）。28 组件：`Turret` ✓ `Wieldable`+`WeaponWielder` ✓
+`ProjectileWeapon` ✓ `Backblast` ✓ `AiEnemy` ✓ 索敌三件套 ✓；`Faction +0 = 8`、`Behavior +0 = 79`；
+壳 = 自身（包 `1a3dc966179bd5a4`，mesh 1.35 MB）；射界 yaw **±180** / pitch **−30…+90**；
+弹丸 `+0 = 334`、rpm 1000、弹匣 1000。
+
+**为什么选它**：旧档 §86.1 实测——不换壳、只做「包 + 阵营」，**位置正确 + 炮管跟着瞄准转**。
+判据是「壳体是不是车顶炮塔形态」，它正是。
+
+### 15.2 改动（3 处）
+
+| # | 层 | 改动 | 门禁 |
+|---|---|---|---|
+| ① | 挂载 | TD-110 行 125 **槽 2**：光明族炮头 → **`0x5D142C3A73EBC634`** | G1–G10 ✓ |
+| ② | 阵营 | `Faction +0`：**8 (Automaton) → 1 (Super Earth)** | G1–G8 ✓ |
+| ③ | 行为 | `Behavior +0`：**79 → 658**（归玩家；不换的话 AI 会自己打） | G1–G8 ✓ |
+
+### 15.3 特效包（旧档 §86.2 给的清单，本轮按 3 个口裁剪）
+
+| 口 | `+0xA8` | 内容 | 覆盖 |
+|---|---|---|---|
+| `Reinforce` 行 57 | `0x1A3DC966179BD5A4` | 炮塔本体（4 资源 / 1.35 MB） | 模型 |
+| `Reinforce` 行 138 | `0xFDF011DAECF24312` | **拖尾粒子 6094745A691467E1** + 200 particles + 156 textures / 68 MB | 曳光拖尾 **＋枪口/命中粒子**（那两个 id 在 9 个包里都有副本，含此包 ✓） |
+| `SOS Beacon` 行 59 | `0x6A3EECFDDCE28FE8` | 导弹共享贴图 `6A6598587D4BC8F5`（680 textures / 33 MB） | 弹体贴图 |
+
+**省掉的**：`318c6255be1254cd`（旧档 9 包里最小的那个，14.9 MB）——它的粒子在本轮已由 `fdf011…` 覆盖，
+只可能缺它自己的材质/贴图 ⇒ 若枪口闪光观感不对，下一步把它顶上来（要腾口）。
+
+⚠ 旧档同一件上的崩溃警告依然有效：**外来件 + 大量特效 + 连续开火 ⇒ 掉帧 ⇒ 偶发崩**；
+真要稳，可把 `ProjectileSettings` 里该弹丸的拖尾换成同包自动炮粒子（旧档 `--projfx` 的做法）。
+
+### 15.4 盘上内容（**✓ 已装**）
+
+| 文件 | 大小 | sha256 |
+|---|---:|---|
+| `D:\mod\out\rocket-turret\generated_entities.rocket.dl_bin` | 47,259,720 | **`4f766dc7b2ec9496`** |
+| `D:\mod\out\rocket-turret\generated_stratagem_settings.rocket.sealed.dl_bin` | 82,440 | **`add3788215d47d2d`** |
+
+### 15.5 判读
+
+| 观察 | 判定 |
+|---|---|
+| 模型 = 车顶火箭炮塔、**炮管跟着瞄准转** | ✓✓ **外来件两全**（这是本会话第一次在 TD-110 上拿到"会转的玩家炮塔"） |
+| 有曳光/拖尾、导弹可见 | ✓ 特效包对齐 |
+| 开火能打、伤害正常 | ✓ |
+| 炮管不转 | 与旧档预测相反 ⇒ 说明 658 这个行为可能影响转动，退一步把 `Behavior` 回 79 再测 |
+| 紫问号 | 某个包没驻留 ⇒ 先别开火 |
+
+回滚：`restore` 两个文件；回上一版（光明族光束）：
+`install --sealed D:\mod\out\beam-turret\generated_entities.beam.dl_bin` +
+`install --sealed D:\mod\out\beam-turret\generated_stratagem_settings.beam.sealed.dl_bin`。
