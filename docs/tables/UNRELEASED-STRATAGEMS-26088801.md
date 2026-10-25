@@ -30,13 +30,26 @@
 |---:|---|---|---:|---:|---:|---|---|
 | **138** | `VEHICLES. FAST RECON VEHICLE (Ramming Flamethrower)` | 炽灼型快速侦察载具 | ∞ | 480 s | 3 | `2d85bfe3d8717fe5`（`frv_flamer`）+ shuttle | **✓ 实机：能带能叫**（本名单唯一已验证） |
 | **36** | `EAGLE. (NOT USED) ADDITIONAL STRAFING RUNS` | （无名，**借 Eagle Strafing Run 的图标**） | 3 | 15 s | 0 | `23a60681dd4383ec` | **✓ 实机：能带能叫、效果 = Eagle Strafing Run；只有 4 次、用完不可用，Eagle Rearm 补不了它** |
-| **150** | `EAGLE. (NOT USED) AIR-TO-AIR MISSLES` | Eagle Air-to-Air Missiles | 2 | 15 s | 0 | `dfbb9a0d8fa27d85` | 原版标 `NOT USED`；有名字（locid 在包里）⇒ 游戏内大概率显示正常 |
-| **64** | `ORBITAL. WALKING BARRAGE SMOKE` | Orbital Walking Barrage Smoke | ∞ | 120 s | 5 | `08d58cb1bf65f7a9` | 行走弹幕的**烟雾版**，军械库没有；结构完整 |
-| **145** | `ORBITAL CONFETTI` | Orbital Confetti | ∞ | 80 s | 1 | `aedc4a073fb4b925` | 彩蛋战备（纸屑轨道打击），有名字 |
-| **50** | `EAGLE FLY BY` | Eagle Fly By | 5 | 15 s | 0 | `2a275bb78bb20148` | 过场用（飞鹰掠过），能叫出来多半只是演出 |
+| **150** | `EAGLE. (NOT USED) AIR-TO-AIR MISSLES` | Eagle Air-to-Air Missiles | 2 | 15 s | 0 | `dfbb9a0d8fa27d85` | **✓ 实机：有名字有图标、能用**；⚠ **会锁地面目标**（目标筛选未完成）|
+| **64** | `ORBITAL. WALKING BARRAGE SMOKE` | Orbital Walking Barrage Smoke | ∞ | 120 s | 5 | `08d58cb1bf65f7a9` | **✓ 实机：有名字有图标、能用**（行走弹幕的烟雾版）|
+| **145** | `ORBITAL CONFETTI` | Orbital Confetti | ∞ | 80 s | 1 | `aedc4a073fb4b925` | **✓ 实机：有名字有图标、能用**（纸屑轨道打击彩蛋）|
+| **50** | `EAGLE FLY BY` | Eagle Fly By | 5 | 15 s | 0 | `2a275bb78bb20148` | 过场用（飞鹰掠过），多半只是演出；**⚠ 未测** |
 | **119** | `SEAF Squad` | （无名） | ∞ | 120 s | 6 | `75f7e96af7dcd303` + `3ec790806d0b0540` | 投放类型 6（与载具/常规不同）；**✓ 实机：能带、能叫，但运输机投下空无一物** ⇒ 半成品行（有呼叫流程、无载荷生成） |
 
 > 说明：`+0x3C` 投放方式：0=飞鹰空投、1=轨道、2=投掷/空投、3=载具空投、4=信标、5=行走弹幕、6=？（SEAF Squad 独有）。
+
+### 2.1 ✓ 已验证可用（2026-10-25 一天内全部实机）
+
+| id | 名字 | 实测现象 |
+|---:|---|---|
+| 138 | Incinerator FRV | 车辆正常投放、能开 |
+| 36 | （无名）额外扫射 | 图标借 Eagle Strafing Run、效果同它；**只有 4 次充能**、Rearm 不补 |
+| 150 | Eagle Air-to-Air Missiles | 有名字有图标、能打；⚠ **会锁地面目标**（目标筛选未完成） |
+| 64 | Orbital Walking Barrage Smoke | 有名字有图标、能打（烟幕行走弹幕） |
+| 145 | Orbital Confetti | 有名字有图标、能打（纸屑彩蛋） |
+
+结论：**未发布战备的图标/名字大多在包里**（只有 36 / 119 这种真没 locid 的回退到占位或同族图标）；
+所以「额外战备」是**把未发布内容带进正式任务**的稳定入口。
 
 ## 3 T2 · 任务 / 子项行（能带，但基本没意义；个别可能有惊喜）
 
@@ -93,6 +106,7 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 | 153 行 = 85 已发布 + 41 任务/子项 + 9 载具 + 2 `NOT USED` + 少量彩蛋 | **✓ 离线**（内部名从行内字符串直接读） |
 | M-104（138）可带可叫 | **✓ 实机**（2026-10-25） |
 | 36 = 未使用的 Eagle 扫射，能带能叫、效果同 Strafing Run | **✓ 实机**（4 次充能；Rearm 不补） |
-| 150 / 64 / 145 能不能带、能不能叫 | **⚠ 本轮一起测**（链 `34→150→64→145`） |
+| 150 / 64 / 145 都能带、都能叫，且有名字有图标 | **✓ 实机**（三连链一次测完） |
+| 150 会锁地面目标（空中目标筛选未完成） | **✓ 实机观察** |
 | 119 SEAF Squad | **✓ 实机**：可带可叫，**空投为空**（占位图标；判定为半成品行） |
 | 任务行带进普通任务会怎样 | **⚠ 未证**（依赖任务状态，预期大多无反应） |
