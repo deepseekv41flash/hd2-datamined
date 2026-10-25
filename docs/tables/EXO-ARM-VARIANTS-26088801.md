@@ -141,3 +141,42 @@ python tools/mount_table.py swap --entity 0x79E4B3D2DA5E45E3 --slot 0 \
 - 第三方 mod：`D:\mod\recon\exoloadout-26088801\`（`Addon/9ba626afa44a3aa3.patch_0` + 解包出的 `script.lua`）
 - 表几何与字段语义：[WEAPON-AMMO-RESERVE §8](WEAPON-AMMO-RESERVE-26088801.md)（`Magazine +0x88`）· [WEAPON-FIRE-MODES §1.2](WEAPON-FIRE-MODES-26088801.md)（`ProjectileWeapon +4/+8/+12` = rpm）· [EXPLOSION-PROJECTILE §2](../explosions/EXPLOSION-PROJECTILE-25988413.md)（弹丸行 `+60`/`+144`）· [DAMAGE-SETTINGS §2](DAMAGE-SETTINGS-26088801.md)（伤害行 76 B 字段图）
 - 弹丸记录名表：本地第三方 `SHODAN Stat Editor v4.1.0`（`MOD.round_names`，按记录 id 给名）
+
+---
+
+## 8 实机装配（2026-10-25，**⚠ 待验**）：爱国者双外来臂 = MK2 导弹 + 200 发机炮
+
+### 8.1 盘上内容
+
+| 文件 | 大小 | sha256 | 改动 |
+|---|---:|---|---|
+| `D:\mod\out\exo45-arms-v2\generated_entities.exo45-mk2-ac200.dl_bin` | 47,259,592 | `7e75675de840f83f` | EXO-45 行 17：**slot0（左臂）→ `0x821D035AA47E3E75`**（导弹 MK2 孪生）、**slot1（右臂）→ `0x3E3A31261A124454`**（机炮 200 发） |
+| `D:\mod\out\exo45-arms-v2\generated_stratagem_settings.exo49pkg.sealed.dl_bin` | 82,440 | `2dc6179e8a3f71ef` | 只改 1 处：爱国者 **live 行 143 `+0xA8` = `0xE72D3E9B05C3DB0B`**（解放者/EXO-49 包）；`SOS Beacon` 行归零（不再借行） |
+
+门禁：换件两次 G1–G10 全过（`changed=[(17,0,…)]`、`changed=[(17,1,…)]`）；`plain_edit` G1–G6 全过（diff 9 B）；
+封箱后 `open-key` 回读逐字节一致；两个文件 Murmur64A 各自保持原值。
+
+### 8.2 为什么只需要声明 **一个** 包
+
+| 件 | `UnitComponentData +0`（模型来源） | 包 | 是否需额外驻留 |
+|---|---|---|---|
+| 200 发机炮 `0x3E3A31261A124454` | `0xFF9878576A4C543B`（EXO-49 右臂原版） | `e72d3e9b05c3db0b` | **要** → 用爱国者 live 行声明 |
+| 导弹 MK2 孪生 `0x821D035AA47E3E75` | `0x824B7E0C4C879EB5`（爱国者自己的导弹巢） | `22749a294788af66` | **不要**（本体自带） |
+
+⇒ 对比上一轮（盾 + 伐木者炮）需要两个外来包、要借 `SOS Beacon` 一行；这一轮两个件里只有一个外来包，**完全自足**（只动爱国者自己那一行）。
+
+### 8.3 进游戏看什么
+
+| 观察点 | 期望 |
+|---|---|
+| 左臂模型 | 与**原版导弹巢完全一样**（同一 unit 资源） |
+| 左臂手感 | 直击**变弱**（1250→600，AP 6→5），但**爆炸穿甲更强**（3→5）、拆解/硬直更高（30→40 / 40→50） |
+| 右臂模型 | 与 EXO-49 右臂机炮一样（同一 unit 资源），**紫问号** = EXO-49 包没驻留 |
+| 右臂 HUD 弹数 | **200**（原版 100；该件 `chambered = 0`，所以不减一） |
+| 右臂射速 | 300 rpm（原版 175） |
+| 本体 | 正常（`+0xA8` 是纯增量声明，见 [EXO45-ARM-SWAP §8.3](../cases/EXO45-ARM-SWAP-26088801.md)） |
+
+回滚：`python tools/dlbin_deploy.py restore --file generated_entities.dl_bin` 与
+`python tools/dlbin_deploy.py restore --file generated_stratagem_settings.dl_bin`；
+回上一版（盾 + 伐木者炮）：`install --sealed D:\mod\out\exo45-arms\generated_entities.exo45-arms.dl_bin` +
+`install --sealed D:\mod\out\exo45-arms\generated_stratagem_settings.minimal-borrow.sealed.dl_bin`。
