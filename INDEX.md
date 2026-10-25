@@ -28,7 +28,7 @@
 | 战备冷却 / 呼叫时间 / 使用次数 | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | §2 面板公式 · §5.2 鹰式次数 · §5.3 float32 边界 | `26088801` |
 | **Eagle 回收时间** | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | **§5.4 `EAGLE. REARM` 独立行** | `26088801` |
 | **Eagle 冷却 / 回收的升级公式** | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | **§5.4.4**（两个公式都已实机解开） | `26088801` |
-| 爆炸半径 / 破片数 / 粒子 / 震屏 / 外观移植 | [EXPLOSION-VISUAL](docs/explosions/EXPLOSION-VISUAL-26088801.md) | §1 字段图 · §4 无主行账本（265/424）· §5 `+0xA8` 跨包加载 | `26088801` |
+| 爆炸半径 / 破片数 / 粒子 / 震屏 / 外观移植 · 状态爆 | [EXPLOSION-VISUAL](docs/explosions/EXPLOSION-VISUAL-26088801.md) | §1 字段图 · §4 无主行账本（265/424，✓ 实机用过 254）· §5 `+0xA8` 跨包加载 | `26088801` |
 | 换弹头（整行搬运）/ 换爆炸效果 | [EXPLOSION-PROJECTILE](docs/explosions/EXPLOSION-PROJECTILE-25988413.md) | 全文 | `25988413` |
 | 武器数值 / 可选弹种 / 独立弹药池 | [ENTITY-TABLE](docs/tables/ENTITY-TABLE-25988413.md) | §9 | `25988413` |
 | 武器配件与槽位 | [WEAPON-CUSTOMIZATION-DECODED](docs/tables/WEAPON-CUSTOMIZATION-DECODED.md) | 全文 | `25988413` |
@@ -152,7 +152,7 @@
 | ★ [PLAYBOOK-LUA-MOD-TO-DLBIN](docs/cases/PLAYBOOK-LUA-MOD-TO-DLBIN.md) | **老 mod → 数据路线等价修复版**：五步流水线（开包/读载荷/归层 L1–L4/映射/实现）+ **A/B/C 三档判定（dl_bin 等价 / 跨载体等价 / 不可实现，禁用「不可等价」）** + 载体能力表 + 跨 build 常量重取规则 + 三个样板案例 + 报告骨架；配套工具 `lua_payload_dump.py`、技能 `skills/hd2-lua-mod-to-dlbin` | 跨 build |
 | ★ [RECON-VPM-BOUNCE-STICKY](docs/cases/RECON-VPM-BOUNCE-STICKY-26088801.md) | **VanillaPlus Megapack 两件侦察**：`BetterStratagemBounce` 改的是**战备表 `+0x170` 的 bit 0x02**（不是 sticky，且在本 build 会拒绝执行）；`StickyGrenadeHandles` 改的是材质 `userData`（4 B）——**已定位**到 physics 载荷内联 20 B 材质记录的数据字（G-123 `+0x15C` / G-109 `+0xCC`，全量 4,839 载荷扫完），`ThrowableComponent+0x54/+0x164` 只读 | `26088801` |
 | [STICKY-COMPONENT-26088801](docs/tables/STICKY-COMPONENT-26088801.md) | **粘附组件全解**：38 槽 + 19 行 × 76 B；`+0x2C` = 粘住时的命中伤害行（飞刀 648）、`+0x3C/+0x40` = 两个 AbilityId、`+0x08` 附着旋转全表 -90°；热熔的 sticky 是最小配置 | `26088801` |
-| ★ [STATUS-EFFECTS-26088801](docs/tables/STATUS-EFFECTS-26088801.md) | **状态效果表全解**：73×160 B + 名字 blob（id↔名字↔每跳伤害行全表）；全库只有 10 处能施加状态；**Thermite = id 13**（tick 行 533）却无人引用；§7 **状态爆 = 孤儿爆炸行 → 伤害行 → 状态槽**（265 条无主爆炸 + P-11 治疗爆配方） | `26088801` |
+| ★ [STATUS-EFFECTS-26088801](docs/tables/STATUS-EFFECTS-26088801.md) | **状态效果表全解**：73×160 B + 名字 blob（id↔名字↔每跳伤害行全表）；全库只有 10 处能施加状态；**Thermite = id 13**（tick 行 533）却无人引用；§7 **状态爆 = 孤儿爆炸行 → 伤害行 → 状态槽**（265 条无主爆炸 + P-11 治疗爆配方，**✓ 实机**：脚下回血、>2 m 不回血） | `26088801` |
 | ★ [CHARGE-WEAPONS-26088801](docs/tables/CHARGE-WEAPONS-26088801.md) | **蓄力武器**：`WeaponChargeComponentData`（20 槽 + 11 行 × 216 B）三档状态（`ChargeTime`+`ProjType`）+ 12 倍率；**蓄满时间 ✓ 实机**（ARC-3 按下几乎立刻放电）；「不蓄满能否开火」= `Min.ProjType` 非 0（6/6）；过蓄伤害 = `DamageMin→DamageOver`（Railgun 1.0→2.5）· 过蓄自毁 = 爆炸 type 326→伤害行 362（2000 伤害 / 0.4-2-3 m） | `26088801` |
 | ★ [LOCKON-TARGETING-26088801](docs/tables/LOCKON-TARGETING-26088801.md) | **锁定/制导武器（✓ 结项）**：可改 = 距离（`SensorEye.distance`）+ 锁定时间（`lock_on_target_time`，均实机）；改不动 = 锥角（四路否证）+ 可锁集合（标签位图无映射）；含 7 轮实验台账与武器→投射物→制导行映射 | `26088801` |
 | ★ [ENTITIES-TABLE-LIVE-EDIT-26088801](docs/cases/ENTITIES-TABLE-LIVE-EDIT-26088801.md) | **实体表在线改写 ✓ 实机**：47 MB `generated_entities.dl_bin` 可改 + 重新封装 + 引擎接受；完整证据链（解封/锚点哈希/门禁/盘上回读/实机） | `26088801` |

@@ -787,3 +787,4 @@ python tools/dlbin_deploy.py restore --file generated_entities.dl_bin
 | 链接字段 = `WeaponCustomization +192 underbarrel_path`（本 build 基础值为 0，来自 entity delta） | **✓ 离线** |
 | 改下挂的弹丸/容量/备弹 | **✓ 实机**（run 9）—— 这是「给主武器加一个**独立弹药池**的第二弹头」的现成入口，**不依赖 programmable ammo** |
 | 给无下挂武器加下挂 | **⚠ 未试**（要写 entity delta + item + `func.left=11`） |
+| **状态爆**：弹丸 `+0x90`/`+0x9C` → 孤儿爆炸行 → 伤害行状态槽 = 任意武器把任意状态送进一片区域 | **✓ 实机**（P-11：打自己脚下回血、>2 m 不回血；见 [STATUS-EFFECTS §7](STATUS-EFFECTS-26088801.md)） |
