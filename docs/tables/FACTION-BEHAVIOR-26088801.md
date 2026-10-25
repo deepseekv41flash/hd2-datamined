@@ -132,3 +132,38 @@ Murmur64A 内容哈希保持 `0x8E49771B181FFAA1`。
 - 本 build 表几何：`tools/entity_field_set.py` / `tools/typelib.py` 现算；数据 `refs/dlbin/plaintext-26088801/generated_entities.dl_bin`
 - 名字：`refs/entity-locid-names.json`（`EncyclopediaEntryComponentData`）
 - 相关：[MOUNT-SEATS §4](MOUNT-SEATS-26088801.md)（五件套 / 两条否决项）· [LOCKON-TARGETING §2](LOCKON-TARGETING-26088801.md)（SensorEye 字段）
+
+---
+
+## 8 复现旧实验：运输机炮塔 → TD-110 槽 0，只改 `Behavior +0`（**⚠ 待验**）
+
+### 8.1 盘上内容
+
+| 文件 | 大小 | sha256 | 改动 |
+|---|---:|---|---|
+| `D:\mod\out\shuttle-beh\generated_entities.shuttle-beh658.dl_bin` | 47,259,608 | `14c8f6462fdb9acb` | ①TD-110 行 125 **槽 0**：`0x9872EEB31A5F88FD`（40 mm 站）→ **`0x8365609B35EF6672`（运输机炮塔）**；②`BehaviorComponentData +0`：**645 → 658**（旧 `AIBEH` 的同一个改动） |
+
+**不动 Faction**：运输机炮塔本来就 `Faction +0 = 1`（超级地球），不需要改（与旧档结论一致）。
+换件走 `mount_table.py swap`（G1–G10 全过，`changed=[(125,0,…)]`）；行为走 `entity_field_set.py`（G1–G8 全过，diff=2）；
+封箱后 `open-key` 回读字节级一致；Murmur64A 保持 `0x8E49771B181FFAA1`。
+
+工具在换件时给出两条提醒（都是旧档已知的）：**AI 索敌三件套齐**（它会自己开火）、**机械射界 ±180 → ±105**。
+
+### 8.2 ⚠ 数据路线与旧 memmod 路线的两个差别（判读前必须知道）
+
+| # | 差别 | 影响 |
+|---|---|---|
+| 1 | 旧 `AIBEH` 改的是**实例**（运行时那份组件数据）；数据路线改的是**件本身的行** | **全局生效**：所有运输机炮塔（包括敌人运输机上的那门）都会跑 behaviour 658 |
+| 2 | 旧实验有 runtime warm 兜底；本轮**没有为它声明包**（保持单变量） | 炮塔资源在 4 个包里：`af782724c0f7658b` / `131fe264b7380717`（超级地球运输机，各 212 资源 / 22.7 MB）、`a0a27e07d3cbb445`（空降舱，28 资源）、`09985dc611a3a8b6`（关卡包，228 MB）。任务里运输机一出现通常就驻留了 |
+
+### 8.3 判读
+
+| 观察 | 判定 |
+|---|---|
+| 炮塔模型出现、能瞄能打、**不自己转 / 不被 AI 抢** | **✓ 纯数据版 `AIBEH` 成立**（不需要 runtime、不需要每帧 PIN） |
+| 仍自己转 / 打几秒被抢 | behaviour 658 不够（可能还要兄弟槽的其它条件，或实例行不是从件行复制） |
+| **紫问号** | 包没驻留 ⇒ **千万别开火**（[EXO-ARM-VARIANTS §10.2](../tables/EXO-ARM-VARIANTS-26088801.md)：紫问号臂件开火会崩）⇒ 下轮再加 `+0xA8` 声明 |
+
+回滚：`python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`
+（会连 EXO-45 双臂、TD-110 槽 2/FRV 的 40 mm 站一起回原版；只想回上一版则重装
+`D:\mod\out\exo45-arms-v2\generated_entities.exo45-mk2-ac200.dl_bin`。）
