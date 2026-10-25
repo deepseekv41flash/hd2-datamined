@@ -212,3 +212,70 @@ memmod 时期的历史：**先用驾驶位**（槽 2，原烟幕位）→ 被 AI
 
 回滚：`python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`
 （回上一版：`install --sealed D:\mod\out\shuttle-beh\generated_entities.shuttle-beh658.dl_bin`）
+
+---
+
+## 10 放进**敌人**炮塔（2026-10-25，**⚠ 待验**）：Faction 8→1 + Behaviour 90→658 + 包声明
+
+### 10.1 选件与改动
+
+| 项 | 值 |
+|---|---|
+| 件 | **`0x9926876B2375A1BB`**「Bunker Turret · 自动化军团小口径自动炮」（28 组件：`ProjectileWeapon` ✓ `Turret` ✓ `Wieldable`+`WeaponWielder` ✓ **`AiEnemy`** ✓ 索敌三件套 ✓） |
+| 旧读数 | `Faction +0 = 8`（自动化军团）· `Behavior +0 = 90` |
+| 本轮改成 | **`Faction +0 = 1`**（超级地球）· **`Behavior +0 = 658`**（旧 `AIBEH` 那套玩家武器行为） |
+| 挂载 | TD-110 **槽 2（原烟幕位 / 驾驶位）**：上一轮的运输机炮塔 → 本件；槽 0 保持原版主炮 |
+
+文件（**✓ 已装**）：`D:\mod\out\enemy-turret\generated_entities.enemy-turret.dl_bin`（47,259,648 B，sha256 **`ae1e006f5fd896f4`**）。
+换件 G1–G10、两格字段写 G1–G8 全过，Murmur64A 保持 `0x8E49771B181FFAA1`，封箱回读一致。
+
+### 10.2 资源加载（用户特别提醒的那一条）
+
+该件的资源在 **4 个包**里各有完整一套（bones / physics / state_machine / mesh 1.74 MB）：
+
+`4f3d304001614b38` · `0c37e83a8d16b67a` · `a8c58d2665dc2d99` · `b000071734784fb3`
+（旧档把前两个称作「自动化军团指挥地堡的**关卡内容包**」——不是 loadout 包，**不会因为带了某个战备就驻留**。）
+
+按 [§9](../cases/EXO45-ARM-SWAP-26088801.md) 与 [EXO-ARM-VARIANTS §9](EXO-ARM-VARIANTS-26088801.md) 的结论（**`+0xA8` 是替换语义、一台载具只给 1 个口**），
+本轮用**两个免费常驻行**声明同一个包：
+
+| 行 | `+0xA8` | 依据 |
+|---|---|---|
+| `Reinforce` **行 57**（基址 `0x6FDC`，字段 `0x7084`） | `0x4F3D304001614B38` | 变体 A 实机证明该行在关卡加载时被读、且它自己不投送资产（原值 0） |
+| `Reinforce` **行 138**（`0x12524`） | 同上 | 同上（同一战备的重复行，保险起见两行都写） |
+
+文件：`D:\mod\out\enemy-turret\generated_stratagem_settings.enemy-pkg.sealed.dl_bin`（82,448 B，sha256 **`cbc2ae630dbcbd65`**）。
+它是在上一版（EXO 双臂用的两包：行 143 = 解放者包、`SOS` 行 59 = 爱国者包）**之上**再加两个声明 ⇒ 现在同时有 **4 个包口**在用：
+
+| 口 | 包 | 服务于 |
+|---|---|---|
+| EXO-45 行 143 | `e72d3e9b05c3db0b`（解放者） | 爱国者右臂 200 发机炮 |
+| `SOS Beacon` 行 59 | `22749a294788af66`（爱国者） | 爱国者左臂导弹巢 |
+| `Reinforce` 行 57 / 138 | `4f3d304001614b38`（自动化军团地堡内容包） | 本轮敌人炮塔 |
+
+### 10.3 判读表
+
+| 观察 | 判定 |
+|---|---|
+| 模型出现、能瞄能打、**不被抢** | **✓ 敌人件在数据路线上也通了**（`Faction 1` + `Behaviour 658` + 包声明三件套齐） |
+| 模型出现但**自己开火 / 被抢** | `AiEnemy` 大脑仍在跑（只改 behaviour 不够）⇒ 下一步处理 `AiEnemy`（该表 736 B 里 102 个非零字段，未解） |
+| **紫问号** | 声明的那个包副本不是引擎实际要的那份 ⇒ 换 `0c37e83a8d16b67a` 再试 |
+| **没有实体**（不是问号） | 与旧档"地堡机枪没实体"同症状 ⇒ 查组件集/阵营是否被引擎拒绝 |
+
+### 10.4 ⚠ 全局副作用（这局要留意）
+
+`Faction` 与 `Behavior` 都是**件级**改动，不是实例级：
+
+- **世界上所有这型炮塔**（自动化军团地堡小口径自动炮）都会变成「超级地球阵营 + 玩家武器行为」⇒
+  这一局如果刷到自动化军团地堡，**那门炮大概率不再打你**（阵营 1 = 友军）；
+- 反过来也说明：**不要用这种改法做"只改一台"的实验**，要做单台只能走运行时。
+
+回滚：
+
+```bash
+python tools/dlbin_deploy.py restore --file generated_entities.dl_bin
+python tools/dlbin_deploy.py restore --file generated_stratagem_settings.dl_bin
+# 只回上一版（驾驶位 = 运输机炮塔）
+python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed "D:\mod\out\shuttle-slot2\generated_entities.shuttle-slot2.dl_bin"
+python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin --sealed "D:\mod\out\exo45-arms-v2\generated_stratagem_settings.two-pkgs.sealed.dl_bin"
+```
