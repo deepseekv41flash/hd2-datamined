@@ -33,10 +33,13 @@
 | **150** | `EAGLE. (NOT USED) AIR-TO-AIR MISSLES` | Eagle Air-to-Air Missiles | 2 | 15 s | 0 | `dfbb9a0d8fa27d85` | **✓ 实机：有名字有图标、能用**；⚠ **会锁地面目标**（目标筛选未完成）|
 | **64** | `ORBITAL. WALKING BARRAGE SMOKE` | Orbital Walking Barrage Smoke | ∞ | 120 s | 5 | `08d58cb1bf65f7a9` | **✓ 实机：有名字有图标、能用**（行走弹幕的烟雾版）|
 | **145** | `ORBITAL CONFETTI` | Orbital Confetti | ∞ | 80 s | 1 | `aedc4a073fb4b925` | **✓ 实机：有名字有图标、能用**（纸屑轨道打击彩蛋）|
-| **50** | `EAGLE FLY BY` | Eagle Fly By | 5 | 15 s | 0 | `2a275bb78bb20148` | 过场用（飞鹰掠过），多半只是演出；**⚠ 未测** |
+| **50** | `EAGLE FLY BY` | Eagle Fly By | 5 | 15 s | 0 | `2a275bb78bb20148` | **✓ 实机：有名字有图标、能用**（飞鹰掠过，纯演出）|
+| **5** | `MISSIONS. ORBITAL ILLUMINATION FLARE` | Orbital Illumination Flare | ∞ | 30 s | 1 | 1 个实体 | **✓ 实机：有名字有图标、能用**（轨道照明弹）—— `MISSIONS.` 前缀的反例 |
 | **119** | `SEAF Squad` | （无名） | ∞ | 120 s | 6 | `75f7e96af7dcd303` + `3ec790806d0b0540` | 投放类型 6（与载具/常规不同）；**✓ 实机：能带、能叫，但运输机投下空无一物** ⇒ 半成品行（有呼叫流程、无载荷生成） |
 
 > 说明：`+0x3C` 投放方式：0=飞鹰空投、1=轨道、2=投掷/空投、3=载具空投、4=信标、5=行走弹幕、6=？（SEAF Squad 独有）。
+>
+> ★ **判据 B 的修正**：`MISSIONS.` 前缀**不等于**不能带 —— `id 5 ORBITAL ILLUMINATION FLARE` 就带着 `MISSIONS.` 前缀、实机却能正常呼叫（照明弹落地）。所以前缀只能当「优先级提示」，「能不能用」要实测。
 
 ### 2.1 ✓ 已验证可用（2026-10-25 一天内全部实机）
 
@@ -47,6 +50,8 @@
 | 150 | Eagle Air-to-Air Missiles | 有名字有图标、能打；⚠ **会锁地面目标**（目标筛选未完成） |
 | 64 | Orbital Walking Barrage Smoke | 有名字有图标、能打（烟幕行走弹幕） |
 | 145 | Orbital Confetti | 有名字有图标、能打（纸屑彩蛋） |
+| 50 | Eagle Fly By | 有名字有图标、能用（飞鹰掠过，纯演出） |
+| **5** | Orbital Illumination Flare | 有名字有图标、能用（**`MISSIONS.` 前缀也能带**） |
 
 结论：**未发布战备的图标/名字大多在包里**（只有 36 / 119 这种真没 locid 的回退到占位或同族图标）；
 所以「额外战备」是**把未发布内容带进正式任务**的稳定入口。
@@ -157,6 +162,8 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 | M-104（138）可带可叫 | **✓ 实机**（2026-10-25） |
 | 36 = 未使用的 Eagle 扫射，能带能叫、效果同 Strafing Run | **✓ 实机**（4 次充能；Rearm 不补） |
 | 150 / 64 / 145 都能带、都能叫，且有名字有图标 | **✓ 实机**（三连链一次测完） |
+| 50 Eagle Fly By / 5 Orbital Illumination Flare 同样可用 | **✓ 实机**（链 `34→50→5`）|
+| `MISSIONS.` 前缀不决定可用性 | **✓ 实机反例**（id 5）|
 | 150 会锁地面目标（空中目标筛选未完成） | **✓ 实机观察** |
 | 119 SEAF Squad | **✓ 实机**：可带可叫，**空投为空**（占位图标；判定为半成品行） |
 | 任务行带进普通任务会怎样 | **⚠ 未证**（依赖任务状态，预期大多无反应） |
