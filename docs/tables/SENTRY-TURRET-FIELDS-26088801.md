@@ -347,6 +347,16 @@ AC-8 关键字段：`Faction 1`（不用改）· `Behavior 5→658` · `Unit +0 
 3. ✗ 只调 `MountInfo` offset：能抬起来，但折叠姿态与空中开火点治不了。
 4. ✗ 改 `state_machine` 初始状态：资产级、且挂载路径可能仍强制默认态。
 
+**state_machine 在哪**：它是**包里的资源**（不是 `.dl_bin` 表）——`type=state_machine`，
+`file_id` 与壳 id 相同；AC-8 = `CBFE1FC7158347F3` 在包 `54dc633a67baa93d`（副本 `418322d5ff8b13bc`），
+大小 **3,372 B**、`gpu=0/stream=0`（纯 toc）；MG-43 = `37CDE43876BA26BB` 在 `fc5b6bff0db90aab`/`154bd6143819df7d`；
+而 40mm 车顶站的 `9872EEB31A5F88FD` 在**共享基础包 `f6fb08cc02d24255`** 里（这也解释了它“在车上零预热、没有折叠态”）。
+物理位置在 `data/bundles.NN.nxa`，按包 id 取即可：
+`python -m srkit extract --id CBFE1FC7158347F3 --type state_machine --package 54dc633a67baa93d -o out "<game>/data"`
+（⚠ 包名必须**小写**）。离线看结构：开头是 `(offset,count)` 段表 —— (1,6)(80,7)(2944,3)(2972,5)(2996,0)(0,4)(3360,4)(3368,0)，
+之后全是数字/哈希，**没有 ASCII 状态名**、也不含那 8 个动画 file_id ⇒ 状态名是另一套哈希，
+要“把默认态改成展开”得先解出状态表语义（资产级、未解、风险高）。
+
 **借壳版已装**：`generated_entities.dl_bin` = **`ef27eaf4e5310ca8`**（在 `02b740fef30a7f7a` 基础上只改 AC-8 `Unit +0` → `9872EEB31A5F88FD`）。
 
 判读：炮手位出不出「自动炮哨戒」的模型（长炮管）；能不能瞄准/开火；炮管跟不跟瞄准转；
