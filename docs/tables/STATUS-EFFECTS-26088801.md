@@ -127,3 +127,92 @@ python tools/dmg_row_edit.py set --type 20 --slot 3:13:1.0 \
 | 没有任何数据字段引用 id 13（引擎硬编码/旧行） | **✓ 离线**（全表 + 实体组件双向扫描 0 命中） |
 | 主动写 `slot=(29, 1.0)`（`Stim Pistol Heal`）会让伤害行变成治疗 | **✓ 实机**（Sterilizer-Heal：TX-41 喷脚下自己回血） |
 | 主动写 `slot=(13, v)` 能打出热熔效果 | **⚠ 待实机** |
+
+## 7 状态爆：把状态送进一片区域（孤儿爆炸行路线）
+
+`ExplosionInfo`（152 B）**没有** `StatusEffectType` 字段 —— typelib 全扫，它只有
+`StatusEffectTemplateType`（模板，不是状态 id）。爆炸能挂状态的唯一入口是：
+
+```
+爆炸行 +0x04 DamageInfoType  →  伤害行 +0x2C 起的 4 个状态槽
+```
+
+⇒ 「给一颗无状态的弹头加状态爆」= **找一条没人用的爆炸行，把它的伤害行指向一条
+「零伤害 + 状态槽」的伤害行**，再把弹丸的 `+0x90`（命中）/ `+0x9C`（失效）指向它。
+整行克隆供体爆炸的做法见 [EXPLOSION-VISUAL §4](../explosions/EXPLOSION-VISUAL-26088801.md)。
+
+### 7.1 孤儿爆炸行普查（`26088801` 现算）
+
+判据与 memmod 时代 `c9-recon/a30-ammo/build_row_catalogue.py` 一致：
+**没有任何射弹行的 `+0x90`（命中爆炸）或 `+0x9C`（失效爆炸）指向它**。
+
+| 口径 | `25988413`（memmod 文档） | `26088801`（现算） |
+|---|---:|---:|
+| 爆炸行 | 422 | 424 |
+| 被射弹引用 | 159 | 159 |
+| **无主** | **263** | **265** |
+| 其中伤害行独占 | 94 | 98 |
+| 有名字（目录里 97 个命名全是有人用的） | — | **0 / 265** |
+
+独立产物 `refs/explosion-names-chain.json` 交叉验证：159 行有 consumers，
+265 个孤儿行 consumers 全空 —— 两个口径一致。
+
+```bash
+python tools/expl_orphans.py                    # 摘要 + 全空/近空白候选
+python tools/expl_orphans.py --list             # 265 行全表
+python tools/expl_orphans.py --type 254 --json out/expl-orphans-26088801.json
+```
+
+小半径候选（伤害行独占、无破片）：
+`73`（1.0 m）· `216`（1.0 m）· `272`（1.1 m）· `86`/`283`/`305`（2.0 m）· `254`（1.4/1.5/2.0 m）。
+
+> ⚠ 记录一条自己的错结论：本轮之前曾写「424 条爆炸**全**被引用、零孤儿」——
+> 是把爆炸行自己的 `+0`（type）当成了引用。以本表为准，方法已被两个独立产物复核。
+
+### 7.2 配方（纯离线，四步）
+
+```bash
+# ① 选一条孤儿爆炸（伤害行独占），把它的伤害行改成我们的"零伤害 + 状态槽"行
+python tools/expl_set.py --plain <base_expl.plain> --type 254 --set 0x4:446 \
+    --host-type 3 --host-offset 0x4 --out expl.plain       # 宿主 = 另一条孤儿行的空 8 字节字
+
+# ② 弹丸：命中 + 失效都指过去
+python tools/plain_edit.py --plain <base_proj.plain> --out proj.plain \
+    --set <弹丸行+0x90>=u32:254 --set <弹丸行+0x9C>=u32:254
+
+# ③ 封包（内容哈希已在 ①② 保住，hash 值与原版一致）
+python tools/dlbin_seal.py seal-key expl.plain --key refs/dlbin/keys/recipient.pk --out generated_explosion_settings.dl_bin
+
+# ④ 装盘（先确认游戏已退出）
+python tools/dlbin_deploy.py install --file generated_explosion_settings.dl_bin --sealed out/.../generated_explosion_settings.dl_bin
+```
+
+⚠ **视觉**：孤儿行是没被用过的预设，它的粒子资产**可能不在任何已加载的包里**
+⇒ 实机看到的可能是灰色方块占位符（判读方法见
+[EXPLOSION-VISUAL §6](../explosions/EXPLOSION-VISUAL-26088801.md)）。
+要好看就按同一篇 §4 把「已知会渲染」的供体爆炸整行克隆进来，再改 `+0x04`。
+
+### 7.3 案例：P-11 Stim Pistol 治疗爆（已装盘，⚠ 待实机）
+
+原生 P-11 弹丸 `+0x3C`（`DamageInfoType`）= **0**、`+0x90`/`+0x9C` = 0 ⇒
+子弹本身不挂伤害行（治疗走的是别的路径）。要让它「打脚下也自愈」必须补一层 AoE：
+
+| 环节 | 值 |
+|---|---|
+| 治疗伤害行 | **446**（无主行整条重写）：`damage 0 / durable 0 / AP 0,0,0,0 / demo 0 / force 0 / impulse 0 / element 0` + `slot0 = (29 Stim Pistol Heal, 1.0)` |
+| 爆炸载体 | **孤儿爆炸 254**（伤害行原本独占 492；半径 1.4 / 1.5 / 2.0 m；破片 0）→ `+0x04 = 446` |
+| 弹丸挂点 | 弹丸 **323**（P-11）：`+0x3C = 446` · `+0x90 = 254` · `+0x9C = 254` |
+
+产物：`out/stim-heal/explode.plain` → `generated_explosion_settings.dl_bin`（68,204 B）；
+`out/stim-heal/projectile2.plain` → `generated_projectile_settings2.dl_bin`（96,664 B）。
+两个明文哈希与原生一致（`0x2ABCD21D…` / `0x946A4FE5FAAAE076`），已装盘并回读核对。
+⚠ 同在盘上的 `explosion 326`（Railgun 过蓄自毁 → 伤害行 32）是上一轮的改动，未动。
+
+回滚：`python tools/dlbin_deploy.py restore --file generated_explosion_settings.dl_bin`
+（弹丸同理）。
+
+| 判定 | 态 |
+|---|---|
+| 爆炸只能经伤害行施加状态（`ExplosionInfo` 无 `StatusEffectType`） | **✓ 离线**（typelib） |
+| 孤儿爆炸行可整条征用（265 条，交叉验证 0 冲突） | **✓ 离线**（两个独立产物） |
+| 治疗爆击中自己脚下 → 自己回血、无伤害无硬直 | **⚠ 待实机** |

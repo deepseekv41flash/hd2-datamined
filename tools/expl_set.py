@@ -20,18 +20,16 @@
 from __future__ import annotations
 
 import argparse
-import pathlib
 import struct
 import sys
 
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-
-for _stream in (sys.stdout, sys.stderr):          # Windows 控制台默认 GBK，不含 ✗/⚠
+for _stream in (sys.stdout, sys.stderr):
     try:
         _stream.reconfigure(encoding="utf-8", errors="replace")
     except Exception:                                        # noqa: BLE001
         pass
 
+sys.path.insert(0, r"D:\mod\work\devkit\tools")
 from murmur64 import murmur64, padding_word_for_hash  # noqa: E402
 
 STRIDE = 152
