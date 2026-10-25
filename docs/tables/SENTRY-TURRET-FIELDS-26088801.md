@@ -314,6 +314,25 @@ python tools/plain_edit.py --plain strat.dl_bin --out strat2.dl_bin --set 0x7084
 回滚：`install --sealed D:\mod\out\sentry-life\generated_entities.life30.sealed.dl_bin`（`03f80e9d121f2953`）
 ＋`...generated_stratagem_settings.code_dup.sealed.dl_bin`（`a94c95226cda89fb`）。
 
+**⚠ 实机读数（2026-10-25 23:4x）**：TD-110 槽 2 装 MG-43 哨戒 —— **车顶看不到**（用户判断：穿模进车体里了，
+因为哨戒壳是「落地三脚架」形态、原点在底座），但**驾驶位可以正常操作**。
+⇒ 两条结论：**① 哨戒作为挂载件成立**（引擎生成了它、可开火/瞄准）；
+**② 「壳形态」决定外观是否可用**（与 15.1 的判据一致），要车顶炮塔外观还得挑车顶形态的壳。
+
+### 3.8.3 换到 M-102 Gunner FRV（炮手位，长炮管便于观察）（2026-10-25 23:5x，⚠ 待实机）
+
+| 文件 | sha256 | 改动 |
+|---|---|---|
+| `generated_entities.dl_bin` | **`02b740fef30a7f7a`** | ① TD-110 槽 2 回原版烟幕 `3A061009AA31E9CB`；② **M-102 两条挂载记录（行 19 `CC21C7FFD3EBEFB9` 与行 119 `E9CD1D0D118886AF`）槽 0 = `54D86057F5DACFB9`（A/AC-8 自动炮哨戒）**；③ AC-8 `Behavior 5 → 658` |
+| `generated_stratagem_settings.dl_bin` | **`081e7879cb6575e2`** | 行 57 `+0xA8` = `54DC633A67BAA93D`（AC-8 包，43 资源）· 行 59 `+0xA8` = `418322D5FF8B13BC`（AC-8 壳的 bones/mesh/physics/state_machine 所在包）|
+
+AC-8 关键字段：`Faction 1`（不用改）· `Behavior 5→658` · `Unit +0 = CBFE1FC7158347F3`（壳**不是自己**）·
+`LoadoutPackage = 54DC633A67BAA93D` · 弹容 24 · 弹丸 122 · 转速 20/20 · 俯仰 −60…70 · 水平 ±180。
+
+判读：炮手位出不出「自动炮哨戒」的模型（长炮管）；能不能瞄准/开火；炮管跟不跟瞄准转；
+会不会 150 s（`HellpodPayload`）自己消失。若模型仍陷进车里，就说明**原点/挂点**对不上——
+下一步可走「借车顶形态壳」（`Unit +0` 换成 40mm 站或火箭炮塔那种车顶壳）或调 `MountInfo` 的 offset。
+
 ## 4 怎么改
 
 ### 4.1 一条命令（保内容哈希）
