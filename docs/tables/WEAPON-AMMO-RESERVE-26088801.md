@@ -256,9 +256,22 @@ python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed g
 | 地堡 HMG `0xCD28A27A79BE53D5` | 42 | 1000 | 6 | 6 | 12 | 1 |
 | GR-8（对照，背包供弹） | — | 1 | 0 | 6 | 0 | 1 |
 
-- **改弹容量 = 改 `+0x88`**（每匣弹数）；**备弹 = `+0x94`（匣数）**；**起始 = `+0x8C`（匣数）**。
-- `+0x90` / `+0x9C` 语义仍未证（本文 §1 已标 ⚠；`+0x90` 在 2/6 之间取值的件都可正常用）。
-- 炮塔类的 `+0x8C` 常见 0 或 6，与"召唤时是否预装一匣"有关，未逐项验；先别动它。
+- **改弹容量 = 改 `+0x88`**。
+- **四个字段的准确定义（HD2Runtime schema + Shodan 词条双源对齐，2026-10-25）**：
+
+| 偏移 | 名称（HD2Runtime `schemas/weapon_mapper.lua`） | Shodan 词条 | 含义 |
+|---:|---|---|---|
+| `+0x88` (136) | `capacity` | "Magazine size / 弹匣容量" | 每匣弹数 |
+| `+0x8C` (140) | `starting_magazines` | — | **初始携带的备用匣数**（不是"起始弹数"） |
+| `+0x90` (144) | `magazines_from_supply` | "Magazines from supply / 补给获得的弹匣数" | 每份补给给几匣 |
+| `+0x94` (148) | `spare_magazines` | "Max spare magazines / 备用弹匣上限" | **备用匣的上限（容量上限，不是当前数量）** |
+| `+0x9C` (156) | `chambered`（u8） | — | 膛内是否有一发；HUD 显示 = capacity − chambered ⇒ **200 显示 199 就是这个 1** |
+
+  ⇒ 40 mm 站"游戏里没有备弹"与数据不矛盾：它的 `+0x8C 起始 = 0`，`+0x94 = 12` 只是**上限**。
+  想要"真的有备弹"，要同时填 `+0x8C`（起始）与 `+0x94`（上限）——炮塔会不会显示/消耗备弹另说（见待验）。
+- 炮塔类的 `+0x8C` 常见 0 或 6；`+0x90`/`+0x9C` 现已定名，不再是未知。
+- **HD2Runtime 的 `hd2.fields.weapon.capacity` 就是 `WeaponMagazineComponentData +136`**，
+  与本轮实机改 `+0x88` 生效**互相印证**（它是外部实现，我们是数据文件路线，两边一致）。
 - **Rounds 模型**（单发式，如 AC-8）没有 Magazine 行，改 `+0x48`（每匣弹数，f32）/ `+0x50`+`+0x54`（备弹上限）/ `+0x58`（初始备弹）。
 
 ### 6.1 本轮已造并装盘的样例
