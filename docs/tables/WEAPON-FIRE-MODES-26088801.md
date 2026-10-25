@@ -165,7 +165,7 @@
 |---|---|---|---:|---:|---:|---:|---:|
 | **AR/GL-21 One-Two** | `0x02CD7321CD8445F5`（"Grenade Launcher Grenadier"，与 **GP-31 Grenade Pistol 共用根**） | Projectile（榴弹） | **267** | **1** | **5** | 900 | 0 |
 | **AR-11 Arbitrator** | `0xB9C209B4F99B5335`（"shotgun risk"） | Projectile（霰弹） | **201** | **4** | **20** | 80 | 0 |
-| **SMG/FLAM-34 Stoker** | `0x992B6F65A5BAB53D`（"Flamerthrower SMG Flamer"，与 **P-72 Crisper 共用根**） | SprayWeapon（喷火） | `+200`=22 | mag **50** | — | — | 2.5 |
+| **SMG/FLAM-34 Stoker** | `0x992B6F65A5BAB53D`（"Flamerthrower SMG Flamer"；与 P-72 Crisper 共用**伤害类型 22**，但 **spray 行与粒子都不同**，见 §5.6.8） | SprayWeapon（喷火） | `+200`=22 | mag **50** | — | — | 2.5 |
 
 - 下挂的 `WeaponData.function_info = (0, 0)` ⇒ 它自己没有选择键，全靠宿主那个 `11` 切进来。
 - 下挂的弹丸在**两处**都写着同一个值（`ProjectileWeapon +0` 与 `WeaponRounds +64` 均为 267/201），
@@ -242,7 +242,7 @@ payload **6,112 B** = `ComponentIndexData` **736 B**（46 槽 × 16 B，槽 = `{
 | 10 | G-142 Pyrotech（投掷物） | throwable | 0 | 0 | 32 | `0x172E1E5393DC59FF` |
 | 11 | **A/FLAM-40 Flame Sentry** | unit | 0.7 | 10 | 24 | `0xE3D15622A42863C4` |
 | 12 | 未知（毒气交互物） | interactable | 0.7 | 15 | 0 | `0x70690ADA12804044` |
-| 13 | 未知（**Stoker 喷火下挂** `0x992B6F65A5BAB53D`） | unit | 0.7 | 10 | 22 | `0xEE2AA1974FBF52AF` |
+| 13 | 未知 unit（**Stoker 喷火单元** `0x992B6F65A5BAB53D`，⚠ 待实机确认） | unit | 0.7 | 10 | 22 | `0xEE2AA1974FBF52AF` |
 | 14 | 未知（毒气） | interactable | 0.7 | 15 | 0 | `0x70690ADA12804044` |
 | 15 | 未知（Torcher 变体） | interactable | 0.7 | 10 | 21 | `0xC22C03EC68E8DBCE` |
 | 16 | 未知（毒气 `+0xC8`=36） | interactable | 0 | 15 | 36 | `0x035E79D1D898362B` |
@@ -624,6 +624,57 @@ run 14 配置 = **纯原版**（两把枪都在 `0xA252B7821AAB37D7`；Reinforce
 | 换粒子能换外观 | **✓ 实机**（run 12） |
 | 射程 = 粒子（同粒子同射程 + 换粒子换射程） | **✓ 实机**（run 14 + run 12 互锁） |
 | 第二因子（枪侧影响射程） | **✗ 否证**（run 14：同粒子两把枪等长；WeaponData 也无射程量级字段） |
+
+### 5.6.8 火焰粒子的共用关系：**只有一对共用**
+
+把 23 行的三个粒子字段（`+0x38` warmup / `+0x70` firing / `+0xA8` cooldown）全摊开：
+
+**导引火（warmup / cooldown）：全体火焰武器共用一套**
+
+| 状态 | 粒子 | 谁在用 |
+|---|---|---|
+| warmup | `0x8B729322F53729F4` | **全部 8 把火焰武器 + 哨戒炮**（FLAM-40 / Torcher / Crisper / Cremator ×2 / Sentry / Stoker 下挂 / 未命名行 7、12、13、14、15） |
+| warmup（变体） | `0xFC46F04CCE9FDB40` | 仅行 5 / 6 两个未命名 unit（`+0xC8`=0，像是场景火焰发射器） |
+| cooldown | `0x0B844F68DBA4F310` | 全部火焰武器（毒气 / Pyrotech / TX-41 = 0，没有导引火） |
+
+**主喷流（firing）：只有 FLAM-40 ↔ P-72 Crisper 共用**
+
+| 武器 | `+0x70` | 与谁共用 |
+|---|---|---|
+| **FLAM-40 Flamethrower** | `0xA252B7821AAB37D7` | **P-72 Crisper（互为唯一）** |
+| **P-72 Crisper** | `0xA252B7821AAB37D7` | **FLAM-40** |
+| **FLAM-66 Torcher** | `0xC22C03EC68E8DBCE` | 一个未命名 Torcher 变体（行 15，`interactable`） |
+| **B/FLAM-80 Cremator** | `0xA4F17DABA8ECD8E5`（左管）/ `0x7E2D445495989701`（右管） | **各自独有**，连双管之间都不共用 |
+| **SMG/FLAM-34 Stoker** 的喷火单元 `0x992B6F65A5BAB53D`（行 13） | `0xEE2AA1974FBF52AF` | **独有** |
+| A/FLAM-40 Flame Sentry | `0xE3D15622A42863C4` | 另一个未命名火焰 unit（行 7） |
+| G-142 Pyrotech（投掷） | `0x172E1E5393DC59FF` | 独有 |
+| TX-41（毒气） | `0xA3D15A3BBC56DE55` | 独有 |
+
+⚠ **Stoker 不在 spray 哈希图里**：`SMG/FLAM-34 Stoker`（`0x8A307BD1811A5FE9`，`primary_weapon`）
+自己**没有** `SprayWeaponComponentData`；它的火焰来自**独立的下挂单元实体** `0x992B6F65A5BAB53D`
+（`unit`，spray 行 13，与 §5.5 记的 `Flamerthrower SMG Flamer` 同一 id；该 id 出现在
+`generated_weapon_customization_settings` 与 `generated_entity_deltas` 里）—— 与 §5.5 的
+"下挂 = 独立实体"模型一致。若要实机确认，把它行 13 的 `+0x70` 换掉看 Stoker 是否变样即可。
+
+**同一粒子会跨包重复**（所以"在不在内存"要看具体哪一份）：
+
+| 粒子 | 出现在几个包 |
+|---|---|
+| `0xA252B7821AAB37D7`（FLAM-40 / Crisper） | **3**：`a37891d879cb3b1d`(FLAM-40) · `41ce78fe8f96bebe` · `784671f2b3a4da79`(Cremator R) |
+| 导引火 warmup `0x8B729322F53729F4` | ≥2：`49fd919a67a5db66`(Torcher) · `a37891d879cb3b1d`(FLAM-40) |
+| Torcher `0xC22C03EC68E8DBCE` | 2 |
+| Cremator R / Sentry / Stoker 下挂 | 各 2 |
+| **Cremator L / Pyrotech / TX-41** | **各 1**（只有自己的包有 ⇒ 换进来必须挂包） |
+
+⇒ 这解释了为什么**导引火从来不需要挂包**（它在每把火焰武器自己的包里都有一份）。
+
+**编辑含义（重要）**
+
+| 动作 | 影响范围 |
+|---|---|
+| 改行内 `+0x70`（引用 id） | **只影响那一把枪**（run 13/15 实测：只改 Crisper，FLAM-40 不受影响） |
+| 改**粒子资源本体**（资源路线） | **所有引用者一起变** ⇒ 改 `0xA252B7821AAB37D7` 会同时改 FLAM-40 与 Crisper |
+| 想改一把 ↛ 波及另一把 | 先把其中一把的 `+0x70` 指向一个等价副本（该粒子在 3 个包里都有） |
 
 ---
 
