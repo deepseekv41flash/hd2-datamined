@@ -48,6 +48,9 @@
 | **4** | 52 | `Overseer`、`Elevated Overseer`、`Voteless` | **光明族**（✓） |
 | **8** | 103 | `Devastator`、`Factory Strider`、`Fabricator`、`Trooper` | **自动化军团**（✓） |
 
+> **英文对照**（写文档/检索第三方资料时用这套）：`1 = Super Earth` · `2 = Terminid`（虫子）· `4 = Illuminate`（光明族）· `8 = Automaton`（自动化军团）· `0 = inherit`。
+> 本轮光明族光束炮头就是 **faction 4 → 1**（Illuminate → Super Earth）。
+
 **有行 vs 没行**（很重要，改之前先看这个）：
 
 | 件 | Faction 行 | `+0` |
@@ -409,7 +412,8 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 
 上一轮我写「这件上 behaviour 658 会 `STATUS_INVALID_DISPARITY` 崩」，来源是记忆库里的一条**实验摘要**
 （「AIBEH 将行为 ID 从 80 替换为 658 导致 `STATUS_INVALID_DISPARITY` 崩溃，关闭 AIBEH 后不再崩」）。
-回查一手报告（`D:\mod\g2-vehicle-loadoutecon\REPORT-xref-hmg-station-2026-10-18.md`）后，结论相反：
+回查一手报告（`D:\mod\g2-vehicle-loadout
+econ\REPORT-xref-hmg-station-2026-10-18.md`）后，结论相反：
 
 | 事实 | 出处 | 说明 |
 |---|---|---|
