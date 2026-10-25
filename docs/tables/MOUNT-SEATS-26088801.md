@@ -265,6 +265,12 @@ yaw 对最常见的正是 `(-180, 180)`（52 行，全向炮塔）。
   像是"AI/瞄准约束"而不是载具相机夹制。
 - 名表里已有 `CameraTemplateType` 枚举（`LandVehicle` / `FRVTurret` / `MannedTurret` /
   `RegularTurret` / `Cars` / `Emplacement`…），说明相机是**模板化**的；但模板参数本身仍未在数据文件里找到。
+- **Lua 面能碰到相机，但碰不到 preset**：本 build 存在第三方**纯 Lua boot 覆盖**的第一人称 mod
+  （替换 `boot` 资源 `0xF476DF93691895FA`，无需 loader）。它每帧只写**单台相机的 `local_position`**
+  （`Camera.set_local_position` + `World.update_unit`，`render` 里写、`update` 开头还原），
+  **从不碰旋转**；Lua API 表里也没有"相机 preset / 角度上限"这一类接口。
+  ⇒ Lua 能当**只读测量探针**（读 `Camera.local_rotation`/`world_pose`），但改不了这一层；
+  真要改只能用 `set_local_rotation` 每帧加偏移（等价性未证）或运行时定位原生表。
 - **为什么在二进制里也搜不到**：本 build 的 `data/game/game.dll`（49,075,800 B）`.text` 段熵 **8.00**
   （加密/压缩），`bin/runtime.dll`（64 MB）段名直接是 `packer0…packer42`（加壳）⇒
   **磁盘字节 ≠ 运行时字节**（旧线也记过同一现象）。所以"在 game.dll 里按 ±40/±180 搜表"必然落空；
