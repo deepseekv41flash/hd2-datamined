@@ -540,7 +540,7 @@ python tools/dlbin_deploy.py restore --file generated_entities.dl_bin
 | 一辆载具自己的战备行，只要玩家**带了这件战备**，它的 **live 行** `+0xA8` 会在关卡加载时被读 | `EXO45-ARM-SWAP` B 组：`row 143` 生效、`row 88` 无效 | ✓ 实机 |
 | **一条战备只给 1 个口**：同一战备的重复行 **不算**第二个口 | 同上（`+0x106` 分类位/`+0x150` 哨兵显示 row 88 是遗留记录） | ✓ 实机 |
 | 账号常驻行可白拿：`Reinforce` 行 57/138、`SOS Beacon` 行 59 | [LIMITED-CROSS-PACKAGE-LOADING §6.6.7](../engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) R3/R9 | ✓ 实机 |
-| `+0xA8` 是**纯增量声明**，写成外来包不会伤该战备自身载荷 | `EXO45-ARM-SWAP` B 组：本体照常渲染 | ✓ 实机 |
+| **`+0xA8` 是「替换」**：写谁就只加载谁，本机甲自己的内容包会被挤掉 | 2026-10-25：爱国者行改填解放者包后，依赖爱国者包的左臂紫问号（[EXO-ARM-VARIANTS §9](EXO-ARM-VARIANTS-26088801.md)） | **✗ 否证（原"增量"结论作废）** |
 | `+0xF8` 对"不授予武器"的战备无效（机甲用不了） | 同文 R1 | ✗ 否证 |
 
 ⇒ **N 件不同包的换装 = N 个口**：1 个来自载具自己的 live 行，其余从常驻行借。
