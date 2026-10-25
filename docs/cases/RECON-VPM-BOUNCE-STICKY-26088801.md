@@ -83,6 +83,59 @@ vanilla_flags = { 2, 2, 0, 0, 2, … }   -- 按 kind 索引的期望值
 | **BetterStratagemBounce** | **能**。`generated_stratagem_settings` 每行 `+0x170` 就是我们的字段，直接清 bit `0x02` 即可（`plain_edit.py` / `stratagem_tune.py` 那套保哈希流程），**不需要 loader**。⚠ 两点：① 105 行一起变，影响面大；② 清 bit 之后的实际观感要实机确认 |
 | **StickyGrenadeHandles** | **dl_bin 不能，但资源路线可以**（B · 跨载体等价）。它改的是 havok 材质库条目的 `userData` —— 属于 **`physics` 资源族**：我们已逆出 Havok 2019.01 tagfile 载荷布局并改过同族的 mass 字段（`CASE-STUDY-20261021.md` §17–§18），所以"能改"这件事有同族实证；⚠ 但"这一个 userData 落在哪份资源、偏移多少"**尚未针对本条验证** |
 
+## 7 追加侦察（2026-10-25）：`sticky_grenade_handle` 的 userData 在哪份资源里？
+
+目标：给 B 档（跨载体等价）补证据 —— 那个被 mod 写的 `userData` 4 B 到底落在哪份资源。
+
+### 7.1 先钉死 hash ↔ 名字（工具级，可复现）
+
+```bash
+python -m srkit hash sticky_grenade_handle throwable
+# sticky_grenade_handle  murmur64=0x9A056E1C82863322  murmur32=0x9A056E1C
+# throwable              murmur64=0xC4692706CC9E97D7  murmur32=0xC4692706
+```
+
+⇒ mod 里的 `Mod.HANDLE = 0x9A056E1C` / `Mod.THROWABLE = 0xC4692706` 就是这两个名字的 **murmur32（thin hash）**，与我们工具算的一致。
+
+### 7.2 引用侧：**已定位**
+
+| 项 | 值 |
+|---|---|
+| 资源 | `physics` **`0xC5C05FCB5747C799`**「G-123 Thermite」，7,068 B，在包 `fc5b6bff0db90aab` 与 `dfb81f9917285965` 各一份 |
+| 载荷形态 | **Havok 2019.01 tagfile**：`TAG0`/`SDKV20190100`/`DATA`/`TST1`/`TPTR`/`TBDY`/`TSTR`/`DTBDY`/`TPAD`/`INDX`/`ITEM`/`PTCH` |
+| 内容 | **纯 shape 数据**：`hknpCompoundShape` + `hknpCapsuleShape` + `hknpConvexShape`（手柄就是那个 capsule）+ 质量属性；类型表里**没有任何 `hknpMaterial*`** |
+| `sticky_grenade_handle` 的 hash | **`+0x154`**（唯一的 1 处） |
+| `throwable` 的 hash | **`+0xC4`**（唯一的 1 处） |
+| `+0x150` 起的结构 | `flags=0x00001002 · 0x9A056E1C · 0xB03B6BFF · 0xAEB35C56 · 1.0f · 0 · 0 · 0 · 0 · 1.0f` ⇒ 像"材质/摩擦规格"块：3 个材质 hash + 摩擦/回弹系数 |
+
+⇒ 资源里只有**材质引用（hash）**，没有名字、也没有 `userData`。
+
+### 7.3 定义侧：**未找到**（而且数据目录里根本没有那个名字）
+
+| 检查 | 结果 |
+|---|---|
+| G-123 的两份 `material`（渲染材质）资源 | 都不含这两个 hash，也不含材质名 |
+| 23 GB `bundles.*.nxa` 全文 grep | `sticky_grenade_handle` **0 命中**；`hknpMaterialLibrary` **0**；`hknpMaterial*` **0** |
+| 412 MB 顶层散包（`data/` 根下的 hash 文件）grep | 同样 0 |
+| 对照组（证明 grep 有效） | `hknpCompoundShape` 在 `bundles.00.nxa` **17 命中**；`SDKV20190100` **66 命中** |
+
+⚠ **但这条不能当成"数据里没有"**：bundle 里只有一部分 havok 载荷是未压缩的（`hknpCompoundShape` 只有 17 次，
+而 physics 资源有 39,172 份）⇒ grep 只覆盖**未压缩那部分**。
+
+### 7.4 现在能下的结论（三态）
+
+| 结论 | 态 |
+|---|---|
+| `sticky_grenade_handle` / `throwable` 的 hash 算法与取值 | **✓ 离线**（`srkit hash`，与 mod 常量逐位一致） |
+| 这两个材质在 G-123 的 `physics` 资源里被**引用**（`+0x154` / `+0xC4`） | **✓ 离线** |
+| 该资源的 `userData`（4 B）**定义**在哪份资源 | **⚠ 未定位**（不在该 physics 资源、不在其渲染材质、不在未压缩载荷的 grep 范围里） |
+| "材质库是引擎启动时构建的" 这一假设 | **⚠ 未证**（若成立，则这条 B 档需要用引擎侧数据/资源替换以外的手段） |
+
+**下一步（有界、只读）**：把 base/boot 相关包里的 `physics` 资源逐个 `srkit extract` 出来 grep
+`hknpMaterialLibrary` / `hknpMaterial`（每份 extract 约 1 s，先扫 base 包，命中即停）；
+若全库仍无，则结论改为"运行时构建"，B 档要改走别的等价物（例如**换 unit 的材质绑定**或**给手柄换一个
+材质 tag** 的数据侧等价物）。
+
 ## 6 三态
 
 | 结论 | 态 |
