@@ -429,6 +429,11 @@ def seat_records(env: Env) -> list[dict]:
 
 
 # ---------------------------------------------------------------- 名字解析
+def _norm(text: str) -> str:
+    """名字匹配口径：小写 + 去掉空白与 `- _ .`（`40mm`→`40 mm 炮塔站`，`td220`→`TD-220 Bastion MK XVI`）。"""
+    return "".join(ch for ch in str(text).lower() if not ch.isspace() and ch not in "-_.")
+
+
 def resolve_entity(env: Env, text: str) -> tuple[int, int]:
     """实体键或名字 → (key, mount row)。名字支持子串，必须唯一。"""
     t = text.strip()
@@ -438,10 +443,10 @@ def resolve_entity(env: Env, text: str) -> tuple[int, int]:
         if row is None:
             raise SystemExit(f"✗ 0x{key:016X} 不在 Mount 哈希图里（没有挂载记录）")
         return key, row
-    low = t.lower()
+    low = _norm(t)
     hits = []
     for key, row in env.index_map(MOUNT).items():
-        if low in best_name(env, key).lower():
+        if low in _norm(best_name(env, key)):
             hits.append((key, row))
     if not hits:
         raise SystemExit(f"✗ 没有名字含 {t!r} 的挂载记录；先跑 `list` 或 `find`")
@@ -464,7 +469,7 @@ def resolve_item(env: Env, text: str) -> int:
             if key not in env.entity and key not in env.components:
                 raise SystemExit(f"✗ 0x{key:016X} 既不在任何挂载槽里，也不是实体表里的实体")
         return key
-    low = t.lower()
+    low = _norm(t)
     pool = {}
     for rec in mount_records(env):
         for s in rec["slots"]:
@@ -474,7 +479,7 @@ def resolve_item(env: Env, text: str) -> int:
     for key in list(env.entity.keys()):
         if key in env.components:
             pool.setdefault(key, True)
-    hits = [k for k in pool if low in best_name(env, k).lower()]
+    hits = [k for k in pool if low in _norm(best_name(env, k))]
     if not hits:
         raise SystemExit(f"✗ 没有名字含 {t!r} 的件；先跑 `find {t}`")
     if len(hits) > 1:
@@ -693,7 +698,7 @@ def cmd_seats(env: Env, args) -> int:
 
 
 def cmd_find(env: Env, args) -> int:
-    low = args.text.lower()
+    low = _norm(args.text)
     pool = {}
     for rec in mount_records(env):
         for s in rec["slots"]:
@@ -701,7 +706,7 @@ def cmd_find(env: Env, args) -> int:
                 pool[int(s["item"], 16)] = True
     for key in env.components:
         pool.setdefault(key, True)
-    hits = [k for k in pool if low in best_name(env, k).lower()]
+    hits = [k for k in pool if low in _norm(best_name(env, k))]
     if not hits:
         print(f"没有名字含 {args.text!r} 的件")
         return 1
