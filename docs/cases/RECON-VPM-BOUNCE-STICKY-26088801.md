@@ -81,7 +81,7 @@ vanilla_flags = { 2, 2, 0, 0, 2, … }   -- 按 kind 索引的期望值
 | mod | 能不能用数据路线（dl_bin）等价实现？ |
 |---|---|
 | **BetterStratagemBounce** | **能**。`generated_stratagem_settings` 每行 `+0x170` 就是我们的字段，直接清 bit `0x02` 即可（`plain_edit.py` / `stratagem_tune.py` 那套保哈希流程），**不需要 loader**。⚠ 两点：① 105 行一起变，影响面大；② 清 bit 之后的实际观感要实机确认 |
-| **StickyGrenadeHandles** | **dl_bin 不能，但资源路线可以**（B · 跨载体等价，**置信度高**）。§7.6 已把 mod 写的 4 B `userData` 定位到具体载荷的具体偏移：`physics 0xC5C05FCB5747C799`（G-123）`+0x15C`、`physics 0x3FA94F58F596BC0B`（G-109）`+0xCC` —— 即物理资源内联的 20 B 材质记录里第 3 个 u32。⚠ 只剩实机判定：写 `throwable` 的 hash（`0xC4692706`）后是否真的粘手柄 |
+| **StickyGrenadeHandles** | **dl_bin 不能，但资源路线可以**（B · 跨载体等价，**置信度高**）。§7.5 已把 mod 写的 4 B `userData` 定位到具体载荷的具体偏移：`physics 0xC5C05FCB5747C799`（G-123）`+0x15C`、`physics 0x3FA94F58F596BC0B`（G-109）`+0xCC` —— 即物理资源内联的 20 B 材质记录里第 3 个 u32。⚠ 只剩实机判定：写 `throwable` 的 hash（`0xC4692706`）后是否真的粘手柄 |
 
 ## 7 追加侦察（2026-10-25）：`sticky_grenade_handle` 的 userData 在哪份资源里？
 
@@ -110,7 +110,7 @@ python -m srkit hash sticky_grenade_handle throwable
 
 ⇒ 资源里只有**材质引用（hash）**，没有名字、也没有 `userData`。
 
-### 7.3 定义侧：**未找到**（而且数据目录里根本没有那个名字）
+### 7.3 定义侧：**不在 Havok 库段**（按名字也找不到 —— 只存 hash；真正的去向见 §7.4/§7.5）
 
 | 检查 | 结果 |
 |---|---|
@@ -122,7 +122,7 @@ python -m srkit hash sticky_grenade_handle throwable
 ⚠ **但这条不能当成"数据里没有"**：bundle 里只有一部分 havok 载荷是未压缩的（`hknpCompoundShape` 只有 17 次，
 而 physics 资源有 39,172 份）⇒ grep 只覆盖**未压缩那部分**。
 
-### 7.5 全量扫描（4,839 个去重 physics 载荷）：**Havok 材质库确实不存在**
+### 7.4 全量扫描（4,839 个去重 physics 载荷）：**Havok 材质库确实不存在**
 
 先做过一次 100 份分层抽样（9 个体积档各抽 6 个，`hknpMaterial*` / `sticky_grenade_handle` 全 0/100）；
 现在把**全部 4,839 个去重 physics 载荷**（覆盖 `srkit list --type physics` 的 39,016 行、145.7 MB）逐个读完：
@@ -146,7 +146,7 @@ python -m srkit hash sticky_grenade_handle throwable
 报告：`D:\mod\recon\sticky-material\SWEEP-RESULT.md` / `.json` / `SWEEP-SUPPLEMENT.md` / `MATERIAL-RECORDS.md`；
 载荷副本 `…\sweep\`；脚本 `sweep_all.py` / `analyze_material_records.py` / `scan_supplement.py`。
 
-### 7.6 ★ 真正的落点：physics 载荷内联的 **20 B 材质记录**
+### 7.5 ★ 真正的落点：physics 载荷内联的 **20 B 材质记录**
 
 材质定义就在 physics 载荷里，只是**不是 Havok 的库段** —— Stingray 自己序列化了一张
 「库名 + 材质名」表，名字只存 **murmur32**（所以按名字 grep 必然 0 命中）：
@@ -183,7 +183,7 @@ python -m srkit pack …                        # 打进 patch_N 资源包
 ⚠ 未证：写 `throwable` hash 后**真的会粘手柄**（语义待实机）；以及 `dfb81f9917285965` 那份副本是否也被加载
 （稳妥做法：两份都覆盖）。
 
-### 7.4 现在能下的结论（三态，含全量扫描后修订）
+### 7.6 现在能下的结论（三态，含全量扫描后修订）
 
 | 结论 | 态 |
 |---|---|
