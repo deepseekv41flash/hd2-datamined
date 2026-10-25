@@ -99,6 +99,56 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 
 ⇒ 想要"无限用的未发布 Eagle"，光靠 `+0xC8` 不够，得再看 Rearm 的目标集合怎么定。
 
+## 5.2 给开发者的「成品配方」（照抄即可做出一份可用 mod，不需要我们打包）
+
+目标：让玩家带着熟悉的战备进任务时，**额外**拿到未发布战备（不占 4 个自选位）。
+
+**第一步：查 id**
+
+```bash
+python tools/stratagem_extra.py --show          # 153 行：id / 名字 / 当前额外战备
+python tools/stratagem_extra.py --find FRV      # 按名字找 id（108 / 26 / 138）
+```
+
+**第二步：选形态**
+
+| 形态 | 命令 | 效果 |
+|---|---|---|
+| 单挂 | `--host 34 --extra 138` | 带 Resupply → 多一件 M-104 |
+| 链式（一件带一串） | `--chain 34:138,36,150` | 带 Resupply → M-104 → 额外扫射 → A2A 导弹（4 件） |
+| 4+4 成品 | 见下方 | 4 个自选位各带 1 条未发布 |
+
+**第三步：4+4 成品示例**（假设自选：Resupply / 轨道精准 / 哨戒机枪 / 飞鹰空袭）
+
+```bash
+# 每条宿主只挂 1 条目标（不串链，避免互相覆盖）——四次调用，同一份明文上累加
+python tools/stratagem_extra.py --host 34  --extra 138 --out out/p1.plain          # Resupply → M-104
+python tools/stratagem_extra.py --plain out/p1.plain --host 121 --extra 64 --out out/p2.plain   # 精准 → 烟幕行走弹幕
+python tools/stratagem_extra.py --plain out/p2.plain --host 124 --extra 150 --out out/p3.plain  # 哨戒 → A2A 导弹
+python tools/stratagem_extra.py --plain out/p3.plain --host 18  --extra 145 --out out/p4.plain --seal
+python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin     --sealed out/p4.dl_bin
+```
+
+（`--plain <上一步产物>` 是链式追加的正确写法；每次都会重新解一个校正字、哈希回到原版锚点。）
+
+**第四步：进游戏验收**
+
+| 看什么 | 通过标准 |
+|---|---|
+| 战备条数量 | 4 + 额外（本页实测 6 正常；8 未测） |
+| 图标 / 名字 | 未发布战备多数**自带**图标与名字；没有的回退成同族图标或占位虚框 |
+| 叫出来 | 有实体/弹幕/车辆落地并生效（"空的" = 半成品，如 119） |
+
+**第五步：回滚** —— `python tools/dlbin_deploy.py restore --file generated_stratagem_settings.dl_bin`
+
+### 照做前必须知道的五条约束
+
+1. **别造环**：引擎顺着 `+0xC8` 无限跟，成环在任务开始崩（`--chain` 已做重复检测，手改请自己查）。
+2. **链会覆盖中间行原有的 `+0xC8`**：Eagle 全家原本 = 51（Rearm），串链会把它们改掉 —— 想做「4+4」请用上面**不串链**的写法。
+3. **Eagle 类额外条目只有 4 次共享充能，且 Eagle Rearm 补不到它**（id 36 实测）。
+4. **只改本机**：队友的战备表是他们的，看不到你的额外条目。
+5. **哈希必须保持**：工具已内置（tail 宿主 + Murmur64A 复原）；手写脚本请沿用 `plain_edit.py` 的 tail 宿主流程，否则引擎校验失败。
+
 ## 6 三态
 
 | 结论 | 态 |
