@@ -154,6 +154,46 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 4. **只改本机**：队友的战备表是他们的，看不到你的额外条目。
 5. **哈希必须保持**：工具已内置（tail 宿主 + Murmur64A 复原）；手写脚本请沿用 `plain_edit.py` 的 tail 宿主流程，否则引擎校验失败。
 
+## 5.3 Eagle 的 Rearm「装填目标集合」查清了：**不在数据里**
+
+### 结论
+
+`EAGLE. REARM`（id **51**，group 2 row 8）的行里**没有任何目标列表**：
+
+| 检查 | 结果 |
+|---|---|
+| `+0x98` / `+0x9C`（payload 指针/计数） | **`0xFFFFFFFF` / `0xFFFFFFFF`** ⇒ payload 为空，行内没有 id 数组 |
+| 行内其它字段 | 全是标量：`+0x60=15.0`（冷却）、`+0x68=150.0`（**rearm time**）、`+0x104=0x80`、`+0x188=7` 等 |
+| 外部独立模型（HD2Runtime `schemas/stratagem_authoring_catalog.json`，94 条**已发布**战备） | `eagle.rearm_time`（= Rearm 行 `+0x68`）的 consumers **恰好是 8 条已发布 Eagle**：Airstrike / Strafing / 500kg / 110mm / Cluster / Napalm / Smoke / Gas —— **36 / 150 / 50 根本不在它的 94 条目录里** |
+
+⇒ Rearm 的「装填目标」是**代码侧的战备花名册**（按已发布战备判定），不是表里的数组。
+**数据路线改不了「让 Rearm 补一条未发布的 Eagle」**（没有可改的字段）。
+
+### 但真正的问题有更好的解：`+0x50` 在 Eagle 上就是「每次 Rearm 后的可用次数」
+
+HD2Runtime 的字段命名把这件事钉死了：
+
+| 字段 | 我方偏移 | HD2Runtime 语义 | 说明 |
+|---|---|---|---|
+| `+0x50` | 80 | **`eagle.uses_per_rearm`**（Eagle 行）／`stratagem.max_uses`（普通行） | 同一条 u32，Eagle 上是"每次重新武装后能用几次" |
+| `+0x68` | 104 | `stratagem.cooldown` / `eagle.rearm_time`（Rearm 行） | 前者 15 s，Rearm 行 150 s |
+| `+0x104` | 260 | （车辆种类位，见 §2） | — |
+
+⇒ **不需要 Rearm 来补**：把未发布 Eagle 的 `+0x50` 直接调大，它一次就带够次数。
+
+```bash
+# 例：两条未使用 Eagle 各给 20 次（原 3 / 2）
+python tools/stratagem_tune.py --plain <vanilla_stratagem.plain> --out uses.plain     --edit "EAGLE. (NOT USED) ADDITIONAL STRAFING RUNS::uses=20"     --edit "EAGLE. (NOT USED) AIR-TO-AIR MISSLES::uses=20"
+# 再挂成额外战备（工具见 §5.2）
+python tools/stratagem_extra.py --plain uses.plain --chain 34:36,150 --out final.plain --seal
+```
+
+已装盘验证件：`out/stratagem-extra/uses-chain.dl_bin`（36/150 的 `+0x50 = 20`，链条 `34→36→150`，
+150 原生还带 Rearm），明文哈希仍 = `0x04BBE33EF809862A`。
+
+**待实机**：战备面板/战备条显示的次数是否变成 20（实测里 36 原 `+0x50=3` 显示为 4，可能有一层 +1 的修正）；
+以及 Rearm 是否**仍然**补不到它（预期：补不到，但不需要了）。
+
 ## 6 三态
 
 | 结论 | 态 |
@@ -163,6 +203,8 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 | 36 = 未使用的 Eagle 扫射，能带能叫、效果同 Strafing Run | **✓ 实机**（4 次充能；Rearm 不补） |
 | 150 / 64 / 145 都能带、都能叫，且有名字有图标 | **✓ 实机**（三连链一次测完） |
 | 50 Eagle Fly By / 5 Orbital Illumination Flare 同样可用 | **✓ 实机**（链 `34→50→5`）|
+| Rearm 的装填目标集合 = 代码侧花名册（表里无 id 数组） | **✓ 离线**（Rearm 行 payload 空 + HD2Runtime 目录 8 条）|
+| `+0x50` = Eagle 的 uses per rearm（调大即可给足次数） | **✓ 离线**（HD2Runtime 字段名）；**⚠ 待实机**确认显示值 |
 | `MISSIONS.` 前缀不决定可用性 | **✓ 实机反例**（id 5）|
 | 150 会锁地面目标（空中目标筛选未完成） | **✓ 实机观察** |
 | 119 SEAF Squad | **✓ 实机**：可带可叫，**空投为空**（占位图标；判定为半成品行） |
