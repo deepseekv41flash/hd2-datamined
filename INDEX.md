@@ -45,6 +45,7 @@
 | **只给某一件甲加效果** | [ARMOR-PASSIVE-STATS](docs/tables/ARMOR-PASSIVE-STATS-26088801.md) | **§2 单件级（改 kit 的 `+0x1C`）· §6 配方 · §2 末尾「没有空被动」的否证** | `26088801` |
 | **投送舱送什么（战备空投舱换载荷）** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§1 槽位结构 · §2 前 N 个槽才生成 · §3 换物品配方** | `26088801` |
 | **换进来的物品只有紫问号 / 网格材质不加载** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§4 两个包槽（`+0xA8` + `+0xF8`）· §5 item→包解析表** | `26088801` |
+| **哨戒炮/炮塔多久自动消失、各字段含义** | [SENTRY-TURRET-FIELDS](docs/tables/SENTRY-TURRET-FIELDS-26088801.md) | **§2 寿命字段（`HellpodPayload +0x04`）· §3 逐组件字段表 · §4 一条命令** | `26088801` |
 | **有限数量的跨包加载（通用产出）** | [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) | **§2 三个可编辑量 · §3 解析链 · §5 一条命令 · §6.9 补丁路线（不受口上限）· §7 边界** | `26088801` |
 
 ### 理解原理
@@ -171,6 +172,7 @@
 | ★ [STRATAGEM-SETTINGS-DECODED](docs/tables/STRATAGEM-SETTINGS-DECODED.md) | 战备表 400 B 行 / 12 组解码，含三处旧结论的自我否证 | `25988413` |
 | ★ [STRATAGEM-FIELDS-26088801](docs/tables/STRATAGEM-FIELDS-26088801.md) | 战备字段总表：面板公式（先预测后实测）、散布、**Eagle 回收（§5.4）**、条目 ID 重复=崩溃 | `26088801` |
 | ★ [DAMAGE-SETTINGS-26088801](docs/tables/DAMAGE-SETTINGS-26088801.md) | 伤害表 76 B 行字段图：5 张引用表 / 共享伤害行 / **行内零 padding 的宿主策略** / 完整改值链 | `26088801` |
+| ★★ [SENTRY-TURRET-FIELDS-26088801](docs/tables/SENTRY-TURRET-FIELDS-26088801.md) | **哨戒/阵地炮塔的字段图**：寿命 = `HellpodPayloadComponentData +0x04`（f32 秒；MG-43=150、迫击炮=180、人操阵地=0 不自毁）—— 三源交叉（本仓库数据 / SHODAN「Time deployed (s)」/ wiki）；另给 StratagemInfo、Turret（转速/俯仰·水平限位）、弹匣、射速三档、ergonomics、护甲的逐字段对照表 | `26088801` |
 | ★ [POD-RACK-26088801](docs/tables/POD-RACK-26088801.md) | 投送舱换载荷：rack 568 B 行 / 槽位语义 / **`+0xA8`+`+0xF8` 双包声明** / item→包解析表 / 六轮实机 / **§8 整包补丁驻留（✓✓：一个舱三件、两个零声明）** | `26088801` |
 | ★ [WEAPON-AMMO-RESERVE-26088801](docs/tables/WEAPON-AMMO-RESERVE-26088801.md) | 三种供弹模型 / `Rounds` 与 `Magazine` **两套备弹字段** / 五把背包武器改成自带备弹（已实机）/ 清空槽位的坑 | `26088801` |
 | ★ [PROJECTILE-PROXIMITY-26088801](docs/tables/PROJECTILE-PROXIMITY-26088801.md) | **近炸引信字段**（弹丸行 `+0x94` 半径 / `+0x88` 阈值角 / `+0xA0` 保险距离）；AC-8 在备弹 289 上 | `26088801` |
