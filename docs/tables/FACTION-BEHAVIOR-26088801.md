@@ -421,3 +421,49 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 ⇒ 正确表述：**「658 在光明族炮头上会崩」没有证据**；那条是记忆摘要里的错误归因（把「装特效包后偶发崩」记成了「改 behaviour 导致崩」）。
 做光明族实验时可以直接按 §10 的办法改 658；已知的真实风险只有一条：
 **外来件 + 大量特效 ⇒ 掉帧 ⇒ 偶发崩溃**（旧档 §86.6 的结论）。
+
+---
+
+## 13 实装：光明族光束炮头 + 40mm 壳 → 驾驶位烟幕槽（2026-10-25，**⚠ 待验**）
+
+### 13.1 四处改动（全部纯数据）
+
+| # | 层 | 改动 | 门禁 |
+|---|---|---|---|
+| ① | 挂载 | TD-110 行 125 **槽 2**：地堡炮塔 `0x9926876B2375A1BB` → **`0xF196069E7E14C497`**（光明族光束炮头） | G1–G10 ✓ `changed=[(125,2,…)]` |
+| ② | 借壳 | `UnitComponentData +0`（`0x4437574D`）：`0x4E342031A9D5C4F9` → **`0x9872EEB31A5F88FD`**（40mm 站壳） | G1–G8 ✓ |
+| ③ | 阵营 | `FactionComponentData +0`：**4 → 1** | G1–G8 ✓ |
+| ④ | 行为 | `BehaviorComponentData +0`：**284 → 658**（按 §12.5 的更正：没有"658 必崩"的证据） | G1–G8 ✓ |
+
+### 13.2 包声明（三个常驻口，敌人炮塔那条线已让出）
+
+| 口 | `+0xA8` | 内容 |
+|---|---|---|
+| `Reinforce` 行 57 | `0x046D4441A6DAE0A9` | **光束粒子 + 材质/贴图**（1706 资源 / 72.8 MB / 248 particles）——旧档口径里"光束本体粒子"那一包 |
+| `Reinforce` 行 138 | `0xF6FB08CC02D24255` | **40mm 站壳所在的共享包**（保险起见点名；前几轮 40mm 站实验里它本来就常驻） |
+| `SOS Beacon` 行 59 | `0xDD43EBBA60A66968` | 光明族炮头自己的壳包（66 资源 / 12 MB；借壳后仍点名以免它的动画/挂点资源缺） |
+
+不用声明的：`fdf011daecf24312`（曳光粒子，那是地堡炮塔的弹丸拖尾，本件用不到）。
+
+### 13.3 盘上内容
+
+| 文件 | 大小 | sha256 |
+|---|---:|---|
+| `D:\mod\out\beam-turret\generated_entities.beam.dl_bin` | 47,259,696 | **`c49fab20a65029e6`** |
+| `D:\mod\out\beam-turret\generated_stratagem_settings.beam.sealed.dl_bin` | 82,440 | **`f1809694e1c19e0d`** |
+
+✓ 已装；两文件封箱回读一致，Murmur64A 各自保持原值。
+
+### 13.4 判读
+
+| 观察 | 判定 |
+|---|---|
+| 模型 = **40mm 站**，光束**从炮管/车顶打出**，能开火有伤害 | ✓ 借壳路线复现（位置对） |
+| **炮管不跟瞄准转** | **预期如此**（§12.3 的硬伤，三次否证） |
+| 有光束观感 | ✓ 粒子包声明生效 |
+| 没有光束 | 粒子包不是引擎要的那份 ⇒ 换 `d448a6c8eb991f1a` |
+| 紫问号 / 没实体 | 壳包或件包没驻留 ⇒ 先别开火（[EXO-ARM-VARIANTS §10.2](../tables/EXO-ARM-VARIANTS-26088801.md)） |
+
+回滚：`restore` 两个文件；回上一版（地堡炮塔 + 曳光）：
+`install --sealed D:\mod\out\enemy-turret-vfx\generated_entities.enemy-vfx.dl_bin` +
+`install --sealed D:\mod\out\enemy-turret-vfx\generated_stratagem_settings.vfx3.sealed.dl_bin`。
