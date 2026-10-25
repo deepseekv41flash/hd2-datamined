@@ -279,3 +279,70 @@ python tools/dlbin_deploy.py restore --file generated_stratagem_settings.dl_bin
 python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed "D:\mod\out\shuttle-slot2\generated_entities.shuttle-slot2.dl_bin"
 python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin --sealed "D:\mod\out\exo45-arms-v2\generated_stratagem_settings.two-pkgs.sealed.dl_bin"
 ```
+
+---
+
+## 11 曳光/拖尾不显示：旧档早有答案 —— **缺第 3 个包**（2026-10-25）
+
+### 11.1 症状与旧档的判据
+
+§10 的敌人炮塔实机：**模型出现、能瞄能打、不被抢，但没有曳光弹拖尾**。
+旧档 `D:\mod\docs\VEHICLE-MOUNT-ITEMS.md` §6.0 把跨阵营换件拆成**三层**，第 3 层正好对应这个症状：
+
+| 层 | 缺这层时的症状 | 数据位置 | 旧档手段 |
+|---|---|---|---|
+| 1 件本体的包 | 紫色 `?` | 普查 `bundle-index.tsv` | 请求包 |
+| 2 阵营 | 槽位**没有实体** | `FactionComponentData +0` | `--faction 1` |
+| **3 弹丸效果** | **有伤害/命中/火花，看不到飞行段（曳光/拖尾）** | 弹丸行里的效果 id → 所在包 | 把**效果包**一起请求 |
+
+并且旧档给过同一件（`9926876B2375A1BB`）**实测可用组合的必需包**：
+
+> `4F3D304001614B38` · `0C37E83A8D16B67A` · **`FDF011DAECF24312`（弹丸拖尾粒子唯一所在包）**
+
+⇒ 我们 §10 只声明了第一个，缺后两个；**尤其是 `FDF011DAECF24312`**（喷口/拖尾粒子）。
+
+两个旧档细节也一并记下（查包时必踩）：
+
+- 弹丸表里的效果 id 在**原始字节序**里与普查 hex **逐字节相同**，按 u64 小端读会全部查不到；
+- 装特效包后旧档**连续开火崩过一次**（ntdll `0xC0000026`），原样字节复测又不崩 ⇒ 判为**偶发资源压力**；
+  `--projfx`（换同包内更轻的粒子）只能算缓解。
+
+### 11.2 本轮怎么补：三个包各占一个常驻口
+
+`+0xA8` 是替换语义、一车一行只给 1 个口（[§9](../cases/EXO45-ARM-SWAP-26088801.md)），
+所以只能用**账号常驻行**（默认栏里的 `Reinforce`、`SOS Beacon`）来声明。为了腾出干净的口，
+本轮把 EXO-45 的双臂**恢复原版**（那两个外来包的需求随之消失）：
+
+| 口（都是默认栏，关卡加载即读） | `+0xA8` | 作用 |
+|---|---|---|
+| `Reinforce` 行 57（`0x7084`） | `0x4F3D304001614B38` | 炮塔本体（76 资源：turret_small_autocannon + 关卡零碎） |
+| `Reinforce` 行 138（`0x12524`） | `0x0C37E83A8D16B67A` | 指挥地堡顶部 + 炮塔（37 资源；旧档"必需包"之二） |
+| **`SOS Beacon` 行 59（`0x73A4`）** | **`0xFDF011DAECF24312`** | **拖尾/粒子（1414 资源 / 68 MB / 200 particles，旧档称"唯一所在包"）** |
+
+### 11.3 盘上内容（**✓ 已装，⚠ 待验**）
+
+| 文件 | 大小 | sha256 | 内容 |
+|---|---:|---|---|
+| `D:\mod\out\enemy-turret-vfx\generated_entities.enemy-vfx.dl_bin` | 47,259,664 | **`5fcbb92bdfe25717`** | TD-110 槽 2 = 敌人炮塔；`Faction 8→1`；`Behaviour 90→658`；**EXO-45 双臂恢复原版** |
+| `D:\mod\out\enemy-turret-vfx\generated_stratagem_settings.vfx3.sealed.dl_bin` | 82,440 | **`2b561a4bf1751f71`** | 上表三个包声明（其余全原版） |
+
+门禁：换件 G1–G10 ×2、`plain_edit` G1–G6（diff 25 B / 3 处读回一致）；封箱后 `open-key` 回读逐字节一致；
+Murmur64A 分别保持 `0x8E49771B181FFAA1`（实体）与 `0x04BBE33EF809862A`（战备）。
+
+### 11.4 判读
+
+| 观察 | 判定 |
+|---|---|
+| 曳光/拖尾出现 | **✓ 第 3 层补齐**，与旧档同一件、同一配方对齐 ⇒ 数据路线也能拿全 VFX |
+| 仍无拖尾 | 换 `0c37e8…`/`fdf011…` 之外的候选包？先确认这件武器的弹丸行指向哪个效果 id（见旧档第 3 层读法） |
+| 开火偶发崩溃 | 与旧档同款"资源压力"现象；`--projfx` 类缓解思路保留，别当修复 |
+
+回滚：
+
+```bash
+python tools/dlbin_deploy.py restore --file generated_entities.dl_bin
+python tools/dlbin_deploy.py restore --file generated_stratagem_settings.dl_bin
+# 回上一版（无曳光、但有 EXO 双臂）：
+python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed "D:\mod\out\enemy-turret\generated_entities.enemy-turret.dl_bin"
+python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin --sealed "D:\mod\out\enemy-turret\generated_stratagem_settings.enemy-pkg.sealed.dl_bin"
+```
