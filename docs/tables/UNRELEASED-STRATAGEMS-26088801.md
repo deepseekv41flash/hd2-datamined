@@ -29,7 +29,7 @@
 | id | 内部名 | 显示名 | 使用次数 | 冷却 | 投放 | 载荷实体 | 备注 |
 |---:|---|---|---:|---:|---:|---|---|
 | **138** | `VEHICLES. FAST RECON VEHICLE (Ramming Flamethrower)` | 炽灼型快速侦察载具 | ∞ | 480 s | 3 | `2d85bfe3d8717fe5`（`frv_flamer`）+ shuttle | **✓ 实机：能带能叫**（本名单唯一已验证） |
-| **36** | `EAGLE. (NOT USED) ADDITIONAL STRAFING RUNS` | （无名） | 3 | 15 s | 0 | `23a60681dd4383ec` | 原版标 `NOT USED`；`+0xC8` 自带 51（Rearm）。Eagle 全家结构，**很可能是一轮扫射** |
+| **36** | `EAGLE. (NOT USED) ADDITIONAL STRAFING RUNS` | （无名，**借 Eagle Strafing Run 的图标**） | 3 | 15 s | 0 | `23a60681dd4383ec` | **✓ 实机：能带能叫、效果 = Eagle Strafing Run；只有 4 次、用完不可用，Eagle Rearm 补不了它** |
 | **150** | `EAGLE. (NOT USED) AIR-TO-AIR MISSLES` | Eagle Air-to-Air Missiles | 2 | 15 s | 0 | `dfbb9a0d8fa27d85` | 原版标 `NOT USED`；有名字（locid 在包里）⇒ 游戏内大概率显示正常 |
 | **64** | `ORBITAL. WALKING BARRAGE SMOKE` | Orbital Walking Barrage Smoke | ∞ | 120 s | 5 | `08d58cb1bf65f7a9` | 行走弹幕的**烟雾版**，军械库没有；结构完整 |
 | **145** | `ORBITAL CONFETTI` | Orbital Confetti | ∞ | 80 s | 1 | `aedc4a073fb4b925` | 彩蛋战备（纸屑轨道打击），有名字 |
@@ -71,11 +71,20 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 |---|---|
 | 图标出现 + 能按呼叫码 + 掉下来预期的东西 | **可用**，记进 "可带未发布战备" 名单 |
 | 图标出现但叫不动 | 行在表里、引擎侧没生成逻辑（半成品行） |
-| 图标出现、能叫、**运输机投下空的** | 呼叫流程完整、**载荷没生成**（120/119 就是这个：结构像、资源/生成逻辑缺）|
+| 图标出现、能叫、**运输机投下空的** | 呼叫流程完整、**载荷没生成**（119 就是这个：结构像、资源/生成逻辑缺）|
+| 能叫、效果正常，但**Eagle 只有 4 次且 Rearm 补不上** | Eagle 类额外战备只吃**共享充能池**；Rearm 的补弹目标不含「额外」条目（36 实测）|
 | 完全没图标 | 该行被过滤（多半缺 locid 或投放类型没人处理） |
 | 任务开始崩溃 | 该行缺运行时前置；一次只链一条再定位 |
 
 ⚠ 链路上会**覆盖**中间行原有的 `+0xC8`（Eagle 的 51 会被改掉）——测试完记得回到原版或重挂。
+
+## 5.1 Eagle 类额外战备的一个坑（id 36 实测）
+
+- 额外带来的 Eagle 条目**吃共享的 4 次充能**（不是它自己 `+0x50` 的 3 次）；
+- **Eagle Rearm 补不到它** —— 说明 Rearm 的"装填目标"不是"表里所有 Eagle 行"，
+  而是与**配装里被选中的条目**（或另一组字段）绑定；额外条目不在补弹名单里。
+
+⇒ 想要"无限用的未发布 Eagle"，光靠 `+0xC8` 不够，得再看 Rearm 的目标集合怎么定。
 
 ## 6 三态
 
@@ -83,6 +92,7 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 |---|---|
 | 153 行 = 85 已发布 + 41 任务/子项 + 9 载具 + 2 `NOT USED` + 少量彩蛋 | **✓ 离线**（内部名从行内字符串直接读） |
 | M-104（138）可带可叫 | **✓ 实机**（2026-10-25） |
-| 36 / 150 / 64 / 145 / 50 能不能带、能不能叫 | **⚠ 待实机**（本名单给了排序与判读表） |
+| 36 = 未使用的 Eagle 扫射，能带能叫、效果同 Strafing Run | **✓ 实机**（4 次充能；Rearm 不补） |
+| 150 / 64 / 145 能不能带、能不能叫 | **⚠ 本轮一起测**（链 `34→150→64→145`） |
 | 119 SEAF Squad | **✓ 实机**：可带可叫，**空投为空**（占位图标；判定为半成品行） |
 | 任务行带进普通任务会怎样 | **⚠ 未证**（依赖任务状态，预期大多无反应） |
