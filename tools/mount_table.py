@@ -90,7 +90,12 @@ ANCHOR_HASH = 0x8E49771B181FFAA1      # vanilla `generated_entities.dl_bin` 明�
 SHARED_BASE_PACKAGE = "f6fb08cc02d24255"   # hellpod / shuttle_transport / weapon_rack / sos_beacon
 TAIL = 8
 AI_BRAIN = ("SensorEyeComponentData", "TargetingComponentData", "DetectorComponentData")
-FACTION_NAMES = {0: "inherit", 1: "super-earth", 2: "?", 4: "illuminate", 8: "automaton"}
+# 阵营位掩码实测（2026-10-25，按名字抽样反查）：
+#   1 = 超级地球（Solo Silo 等）· 2 = 终结者/虫子（Impaler / Bug Hole / Alpha Commander）
+#   4 = 光明族（Overseer / Voteless）· 8 = 自动化军团（Devastator / Factory Strider / Trooper）
+#   0 = 无 Faction 行或显式 0 = 继承
+FACTION_NAMES = {0: "inherit", 1: "super-earth", 2: "terminid", 4: "illuminate", 8: "automaton"}
+ENEMY_FACTIONS = (2, 4, 8)   # 玩家不可直接使用：虫子 / 光明族 / 自动化军团
 SIDE_NAMES = {0: "Common", 1: "Right", 2: "Left"}
 FMT = {"u32": ("<I", 4), "u64": ("<Q", 8)}
 # `TurretComponent`（76 B）在本 build 的四项限位偏移：pitch_min / pitch_max / yaw_min / yaw_max
@@ -390,7 +395,7 @@ def five_piece(info: dict) -> dict:
         "turret": info["has_turret"],
         "player_control": info["has_wieldable"] and info["has_weapon_wielder"],
         "fire": info["has_projectile_weapon"],
-        "veto_enemy_faction": info["faction"] in (4, 8),
+        "veto_enemy_faction": info["faction"] in ENEMY_FACTIONS,
         "veto_ai_brain": info["ai_brain"],
     }
 

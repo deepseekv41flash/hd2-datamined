@@ -14,7 +14,7 @@
 | 想亲手改一张表 | **[改盘上数据的完整工作流](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md)** —— 主线文档，8 步链 + 锚点哈希 + 93 条坑 |
 | 想让**代理**去做 | **[skills/hd2-file-route-mod](skills/hd2-file-route-mod/SKILL.md)** —— Agent Skills，只给方法论（每步的目的 / 判据 / 停的条件）+ 指回本页 |
 | 想查某个字段 / 某个数 | [§1 按问题找](#1-按问题找) |
-| 想按类型看全部 67 篇 | [§2 按类型浏览](#2-按类型浏览67-篇) |
+| 想按类型看全部 68 篇 | [§2 按类型浏览](#2-按类型浏览68-篇) |
 | 想找某个工具 / 看它验证到哪一步 | [§3 工具清单](#3-工具清单tools) |
 | 刚更新完游戏 | [BUILDS.md §3](BUILDS.md)（三步 + §3.1 锚点复验） |
 | 什么都没有、只想先摸摸 | [§4 无密钥也能练](#4-无密钥也能练) |
@@ -100,13 +100,13 @@
 | **多个 mod 改同一份文件的不同字段，想同时用** | [MOD-MERGER](docs/cases/MOD-MERGER-26088801.md) | **§1 算法 · §2 用法 · §3 逐字节等价证明 · §4 前提与边界** | `26088801` |
 | 社区包怎么做 / 能不能共存 | [CASE-STUDY](docs/cases/CASE-STUDY-20261021.md) · [COMMUNITY-MODS-COMPAT](docs/cases/COMMUNITY-MODS-COMPAT-26088801.md) · [PATCH-SALVAGE](docs/builds/PATCH-SALVAGE-25988413.md) |
 
-## 2. 按类型浏览（67 篇）
+## 2. 按类型浏览（68 篇）
 
 | 类别 | 放什么 | 篇数 |
 |---|---|---:|
 | [`builds/`](docs/builds/) | 每个 build 的总体变化、差异、路线取舍 | 4 |
 | [`engine/`](docs/engine/) | 引擎侧：格式封装、API 面、Lua 运行时、探针、加载器、**有限数量的跨包加载** | 10 |
-| [`tables/`](docs/tables/) | 数据表与实体库的解码 / 改写 | 23 |
+| [`tables/`](docs/tables/) | 数据表与实体库的解码 / 改写 | 24 |
 | [`explosions/`](docs/explosions/) | 爆炸与弹头（玩法层 + 外观层） | 2 |
 | [`boundaries/`](docs/boundaries/) | 被挡住的路：进程内存、虚拟机 | 2 |
 | [`cases/`](docs/cases/) | 案例与外部参照：社区包、贴图委托、wiki 数据、**完整工作流**、**老 mod→数据路线修复版 playbook（含两个 C 档样板）**、**第三方护甲多被动 / Sterilizer 改治疗 / P-11 Self-Heal / VanillaPlus 两件 / SHODAN 额外战备 侦察**、**网络复制层探针系列**、**实体表在线改写实机证明**、**EXO-45 换臂（memmod 复现）** | 26 |
@@ -149,6 +149,7 @@
 
 | 文档 | 一句话 | build |
 |---|---|---|
+| ★ [FACTION-BEHAVIOR-26088801](docs/tables/FACTION-BEHAVIOR-26088801.md) | **阵营与 AI 行为回到明文表**：`FactionComponentData 0x5653EA91 +0` 位掩码（实测补 **2=终结者**）· `BehaviorComponentData 0xBA9B803D +0` = behaviour id（旧 `AIBEH` 的 645→658 双向对上：658 的持有者就是 TD-110 烟幕件） | `26088801` |
 | ★ [EXO-ARM-VARIANTS-26088801](docs/tables/EXO-ARM-VARIANTS-26088801.md) | **机甲臂件变体普查**：社区编号 MK2/MK3 对应哪些实体键；200 发机炮件与原版只差「弹匣 100→200 + 默认射速 175→300 rpm」；真正的 `_MK2` 类型在导弹家族（伤害/AP/爆炸逐项对照） | `26088801` |
 | ★ [WEAPON-FIRE-MODES-26088801](docs/tables/WEAPON-FIRE-MODES-26088801.md) | **射击模式 / 射速档位**:`FireMode` 四连槽 `+0x90…0x9C` + `function_info` 选择键（`Firemode=3` / `ROF=2`）；枚举 1 自动 / 2 半自动 / 3 连发 / **4 齐射 / 5 安全 / 6 不安全 / 7 全射**（**槽位上限 3**）；任意枪可加全自动与全射（均已实机） | `26088801` |
 | ★ [PLAYBOOK-LUA-MOD-TO-DLBIN](docs/cases/PLAYBOOK-LUA-MOD-TO-DLBIN.md) | **老 mod → 数据路线等价修复版**：五步流水线（开包/读载荷/归层 L1–L4/映射/实现）+ **A/B/C 三档判定（dl_bin 等价 / 跨载体等价 / 不可实现，禁用「不可等价」）** + 载体能力表 + 跨 build 常量重取规则 + **五个样板案例（A×2 / B / C×2：代码型 P-11 Self-Heal、数据边界型 锁定锥角）** + 报告骨架；配套工具 `lua_payload_dump.py`、技能 `skills/hd2-lua-mod-to-dlbin` | 跨 build |
