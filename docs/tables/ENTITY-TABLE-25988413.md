@@ -213,7 +213,9 @@ LoadoutEntryComponentData 行（32 B × 199）：
 
 **没有 `selectable`**：32 B 已被上述字段占满，一个字节不剩。带 `selectable` 的 `LoadoutItem` / `LoadoutItemCategory` 在实体库（两种哈希空间）与 55 张 `data/game` 表里 **0 命中**；`LoadoutPackageComponent` 也只有 `{bundle_tag, package, audio_resource, include_default_customizations}`。
 
-⇒ 「显示未发布物品」**不是离线数据层的开关**：可见性由「实体是否挂 `LoadoutEntry` 组件」+「后端 id / 账号 / DLC 归属」决定。老 b18 路线能做是因为它**运行期**往登记表追加记录，正好印证数据层没有这个开关。
+⇒ 「显示未发布物品」**不是离线数据层的开关**：可见性由「实体是否挂 `LoadoutEntry` 组件」+「后端 id / 账号 / DLC 归属」决定。
+
+> ⚠ 2026-10-25 补充：这句只对**军械库显示**成立。**战备**可以走 `generated_stratagem_settings +0xC8`「额外战备」**不进军械库、直接进任务**（7 条未发布战备已实机可用，见 [UNRELEASED-STRATAGEMS-26088801](UNRELEASED-STRATAGEMS-26088801.md)）。老 b18 路线能做是因为它**运行期**往登记表追加记录，正好印证数据层没有这个开关。
 
 
 ## 9. 独立弹药池：两套完整弹药（各带自己的弹道）—— ✓✓ 已实机

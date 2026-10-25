@@ -27,7 +27,7 @@
 | `+0x60` 语义 | **⚠ 未证** | `EAGLE. REARM` = 15.0，`EAGLE. AIRSTRIKE` = 0.0；没做过改动实验 |
 | 20 张零空位表用 tail 宿主 | **⚠ 未证** | 只在战备表 / 实体表实机；其余逐表未验（§9.5 / §10.3） |
 | `damage_settings` 改伤害 | **✓ 实机** | 面板「伤害」直接跟着变（改成 1 → **001**）。`DamageInfo` 76 B / 8 成员**行内**零 padding，但宿主可以放**文件尾**（tail +8）或借别的无主行 → [DAMAGE-SETTINGS §5](../tables/DAMAGE-SETTINGS-26088801.md#5-宿主策略)。**零 padding 是「行内」事实，不是「文件内」事实** |
-| 加行新增可见战备 / 解锁未发布物品 | **✗ 否证** | 加行能进游戏，面板不显示；成员资格在 55 张表外（§10.3） |
+| 加行新增可见战备 / 解锁未发布物品 | **✗ 否证**（军械库）；**战备例外 ✓ 实机** | 加行进不了军械库；但**未发布战备**可用 `+0xC8`「额外战备」直接带进任务（7 条实机，见 [UNRELEASED-STRATAGEMS](../tables/UNRELEASED-STRATAGEMS-26088801.md)）|
 | 给武器新增独立弹种行 | **✗ 否证** | 四个变体全 `0xC000000D`；只能改现有行（§10.3） |
 | 用 `.patch_N` 覆盖 `data/game/*.dl_bin` | **✗ 否证** | 不在 `bundle_database.data`，引擎按路径直读加密松文件（§10.3） |
 
@@ -47,6 +47,8 @@
 | 进程内存 / 原生代码 | 运行时数值、DLL | — | ✗ 已全部否证（§10.4） |
 
 **一句话**：这条路能改「定义」和「表内引用」，改不了「谁能出现」「文本从哪来」「资源长什么样」。想把未发布物品变出来、想写全新描述，都不在这条路上。
+
+> ⚠ **2026-10-25 修正（重要）**：**战备**这一族有例外 —— 未发布战备可以用 `+0xC8`「额外战备」在**任务里**拿到（7 条实机：M-104 FRV / 额外扫射 / A2A 导弹 / 烟幕行走弹幕 / 纸屑 / 飞鹰掠过 / 照明弹，见 [UNRELEASED-STRATAGEMS](../tables/UNRELEASED-STRATAGEMS-26088801.md)）。**军械库仍然不显示**（那条边界的原意没变）；武器/护甲等其它族也仍然不行。
 
 ### 1.2 三个硬前置
 
@@ -336,7 +338,8 @@ python tools/plain_edit.py --plain <work>/generated_stratagem_settings.dl_bin \
 | 弹幕轮数 / 散布 | `generated_entities`，`Bombardment` 组件 | `+0x18` 轮数 / `+0x24` 散布（f32 米） | ✓ 实机 **@`25988413`**（5→1 落 2 组；36.0→2.0） |
 | 武器装填时可移动 | `generated_entities`，`WeaponReloadComponentData` | 80 B 行：`ManualClearing` / `ReloadAllowMove` / `Duration` | ✓ 实机 **@`25988413`**（MG-43 的 `ReloadAllowMove` 0→1） |
 | 爆炸外观 | 爆炸表 + 弹丸表 + 战备表 | 整行克隆 + 爆炸 type + `+0xA8` 包 | ✓✓ 实机 |
-| 新可见战备 / 解锁未发布物品 | **不在 55 张表** | — | ✗ 否证 |
+| 新可见战备 / 解锁未发布物品（**军械库**） | **不在 55 张表** | — | ✗ 否证（需运行时登记表） |
+| **未发布战备进任务**（不经军械库） | `generated_stratagem_settings +0xC8` | 宿主战备「附赠」另一条战备 id，不占配装位 | **✓ 实机**（7 条，见 [UNRELEASED](../tables/UNRELEASED-STRATAGEMS-26088801.md)）|
 | 自定义名称 / 描述文本 | `.strings` 语料 | — | ✗ 另一条路线 |
 | 战备攻击参数（`num_bombs` / `num_salvos` / `area_size` / `fire_height`） | **不在明文表** | bundle 里的战备攻击定义 | ✗ 全扫空 |
 | 伤害 / 穿甲（`DamageInfo`） | `damage_settings` | 76 B / 8 成员，**行内**零 padding；宿主用 tail（或借无主行）（[DAMAGE-SETTINGS §5](../tables/DAMAGE-SETTINGS-26088801.md#5-宿主策略)） | **✓ 实机**（面板可见） |
@@ -988,7 +991,7 @@ python tools/murmur64.py "$WORK/restored.plain"   # 必须 = 原版锚点
 | 65 | 护甲多被动 mod 的基线所有权 | 内嵌 `ORIGINAL_PLAINTEXT`，应用时整体重建覆盖盘上改动 | 不要在它管理的表上叠加 | **✓ 离线** |
 | 66 | 用 `.patch_N` 覆盖数据表 | `data/game/*.dl_bin` 不在 `bundle_database.data`，是加密松文件 | 只能替换文件本身 | **✗ 否证** |
 | 67 | 「只有 5 种资源有 codec ⇒ 只能改 5 类」 | `.patch_N` 替换只需原始字节，引擎按类型选加载器；physics 裸 float32 已证可改 | 不要从 codec 数量推能力边界 | **✗ 否证** |
-| 68 | `LoadoutEntry.selectable` 解锁未发布物品 | 发布数据里没有这个组件；可见性由「实体是否挂 LoadoutEntry」+ 后端 id/DLC 决定 | 不是离线可翻的字节 | **✗ 否证** |
+| 68 | `LoadoutEntry.selectable` 解锁未发布物品 | 发布数据里没有这个组件；可见性由「实体是否挂 LoadoutEntry」+ 后端 id/DLC 决定 | 不是离线可翻的字节；**但战备另有 `+0xC8` 旁路**（不进军械库、直接进任务） | **✗ 否证**（军械库）|
 | 69 | 给武器新增独立弹种行 | 四个变体全 `0xC000000D` | 只能改现有行 | **✗ 否证** |
 | 70 | EAC 是移除 LuaJIT 的原因 | EAC 是独立进程，改不了引擎的 Lua 实现 | 同一意图、两个改动；别因果误判 | **✗ 否证** |
 | 71 | 不存在「声明式包依赖」 | 包头 56 B = 哈希 / 哈希 / 包大小，不是依赖表；三个资产包在 55 张明文表里全表 0 命中；bundle 不是加载单位 | 唯一声明口是 `+0xA8`（以及武器 `+0xF8`）；见 [EXPLOSION-VISUAL](../explosions/EXPLOSION-VISUAL-26088801.md) §7 | **✗ 否证** |
@@ -1013,6 +1016,7 @@ python tools/murmur64.py "$WORK/restored.plain"   # 必须 = 原版锚点
 | 85 | 问引擎「有什么」 | `ResourcePackage` 只有 6 个键不可枚举；`PluginManager` 只列 3 个引擎插件 | [LOADER-SPEC](../engine/LOADER-SPEC-25988413.md) §3 | **✗ 否证** |
 | 86 | 载荷请求资源包 | Lua 侧 `stingray.ResourcePackage` 只有 6 个键（load / unload / has_loaded / flush / __index / _name），不能枚举也不能任意预载；跨包驻留只能由 **HD2Runtime by SkyeShade** 走 `game.dll` 的 `RefcountedPackageSystem`（见 §13） | 同上 §3 | **✗ 否证** |
 | 87 | 猜 GUI 绑定签名 | `Gui.resolution` 是 `(viewport, window)`，把 Gui 当 Viewport 传 = 原生 AV；immediate 模式调用全成功但屏幕不画 | [GUI-HUD](../engine/GUI-HUD-25988413.md) | **✗ 否证** |
+| 88 | 「未发布物品一律不可用」（旧能力边界） | **要分族**：**战备** ✓（`+0xC8` 附赠，7 条实机、含未发布的 M-104）；**武器 / 护甲 / 其它物品** ✗（军械库成员资格在表外，需运行时登记表） | [UNRELEASED-STRATAGEMS](../tables/UNRELEASED-STRATAGEMS-26088801.md) | **✓ 实机** |
 | 88 | `pcall` 成功 = 调用成功 | `loadlib`/`loadstring` 失败返回 `nil,message`，只取第一个返回值会记成 `ok=true` | [PROBE-AUTHORING](../engine/PROBE-AUTHORING-25988413.md) §7 | **✗ 否证** |
 | 89 | 沿用 LuaJIT 的 `\x` 转义 | stock 5.1 静默丢掉反斜杠，`"\x41"` 变 `"x41"`，载荷照常加载但字节不同 | [LUA51-TOOLING](../engine/LUA51-TOOLING-25988413.md) §3 | **✗ 否证** |
 | 90 | `patch_N` 序号可留空洞 | 只留 `patch_3` 时探针报 0/0/6 全 absent；连续态 3/3/3 | [LOADER-SPEC](../engine/LOADER-SPEC-25988413.md)（单次观察） | **⚠ 未证** |

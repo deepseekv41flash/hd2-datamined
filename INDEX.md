@@ -11,7 +11,7 @@
 
 | 你是… | 从这进 |
 |---|---|
-| 想亲手改一张表 | **[改盘上数据的完整工作流](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md)** —— 主线文档，8 步链 + 锚点哈希 + 92 条坑 |
+| 想亲手改一张表 | **[改盘上数据的完整工作流](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md)** —— 主线文档，8 步链 + 锚点哈希 + 93 条坑 |
 | 想让**代理**去做 | **[skills/hd2-file-route-mod](skills/hd2-file-route-mod/SKILL.md)** —— Agent Skills，只给方法论（每步的目的 / 判据 / 停的条件）+ 指回本页 |
 | 想查某个字段 / 某个数 | [§1 按问题找](#1-按问题找) |
 | 想按类型看全部 64 篇 | [§2 按类型浏览](#2-按类型浏览64-篇) |
@@ -71,7 +71,7 @@
 
 | 想知道 | 读 |
 |---|---|
-| **92 条坑**（现象 / 规则 / 三态） | [WORKFLOW §10](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md) |
+| **93 条坑**（现象 / 规则 / 三态） | [WORKFLOW §10](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md) |
 | 工具的行为陷阱（不报错但会让你误判） | [WORKFLOW §5.2](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md) · [§3 工具清单](#3-工具清单tools) |
 | 走不通的路：进程内存 / 未签名 DLL / 加载器 | [MEMORY-ACCESS](docs/boundaries/MEMORY-ACCESS-25988413.md) · [LOADER-SPEC](docs/engine/LOADER-SPEC-25988413.md) |
 | 虚拟机路线为什么也不行 | [VM-DUMP](docs/boundaries/VM-DUMP-25988413.md) |
@@ -190,7 +190,7 @@
 
 | 文档 | 一句话 | build |
 |---|---|---|
-| ★ [FILE-ROUTE-WORKFLOW-26088801](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md) | **知识库主管线**：完整 8 步链、5 张表锚点、宿主三选（含三次崩溃归因）、**92 条坑**、EAGLE 双行案例、未决清单 | `26088801`（流程跨 build） |
+| ★ [FILE-ROUTE-WORKFLOW-26088801](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md) | **知识库主管线**：完整 8 步链、5 张表锚点、宿主三选（含三次崩溃归因）、**93 条坑**、EAGLE 双行案例、未决清单 | `26088801`（流程跨 build） |
 | [CASE-STUDY-20261021](docs/cases/CASE-STUDY-20261021.md) | 三个社区包拆出来的路：`.patch_N` 能替换任意资源类型，纯资产 mod 不需要 loader | `25988413` |
 | [TEXTURE-SWAP-10X-APEX](docs/cases/TEXTURE-SWAP-10X-APEX.md) | 一次贴图替换委托：BC1 往返误差、材质槽判定、`patch_3` 部署与回滚 | 跨 build |
 | [COMMUNITY-MODS-COMPAT-26088801](docs/cases/COMMUNITY-MODS-COMPAT-26088801.md) | SSEO 与护甲多被动为何不能共存：争的是同一文件的基线所有权 | `26088801` |
