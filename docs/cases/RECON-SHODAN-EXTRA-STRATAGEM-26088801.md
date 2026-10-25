@@ -3,7 +3,7 @@
 > **一句话**：SHODAN-Stat-Editor v4.1.0 的「额外自选战备」= 往 `StratagemInfo +0xC8`（`additional_stratagem`）
 > 写**另一条战备的 id**；带上宿主战备时，引擎把这条额外战备一起给你，**不占 4 个配装位**，而且会顺着
 > extras 一路跟（**成环 → 任务开始崩溃**）。这是**纯数据表**字段（file route），不是运行时补丁。
-> 我们已离线做出补丁（`M-104 Incinerator FRV` = 战备 id **138**），**尚未装盘**（等实机判定未发布战备是否被拒）。
+> 我们已离线做补丁并**实机验证通过**：包里不带 Precision Strike，战备条却多出 **Orbital Precision Strike + M-104 Incinerator FRV** 两件，**都能呼叫** ⇒ 未发布战备可以走这条数据路线进任务。
 >
 > 样本：SHODAN-Stat-Editor-Offline **v4.1.0**（GitHub release，zip sha256 `3174425d3939bec3…`）
 > 抽出位置：`D:/mod/recon/shodan-stat-editor/v4.1.0/`（**只读**：未运行 exe、未改 `data/`）
@@ -17,9 +17,10 @@
 | 额外战备写的是哪个字段 | `StratagemInfo +0xC8`（=200）u32，值 = 目标战备的 `+0` id；0 = 无 | **✓ 离线**（源码 + 本 build 数据双向对上） |
 | 它占配装位吗 | **不占**（作者注释：`It doesn't take a loadout slot, but the HUD's stratagem list can fill up`） | ✓ 源码注释 |
 | 引擎真的用它吗（我们的 build） | **是**：全部 Eagle 行 `+0xC8 = 51`（`EAGLE. REARM`）—— 原版就在用这条链 | **✓ 离线**（153 行逐行读） |
-| 能附带未发布战备吗 | **机制上能**（值是任意战备 id），但**未发布战备会不会被任务开始校验拒绝**：**未证** | ⚠ 待实机 |
+| 能附带未发布战备吗 | **能，且已实机**：M-104（未发布）作为额外战备出现并**可以呼叫**（不需要解锁） | **✓ 实机**（2026-10-25） |
 | M-104 Incinerator FRV 在本 build 里存在吗 | **存在**：战备 id **138**、key `0xA9A97CD7`、实体 `0x2d85bfe3d8717fe5`（`frv_flamer`） | **✓ 离线** |
-| 是 A 档（dl_bin）还是 C 档 | **A · dl_bin 等价**（只写一个 u32 + 保内容哈希） | ✓ 离线门禁 G1–G7 |
+| 是 A 档（dl_bin）还是 C 档 | **A · dl_bin 等价**（只写一个 u32 + 保内容哈希） | **✓ 实机** |
+| 引擎会不会顺着 extras 链继续跟 | **会**：只带 `Resupply` 就同时来了 Precision Strike **和** M-104（链 34 → 121 → 138） | **✓ 实机** |
 
 ## 2 第三方 mod 的机制（源码级）
 
@@ -81,7 +82,8 @@ python tools/stratagem_extra.py --find FRV             # id 108 / 26 / 138
 python tools/stratagem_extra.py --host 121 --extra 138 --out out/stratagem-extra/strat-m104.plain --seal
 ```
 
-产物：`out/stratagem-extra/strat-m104.dl_bin`（82,440 B，sha256 `ac7c2e53a1d2e23c…`）
+产物：`out/stratagem-extra/strat-m104.dl_bin`（单条，82,440 B，sha256 `ac7c2e53a1d2e23c…`）
+**实机用的组合件**：`out/stratagem-extra/strat-both.dl_bin`（两条，82,448 B，sha256 `a7d904a06e1a4704…`）
 
 | 门禁 | 结果 |
 |---|---|
@@ -93,7 +95,14 @@ python tools/stratagem_extra.py --host 121 --extra 138 --out out/stratagem-extra
 | G6 容器自洽、无尾部残留 | PASS |
 | **G7 环检测** | PASS（另测 `--host 51 --extra 31` 正确拒绝） |
 
-改动内容：`ORBITAL. PRECISION STRIKE`（id **121**）`+0xC8: 0 → 138`。
+改动内容（组合件，两条链）：
+
+| 宿主 | `+0xC8` | 效果 |
+|---|---|---|
+| id **34** `CONSUMABLES. RESUPPLY` | → **121** | 带 Resupply 就送 Orbital Precision Strike（控制组） |
+| id **121** `ORBITAL. PRECISION STRIKE` | → **138** | 带 Precision Strike 就送 M-104 Incinerator FRV（目标） |
+
+两条串起来 = 带 Resupply 一路送到 M-104（链式已验证，见 §5）。
 
 **装盘（等你说）**：
 ```bash
@@ -102,14 +111,51 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 python tools/dlbin_deploy.py restore --file generated_stratagem_settings.dl_bin
 ```
 
-## 5 试验设计（一局判三件事）
+## 5 实机结果（2026-10-25，**A 档闭环**）
 
-1. 配装：带 **Orbital Precision Strike**（+ 任意 3 个）进任务；
-2. 看战备条：是否出现第 5 个图标（M-104），图标/名字是否正常（未发布会显示什么？）；
-3. 按呼叫码叫车：
-   - 车出来了 ⇒ **未发布战备可用，A 档闭环**（数据就能带未发布战备）；
-   - 图标在但叫不出来 / 报不可用 ⇒ 任务开始有解锁校验，需要运行时（**C 档**：解锁那一步）；
-   - 完全没有图标 ⇒ `+0xC8` 对未发布目标被过滤（要换宿主或换目标再试），仍属数据侧可查。
+配装里**没有带** Orbital Precision Strike（只带了 Resupply 等），进任务后战备条：
+
+| 观察 | 结果 |
+|---|---|
+| 额外战备数量 | **2 个**：`轨道精准攻击`（Orbital Precision Strike）+ `炽灼型快速侦察载具`（M-104 Incinerator FRV） |
+| 图标 / 名字 | 正常（中文名、原版图标，说明资源与 locid 都在包里） |
+| 能不能用 | **都能呼叫** ✓ |
+| HUD | 6 个战备（4 自选 + 2 额外）显示正常，没有挤坏 |
+
+**为什么是 2 个**：只带了 `Resupply`(34)，它的额外是 `Precision Strike`(121)；
+而 `Precision Strike` 自己的额外是 `M-104`(138) ⇒ 引擎**顺着链继续跟**，一次带出两件。
+这正好把作者的注释「the game follows extras with no end」在外部独立验证了一遍。
+
+⇒ **结论**：
+1. `+0xC8` 额外战备 = **A · dl_bin 等价 ✓ 实机**；
+2. **链式跟随 ✓ 实机**（2 跳）；
+3. **未发布战备可带、可叫 ✓ 实机** —— 「解锁未发布物品」那道坎**不拦额外路线**，不需要 SHODAN 的运行时 UNLOCKS；
+4. 4 个自选位不变，额外的是「跟着来」的第 5、6… 条。
+
+### 5.1 想做成品时怎么挂
+
+```bash
+# 挂到任意战备（例：让每次带 Resupply 都送 M-104）
+python tools/stratagem_extra.py --host 34 --extra 138 --out out/my.plain --seal
+# 一送多：链起来（A→B→C），或给 4 个自选各挂 1 个不同战备
+python tools/stratagem_extra.py --host 34 --extra 121 --out out/s1.plain
+python tools/stratagem_extra.py --plain out/s1.plain --host 121 --extra 138 --out out/s2.plain --seal
+```
+
+⚠ **别造环**（工具 G7 会拒），环在任务开始崩。
+
+### 5.2 本 build 里还有哪些「游戏有但没提供」的战备行（候选）
+
+| id | 内部名 | 备注 |
+|---:|---|---|
+| 36 | `EAGLE. (NOT USED) ADDITIONAL STRAFING RUNS` | 原版未用，`+0xC8` 已自带 51 |
+| 114 | `MISSIONS. IMMEDIATE EXTRACTION BEACON` | 任务用 |
+| 135 | `MISSIONS CLAN STATION. Nuke` | 任务用 |
+| 89 | `MISSIONS. REMOTE EXPLOSIVES` | 任务用 |
+| 119 | `SEAF Squad` | 未命名 |
+| 48 / 98 / 62 | `TANK. TANK RELOAD HE / AT / CANISTER` | 坦克换弹子项，多半不能当独立呼叫用 |
+
+（`stratagem-display-names.json` 里 8 行 `name_status=unknown`；M-104 不在这 8 行里 —— 它是有名字但**军械库不提供**。）
 
 ## 6 风险与已知
 
@@ -129,5 +175,6 @@ python tools/dlbin_deploy.py restore --file generated_stratagem_settings.dl_bin
 | 引擎会在配装里跟随 extras 链（成环崩溃） | **✓ 离线**（源码注释，作者实测；本 build 原版 Eagle 链在用） |
 | M-104 = 战备 id 138 / key `0xA9A97CD7` / 实体 `frv_flamer` 在本 build 完整存在 | **✓ 离线**（表 + 实体表双向） |
 | 写 `+0xC8` 一个 u32 即可、保内容哈希 | **✓ 离线**（G1–G7 全 PASS） |
-| 未发布战备能作为额外战备进任务并呼叫 | **⚠ 待实机** |
-| 「解锁未发布物品」（让它在军械库可选）可以离线做 | **✗ 不能**（SSEO 走运行时物品注册表，L4） |
+| 未发布战备（M-104）能作为额外战备进任务并呼叫 | **✓ 实机**（2026-10-25，战备条出现且可叫） |
+| extras 链会被引擎继续跟随 | **✓ 实机**（只带 Resupply → 同时得到 Precision Strike + M-104） |
+| 「解锁未发布物品」（让它在**军械库**可选）可以离线做 | **✗ 不能**（SSEO 走运行时物品注册表，L4）—— 但**走额外战备不需要它** ✓ |
