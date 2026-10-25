@@ -349,13 +349,15 @@
 
 | 资产 | 内容 |
 |---|---|
-| [`tables/`](tables) | 三张很小的明文参数表（projectile 96,604 B / damage 50,336 B / weapon_customization 30,824 B，合计 ~180 KB） |
+| [`tables/`](tables) | 四张很小的明文参数表（projectile 96,604 B / damage 50,336 B / weapon_customization 30,824 B / **stratagem 82,384 B**，合计 ~260 KB） |
 | [`refs/table-geometry.json`](refs/table-geometry.json) | 55 张表的 stride / 行数 |
 | [`refs/exports/`](refs/exports) | 战备 / 爆炸 / 弹丸等表的逐行 CSV（组 / 行 / 内部名 / 偏移值） |
 | [`refs/dl-type-names.txt`](refs/dl-type-names.txt) | 类型哈希 → 名字 |
 | [`refs/entity-block-types.json`](refs/entity-block-types.json) | 275 个组件块类型名 |
 
 配方：[WORKFLOW §2.6](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md) —— 用 `plain_edit.py` 真跑出完整 G1–G6（锚点 `946A4FE5FAAAE076`）。
+
+当前 build 的可跑示例：[`examples/stratagem_extra_demo.py`](examples/stratagem_extra_demo.py)（战备表 `+0xC8` 额外战备，`--verify` 自带自检；写入用 [`tools/stratagem_extra.py`](tools/stratagem_extra.py)）。
 
 ## 5. 能力明细
 

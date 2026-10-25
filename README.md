@@ -27,6 +27,9 @@
 核心工具**纯 Python 3.11+，无第三方依赖**（少数可选工具需要 PyNaCl / Pillow / lupa / `srkit`，见 [INDEX §3 工具清单](INDEX.md#3-工具清单tools)）。
 
 ```bash
+# 0) 当前 build 的示例：战备表「额外战备 +0xC8」——未发布战备进任务的入口
+python examples/stratagem_extra_demo.py --verify
+
 # 1) 解析一张表（用仓库自带明文，不需要游戏、不需要密钥）
 python examples/parse_examples.py --projectile tables/generated_projectile_settings.dl_bin
 
@@ -38,8 +41,9 @@ python tools/plain_edit.py --plain tables/generated_projectile_settings.dl_bin \
     --set 0x<偏移>=u32:123 --out /tmp/out.plain.dl_bin
 ```
 
-**要动自己机器上的游戏文件** → 从 [改盘上数据的完整工作流](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md) 入手（8 步链 + 锚点哈希 + 92 条坑）。
+**要动自己机器上的游戏文件** → 从 [改盘上数据的完整工作流](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md) 入手（8 步链 + 锚点哈希 + 93 条坑）。
 **要让代理自动做** → 用技能 [skills/hd2-file-route-mod](skills/hd2-file-route-mod/SKILL.md)（只给方法论，知识一律指回本仓库）。
+**案例在哪** → [`docs/cases/`](docs/cases)（25 篇）· 战备/未发布内容在 [`docs/tables/`](docs/tables) · 总入口 [INDEX](INDEX.md)。
 
 > **两条前置，动手之前必须确认**：
 > ① **密钥** —— `recipient.pk` / `recipient.sk` 不随仓库提供，但**可以自己解出来**：一份旧 build 的全量内存转储 + [DLBIN-SEALED-BOX §10](docs/engine/DLBIN-SEALED-BOX.md) 的 RVA / XOR 常数 / seek 工具 / 三重验证。
@@ -50,11 +54,11 @@ python tools/plain_edit.py --plain tables/generated_projectile_settings.dl_bin \
 ```
 INDEX.md   ★ 唯一索引入口：按问题找 / 按类型浏览 / 能力明细 / 已验证结论
 BUILDS.md  换 build 的操作手册：三步 / 判读规则 / 锚点复验 / 基线存放（记录在 INDEX §2 builds/）
-docs/      34 篇文档（builds/ engine/ tables/ explosions/ boundaries/ cases/）
+docs/      65 篇文档（INDEX 按类收录 64 篇 + 目录说明；案例全在 cases/）
 tools/     离线工具链（解析 / 改字节 / 保哈希 / 行级编辑 + 门禁）
 tables/    三张很小的明文参数表，供离线验证解析器
 refs/      字段图与索引：表几何 / 行名 / 本地化名 / 弹头引用链 / 组件块类型名
-examples/  最小解析示例（纯标准库）
+examples/  可直接运行的示例（纯标准库）+ 案例指路
 skills/    代理技能 hd2-file-route-mod —— 只写方法论，知识全在 docs/
 ```
 

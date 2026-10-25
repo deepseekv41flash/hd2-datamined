@@ -13,6 +13,9 @@ the typelib member list (by simulated Go layout offsets) recovers the names.
 usage:
   python tools/entity_fields.py --component WeaponDataComponentData
   python tools/entity_fields.py --component WeaponDataComponentData --json out.json
+
+⚠ 本示例写于 build 25988413；当前 build 用 tools/entity_field_set.py（同样的读法 + 门禁），
+完整案例见 docs/cases/。
 """
 from __future__ import annotations
 

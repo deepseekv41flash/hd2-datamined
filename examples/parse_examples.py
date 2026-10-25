@@ -1,5 +1,8 @@
 """示例解析脚本（只依赖 Python 标准库）。
 
+⚠ 本示例写于 build 25988413（表结构与解析方式跨 build 稳定）；
+当前 build `26088801` 的示例见 examples/stratagem_extra_demo.py，完整案例见 docs/cases/。
+
 用法：
     python parse_examples.py --projectile generated_projectile_settings.dl_bin
     python parse_examples.py --blocks   generated_entities.dl_bin
