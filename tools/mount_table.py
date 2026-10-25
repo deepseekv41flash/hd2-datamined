@@ -93,6 +93,9 @@ AI_BRAIN = ("SensorEyeComponentData", "TargetingComponentData", "DetectorCompone
 FACTION_NAMES = {0: "inherit", 1: "super-earth", 2: "?", 4: "illuminate", 8: "automaton"}
 SIDE_NAMES = {0: "Common", 1: "Right", 2: "Left"}
 FMT = {"u32": ("<I", 4), "u64": ("<Q", 8)}
+# `TurretComponent`（76 B）在本 build 的四项限位偏移：pitch_min / pitch_max / yaw_min / yaw_max
+# （旧 build 是 +0/+4/+8/+12；本 build 那四个位置是小浮点，限位整体后移 —— 见文档 §4.6）
+TURRET_LIMITS = (0x14, 0x18, 0x1C, 0x20)
 
 # 人工别名：**每一条都有出处**，不是猜的。来源缩写：
 #   [实机] = memmod 时代在 build 25480438 上装过/打过（见 docs/VEHICLE-MOUNT-ITEMS.md）
@@ -146,6 +149,7 @@ class Env:
         self.components = self._load_components(components)
         self.catalog = self._load_catalog(catalog)
         self._unit_cache: dict[int, dict] = {}
+        self._idx_cache: dict[int, dict[int, int]] = {}
         self._faction_cache: dict[int, int] | None = None
         self._pkg_cache: dict[int, int] | None = None
 
@@ -204,7 +208,7 @@ class Env:
         e._by_type = {}
         for i, b in enumerate(e.blocks):
             e._by_type.setdefault(b["type_id"], []).append(i)
-        e._unit_cache, e._faction_cache, e._pkg_cache = {}, None, None
+        e._unit_cache, e._idx_cache, e._faction_cache, e._pkg_cache = {}, {}, None, None
         return e
 
     # -- 容器
@@ -229,12 +233,15 @@ class Env:
                 "rows": row_bytes // stride, "stride": stride, "row_type": ms[1]["type_id"]}
 
     def index_map(self, tid: int) -> dict[int, int]:
+        if tid in self._idx_cache:
+            return self._idx_cache[tid]
         c = self.container(tid)
         out = {}
         for i in range(c["slots"]):
             key, row, pad = struct.unpack_from("<QII", self.data, c["body"] + 16 * i)
             if key:
                 out[key] = row
+        self._idx_cache[tid] = out
         return out
 
     def row_map(self, tid: int) -> dict[int, int]:
@@ -315,6 +322,17 @@ def _looks_hex(text: str) -> bool:
     return len(t) == 16 and all(c in "0123456789ABCDEF" for c in t.upper())
 
 
+def turret_limits(env: Env, key: int) -> dict | None:
+    """件的 `Turret` 行四项限位（本 build：+0x14/+0x18/+0x1C/+0x20，f32）。"""
+    row = env.index_map(TURRET).get(key)
+    if row is None:
+        return None
+    base = env.row_offset(TURRET, row)
+    pmin, pmax, ymin, ymax = (struct.unpack_from("<f", env.data, base + o)[0]
+                              for o in TURRET_LIMITS)
+    return {"row": row, "pitch_min": pmin, "pitch_max": pmax, "yaw_min": ymin, "yaw_max": ymax}
+
+
 def item_info(env: Env, key: int) -> dict:
     """一个挂载件的全部离线判据（五件套 + 两条否决项 + 包）。
 
@@ -353,6 +371,7 @@ def item_info(env: Env, key: int) -> dict:
         "geometry": geometry,
         "bones": len(cat.get("types", {}).get("bones", [])),
         "has_turret": env.index_map(TURRET).get(key) is not None,
+        "turret_limits": turret_limits(env, key),
         "has_projectile_weapon": env.index_map(PROJECTILE_WEAPON).get(key) is not None,
         "has_wieldable": env.index_map(WIELDABLE).get(key) is not None,
         "has_weapon_wielder": env.index_map(WEAPON_WIELDER).get(key) is not None,
@@ -513,6 +532,7 @@ def swap(env: Env, entity: str, slot: int, item_text: str, out: str,
             print(f"✗ G7 旧值 0x{old_item:016X} != 期望 0x{want:016X}")
             return 1
 
+    old_lim = turret_limits(env, old_item) if old_item else None
     info = item_info(env, item) if item else None
     if info:
         fp = five_piece(info)
@@ -524,6 +544,11 @@ def swap(env: Env, entity: str, slot: int, item_text: str, out: str,
             print("  ⚠ 否决项：敌阵营件（Faction=4/8）—— 本工具不写 Faction 表，装上会被宿主阵营处理掉")
         if fp["veto_ai_brain"]:
             print("  ⚠ 否决项：AI 索敌三件套齐（SensorEye+Targeting+Detector）—— 它会自己开火，玩家抢不到")
+        lim = info["turret_limits"]
+        if lim or old_lim:
+            def _yaw(x):
+                return f"±{x['yaw_max']:g}" if x and abs(x['yaw_min'] + x['yaw_max']) < 1e-3                     else (f"{x['yaw_min']:g}…{x['yaw_max']:g}" if x else "无 Turret")
+            print(f"  射界(yaw): 原 {_yaw(old_lim)} → 新 {_yaw(lim)}")
         if fp["geometry"] == "none":
             print("  ⚠ 几何：没有 mesh（骨骼引用型或非武器件）—— 装上看不到模型，但可能能瞄/能打")
 
@@ -568,13 +593,14 @@ def swap(env: Env, entity: str, slot: int, item_text: str, out: str,
         check("G6 容器重解析自洽", n == len(blocks), f"{n} 块")
     except Exception as exc:                                     # noqa: BLE001
         check("G6 容器重解析自洽", False, str(exc))
-    # G10：从输出重新解析这张表，确认"只有这一个槽变了"
+    # G10：从输出重新解析这张表，确认"只有这一个槽变了"。
+    # 用 (row, slot) 当键而不是按顺序 zip —— 空槽在前后两次列表里的条数不同，zip 会错位。
     env2 = env.clone(bytes(edited))
-    before = [(r["row"], s["slot"], s["item"]) for r in mount_records(env) for s in r["slots"]]
-    after = [(r["row"], s["slot"], s["item"]) for r in mount_records(env2) for s in r["slots"]]
-    changed = [y for x, y in zip(before, after) if x != y]
-    check("G10 全表只有目标槽变了", changed == [(row, slot, f"0x{item:016X}")],
-          f"changed={changed}")
+    before = {(r["row"], s["slot"]): s["item"] for r in mount_records(env) for s in r["slots"]}
+    after = {(r["row"], s["slot"]): s["item"] for r in mount_records(env2) for s in r["slots"]}
+    changed = sorted(k for k in set(before) | set(after) if before.get(k) != after.get(k))
+    check("G10 全表只有目标槽变了", changed == [(row, slot)],
+          f"changed={[(r, sl, before.get((r, sl)), after.get((r, sl))) for r, sl in changed]}")
 
     if not all(c[1] for c in checks):
         print("\n✗ 门禁未全过，不写输出")
@@ -677,6 +703,10 @@ def cmd_show(env: Env, args) -> int:
         print(f"      Turret={fp['turret']} Wieldable={info['has_wieldable']} "
               f"WeaponWielder={info['has_weapon_wielder']} ProjectileWeapon={fp['fire']} "
               f"Faction={info['faction_name']} AI大脑={fp['veto_ai_brain']}")
+        lim = info["turret_limits"]
+        if lim:
+            print(f"      射界: pitch {lim['pitch_min']:g}…{lim['pitch_max']:g}  "
+                  f"yaw {lim['yaw_min']:g}…{lim['yaw_max']:g}（Turret 行 {lim['row']}）")
     if not any_slot:
         print("  （空记录：5 个槽全 0）")
     return 0

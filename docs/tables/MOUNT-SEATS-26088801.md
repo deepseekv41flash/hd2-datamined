@@ -169,7 +169,7 @@ memmod 时代的 WATCH 实测"写完 node/pad 未变"，与本 build 的槽结�
 |---|---|---|---|
 | 1 | 几何 | 资源目录里该键的 `mesh` 的 `gpu_size` | 0 网格 = 无模型；`gpu_size=0` 但有 mesh = 流式几何（要包驻留） |
 | 2 | 包驻留 | 该键的资源出现在哪些 toc 包 | 没驻留 → 紫 `?` |
-| 3 | 炮塔 | `TurretComponentData` 有行 | 固定指向，不能瞄 |
+| 3 | 炮塔 | `TurretComponentData` 有行（限位偏移见 §4.6） | 固定指向，不能瞄 |
 | 4 | 玩家可操作 | `Wieldable` **和** `WeaponWielder` 都有行（必要不充分） | 不能瞄不能打 |
 | 5 | 开火 | `ProjectileWeaponComponentData` 有行 | 只能瞄不能打 |
 | 否决 | 阵营 | `FactionComponentData` 行 `+0` 位掩码 ∈ {4,8} | 敌兵登车，运输机当场把槽打空（memmod 实测） |
@@ -219,6 +219,29 @@ memmod 时代的 WATCH 实测"写完 node/pad 未变"，与本 build 的槽结�
 带 `WeaponWielder` 的件（本 build 的挂载池里只有 40 mm 炮塔站）。
 这也解释了旧账里"运输机炮塔两表都有、依然不能操作"——它的 `WeaponWielder` 记录与 40 mm 站不同，
 且带 AI 大脑。
+
+### 4.6 射界：`TurretComponentData` 四项限位（本 build 的偏移是新的）
+
+判据 3（"能瞄"）用的是**件自己的** `TurretComponentData` 行（`0x1EBA7593`，148 槽 / 74 键 /
+75 行 × 76 B）。本 build 的四项限位在：**`+0x14` pitch_min / `+0x18` pitch_max /
+`+0x1C` yaw_min / `+0x20` yaw_max**（f32）。
+
+> ⚠ **与旧文档的偏移不同**：memmod 时代记的是 `+0/+4/+8/+12`；本 build 的那四个位置是小浮点
+> （`+0`≈9.3e-14、`+4`≈3.9e-19），限位整体后移到了 `+0x14…+0x20`。数值本身仍与旧实测逐条吻合。
+
+| 件 | pitch（min…max） | yaw（min…max） | 旧文档记的 | 判定 |
+|---|---|---|---|---|
+| `0x9872EEB31A5F88FD` 40 mm 炮塔站 | −13 … 60 | **−180 … +180** | "40 mm 站 ±180" | ✓ |
+| `0xC25DC40EDE0E2D16` 孤儿站 | −20 … 80 | **−180 … +180** | "孤儿站 ±180" | ✓ |
+| `0x439F9E65C18567DA` TD-220 同轴机枪 | −3 … 25 | **−20 … +20** | "TD-220 同轴机枪 ±20" | ✓ |
+| `0x1FA1F596769225C2` TD-220 主炮 | −3 … 25 | −20 … +20 | — | — |
+| `0x8365609B35EF6672` 运输机炮塔 | 0 … 90 | **−105 … +105** | "炮塔自己的 ±105" | ✓ |
+
+判据自证：75 行**全部**满足 `pitch_min ≤ pitch_max`、`yaw_min ≤ yaw_max`、落在 ±180/±360 内；
+yaw 对最常见的正是 `(-180, 180)`（52 行，全向炮塔）。
+
+⇒ **补丁 A 的实机可判读点**：TD-220 槽 1 原装同轴机枪的 yaw 只有 **±20°**；换成 40 mm 站后
+数据层给的是 **±180°**。进游戏如果"玩家能转满一整圈"，就同时证明了 ①换件生效 ②射界取件自己的 Turret 行。
 
 ---
 
@@ -352,13 +375,14 @@ memmod 时代的 WATCH 实测"写完 node/pad 未变"，与本 build 的槽结�
 
 ```bash
 python tools/mount_table.py list                       # 134 条记录 / 载具 19 条
-python tools/mount_table.py show --entity "TD-220"     # 槽位解码 + 五件套判据
+python tools/mount_table.py show --entity "TD-220"     # 槽位解码 + 五件套判据 + 射界
 python tools/mount_table.py seats                      # SeatCollection 56 行
 python tools/mount_table.py find 40mm                  # 按名字找件
 python tools/mount_table.py explain                    # 打印几何推导
 python tools/mount_table.py swap --entity 0x16474112801385B6 --slot 1 \
     --item 0x9872EEB31A5F88FD --out out/x.plain        # 换件（保哈希）
 python tools/mount_table.py verify out/x.plain         # 复核：哈希/容器/几何/只变了哪个槽
+# swap 还会把"新旧射界"打出来（补丁 A：原 ±20 → 新 ±180），这是进游戏最硬的判据
 ```
 
 `swap` 的物理动作只有一步：**把 `MountInfo.item` 的 8 字节写成目标件**。
@@ -424,8 +448,9 @@ python tools/dlbin_deploy.py restore --file generated_entities.dl_bin
 
 1. **模型**：召 TD-220 看槽 1 位置（同轴机枪位）是不是变成 40 mm 站的炮塔外形
    —— 40 mm 站在共享基包，任务里天然驻留，不该出紫 `?`。
-2. **操作**：坐进车长位，看这门 40 mm 能不能瞄、能不能打。
-   旧 build 的实测是"这件的炮塔射界取它自己的 `Turret` 行"，与本 build 数据一致。
+2. **操作**：坐进车长位，看这门 40 mm 能不能瞄、能不能打；**最硬的判据是射界**——
+   原装同轴机枪 yaw 只有 **±20°**，40 mm 站在数据层是 **±180°**（§4.6）。
+   能转满一整圈 ⇒ 换件生效 + 射界确实取件自己的 `Turret` 行（同时否证"射界取宿主车的"）。
 3. **槽 2 工件**：如果模型出现但**操作不了**，说明"空槽加件"只补了模型、没有座位授权——
    这正好把 §6 的结论钉死（座位→武器的绑定在代码侧）。
 
