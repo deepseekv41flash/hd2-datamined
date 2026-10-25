@@ -15,7 +15,7 @@
 | 文件 | 大小 | 是什么 |
 |---|---:|---|
 | `manifest.json` | 1,418 B | addon 清单 |
-| `Addon/9ba626afa44a3aa3.patch_0` | 17,936 B | 打包后的 addon（含 lua 载荷） |
+| `Addon/9ba626afa44a3aa3.patch_0` | 17,936 B | 打包后的 addon；lua 载荷 = **source 形态**（条目 `0xFC56EEAD1A1915C8`，17,733 B），换行归一后与 `docs/p11_self_heal.lua` **逐字节相同**（`tools/lua_payload_dump.py --zip` 直接解出，不是字节码） |
 | `Addon/…patch_0.gpu_resources` / `.stream` | 0 B | 空伴随流 |
 | `docs/README.md` | 4,783 B | 作者自述（触发条件 / cfg / 与"自己扎一针"的差别） |
 | `docs/p11_self_heal.lua` | 17,733 B / 413 行 | **源码**（不用解字节码，直接读） |
@@ -75,6 +75,7 @@
 |---|---|
 | 老 mod = 运行时事件 + 原生治疗；不写内存、不改数据 | **✓ 离线**（413 行源码 + README 逐条互证） |
 | P-11 身份 hash = `0xD6B1FB05B9109353` | **✓ 离线**（源码常量） |
+| 盘上载荷 = 文档里的源码（同一份，source 而非 bytecode） | **✓ 离线**（`lua_payload_dump.py` 解出 + 换行归一后逐字节相同） |
 | 「开火即回血」dl_bin / 资源都做不到 | **✓ 离线**（数据无事件钩子、无"开火自动施加状态"字段；见 §3） |
 | 替代：治疗爆打自己脚下 → 回血不受伤 | **✓ 实机**（2026-10-25） |
 | 替代：>2 m 打地面 → 不回血（半径生效） | **✓ 实机**（反向对照） |
