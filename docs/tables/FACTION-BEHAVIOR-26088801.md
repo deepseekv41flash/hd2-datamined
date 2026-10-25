@@ -167,3 +167,48 @@ Murmur64A 内容哈希保持 `0x8E49771B181FFAA1`。
 回滚：`python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`
 （会连 EXO-45 双臂、TD-110 槽 2/FRV 的 40 mm 站一起回原版；只想回上一版则重装
 `D:\mod\out\exo45-arms-v2\generated_entities.exo45-mk2-ac200.dl_bin`。）
+
+---
+
+## 9 上一轮结果 + 驾驶位复测（2026-10-25）
+
+### 9.1 §8 的结果：**纯数据版 `AIBEH` ✓ 成立**
+
+运输机炮塔装到 TD-110 **槽 0（主炮位）**、只把 `Behavior +0` 改成 658：
+
+> 实机：**模型出现、能瞄能打、一直都不会被抢**（用户原话）
+
+⇒ memmod 时代的 `AIBEH`（运行时改实例 + 每帧 `PIN` 兜底）**在数据路线上一个 u32 就够了**，
+不需要 runtime、不需要持续写。这条与 §3/§4 的表结构完全对得上（645 = 运输机炮塔原 behaviour，
+658 = TD-110 烟幕件的 behaviour）。
+
+### 9.2 本轮：把同一门炮放回**驾驶位的槽**（旧 memmod 从未测过的组合）
+
+memmod 时期的历史：**先用驾驶位**（槽 2，原烟幕位）→ 被 AI 抢 → 换到主炮位 → `AIBEH` 成功后
+**再没放回驾驶位**。本轮把这个缺口补上：
+
+| 项 | 值 |
+|---|---|
+| TD-110 **槽 0** | 恢复原版主炮 `0xD58AE6A04EDB10DE`（不再占用主炮位） |
+| TD-110 **槽 2（原烟幕位）** | **`0x8365609B35EF6672`（运输机炮塔）** |
+| `Behavior +0`（运输机炮塔） | 已是 **658**（§8 的件级改动**仍然生效**，本轮不用再动） |
+| 文件 | `D:\mod\out\shuttle-slot2\generated_entities.shuttle-slot2.dl_bin`（47,259,624 B，sha256 **`92124d3528403d7e`**） |
+| 门禁 | 两次换件 G1–G10 全过（`changed=[(125,0,…)]`、`changed=[(125,2,…)]`），Murmur64A 保持，封箱回读一致 |
+
+### 9.3 判读表（三条互斥）
+
+| 观察 | 判定 |
+|---|---|
+| 驾驶位**能瞄能打、不被抢** | ✓ 关键结论：**座位控制通道与 AIBEH 互不冲突** —— 之前"驾驶位不行"是 AI 抢，不是座位没通道 |
+| 能开火但**不能瞄/不能转** | 该座位没有瞄准/相机通道（与 [MOUNT-SEATS §4.7](MOUNT-SEATS-26088801.md) 的"准星/装填属座位侧"同源） |
+| **紫问号** | 包未驻留 ⇒ **不要开火**（[EXO-ARM-VARIANTS §10.2](../tables/EXO-ARM-VARIANTS-26088801.md)） |
+
+附带观察点（都不影响主判据）：
+
+- 模型会挂在**烟幕发射器的小挂点**上，可能悬空/偏移；
+- 机械射界按件（±105），但玩家实际能转多少 = 相机层与机械层取小；
+- 想再验"AI 是否真被领走"，可以做一局**对照**：把 `Behavior +0` 改回 645（同一个件级改动），
+  驾驶位应重新出现"打几秒被抢" ⇒ 这是 §8 结论的**反向验证**。
+
+回滚：`python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`
+（回上一版：`install --sealed D:\mod\out\shuttle-beh\generated_entities.shuttle-beh658.dl_bin`）
