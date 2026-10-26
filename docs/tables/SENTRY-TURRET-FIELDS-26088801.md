@@ -738,14 +738,17 @@ mesh/material/texture 都行）；但**动画播放器/包级注册**可能仍�
 | B | 无位移 + **叫**原版 | 跟着抬 | 已观察到，等于"动画随包载入"|
 | C | **`+0xA8` 声明包**（已备好，未装） | **出生就抬** | 若 B 成立，C 应当不需要"外援" |
 
-**盘上当前状态（已回退到"不做位移"那一版）**
+**盘上当前状态（C3：包走声明口、修正走补丁；2026-10-26 11:3x 已装）**
 
 | 项 | 值 |
 |---|---|
-| `data/f6fb08cc02d24255.patch_1` | `eb2bfca7c5408a47`（41 条整包；SM `layer0=3` 展开态 + `layer5=1` 空态）|
-| `data/f6fb08cc02d24255.patch_2` | **已删除**（原 +2.0 m 位移，`52dca8710dde0d37`）|
+| `data/9ba626afa44a3aa3.patch_9`（4,560 B） | 只含 1 条 `state_machine 37079568DC86E9C6`：`layer0=3`（展开态）+ `layer5=1`（空态，关自转）|
+| `generated_stratagem_settings.dl_bin` | `dae271681b372bbb`，行 57 `+0xA8` = **`11BBDF8CE39E5FC5`（声明火箭哨戒包）**，行 59 = 0 |
 | `generated_entities.dl_bin` | `2a5ce9ba6b699792`（FRV 炮手位 = 火箭哨戒，`Behavior 658`）|
-| `generated_stratagem_settings.dl_bin` | `6c0ab66b281c2178`（行 57/59 `+0xA8` **全为 0**，不声明任何包）|
+| ~~`f6fb08cc02d24255.patch_1`~~ | **已删除**（原 41 条整包驻留，1.26 MB toc + 4.37 MB gpu + 2.29 MB stream ≈ **7.9 MB**）|
+| 补丁序号 | `9ba…patch_0..9` 连续；`f6fb…patch_0`（Warp 包，另一条实验）不动 |
+
+⇒ 这就是 AC-8 当初的形态：**声明口负责让包（连带动画）被加载，补丁只负责改资源**。
 
 **已备好、未安装的 C 变体**：`D:/mod/out/sm-verify/strat_declare_rocket.sealed.dl_bin`
 （sha256 `dae271681b372bbb`，行 57 `+0xA8` = `11BBDF8CE39E5FC5`，行 59 仍为 0）。
