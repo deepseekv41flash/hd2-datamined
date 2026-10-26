@@ -46,6 +46,7 @@
 | **投送舱送什么（战备空投舱换载荷）** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§1 槽位结构 · §2 前 N 个槽才生成 · §3 换物品配方** | `26088801` |
 | **换进来的物品只有紫问号 / 网格材质不加载** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§4 两个包槽（`+0xA8` + `+0xF8`）· §5 item→包解析表** | `26088801` |
 | **哨戒炮/炮塔多久自动消失、各字段含义** | [SENTRY-TURRET-FIELDS](docs/tables/SENTRY-TURRET-FIELDS-26088801.md) | **§2 寿命字段（`HellpodPayload +0x04`）· §3 逐组件字段表 · §4 一条命令** | `26088801` |
+| **哨戒挂到载具上「不出模型 / 未展开 / 开火点悬空」** | [SENTRY-TURRET-FIELDS](docs/tables/SENTRY-TURRET-FIELDS-26088801.md) | **§3.8.4 改 `state_machine` 的 `layer.DefaultState`（✓✓ 实机）· §3.8.4.1 四态语义 + 部署完成态判据 · §3.8.4.2 九哨戒 = 七份 SM / 两套模板** | `26088801` |
 | **有限数量的跨包加载（通用产出）** | [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) | **§2 三个可编辑量 · §3 解析链 · §5 一条命令 · §6.9 补丁路线（不受口上限）· §7 边界** | `26088801` |
 
 ### 理解原理
@@ -290,6 +291,7 @@
 | `strat_slot_fill.py` | **把包填进战备行的空槽**：名字→行（同名全改）→拒绝覆盖已占用槽→一次 tail 宿主写完→读回校验→可选封装 | `strat_slot_census.py`、`plain_edit.py`、`dlbin_seal.py` | ✓ 离线门禁通过（6 处填空槽，整份只 +8 B） |
 | `entity_field_set.py` | **任意实体组件行任意字段**的通用写入（`--block`+`--key`+`--field`），tail 宿主 + 7 门禁，可链式 | `typelib.py`、`murmur64.py` | ✓✓ 已实机（AC-8 备弹 0→40/40）|
 | `entity_batch_set.py` | **批量字段写入**：一次 tail 宿主写多个组件/多行/多字段（文件只 +12 B），9 道门禁 | `entity_field_set.py`、`pod_rack_swap.py` | ✓ 产物与实机验证件逐字节一致 |
+| `state_machine_edit.py` | **`state_machine` 资源（不是表）的读/改**：`--show` 列层/状态/默认态，`--decode` 解出事件表、每条过渡、以及 `EmitEndEvent → 部署完成态`，`--names` 用 hashlist 反查事件名，`--set 层=索引` 写 `layer.DefaultState`；改完走 `resource_patch.py` 打成补丁 | 标准库 | ✓✓ 已实机（AC-8 哨戒挂载不展开：`0x74: 3→2` 后出场即展开，触点/开火点全对；`--set 0=2` 复现的载荷与 patch_7 逐字节相同）|
 | `armor_kit_weight.py` | **护甲三数字的唯一文件侧入口**：改某件甲 9 个部件的档位（`+16`），rating/speed/stamina 一起变；`--show` 列 135 件甲；8 道门禁 | `plain_edit.py`、`murmur64.py` | ✓ 离线（135/135 与 SDK 逐件对上），⚠ 上机待读 |
 | `passive_bonus_edit.py` | **护甲被动表编辑**：给某个 perk 加 pm/sm 行（含**中间块变长后的整容器重排**），尾部校正字保内容哈希；`--show` 打全表 | `murmur64.py` | ✓✓ 已实机（Acclimated 抗性 0.5→0.0 ⇒ 火/毒不掉血；ergonomics +30 待读） |
 | `entity_hashmap_insert.py` | **给实体新增一种组件**：往组件哈希图里插一条 `(键 → 行)`，可整行复制孤儿行；哈希图是 `键 % 槽数` 线性探测（§ENTITY-LOCID 10），8 道门禁 | `pod_loadout.py`、`murmur64.py` | ✓ 离线门禁全过；**但「新增组件」这条用法已实机否证**（GL-28 插弹匣行不被采纳，删联动键后崩溃）—— 只用于读写已存在组件 |

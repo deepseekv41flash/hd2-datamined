@@ -369,6 +369,16 @@ AC-8 关键字段：`Faction 1`（不用改）· `Behavior 5→658` · `Unit +0 
 把它改成"展开"那一档，挂到载具上时**直接以展开形态出场**——AC-8 挂 M-102 炮手位实测：
 **模型展开、原点正确、开火点在炮管上、开火动画正常**（用户原话：展开本来就有一个往上伸的动作，现在全对）。
 
+**✓✓ 实机那一套（AC-8，2026-10-26 00:0x）**
+
+| 文件 | 值 | 用途 |
+|---|---|---|
+| `data/9ba626afa44a3aa3.patch_7`（3,568 B） | entry `state_machine CBFE1FC7158347F3`，`0x74: 3→2` | 让 AC-8 以展开形态出场 |
+| `generated_entities.dl_bin` | **`02b740fef30a7f7a`** | FRV 炮手位（行 19/119 槽 0）= AC-8 **自己的 `aa_turret` 壳**；`Behavior 5→658`；TD-110 槽 2 回原版烟幕 |
+| `generated_stratagem_settings.dl_bin` | `081e7879cb6575e2` | 行 57/59 声明 AC-8 的两个包 |
+
+⇒ 上一版"借 40mm 壳"只是绕过；**正解是改状态机默认态**——外观、原点、炮口一次到位，且不用改壳（各哨戒外观/数值保持原生）。
+
 **格式（来自 [xypwn/filediver](https://github.com/xypwn/filediver) 的 `stingray/state_machine`，BSD-3）**
 
 ```
@@ -382,36 +392,109 @@ AC-8 关键字段：`Faction 1`（不用改）· `Behavior 5→658` · `Unit +0 
 过渡类型: Immediate / WaitEnd / SyncBeatClosestImmediate / WaitUntilBeat / Sync% / SyncInverse%
 ```
 
-**AC-8 的实际读数**（`state_machine CBFE1FC7158347F3`，3,372 B，来自包 `54dc633a67baa93d`）：
-6 层；layer0 4 个状态，默认 3；两段动画各有"过渡态 + 循环态"（`3168C572…` / `314AE842…`）：
-state0（loop=0, endT=0.20, 带发射事件）、state1（loop=0）、state2（loop=1, `314AE842`）、
-state3（loop=1, `3168C572`）←原默认。
-
-**改法**（一层一个 u32，layer0 在文件偏移 **`0x74`**）：
+**改法**（一层一个 u32，layer0 在文件偏移 **`0x74`**；各 SM 的偏移不同，用 `--show` 读）：
 
 ```bash
-python tools/state_machine_edit.py --show --layer 0 sm.bin          # 看层/状态/默认
-python tools/state_machine_edit.py --set 0=2 --out sm_new.bin sm.bin # ③→②（换成另一族的循环态）
+python tools/state_machine_edit.py --show --layer 0 sm.bin           # 看层/状态/默认
+python tools/state_machine_edit.py --decode --names <hashlist>.csv sm.bin   # 事件表/过渡/部署完成态
+python tools/state_machine_edit.py --set 0=2 --out sm_new.bin sm.bin # ③→②（折叠→展开）
 # 打成补丁（资源层）：entry type = A486D4045106165C(state_machine)，id = 该 SM 的 file_id
 python tools/resource_patch.py build spec.json -o out --index 7
 cp out/9ba626afa44a3aa3.patch_7* "<game>/data/"
 ```
 
-**本轮已装（✓✓ 实机）**
+#### 3.8.4.1 ✓ 离线：layer0 四个状态的真实语义（`--decode` 解出，2026-10-26 10:2x）
 
-| 文件 | 值 | 用途 |
+`state_machine` 的 `AnimationEvent = {事件哈希 u32, Link 索引 i32}`，`Link = {目标态, BlendTime, 类型, Beat}`；
+事件的哈希能在 `hashlist-normalized.csv` 里**直接查出名字**。AC-8（`CBFE1FC7158347F3`）layer0 全解：
+
+| state | 名字哈希 | clip | loop | `EmitEndEvent` | 事件→过渡 | 语义 |
+|---|---|---|---|---:|---|---|
+| 0 | `0x79DE1870039A1A7E` | `3168C572…` | 0 | `DeployDone` endT=0.20 | DeployDone→**s2**、PackageRetract→s1、PackageDeploy→s0 | **部署过渡（播完就"展开完成"）** |
+| 1 | `0xD23167BF92D249B8` | `314AE842…` | 0 | — | PackageDeploy→s0、PackageRetract→s1 | **收起后停驻** |
+| 2 | `0x823905BD6B62BA3E` | `314AE842…` | 1 | — | PackageRetract→s1、PackageDeploy→s0 | **部署完成 = 展开** |
+| 3 | `0x330CA356421F7ADA` | `3168C572…` | 1 | — | PackageDeploy→s0、PackageRetract→s1 | **待部署 = 折叠**（原默认） |
+
+事件表：`0x3D0B77D2=DeployDone · 0x27A2636E=RetractDone · 0x72C4271D=PackageDeploy ·
+0x6F8B215F=PackageRetract · 0xF5EACFD8=Fire · 0xA4DD22E8=FireDone · 0xE62AFEFC=未命名`。
+
+⇒ **可复用的判据**：**部署过渡态（loop=0、带 `EmitEndEvent`）的 `EmitEndEvent` 在该 state 的
+事件表里查到的那条 Link 指向的 state = "部署完成态"（= 展开）**。
+AC-8 上这条规则给出的正是 state2 —— 与我们实机验证的改法完全一致。
+
+**状态名是全局共享词汇**（同一 name 在不同壳里复用，绑的 clip 各自不同）：
+
+| 状态名 | 角色 | 出现在 |
 |---|---|---|
-| `data/9ba626afa44a3aa3.patch_7`（3,568 B） | entry `state_machine CBFE1FC7158347F3`，`0x74: 3→2` | 让 AC-8 以展开形态出场 |
-| `generated_entities.dl_bin` | **`02b740fef30a7f7a`** | FRV 炮手位（行 19/119 槽 0）= AC-8 **自己的 `aa_turret` 壳**；`Behavior 5→658`；TD-110 槽 2 回原版烟幕 |
-| `generated_stratagem_settings.dl_bin` | `081e7879cb6575e2` | 行 57/59 声明 AC-8 的两个包 |
+| `0x79DE1870039A1A7E` | 部署过渡 | **全部 7 个 SM** + 人操阵地 |
+| `0xD23167BF92D249B8` | 收起 | 全部 7 个 SM + 人操阵地 |
+| `0x330CA356421F7ADA` | **待部署（折叠）** | AC-8 / 火箭 / 火焰 / 激光 / 人操阵地 |
+| `0x823905BD6B62BA3E` | **部署完成（展开）** | AC-8 / 火箭 / 火焰 / 激光 / 人操阵地 |
+| `0xE954AED4871D630A` | 模板 B 的 idle（loop=1，默认） | MG-43 / 加特林 / 迫击炮 |
+| `0x69484BEF5AC55426` | 模板 B 的"部署后"（loop=1） | 仅迫击炮 |
 
-⇒ 上一版"借 40mm 壳"只是绕过；**正解是改状态机默认态**——外观、原点、炮口一次到位，且不用改壳（各哨戒外观/数值保持原生）。
+#### 3.8.4.2 九个哨戒 = **七份 SM、两套模板**（不是同一份文件）
+
+`Unit +0` 读出的壳 id 就是 SM 的 `file_id`（`srkit list --type state_machine` 全库 2,099 条 / 448 个去重 id，
+按 id 取即可；同一 id 的多份副本**逐字节相同**，实测 MG-43/加特林/迫击炮/火箭 4 组副本 sha256 一致）。
+
+| 哨戒 | 本体实体 | 壳 / SM file_id | SM 名 | 大小 | 层 | layer0 状态 | 默认 | 部署完成态 | 模板 |
+|---|---|---|---|---|---:|---:|---:|---|---|
+| A/MG-43 | `37CDE43876BA26BB` | 同左 | `…/turret_machinegun_gpmg` | 4,012 | 7 | 3 | s0 `E954AED4` | （无独立态，见下） | **B** |
+| A/G-16 加特林 | `EF85D6CF58E31D70` | `61D9DDA22A59E9BC` | `…/hellpod/turret/turret` | 5,724 | 8 | 3 | s0 `E954AED4` | 同上 | **B** |
+| A/M-12 迫击炮 | `51A0812E3BCE2D74` | 同左 | `ar_turret/mortar_turret` | 4,276 | 7 | 4 | s0 `E954AED4` | **s3 `69484BEF`**（loop=1） | **B** |
+| A/M-23 EMS / 毒气 | `B2053A18…` / `299C0D3D…` | **共用** `51A0812E3BCE2D74` | 同上 | 4,276 | 7 | 4 | 同上 | 同上 | **B** |
+| A/MLS-4X 火箭 | `37079568DC86E9C6` | 同左 | `et_turret/rocket_turret` | 4,364 | 8 | 4 | s1 `330CA356` | **s3 `823905BD`** | **A** |
+| A/AC-8 自动炮 | `54D86057F5DACFB9` | `CBFE1FC7158347F3` | `…/hellpod/aa_turret/aa_turret` | 3,372 | 6 | 4 | s3 `330CA356` | **s2 `823905BD`** | **A** |
+| 火焰哨戒 | `820CC3BAFE962858` | 同左 | （无名） | 2,100 | 4 | 4 | s1 `330CA356` | **s3 `823905BD`** | **A** |
+| A/LAS-98 激光 | `56070F36CFFFA8A8` | 同左 | （无名） | 2,140 | 4 | 4 | s3 `330CA356` | **s1 `823905BD`** | **A** |
+| （参照）人操阵地 | — | `0E977C49DB7604F9` | `…/hellpod/manned_turret` | 4,820 | 6 | 4 | s1 `330CA356` | s2 `823905BD` | **A** |
+
+**同构性结论（回答"能不能照抄"）**：
+
+* **不同构**：7 份 SM 是不同文件，层数 4–8、layer0 状态数 3–4、状态名集合都不一样；
+* **但同模板内部完全同构**：模板 A（AC-8/火箭/火焰/激光/人操阵地）四个状态的名字**一模一样**，
+  只有 clip、loop 标志和索引不同 ⇒ **改法照抄，只需换索引**（这就是"同构"的实用定义）；
+* 模板 B（MG-43/加特林/迫击炮）是另一套三/四态结构，默认态也是 `E954AED4`，
+  **没有 `330CA356`/`823905BD` 这对折叠/展开态** ⇒ 不能照抄（见下 ⚠）。
+
+每份 SM 各自的包：`LoadoutPackage +8` 就是它自己的包（MG-43 `154BD6143819DF7D`、加特林 `992D325D88DE5FBF`、
+迫击炮 `8C5A99A9A40D5B8D`、EMS `4666692B63185121`、毒气 `71D9EA5D656B09B8`、火箭 `11BBDF8CE39E5FC5`、
+AC-8 `54DC633A67BAA93D`、火焰 `1577E917AD1F287D`、激光 `36313BF684C1FD79`）；
+另有一份公共包 `fc5b6bff0db90aab` 存了 MG-43/加特林/迫击炮/火箭 4 份副本（字节相同）。
+
+#### 3.8.4.3 已打补丁：模板 A 的另外三个（⚠ 待实机）
+
+| 文件 | 大小 | entry | 改动 |
+|---|---:|---|---|
+| `data/9ba626afa44a3aa3.patch_8` | 8,976 B | `state_machine 37079568DC86E9C6`（火箭） | layer0 `1 → 3`（`330CA356` → `823905BD`） |
+| 同上 | | `state_machine 820CC3BAFE962858`（火焰） | layer0 `1 → 3` |
+| 同上 | | `state_machine 56070F36CFFFA8A8`（激光） | layer0 `3 → 1` |
+
+产物 `D:\mod\out\sm-patch8\`（spec.json + 3 个载荷），补丁序号 `patch_0..8` 连续。
+
+**本局验证配置**（`D:\mod\out\sm-verify\`，已装，盘上回读逐字节一致）：
+
+| 文件 | sha256 | 改动 |
+|---|---|---|
+| `generated_entities.dl_bin` | **`2a5ce9ba6b699792`** | FRV 炮手位（行 19/119 槽 0）= **A/MLS-4X 火箭哨戒** `37079568DC86E9C6`（顶掉 AC-8）；`Behavior 611→658` |
+| `generated_stratagem_settings.dl_bin` | `0958505e34d4e14b` | 行 57/59 `+0xA8` = `11BBDF8CE39E5FC5`（火箭哨戒包） |
+
+⇒ 一局：**火箭哨戒在炮手位上应该像 AC-8 那样"出场即展开、原点/炮口都对"**。
+回滚到 AC-8 版：把 `D:\mod\out\frv-ac8\ent.sealed.dl_bin`（`02b740fef30a7f7a`）
+与 `…\strat.sealed.dl_bin`（`081e7879cb6575e2`）拷回 `data/game/` 即可（`patch_7/8` 保持不动）。
+
+**模板 B 的待办（⚠ 未验，别照抄）**：MG-43/加特林默认 `E954AED4`（loop=1），部署过渡 `79DE1870`
+播完**没有**回指状态（事件表里没有 `Deployed` 那条 Link），所以它停在部署 clip 的末帧；
+迫击炮则显式走 `Deployed → s3（69484BEF，loop=1）`。
+若模板 B 也停在"折叠"，可试：**MG-43 默认 `0→1`、加特林 `0→1`、迫击炮 `0→3`**（建议单开 `patch_9`，
+一局验一件）。⚠ 这两个状态 loop=0，出场会先播一遍"伸展"再定住，观感可能与模板 A 不同。
 
 **剩下的**：
-① 其它 8 个哨戒各有自己的 SM（如 MG-43 = `37CDE43876BA26BB`，在 `154bd6143819df7d`/`fc5b6bff0db90aab`），
-要各自找"展开"那档（layer0 通常是 4 个状态、两族循环态：逐个试 0/2/3，一局一个）；
-② 状态名是 64-bit 哈希、没语料可解，只能按结构推断 + 试；
-③ 若想"部署时也保持展开"，可从部署动画的过渡态直接切默认态（未验）。
+① 模板 B 三个（上面 ⚠）；
+② `EmitEndEvent` 里 `0xE62AFEFC` 仍未解析（没有语料命中）；
+③ 部署流程（战备投放）也会发 `PackageDeploy` ⇒ 改默认态后，**战备投放**的同一型哨戒可能先以展开形态出现
+再播一遍伸展动画（无害但可能有一瞬抖动，未专门验）。
 
 ## 4 怎么改
 

@@ -9,13 +9,22 @@
     （2026-10-26 ✓✓ 实机：AC-8 哨戒挂 M-102 炮手位，展开形态 + 原点/开火点/开火动画全对）。
 
 格式来源
-    xypwn/filediver `stingray/state_machine`（BSD-3）：`rawStateMachine` 头 15×u32 → 组偏移表 →
-    每层 `{Magic, DefaultState, Count, Offsets[]}` → 每个 state（名字哈希 / 类型 / 循环 / 过渡 / 事件）。
-    本文只解到"能定位 DefaultState 与 state 概览"这一层，够改、够验。
+    xypwn/filediver `stingray/state_machine`（BSD-3）：`rawStateMachine` 头 15×u32 →
+    组偏移表 → 每层 `{Magic, DefaultState, Count, Offsets[]}` → 每个 state：
+    `Name(Hash64) | Type | 动画哈希表 | 权重表 | Unk01 | Loop(bool) | Additive(bool)
+     | AnimationEvent{n,off} | StateTransitionLinks{n,off} | … | EmitEndEvent(u32) | EndTransitionTime(f32) | …`
+    `AnimationEvent = {EventName(ThinHash u32), LinkIndex(i32)}`，
+    `Link = {Index(u32), BlendTime(f32), Type(u32), Beat(u32)}`。
+
+    ⇒ **"部署过渡结束事件"（EmitEndEvent）在该 state 的 AnimationEvent 表里查到的 Link，
+       就是"部署完成态"**。这条规则在 AC-8 上已被实机证实（EmitEndEvent=DeployDone → state2，
+       把默认态改成 state2 后哨戒以展开形态出场）。`--decode` 就是打印这条链。
 
 用法
     python tools/state_machine_edit.py --show  sm.bin
     python tools/state_machine_edit.py --show  sm.bin --layer 0
+    python tools/state_machine_edit.py --decode sm.bin            # 事件/过渡/部署完成态
+    python tools/state_machine_edit.py --decode --names <csv> sm.bin
     python tools/state_machine_edit.py --set 0=2 --out sm_new.bin  sm.bin     # layer0 的默认态改成 2
 
 配套（改完怎么用）
@@ -25,6 +34,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import pathlib
 import struct
 import sys
@@ -39,6 +49,8 @@ HDR = ["unk00", "group_count", "groups_off", "event_hash_count", "event_hash_off
        "var_count", "var_map_off", "opacity_count", "opacity_off",
        "unk0_count", "unk0_off", "unk1_count", "unk1_off", "unk2_count", "unk2_off"]
 STATE_TYPES = {0: "Clip", 1: "Empty", 2: "Blend", 3: "Time", 4: "Unknown", 5: "Ragdoll"}
+LINK_TYPES = {0: "Immediate", 1: "WaitEnd", 2: "SyncBeatClosestImmediate",
+              3: "WaitUntilBeat", 4: "SyncPercentageImmediate", 5: "SyncInversePercentageImmediate"}
 
 
 def header(b: bytes) -> dict:
@@ -67,16 +79,50 @@ def layers(b: bytes, h: dict) -> list[dict]:
             aoff = struct.unpack_from("<I", b, sb + 16)[0]
             loop = b[sb + 32]
             additive = b[sb + 36]
-            evcnt = struct.unpack_from("<I", b, sb + 40)[0]
-            lcnt = struct.unpack_from("<I", b, sb + 48)[0]
+            evcnt, evoff = struct.unpack_from("<II", b, sb + 40)
+            lcnt, loff = struct.unpack_from("<II", b, sb + 48)
             emit = struct.unpack_from("<I", b, sb + 72)[0]
             endt = struct.unpack_from("<f", b, sb + 76)[0]
             anims = [struct.unpack_from("<Q", b, sb + aoff + k * 8)[0] for k in range(min(acnt, 3))] if aoff else []
+            links = []
+            for k in range(lcnt):
+                if not loff:
+                    break
+                links.append(struct.unpack_from("<IfII", b, sb + loff + k * 16))
+            trans = {}
+            for k in range(evcnt):
+                if not evoff:
+                    break
+                ev, idx = struct.unpack_from("<Ii", b, sb + evoff + k * 8)
+                trans[ev] = idx
             states.append({"idx": j, "at": sb, "name": name, "type": typ, "loop": loop,
                            "additive": additive, "anims": anims, "anim_count": acnt,
-                           "events": evcnt, "links": lcnt, "emit": emit, "end_t": endt})
+                           "events": evcnt, "links": lcnt, "emit": emit, "end_t": endt,
+                           "link_list": links, "trans": trans})
         out.append({"idx": i, "at": base, "magic": magic, "default": default, "states": states,
                     "default_at": base + 4})
+    return out
+
+
+def event_table(b: bytes, h: dict) -> list[int]:
+    if not h["event_hash_count"] or not h["event_hash_off"]:
+        return []
+    return [struct.unpack_from("<I", b, h["event_hash_off"] + i * 4)[0]
+            for i in range(h["event_hash_count"])]
+
+
+def load_names(path: str | None) -> dict[int, str]:
+    """hashlist-normalized.csv: hash_dec,0xHEX,64,name,..."""
+    if not path:
+        return {}
+    out: dict[int, str] = {}
+    with open(path, encoding="utf-8", errors="replace") as f:
+        for row in csv.reader(f):
+            if len(row) >= 4 and row[1].startswith("0x"):
+                try:
+                    out[int(row[1], 16)] = row[3]
+                except ValueError:
+                    continue
     return out
 
 
@@ -84,6 +130,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="读/改 state_machine 资源的 layer.DefaultState")
     ap.add_argument("file")
     ap.add_argument("--show", action="store_true")
+    ap.add_argument("--decode", action="store_true", help="打印事件→过渡→状态 与 部署完成态")
+    ap.add_argument("--names", default=None, help="hashlist-normalized.csv，用于反查事件/状态名")
     ap.add_argument("--layer", type=int, default=None)
     ap.add_argument("--set", action="append", default=[], help="层=默认态索引，可重复")
     ap.add_argument("--out", default=None)
@@ -91,10 +139,18 @@ def main() -> int:
 
     b = pathlib.Path(a.file).read_bytes()
     h = header(b)
-    if a.show or not a.set:
+    ls = layers(b, h)
+    names = load_names(a.names)
+
+    def nm(x: int) -> str:
+        return ("=" + names[x]) if x in names else ""
+
+    if a.show or a.decode or not a.set:
         print(f"{a.file}  {len(b):,} B")
         print("header: " + "  ".join(f"{k}={v}" for k, v in h.items()))
-        ls = layers(b, h)
+        if a.decode:
+            ev = event_table(b, h)
+            print("event 表: " + ", ".join(f"0x{e:08X}{nm(e)}" for e in ev))
         print(f"layers: {len(ls)}")
         for L in ls:
             if a.layer is not None and L["idx"] != a.layer:
@@ -106,13 +162,27 @@ def main() -> int:
                 print(f"    state{s['idx']} type={STATE_TYPES.get(s['type'], s['type'])} "
                       f"loop={s['loop']} add={s['additive']} anims={s['anim_count']} "
                       f"{[hex(x) for x in s['anims']]} events={s['events']} links={s['links']} "
-                      f"emit=0x{s['emit']:X} endT={s['end_t']:.2f}{tag}")
+                      f"emit=0x{s['emit']:X}{nm(s['emit'])} endT={s['end_t']:.2f} "
+                      f"name=0x{s['name']:016X}{nm(s['name'])}{tag}")
+                if not a.decode:
+                    continue
+                if s["emit"]:
+                    tgt = s["trans"].get(s["emit"])
+                    if tgt is not None and 0 <= tgt < len(s["link_list"]):
+                        ix, bl, ty, _beat = s["link_list"][tgt]
+                        print(f"        * EmitEndEvent -> state {ix} "
+                              f"({LINK_TYPES.get(ty, ty)}, blend {bl:.2f})  <== 部署完成态")
+                for ev, tgt in s["trans"].items():
+                    if not (0 <= tgt < len(s["link_list"])):
+                        continue
+                    ix, bl, ty, _beat = s["link_list"][tgt]
+                    print(f"        on 0x{ev:08X}{nm(ev):<18s} -> state {ix} "
+                          f"({LINK_TYPES.get(ty, ty)}, blend {bl:.2f})")
 
     if not a.set:
         return 0
 
     data = bytearray(b)
-    ls = layers(b, h)
     for spec in a.set:
         if "=" not in spec:
             raise SystemExit(f"✗ --set 需要 层=索引，收到 {spec!r}")
