@@ -378,3 +378,54 @@ python tools/entity_hashmap_insert.py --block <JumppackComponentData 0x54270608>
 ② **换壳**：`UnitComponentData+0x00` 改成 Jump Pack 的资产 `0x59C5CA839449B379`（会变成跳包外观，但能判定"能力是否在资产里"）。
 
 **回滚**：`cp out/jumpsupply/entities.before-jumpsupply <game>/data/game/generated_entities.dl_bin`（回到未插跳跃的干净态）。
+
+### 7.7 第四轮结果：组件集齐**仍然崩** ⇒ 缺件不在数据表里（2026-10-26 21:1x，`✗`）
+
+Supply Pack 在**组件集与 Jump Pack 完全对齐**（`Jumppack` + `Recharge` + `EffectReference`(同一行 478) + `EquipmentType=19`）
+之后，按 5 **仍然崩溃**，跳跃键仍无反应。⇒ **不是"少一个组件"**。
+
+**这一轮能排除的东西（`✓` 逐个排掉）**
+
+| 已排除 | 依据 |
+|---|---|
+| `AbilityComponentData` | 35 件背包逐字节相同（`SpawnAbility[4]`）|
+| `EquipmentType`（作为跳跃门）| Jump Pack 改成补给类照样跳 |
+| `Jumppack` 行内容 | 与 Jump Pack **逐字节相同** |
+| `Recharge` 行 | 都是 15 s |
+| `EffectReference` 行 | **共用同一行**（键 → 行 478），内容不可能不同 |
+| **组件缺失** | 上述四项已补齐，仍崩 |
+
+剩下 Supply 与 Jump Pack 的差异只有**身份/资源类**：`UnitComponentData+0x00`（资产）、`+0x14`、`LoadoutPackage`/`LoadoutEntry`、
+`Attachable`、`Spottable`，以及 Supply 独有 `DepositComponentData`。
+**最可能是 unit 资产**：跳跃动作、推进器骨骼、状态机里的"跳跃"状态、以及 `Jumppack` 行里那六个 `AbilityId`（2055–2060）
+所指向的能力，按设计都属于**资产**那一侧，数据表只给参数。
+
+### 7.8 第五轮：资产互换的成对实验（2026-10-26 21:1x 已装，`⚠`）
+
+思路：既然"能力"疑似长在资产上，就把**资产互换**（`UnitComponentData+0x00`，u64，块 `0x4437574D`），
+两件互为对照，一局两个读数：
+
+| 实验 | 目标件 | 改动 | 预测（若能力在资产里）|
+|---|---|---|---|
+| **A** | Supply Pack | `Unit+0x00` `0x4EF9A47109239A58` → **`0x59C5CA839449B379`**（跳包资产）| 外观变跳包，**能跳** |
+| **B** | Jump Pack | `Unit+0x00` `0x59C5CA839449B379` → **`0x4EF9A47109239A58`**（补给资产）| 外观变补给包，**不能跳 / 崩** |
+
+其余一律不动：Supply 仍带 `Jumppack`+`Recharge`+`EffectReference`+类 19+`Deposit`；Jump Pack 仍是原版组件集。
+
+**判读**
+
+| A（Supply+跳包资产）| B（Jump Pack+补给资产）| 结论 |
+|---|---|---|
+| 能跳 | 不能跳/崩 | **能力长在资产里** `✓✓` ⇒ 纯数据只能"**换壳**"实现（外观跟着变），不能给原壳加能力 |
+| 能跳 | 也能跳 | 资产不是充分条件也不是必要条件 ⇒ 另有身份字段在起作用 |
+| 仍崩/不能跳 | 不能跳/崩 | 资产不是关键 ⇒ 唯一剩下的差异是 `Deposit`（下一轮删它的键）|
+| 装备/生成阶段就崩 | 同上 | `Jumppack`/`Deposit` 与资产**强耦合**（骨骼/挂点缺失）⇒ 资源层证据 |
+
+**装盘记录**
+
+| 项 | 值 |
+|---|---|
+| 注入件 | `out/jumpsupply/s6b.dl_bin`（md5 `908ce2972aa28446a9f801e0453f0699`，47,259,504 B）|
+| 明文 | `out/jumpsupply/s6b.plain`（sha256 `522561be…f68ce8`，round-trip 一致）|
+| 读回 | Supply `Unit+0x00=0x59C5CA839449B379`、Jump Pack `Unit+0x00=0x4EF9A47109239A58`；其余字段与 s5b 相同 |
+| 回滚 | `cp out/jumpsupply/entities.before-jumpsupply <game>/data/game/generated_entities.dl_bin` |
