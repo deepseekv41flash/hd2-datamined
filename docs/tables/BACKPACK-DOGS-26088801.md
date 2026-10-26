@@ -409,3 +409,46 @@ entities = `out/dogs/h1b.dl_bin`（md5 `404668faaf9255736d7d1ca838a51bc4`）。
 
 **装盘**：entities = `out/dogs/i1e.dl_bin`（md5 `0086cc062d3155d0e76640b5abbab2dd`）；驻留 patch_18/19 保持安装。
 回滚：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`。
+
+### 12.1 第五轮结果：**蓄力武器在实弹行为下"偶尔能放、丢视线必放"**（2026-10-26 22:5x，`✓` 现象 / `⚠` 机制）
+
+Guard Dog（`BehaviorId=192`）+ ARC-3：**偶尔能放电弧；目标丢失视线时必定放电弧。**
+
+读数：`ArcWeapon` 的"蓄力—释放"由**扳机状态**驱动；AIBEH 在有视线时一直按住（蓄力不释放），
+一旦丢失视线它就松手 ⇒ 电弧打出。⇒ 用户先前推断的"按住不放"方向是对的，只是不是"永远不放"，
+而是"**只在松手时机（丢视线）才放**"。这解释了为什么原生带 ArcWeapon 的狗没有这个问题——它的行为本来就是"点一下放一次"。
+
+⇒ 推论：**想稳定用蓄力类武器，应该让"本来就会用 ArcWeapon 的狗"来承载**（即下一轮换 K-9 的理由）。
+
+## 13 第六轮：K-9 当蓄力载体 + 首次试**主武器/副武器**（2026-10-26 22:5x 已装，`⚠`）
+
+用户指令：① 换用本来就带 `ArcWeapon` 的 **AX/ARC-3 K-9** 承载 ARC-3；
+② Guard Dog 换**主武器** PLAS-1 Scorcher、Hot Dog 换**副武器** P-19 Redeemer（此前只测过支援武器）。
+
+| 狗 | 无人机 | 挂的 donor | 类别 | 资源 |
+|---|---|---|---|---|
+| **K-9**（AX/ARC-3）| `0x4B071633584E4594` | **ARC-3** `0x96DE9CD50F7306E6`（原挂自身弧武器 `0xA0532C36…`）| 玩家支援·蓄力 | patch_19 |
+| **Guard Dog** | `0xA0FF2F9A0CA6992A` | **PLAS-1 Scorcher** `0xEEA5E3CEF1E12C14` | **主武器**（等离子）| **patch_20** |
+| **Hot Dog** | `0x979E9BC6D48D1FC6` | **P-19 Redeemer** `0x3575AABC5F1F9326` | **副武器**（连发手枪）| **patch_21** |
+| Rover | `0x5BEEC97F4C7F4AE9` | ARC-3（保留，行为已改 192）| — | patch_19 |
+| Dog Breath | `0xB9BAF571FC8F9959` | ARC-3（保留，行为 190）| — | patch_19 |
+
+**新增驻留（均已装盘）**
+
+| donor | 包 | 包内资源 | toc / gpu / stream | 补丁 |
+|---|---|---|---:|---|
+| **PLAS-1 Scorcher** `0xEEA5E3CE…` | `0xC51F160470B34AE3` | 76 条（texture28/material17/particles9/mesh7/physics4/anim4/bones2…）| 6.54 / 10.96 / 4.30 MB | **patch_20** |
+| **P-19 Redeemer** `0x3575AABC…` | `0x99F20DF1C4CF885A` | 46 条（texture17/anim8/material7/mesh5/bones2/physics2…）| 2.09 / 4.98 / 3.93 MB | **patch_21** |
+
+**判读**
+
+| K-9（弧）| Guard Dog（PLAS-1）| Hot Dog（P-19）| 结论 |
+|---|---|---|---|
+| 稳定放电（不再缺视线才放）| — | — | **载体行为决定蓄力武器可用性** `✓✓`：以后蓄力/点射类一律挂 K-9 或实弹狗 |
+| 仍只在丢视线时放 | — | — | 说明问题不在行为，而在 `ArcWeapon` 需要**玩家手部输入**（无人机无此输入）|
+| — | 能打 | 能打 | **主武器 / 副武器也能挂**（此前只验证过支援武器）⇒ 挂载池覆盖全部武器槽 |
+| — | 能打但不装填 | — | 主/副武器需要 `WeaponMagazine` + 狗装填循环；看 Guard Dog（有装填）表现 |
+| — | 紫问号 | 紫问号 | 包没驻留成功（不该发生，本轮已驻留）⇒ 查 patch_20/21 是否被游戏接受 |
+
+**装盘**：entities = `out/dogs/j1c.dl_bin`（md5 `be3c3d05cd272a120938429ce7c731b5`）；patch_18/19/20/21 全部保持安装。
+**回滚**：entities 回 `out/bkval/p1e.dl_bin`；要减体积可只删 patch_18…21 里不用的那几对文件。
