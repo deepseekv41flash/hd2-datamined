@@ -1476,6 +1476,52 @@ v1 我们是**直接默认到 s2**（跳过了 s1），实机看起来仍像未�
 
 
 
+#### 3.8.4.22 地雷系列战备：雷是"投掷实体"，不是弹丸（2026-10-26 16:2x，`✓` 离线）
+
+四个地雷战备件：`Anti-Personnel Minefield` `0xF00C349422E8E320`、`Anti-tank Mines` `0x25A2FD037B6ED25C`、
+`Gas Mines` `0xA9982969137F3D77`、`Incendiary Mines` `0xBF32E12923A9A252`（都带 `MinefieldComponentData` + **`ThrowerComponentData`**）。
+
+**核心答案：地雷不是 projectile，是和手雷同族的"可投掷实体"**
+
+| 角色 | 组件 | 说明 |
+|---|---|---|
+| 抛洒器（战备件本体）| `ThrowerComponentData` + `MinefieldComponentData` | 负责"把雷扔出去"和"撒成一片" |
+| **单颗雷**（如 `contact_mine`）| **`ThrowableComponentData` + `ExplosiveComponentData`** + LoadoutPackage / Spottable / Unit（**只有 5 个组件**）| 手雷同族；**没有 `AnimationComponent` ⇒ 地雷本身没有状态机** |
+
+**`ThrowerComponentData+0x00` = 要扔的实体 id（u64）** `✓✓` —— 四个变体就是这么区分的：
+
+| 战备 | `Thrower+0x00` |
+|---|---|
+| Anti-Personnel Minefield | `0xEE89CC10D80B6AFB` = **`contact_mine`** |
+| Incendiary Mines | `0xE49A5AE078AAD407` = **`incendiary_mine`** |
+| Anti-tank Mines | `0x032489CF1D439BBA` |
+| Gas Mines | `0x693028644D27FFEF` |
+
+⇒ **换雷种 = 改 `Thrower+0x00` 指向另一颗雷的实体 id**（不需要碰弹丸表）。
+
+**其它字段（`✓` 四变体横比；`⚠` 语义为推断）**：`Thrower` 行 752 B、`Minefield` 行 44 B。
+
+| 字段 | AP | AT | Gas | Incend | 推断 |
+|---|---:|---:|---:|---:|---|
+| `Thrower+0x08` | 0.7 | 0.7 | 0.7 | 0.7 | 抛出速度/初速系数（四件相同）|
+| `Thrower+0x28` | 6 | 6 | 6 | 6 | 每批/每秒投掷数（四件相同）|
+| `Thrower+0x2C` | 8 | **3** | 8 | 8 | 变体差异（AT 只 3 → 可能"每批数/散布点"）|
+| `Minefield+0x08` | 0.001 | **1.0** | 0.001 | 0.001 | AT 独高 → 可能是"最小间距/触发半径" |
+| `Minefield+0x0C` / `+0x10` | 0.2 / 0.25 | 0.2 / **0.2** | 0.2 / 0.25 | 0.2 / 0.25 | 散布抖动 |
+| `Minefield+0x14` | 80.298 | 80.298 | 80.298 | 80.298 | **撒布覆盖半径 ≈ 80 m**（四件相同）|
+| `Minefield+0x18` | 367 | 179 | 270 | 72 | 每变体一个 id（雷类型/数量表索引，语义待定）|
+
+**地雷抛洒器的状态机：`_launcher/mine_launcher`（`0xF00C349422E8E320`，2,036 B，3 层）**
+
+| 层 | 默认 | 状态 | 说明 |
+|---|---|---|---|
+| L0 | **1 = `330CA356`（折叠）** | s0 `79DE1870`（部署过渡，clip `3EB31C8D`）；s2 `D23167BF`（收起，`EmitEndEvent=0x27A2636E` → **s1**）| **没有"展开态"这一档** ⇒ 与模板 B 同型：展开靠 s0 的末帧定格 |
+| L1 | 1 | 两态**共用同一条 clip** `6A52B4F8`，由事件 `0x580DF130`→s0（blend **2.0**）、`0x56ABDA23`→s1（blend **1.0**）切换 | 开/闭盖之类，慢混合 |
+| L2 | 0 = **`9EA750D5` 状态**（clip `300DEE78` loop）| 收到 `PackageDeploy` → `Empty` | **和哨戒同款的"扫视层"** ⇒ 如果哪天要把抛洒器挂到车上，这一层就得关掉 |
+
+⇒ 若要把抛洒器/地雷做成**载具挂载件**，配方与模板 B 一致：`layer0` 钉到 s0（部署过渡末帧）+ 关 `layer2` 扫视层；
+但注意它**没有任何武器组件**（没有 `Wieldable`/`WeaponWielder`/`Turret`），属于"FX-12 那一类非武器件"——挂了也不会被炮手位操作，只能是"自己撒雷"的装置。
+
 #### 3.8.4.11 火焰哨戒：同一套判据照抄（2026-10-26 12:1x，✓✓ 实机）
 
 **火焰的 SM（`820CC3BAFE962858`，2,100 B，4 层）逐层读数**（`--decode`）：
