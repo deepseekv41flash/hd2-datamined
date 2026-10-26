@@ -525,3 +525,45 @@ Guard Dog（`BehaviorId=192`）+ ARC-3：**偶尔能放电弧；目标丢失视�
 
 **装盘**：entities = `out/dogs/m1.dl_bin`（md5 `7ab6d4d1515a83db1e2877c8cc115af2`）；patch_18–22 保持安装。
 **回滚**：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`。
+
+### 15.1 结果：锁定武器**完全可用**（2026-10-26 23:2x，`✓✓`）
+
+| 狗 | 挂的 | 结果 |
+|---|---|---|
+| Guard Dog | **StA-X3 W.A.S.P.** | **正常锁定 + 发射**；**只对原武器能锁定的敌人发射** |
+
+读数：
+- 无人机的 `Targeting`/`MultiTarget`/`SensorEye`/`Detector` **顶替了玩家的锁定输入** ⇒ 制导类武器可以直接挂 `✓✓`。
+- **可锁定目标集仍然继承武器自己的 `GuidanceTarget` 配置**（我们之前锁在线就已知"目标集合不在明文"）⇒ 换枪不改变"能锁谁"。
+  这既是限制也是好消息：**挂 W.A.S.P. 不会让它锁到本不该锁的东西**。
+
+## 16 第九轮：蓄力但**自动发射**的 LAS-99 Quasar Cannon（2026-10-26 23:3x 已装，`⚠`）
+
+用户的判断很关键：Quasar 同样是蓄力武器，但**蓄满自动发射、不需要松手** ⇒ 如果它能打，
+就把 ARC-3 的失败干净地归因到"**需要松手**"而不是"蓄力"。
+
+| 项 | 值 |
+|---|---|
+| 目标件 | **LAS-99 Quasar Cannon** `0x35A61296619CC47E`（23 个组件：`WeaponHeat`+`ProjectileWeapon`+`WeaponData`+`EffectReference`+`StatusEffectReceiver`…）|
+| 挂到 | **Guard Dog** `0xA0FF2F9A0CA6992A`（行为 192，唯一改动；其余狗原版）|
+| 驻留 | 包 `0xCF1ACDE501CCFA1B`（71 条：texture19 / material19 / particles13 / mesh5 / anim4 / physics3 / bones2 / state_machine2）→ **patch_23** |
+
+**三态对照（同一把"蓄力"族，区别只在释放方式）**
+
+| 武器 | 蓄力后 | 实机 |
+|---|---|---|
+| ARC-3 电弧 | **要松手**才放 | ✗ 只在丢视线（AI 松手）时放 |
+| Quasar LAS-99 | **蓄满自动放** | 本轮测 |
+| W.A.S.P. | 锁定即放 | ✓✓ 正常 |
+
+**判读**
+
+| Quasar 现象 | 结论 |
+|---|---|
+| 蓄力后**自动发射**、能装填/冷却 | **"松手"就是 ARC-3 失败的唯一原因** `✓✓`；蓄力类武器只要"自动释放"就能上无人机 |
+| 蓄力但永不发射 | 蓄力释放都依赖玩家输入 ⇒ 无人机与所有蓄力武器无缘 |
+| 蓄力特效都没有 | `WeaponHeat` 的蓄力流程需要手部 wielder 状态机 ⇒ 资源层耦合 |
+| 紫问号 | patch_23 未生效 |
+
+**装盘**：entities = `out/dogs/n1.dl_bin`（md5 `6aa784a3263022bccc9a6d2ff7681f5c`）；patch_18–23 保持安装。
+**回滚**：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`。
