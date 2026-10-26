@@ -52,6 +52,8 @@
 | **P3 整包·注册表包** | `9ba626afa44a3aa3.patch_6`（2.74 MB + 6.06 MB + 4.19 MB）| 注册表包 | 51（GL-28 Belt-Fed 整包）| 舱里 **GL-28 正常渲染**，零声明 `✓✓` |
 | **P4 整包·基础包·挂载件** | `f6fb08cc02d24255.patch_1`（1.26 MB toc + 4.37 MB gpu + 2.29 MB stream）| 共享基础包（第 2 条）| 41（火箭哨戒包 `11bbdf8ce39e5fc5` 整包：11 animation / 9 texture / 9 particles / 6 material / 1 bones / 1 **unit** / 1 physics / 1 state_machine / 2 wwise）| **✓✓ 实机**（部分）：M-102 炮手位挂载**火箭哨戒**，战备表 `+0xA8` **全清零** ⇒ 模型 / 材质 / 贴图**全部正常**；当时以为是"动画不播"（后来查明是 **`layer5` 扫视 clip 把升降摆到收拢位**，与宿主/加载无关，见 §7.1）|
 
+| **P5 整包·基础包·换雷种** | `f6fb08cc02d24255.patch_13`（58,000 B toc + 284,018 B gpu + 1,572,928 B stream）| 共享基础包（第 5 条）| 11（毒气雷资源包 `18466005ef235d2b`：4 texture / 3 particles / 2 material / 1 physics / 1 unit）| `⚠` 待实机：AP 地雷阵的投掷实体换成 **MD-8 毒气雷**后，靠这份驻留顶起网格 / 材质 / 贴图 / **毒气云粒子**（爆炸行 270 的 `+0x38` 粒子就在这个包里）。<br>**为什么必须驻留**：每件布雷器的**声明包**里只带**自己那颗雷**的 mesh/physics（AP 包 `a4946425b2c70017` 带 `contact_mine`、Gas 包 `ef8edb7b47d8f0b3` 带毒气雷）⇒ 换雷后旧包顶不上新雷。详见 [SENTRY-TURRET-FIELDS §3.8.4.24](../tables/SENTRY-TURRET-FIELDS-26088801.md) |
+
 **验收 rig（P2/P3，`✓✓` 三件全出）**：StA-X3 投送舱（rack 29）三件、`spawn=3` ——
 Nova 走舱行 `+0xA8`（基准）、Warp 走共享基础包补丁、GL-28 走注册表包补丁。
 
