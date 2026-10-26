@@ -924,9 +924,17 @@ SM 字节级：`layer0.DefaultState @0x74 0→1`、`layer5.DefaultState @0xB4C 0
 迫击炮用的是**自己变体独有**的粒子/材质，所以缺。
 
 **已装（`⚠` 待验证）**：`data/f6fb08cc02d24255.patch_4` = 包 `8c5a99a9a40d5b8d` **整包 33 条**
-（toc `540867ad03ed00ac` 4.59 MB / gpu `bf64a29695e62891` 4.24 MB / stream `9b6db0e41bd23218` 2.80 MB）——
+（toc `22e76e7ba8667fa0` 4.59 MB / gpu `bf64a29695e62891` 4.24 MB / stream `9b6db0e41bd23218` 2.80 MB）——
 10 particles + 8 animation + 6 texture + 3 material + 1 mesh + 1 bones + 1 SM + 1 physics。
 选择依据：M-12 件 ***自己声明*的那个包**，且它的 SM/动画与 M-12 壳一一对应。
+
+> ⚠ **装它的时候踩了"高号胜"的反噬（已修）**：这个包里**也有一份同 id 的原版 SM `51A0812E`**，
+> 而 `patch_4` 序号高于 `patch_3` ⇒ 第一版 `patch_4`（toc `540867ad03ed00ac`）一装上去，
+> 迫击炮就从展开态退回**折叠态**（特效补丁本身没问题，是它顺带把 SM 顶回原版了）。
+> 修法：重建 `patch_4` 时**把改后的 SM 一起塞进去**（`--edit state_machine:51A0812E=<mortar-sm.bin>`），
+> 现在 `patch_3`（entry 50）和 `patch_4`（entry 11）里那份 SM **逐字节都是改后版本**。
+> 规则记进 [资源层驻留](../engine/RESOURCE-RESIDENCY-26088801.md) §8 第 9 条：
+> **每一份驻留补丁都必须自带它覆盖到的所有改后字节。**
 
 **如果还冒方块**，下一步（按成本）：
 1. 再补另两个 M-12 同壳变体包（`4666692b63185121` / `71d9ea5d656b09b8`，各 ~7 MB，粒子集不同）；
