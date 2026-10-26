@@ -482,7 +482,7 @@ AC-8 `54DC633A67BAA93D`、火焰 `1577E917AD1F287D`、激光 `36313BF684C1FD79`�
 | `generated_entities.dl_bin` | **`2a5ce9ba6b699792`** | FRV 炮手位（行 19/119 槽 0）= **A/MLS-4X 火箭哨戒** `37079568DC86E9C6`（顶掉 AC-8）；`Behavior 611→658` |
 | `generated_stratagem_settings.dl_bin` | `6c0ab66b281c2178` | 行 57（增援信标）/ 59（SOS）的 `+0xA8` **清零** ⇒ 战备表里**没有任何包被声明** |
 | `data/f6fb08cc02d24255.patch_1`（+`.gpu_resources` / `.stream`） | **`eb2bfca7c5408a47`**（toc）/ `9c63665fe8e4c6eb`（gpu）/ `56e9e6715ec76329`（stream） | **火箭哨戒包整包 41 条资源**驻留进共享基础包（toc 1.26 MB + gpu 4.37 MB + stream 2.29 MB）；其中 `state_machine` 是 **`layer0 default=3`（展开态）+ `layer5 default=1`（空态，关掉自转）** 那版 |
-| `data/f6fb08cc02d24255.patch_2`（+`.gpu_resources`） | **`52dca8710dde0d37`**（toc）/ `a5f80ec772ad57a0`（gpu） | **`unit 37079568DC86E9C6` 节点 3 的 z +2.0 m**（同宿主第 2 条，压过 patch_1 里的原件）；见 §3.8.4.6 |
+| ~~`data/f6fb08cc02d24255.patch_2`~~（+`.gpu_resources`） | ~~`52dca8710dde0d37`~~ | **已回退删除**（原为 `unit` 节点 3 的 z +2.0 m，见 §3.8.4.6；因 §3.8.4.9 的动画线索先撤下来做对照）|
 
 回滚到 AC-8 版：把 `D:\mod\out\frv-ac8\ent.sealed.dl_bin`（`02b740fef30a7f7a`）
 与 `…\strat.sealed.dl_bin`（`081e7879cb6575e2`）拷回 `data/game/`，并删掉
@@ -706,6 +706,45 @@ python tools/whole_package_patch.py build --package 11bbdf8ce39e5fc5     --host 
 python tools/turret_shell_survey.py survey --out D:/mod/out/shell-survey \
     --json D:/mod/out/shell-survey/survey.json
 ```
+
+#### 3.8.4.9 ★ 新线索：动画"没播"可能是**资源没被加载**，而不是状态机不对（2026-10-26 11:3x，⚠ 待验）
+
+**实机观察（用户，关键）**：盘上是"不做位移"的那一版时，**呼叫一次原版 A/MLS-4X 火箭哨戒**，
+原版那台伸出之后 **FRV 炮手位上那台也跟着往上抬**了。
+
+**推论（用户提出，最省事的解释）**：那台挂载件的状态机**一直停在"要播部署动画"的位置**，
+只是**动画 clip 的数据没被加载**（所以此前"压根没动"）；原版哨戒一出生，把同一套动画资源带进内存，
+挂载件那边的状态就能播了 ⇒ 抬起来。
+
+**为什么"资源在补丁里"却不等于"动画可用"**：`.patch_N` 只保证**按 `file_id` 可解析**（§3.8.4.6 已验证
+mesh/material/texture 都行）；但**动画播放器/包级注册**可能仍以**整个包被加载**为前提——
+也就是仍然要走 `+0xA8` 声明那条路（`[资源层驻留](../engine/RESOURCE-RESIDENCY-26088801.md)` §7 的边界：
+补丁解决"资源在不在"，不解决"包在不在"）。`AC-8` 当初动画正常，正是因为它是**带 `+0xA8` 声明**挂上去的。
+
+**对照测试矩阵（用户将做，单变量）**
+
+| # | 配置 | 预期 | 说明 |
+|---|---|---|---|
+| A | 无位移 + **不叫**原版 | 不抬（沉/原样） | 复现"压根没动" |
+| B | 无位移 + **叫**原版 | 跟着抬 | 已观察到，等于"动画随包载入"|
+| C | **`+0xA8` 声明包**（已备好，未装） | **出生就抬** | 若 B 成立，C 应当不需要"外援" |
+
+**盘上当前状态（已回退到"不做位移"那一版）**
+
+| 项 | 值 |
+|---|---|
+| `data/f6fb08cc02d24255.patch_1` | `eb2bfca7c5408a47`（41 条整包；SM `layer0=3` 展开态 + `layer5=1` 空态）|
+| `data/f6fb08cc02d24255.patch_2` | **已删除**（原 +2.0 m 位移，`52dca8710dde0d37`）|
+| `generated_entities.dl_bin` | `2a5ce9ba6b699792`（FRV 炮手位 = 火箭哨戒，`Behavior 658`）|
+| `generated_stratagem_settings.dl_bin` | `6c0ab66b281c2178`（行 57/59 `+0xA8` **全为 0**，不声明任何包）|
+
+**已备好、未安装的 C 变体**：`D:/mod/out/sm-verify/strat_declare_rocket.sealed.dl_bin`
+（sha256 `dae271681b372bbb`，行 57 `+0xA8` = `11BBDF8CE39E5FC5`，行 59 仍为 0）。
+装它：拷成 `data/game/generated_stratagem_settings.dl_bin` 即可（其余不动）。
+
+**判读要点**：A 不抬、B 抬 ⇒ 结论 = 缺的不是状态机也不是位移，而是**动画资源/包的加载时机**；
+之后正式配方应改成"`+0xA8` 声明包（或别的让包真加载的手段）"，`unit` 位移只作为备选兜底。
+若 A 也抬了，则说明另有触发源（例如战备投放是**全局广播事件**），要回到事件层查。
 
 **模板 B 的待办（⚠ 未验，别照抄）**：MG-43/加特林默认 `E954AED4`（loop=1），部署过渡 `79DE1870`
 播完**没有**回指状态（事件表里没有 `Deployed` 那条 Link），所以它停在部署 clip 的末帧；
