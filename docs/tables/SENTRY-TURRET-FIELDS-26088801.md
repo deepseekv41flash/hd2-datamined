@@ -977,6 +977,48 @@ SM 字节级：`layer0.DefaultState @0x74 0→1`、`layer5.DefaultState @0xB4C 0
 
 **这一局要看的**：① 出不出激光哨戒；② 展开态；③ 不自转；④ 能瞄准开火（**光束特效正不正常**——重点看有没有灰方块/缺光束）。
 
+#### 3.8.4.17 人操工事（E/MG-101 HMG、E/AT-12 AT）：**不是同一类挂载件**（2026-10-26 14:2x，⚠ HMG 待实机）
+
+十二个哨戒都是"AI 炮塔"，而这两台是**玩家手动操作**的工事。组件层一看就不是一类（`refs/entity-components.json`，`✓` 离线）：
+
+| 组件 | 哨戒（MG-43） | **工事（HMG-101 / AT-12）** | 含义 |
+|---|:--:|:--:|---|
+| `TurretComponentData` | ✅ | **❌ 没有** | 炮塔轴（yaw/pitch + 限位）—— 车位的瞄准逻辑靠它驱动 |
+| `Wieldable` / `WeaponWielder` / `WeaponData` / `ProjectileWeapon` | ✅ | ✅ | 可被"持握者"操作 ⇒ 挂载槽要的就是这几件 |
+| `SeatCollectionComponentData` | ❌ | **✅** | **自己带一个座位**（玩家按 E 坐进去操作）|
+| `InteractableComponentData` | ❌ | **✅** | 交互提示 |
+| `SensorEye` / `Detector` | ✅ | ❌ | AI 索敌（所以它们"没有 AIBEH"）|
+| `Behavior` | ✅ | ✅ | 工事的是"玩家操作"行为（HMG=314、AT=**2**），不是 AI 行为 |
+| unit dev 路径 | `…/turret_machinegun_gpmg` | **`…/hellpod/manned_turret/manned_turret`** | "**人操**炮塔" |
+
+⇒ **两类件的控制模型不同**：
+- **哨戒** = "可被挂的炮"：本身没有座位，挂到车上后由**车位的 Turret 逻辑**接管瞄准（所以我们只要 `Behavior 658` + 展开即可）；
+- **工事** = "自带座位的固定武器"：瞄准轴来自**它自己的 `SeatCollection`**，玩家坐进去才转。
+
+**对"能不能装到载具上"的离线预测**：**能挂上**（`Wieldable`/`WeaponWielder`/`WeaponData`/`ProjectileWeapon` 齐全，挂载槽不检查 `Turret`），
+**但枪身大概率不跟车位准星转**（缺 `Turret` 轴），甚至可能因 `SeatCollection` 与车位冲突而无法操作。只能实机判。
+
+**HMG 工事（已装，`⚠` 待实机）**：
+
+| 项 | 值 |
+|---|---|
+| SM | `0E977C49DB7604F9`（4,820 B，**6 层**）|
+| 改动 | **`layer0.DefaultState 1 → 2`**：s1 `330CA356`（折叠，clip `1D22F5E3`）→ **s2 `823905BD`（展开，clip `C1B7AE53`）**；s0 部署过渡的 `EmitEndEvent=DeployDone` → s2，链路完整。4,820 B 只变 **1 字节** |
+| 其余层 | L1 = 单态 `Time` 循环；L2 默认 `Empty`（s3 是 8-clip 的 `Blend`，事件触发）；L3/L4 默认 `Empty`（s0 是叠加的开火 clip）⇒ 都无需动 |
+| 件 | **`0x0E977C49DB7604F9`**（战备表 `@0x480c`；另一变体 `0xA970CBA66FBEAA11` 表里没有）|
+| 五件套读数 | `Turret=False` `Wieldable=True` `WeaponWielder=True` `ProjectileWeapon=True` `Faction=inherit` **`AI大脑=False`** |
+| 驻留 | `data/f6fb08cc02d24255.patch_6` = 包 `68e80476c1c602f5` 整包 40 条（toc `4b4392b53d66fca2` 3.30 MB / gpu `4610b3aa33def739` 2.76 MB / stream `fa3b4b7390d81234` 1.79 MB）|
+| entities | `d65b396dca9d96ef` —— 行 19 槽 0 = HMG Emplacement，`Behavior 314→658` |
+
+**AT-12（已量未装）**：SM `2B11C9E4980EC479`（6,076 B）、包 `5a0f047f2695b403`（49 条，toc 3.58 MB / gpu 5.04 MB / stream 1.05 MB）、
+件 `0x2B11C9E4980EC479`（战备表 `@0x4c04`）、`Behavior = 2`。等 HMG 的结论再决定要不要上。
+
+**这一局要看的（四档判读）**：
+1. **根本不出现** ⇒ 挂载槽不接受无 `Turret` 的件（`Turret` 是隐藏必要条件）；
+2. **出现、展开、但枪身不转** ⇒ 证实"`Turret` = 车位瞄准轴"，工事只能当**固定炮**；
+3. **出现、能转能打** ⇒ `Turret` 不是必要条件，之前"五件套"判据太严（好消息：工事也能上）；
+4. **出现但无法操作（开不了火/抢不到控制权）** ⇒ `SeatCollection` 与车位冲突，得改它的座位/交互组件。
+
 #### 3.8.4.11 火焰哨戒：同一套判据照抄（2026-10-26 12:1x，✓✓ 实机）
 
 **火焰的 SM（`820CC3BAFE962858`，2,100 B，4 层）逐层读数**（`--decode`）：
