@@ -1609,6 +1609,49 @@ Lure Mine 是**投掷物栏位的地雷**（18 组件：`Throwable`+`Explosive`+
 | 驻留 | **`patch_12`** = 包 `fae34acb79502f53` 整包 22 条（toc `21bd4c9bc44bfb05` 2.41 MB / gpu `2a622f0864b2b21e` 1.40 MB / stream `58ba2893b8478c88` 0.35 MB；含 particles×8 + state_machine×1 + mesh×1）|
 | entities | `e7d700de940d0797`（补丁序列 `patch_0…12` 连续）|
 
+
+**第三轮结果（TM-1 Lure Mine）：`✗` 同样一出来就失活、模型很快消失** ⇒ 与 Thermite / Seeker 同现象。
+
+#### 3.8.4.23 社区 Lua 案例怎么解决"失活"：**靠运行时原生调用手动激活**（2026-10-26 16:5x，`✓` 已读源码）
+
+案例：`D:\Downloads\多地雷布雷器生成热熔地雷2.4.zip`（Meltamine 2.4）。它**不是数据补丁**，而是
+Lua + ffi 的运行时方案（24 个 lua 模块，含内存读取、原生调用表、遥测）。关键差异一目了然：
+
+**它的目标实体是 `MELT='EE4C107B941AB7F4'` = `Melta Mine`（"热熔地雷"本体），而它做的是下面这条链：**
+
+1. **捕获落点**：`world_transform(old_unit)` 读出 64 B 位姿 —— 原（毒气）雷落地时的变换；
+2. **先走原生气体触发再等清理**：`gas_trigger(manager, old_gas_unit, 0)` → 轮询 `unit_alive` 直到槽位清空；
+3. **原生创建**：`create(...)` 造出 Melta 实体；
+4. **★ 手动激活爆炸组件**：`active(explosive_manager, entity, **1**)` —— 把 `Explosive` 的 active 置 1（这一步就是"装引信"）；
+5. **★ 设归属**：`owner(explosive_manager, entity, **avatar**)` —— 否则实体"无主"，会被立刻回收；
+6. **★ 原生投掷**：`throw(throwable_manager, entity, pos, {0,0,0}, avatar)` —— 用零速度在捕获位姿上走一次原生投掷流程（这才是引信/布设计时的起点）。
+
+它用的原生函数与 RVA（来源：它的 `layout` 模块，`game.dll`/`exe` 基址 + RVA）：
+
+| 语义 | 模块 | RVA |
+|---|---|---|
+| `active`（爆炸激活）| game | `0x8CE9C0` |
+| `owner`（设归属）| game | `0x8CEAE0` |
+| `throw`（原生投掷）| game | `0x6C6930` |
+| `gas_trigger`（气体触发）| game | `0x9DE640` |
+| `create`（造实体）| game | `0xFD9B10` |
+| `world_transform` / `unit_alive` | exe | `0x1FD160` / `0x1FEE70` |
+
+组件 id：`Explosive = 255`（行 40 B）、`Throwable = 259`（行 28 B）。
+README 还写明**必须先装备 G-40-K 热熔地雷**——因为 `create` 需要它的模板/资源在场（就是我们说的"驻留"）。
+
+**⇒ 由此得到本线的硬结论（`✓✓` 逻辑闭合，三轮否证 + 源码互证）：**
+
+1. **纯数据补丁无法让布雷器"扔别的投掷物"**：数据只能改"扔哪个实体"（`Thrower+0x00`），
+   但"实体被造出来后要 `active=1` + 设 owner + 走一次原生 throw"这三步**没有任何数据字段能替代**；
+   缺了它们，实体就是"无主、未激活"，表现为**一出来就失活、随后被回收**（正是我们三轮看到的）。
+2. **数据路线能做的，只有"在原生地雷之间互换"**（4 颗：`contact_mine` / `incendiary_mine` / AT `0x032489CF1D439BBA` / gas `0x693028644D27FFEF`）——
+   因为它们本来就走布雷器自己的生成/激活路径。
+3. **想要热熔雷/手雷，就必须走运行时**（Lua + ffi，按上面 6 步）；纯数据方案在这里是死的。
+
+**现场已恢复可用状态**：`Thrower+0x00` 已改回原生 `contact_mine`（`0xEE89CC10D80B6AFB`），
+`generated_entities.dl_bin` = **`290de78e0cbceb59`** ⇒ AP 地雷阵恢复正常布雷（`patch_10/11/12` 三份驻留补丁留着不影响，只是多占内存）。
+
 **四档判读**：
 1. **能布设、能触发** ⇒ `+0x00=4` 也被接受，那"2"就不是唯一门槛；
 2. **布设但不触发**（与 Thermite/Seeker 同现象）⇒ 证实 `+0x00` 枚举是门槛；
