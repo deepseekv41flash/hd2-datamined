@@ -2,13 +2,13 @@
 
 > **本页只作重定向保留**，以防旧链接断掉。工具清单已合并进单一索引入口，避免两份真值漂移。
 
-60 个工具的全部条目（用途 / 依赖 / 验证状态 / 三态）在 **[INDEX §3 工具清单](../INDEX.md#3-工具清单tools)**：
+全部工具条目（用途 / 依赖 / 验证状态 / 三态）在 **[INDEX §3 工具清单](../INDEX.md#3-工具清单tools)**：
 
 | 分节 | 内容 |
 |---|---|
 | [§3 按任务速查](../INDEX.md#3-工具清单tools) | 「我想解封 / 改字节 / 查名字 / 对比 build / 打补丁…」→ 用哪个工具 |
 | [§3.1 数据表 / 封装](../INDEX.md#31-数据表--封装) | 45 个：解封、typelib、逐行名字、本地化、wiki 语料、build 对比、各类改写器 |
-| [§3.2 补丁 / 资源](../INDEX.md#32-补丁--资源) | `resource_patch.py` · `swap_texture.py` · `export_textures.py` |
+| [§3.2 补丁 / 资源](../INDEX.md#32-补丁--资源) | `resource_patch.py` · `whole_package_patch.py`（整包驻留）· `swap_texture.py` · `export_textures.py` |
 | [§3.3 Lua 侧](../INDEX.md#33-lua-侧) | `lua51_check.py` · `luac51_disasm.py` · `check_unit_snapshot.py` 等 6 个 |
 | [§3.4 反作弊 / 能力边界](../INDEX.md#34-反作弊--能力边界全部是否证记录不是方法) | 4 个**否证工具**（全部失败，记录的是「试过、不通」） |
 | [§3.5 故意不含的工具](../INDEX.md#35-文档提到但本仓库故意不含的工具) | 7 个「文档里出现但仓库没有」的东西，免得照着找 |

@@ -47,7 +47,8 @@
 | **换进来的物品只有紫问号 / 网格材质不加载** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§4 两个包槽（`+0xA8` + `+0xF8`）· §5 item→包解析表** | `26088801` |
 | **哨戒炮/炮塔多久自动消失、各字段含义** | [SENTRY-TURRET-FIELDS](docs/tables/SENTRY-TURRET-FIELDS-26088801.md) | **§2 寿命字段（`HellpodPayload +0x04`）· §3 逐组件字段表 · §4 一条命令** | `26088801` |
 | **哨戒挂到载具上「不出模型 / 未展开 / 开火点悬空」** | [SENTRY-TURRET-FIELDS](docs/tables/SENTRY-TURRET-FIELDS-26088801.md) | **§3.8.4 改 `state_machine` 的 `layer.DefaultState`（✓✓ 实机）· §3.8.4.1 四态语义 + 部署完成态判据 · §3.8.4.2 九哨戒 = 七份 SM / 两套模板** | `26088801` |
-| **有限数量的跨包加载（通用产出）** | [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) | **§2 三个可编辑量 · §3 解析链 · §5 一条命令 · §6.9 补丁路线（不受口上限）· §7 边界** | `26088801` |
+| **有限数量的跨包加载（通用产出）** | [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) | **§2 三个可编辑量 · §3 解析链 · §5 一条命令 · §6.9 指针 · §7 边界** | `26088801` |
+| **声明口不够用 / 想不占口就加载一整个包的资源** | [RESOURCE-RESIDENCY](docs/engine/RESOURCE-RESIDENCY-26088801.md) | **§1 两条路线分工 · §3 P1–P4 实测 · §4 三条配方 · §5 `whole_package_patch.py` · §8 坑** | `26088801` |
 
 ### 理解原理
 
@@ -145,7 +146,8 @@
 | [GUI-HUD-25988413](docs/engine/GUI-HUD-25988413.md) | 纯 Lua 自绘屏幕文字：`Gui.*` 真实签名（三次崩溃换来） | `25988413` |
 | [LOADER-SPEC-25988413](docs/engine/LOADER-SPEC-25988413.md) | 共享加载器必须满足什么，含 `package.loadlib` + 原生 DLL 的最终否证 | `25988413` |
 | [PATCH-LOADER-DESIGN-26088801](docs/engine/PATCH-LOADER-DESIGN-26088801.md) | 数据文件路线不需要执行权：用离线合成器替掉 boot 覆盖 | `26088801` |
-| ★★ [LIMITED-CROSS-PACKAGE-LOADING-26088801](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) | **跨包加载全账**：`+0xA8`+`+0xF8` 双声明口 / 解析链 / 「行在不在**普通任务栏**」是唯一判据（教学关行 138 ✗） / `+0xC8` 额外战备链把口带进栏（✓✓） / **§6.9 补丁路线：资源级 79 KB 顶掉 68 MB 包、整包 50/51 条搬进「共享基础包」与注册表包都生效（✓✓ 实机）** | `26088801` |
+| ★★ [LIMITED-CROSS-PACKAGE-LOADING-26088801](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) | **跨包加载全账**：`+0xA8`+`+0xF8` 双声明口 / 解析链 / 「行在不在**普通任务栏**」是唯一判据（教学关行 138 ✗） / `+0xC8` 额外战备链把口带进栏（✓✓） / §6.9 只留指针 → 资源层驻留已单独成文 | `26088801` |
+| ★★ [RESOURCE-RESIDENCY-26088801](docs/engine/RESOURCE-RESIDENCY-26088801.md) | **资源层驻留（`.patch_N`）主档**：声明口管「包在不在」、补丁管「资源在不在」的**两条路线分工** / 机制（连续序号、file_id 全局解析、类型不挑、伴生 gpu·stream、同 id 高号胜） / **P1–P4 实测**（79 KB 顶掉 68 MB 包、整包 50/51 条、整包 41 条给载具挂载件且零声明）/ 三条配方 / `whole_package_patch.py`（G1–G8，重跑产物与盘上逐字节相同）/ 上限与坑（含 `srkit` 把 `unit` 显示成 `mesh` 的 bug） | `26088801` |
 
 ### `tables/`
 
@@ -231,6 +233,7 @@
 | 查某行的名字 / 本地化文本 | `table_row_names.py` · `table_locid_scan.py` · `stratagem_display_names.py` · `entity_locid_scan.py` |
 | 更新后对比到底变了什么 | `build_diff.py` · `build_geometry_diff.py` |
 | 打资源补丁 / 换贴图 | `resource_patch.py` · `swap_texture.py` · `export_textures.py` |
+| 把一个包整包塞进常驻包（不占声明口） | `whole_package_patch.py`（`list` / `build` / `check`，见 [RESOURCE-RESIDENCY](docs/engine/RESOURCE-RESIDENCY-26088801.md)）|
 | 立论或否证一次扫描 | `table_xref_scan.py` · `probe_*` · `find_bombs_salvos_pair.py` |
 | 查 wiki 的原始解码数据 | `wiki_query.py` · `wiki_build_db.py` · `fetch_wiki_modules.py` |
 | 算 / 解 Murmur64A | `murmur64.py`（库）· `murmur64a.py`（CLI） |
@@ -311,6 +314,7 @@
 | 工具 | 用途 | 依赖 | 验证 |
 |---|---|---|---|
 | `resource_patch.py` | **任意** Stingray 资源类型的 `.patch_N` 构建/查看/解包/重打 | `srkit`（构建时） | ✓ |
+| `whole_package_patch.py` | **整包资源 → `<宿主包>.patch_N`**（资源层驻留）：`list` 列包内资源；`build` 解包→`--edit` 换资源（自动同步 `resource.json` 的 size/sha）→打包→复核；`check` 核对成品。G1–G8 门禁；序号默认自动取下一个连续值；`--install` 可选部署 | `srkit`（`python -m srkit`）+ `resource_patch.py` | ✓ 复现证明：重跑 P4 补丁，三件产物与盘上**逐字节相同**（toc `a3f71af78d333f02`）|
 | `swap_texture.py` | 把一张 PNG 换进 `.patch_N` 里的某个贴图并重打 | Pillow | ✓ 已实机 |
 | `export_textures.py` | 把 `.patch_N` 里每个贴图导出成可编辑 DDS | Pillow | ✓ |
 
@@ -390,7 +394,7 @@
 | **投送舱换载荷**：改 rack 槽位决定空投舱送什么 | **✓✓ 实机**（`26088801`：rack 29 → GL-21+B-1 / GL-28 双件 / Nova+Warp 双件；**四件版 Nova+Warp+GL-28+GL-28 背包（`+556`=4）四件全出**）—— 见 [POD-RACK](docs/tables/POD-RACK-26088801.md) |
 | **武器自带备弹**：把背包供弹武器改成自带备弹、不需要背包 | **✓✓ 实机**（两套模型：`Rounds` 用 `+0x50/+0x54/+0x58`（AC-8），`Magazine` 用 `+0x88/+0x8C/+0x94`（GR-8 / Spear / RL-77 / W.A.S.P. 四把一次全绿）；rack `+556` 2→1 → 只出武器）—— 见 [WEAPON-AMMO-RESERVE](docs/tables/WEAPON-AMMO-RESERVE-26088801.md) |
 | **背包供弹武器（第四种模型）怎么办** | ✓✓ **连背包一起投送**（GL-28 + 它的背包同包，`+556`=4 四件全出、能开火）；**改弹药模型/插新组件都走不通**：插弹匣行不被采纳、删联动弹药键直接崩溃（与「给 AR-23 强塞双弹池」同类）—— 见 [WEAPON-AMMO-RESERVE §4b](docs/tables/WEAPON-AMMO-RESERVE-26088801.md) |
-| **跨包加载**：`+0xA8`（物品包）+ `+0xF8`（武器的 LoadoutEntry）双声明口；口不够时接 `+0xC8` 额外战备链（不占位）；**或走补丁把资源/整包塞进常驻包（不受口上限）** | **✓✓ 实机**（只换 `+0xA8` → 谁出模型跟着换；`+0xC8` 链带进 4 条战备；补丁：79 KB 顶掉 68 MB 包、整包 50/51 条进**共享基础包**与注册表包、舱里三件零声明全出）—— 见 [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) §6.9 |
+| **跨包加载**：`+0xA8`（物品包）+ `+0xF8`（武器的 LoadoutEntry）双声明口；口不够时接 `+0xC8` 额外战备链（不占位）；**或走补丁把资源/整包塞进常驻包（不受口上限）** | **✓✓ 实机**（只换 `+0xA8` → 谁出模型跟着换；`+0xC8` 链带进 4 条战备；补丁：79 KB 顶掉 68 MB 包、整包 50/51 条进**共享基础包**与注册表包、舱里三件零声明全出；挂载件整包 41 条零声明 ⚠ 待实机）—— 声明口见 [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md)，补丁见 [RESOURCE-RESIDENCY](docs/engine/RESOURCE-RESIDENCY-26088801.md) |
 | **空声明槽普查**：153 行战备里 **133 行没填满**，空槽存量 **155 个**（两槽全空 22 行 / 仅 `+0xA8` 空 17 行 / 仅 `+0xF8` 空 94 行）⇒ `strat_slot_fill.py` 按名字填空槽 | **✓✓ 实机**（R3：把 Warp 的包填进 `Reinforce` 的 `+0xA8` ⇒ **关卡加载即驻留**，不叫、不带、不死；投送舱里两件不同包的物品同时正常，**三个包并存**）。`+0xF8` 另有否证（R1：不授予武器的战备上不读它）—— 见 [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) §6.6 |
 | 解锁未发布物品（`LoadoutEntry.selectable`） | ✗ 已否证（发布数据里没有这个开关） |
 

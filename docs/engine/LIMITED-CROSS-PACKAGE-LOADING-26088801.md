@@ -575,96 +575,28 @@ rack 29 三个槽（Nova / Warp Pack / GL-28 Belt-Fed，`+556` 设 3），三个
 > 查表命令：`python tools/strat_slot_census.py`（全表）、`--free`（只看有空槽）、`--both`（只看两槽全空）、
 > `--row N`（单行详情，含绝对偏移）、`--json out.json`。
 
-### 6.9 资源层驻留（`.patch_N`）—— 声明口之外的第二条路（**✓✓ 实机 2026-10-25 晚**）
+### 6.9 资源层驻留（`.patch_N`）—— 已单独成文
 
-> 本节回答的是「声明口不够用怎么办」。答案不是"找更多行"，而是**换一层**：
-> 补丁把**资源**塞进**已经常驻**的包，按 `file_id` 全局可查 ⇒ **不受口数限制**。
-> 补偿的是"包要不要加载"，不是"资源在哪"。
+> 声明口（`+0xA8` / `+0xF8`）解决的是"**包会不会被加载**"；补丁解决的是"**资源在不在**"。
+> 这条线现在有独立主档：**[RESOURCE-RESIDENCY-26088801](RESOURCE-RESIDENCY-26088801.md)**
+> （机制 / P1–P4 实测 / 三条配方 / `whole_package_patch.py` 工具 / 上限与坑）。
 
-**机制**
+三条要点（证据与细节见新档）：
 
-- 文件 `data/<包名>.patch_N`；引擎启动时按**连续序号**合并进**那一个包**（缺号则后面全部不生效）。
-- 条目按 `file_id` 进资源索引；同一个 id 只要有一个**已加载**的包里有，就能解析（故 62,915 个 id ↔ 322,711 条条目）。
-- 类型不挑：`patch_0/1/2/4` = `lua`、`patch_3` = `texture`（+`.gpu_resources`）+ `bones`、第三方 FRV 防翻 mod = `physics`、
-  本轮 = `particles` / `material`，以及整包的 `mesh` / `unit` / `bones` / `animation` / `state_machine` / `texture`。
-- 带 GPU / stream 负载的类型（`texture`、`mesh`、`geometry_group`…）要把负载写进同名 `.gpu_resources` / `.stream`；
-  `particles` / `material` 只有 toc，不需要伴生。
-
-**实测（同一晚三轮，单变量）**
-
-| 轮 | 补丁 | 宿主包 | 条目 | 读数 |
-|---|---|---|---:|---|
-| **P1 资源级** | `9ba626afa44a3aa3.patch_5`（82,864 B）| 注册表包 | 19（3 `particles` + 16 `material`，载荷 79.3 KB）| 把 `SOS Beacon` 59 的 `+0xA8` **清零**后，火箭炮塔的**拖尾 / 命中爆炸 / 枪口全在** ⇒ 一个 68 MB 的包被 **79 KB 资源**顶掉 |
-| **P2 整包·基础包** | `f6fb08cc02d24255.patch_0`（3.52 MB toc + 1.84 MB gpu + 2.65 MB stream）| **共享基础包** `f6fb08cc02d24255`（782 资源，必然常驻）| 50（LIFT-182 Warp Pack 整包：mesh/unit/bones/material/texture/physics/animation/state_machine…）| 舱里 **Warp Pack 正常渲染**，且**没有任何 `+0xA8` 声明它** |
-| **P3 整包·注册表包** | `9ba626afa44a3aa3.patch_6`（2.74 MB + 6.06 MB + 4.19 MB）| 注册表包 `9ba626afa44a3aa3` | 51（GL-28 Belt-Fed 整包）| 舱里 **GL-28 正常渲染**，同样零声明 |
-| **P4 整包·基础包·挂载件** | `f6fb08cc02d24255.patch_1`（1.26 MB toc + 4.37 MB gpu + 2.29 MB stream）| **共享基础包** `f6fb08cc02d24255`（第 2 条补丁）| 41（火箭哨戒包 `11bbdf8ce39e5fc5` 整包：11 animation / 9 texture / 9 particles / 6 material / 1 bones / 1 mesh / 1 physics / 1 state_machine / 2 wwise）| ⚠ 待实机：FRV 炮手位挂载**火箭哨戒**，`+0xA8` 已**全清零**（`SOS` 59 与增援 57 两行都回 0）|
-
-**P4 补的三件事（此前三轮都没覆盖）**：
-
-1. **第一次用于「载具挂载件」而不是投送舱 rack 物品** —— 挂载路径（`MountInfo.item`）同样只按 `file_id` 取资源，
-   不需要包被"请求"；
-2. **同一条补丁里可以既放"整包原样拷贝"又放"我们自己改过的资源"**：流程是先 `srkit unpack --raw` 出工作区，
-   直接改 `resources/<type>_<id>/toc.bin`（并用新 sha256 更新同目录 `resource.json` 的 `blobs` / `payloads`），
-   再 `srkit pack` —— 本轮的 `state_machine 37079568DC86E9C6` 就是这样把 `layer0.DefaultState` 改成 3 带进去的
-   （`resource_patch.py dump <patch> 14` 出来的 4,364 B 与 `sm_rocket.bin` 逐字节相同）；
-3. **`+0xA8` 清零后依然出模型**（这是 P1 的 0 声明结论在"整包 + 挂载"上的复现）。
-
-**顺带修正一条旧判断**：`content/fac_helldivers/hellpod/aa_turret`（AC-8 壳）的 `bones/mesh/physics/state_machine`
-**在 `54dc633a67baa93d` 与 `418322d5ff8b13bc` 里各有一整套**（`srkit list --id 0xCBFE1FC7158347F3` 共 8 条，两个包各 4 条，
-逐项同尺寸）；火箭哨戒壳更是只在 `11bbdf8ce39e5fc5` + 副本包 `fc5b6bff0db90aab` 里。而且**整个库里这两套壳都没有
-`unit` 类型的资源**（挂载件的 `Unit +0` 只指向 mesh/bones/physics/state_machine 这一组）——
-所以之前"AC-8 必须声明两个包"其实是保守做法，一个包就够；真正必需的是**这一组的四个资源能被解析**。
-
-**验收 rig（✓✓ 实机：三件全出）**：StA-X3 投送舱（rack 29）三件、`spawn=3` ——
-Nova 走**舱行** `+0xA8`（基准，已知可）、Warp 走**共享基础包补丁**、GL-28 走**注册表包补丁**；
-两个补丁在战备表里一个字都没写。
-
-⇒ 本轮最重要的两条新事实：
-
-1. **宿主不限于注册表包**：`data/<任意包>.patch_N` 都会被读（P2）。
-2. **整包（含 mesh/unit/bones 与纹理 GPU）也能这样驻留**（P2/P3），所以"整包驻留"不再只有
-   `+0xA8` 一条路 —— 但对**被引擎主动请求**这件事，仍然只有 `+0xA8` / `+0xF8`。
-
-**上限与代价**
-
-| 项 | 现状 |
-|---|---|
-| 补丁体积 | 3.52 MB / 2.74 MB toc 已通（旧已知最大 2.2 MB）；**上限仍未测** |
-| 条目数 | 50 / 51 条已通；本轮资源级 19 条 |
-| 序号 | **必须连续**（0…N），中间缺号后面全部不生效 |
-| 同 id 冲突 | **高号胜**（✓✓ 实机，[SAMEID-PATCH-PRIORITY](../cases/SAMEID-PATCH-PRIORITY-26088801.md)）|
-| 内存 | 驻留 = 真加载；200 MB 级特效包会明显掉帧（旧档 §86.6）|
-| 能力边界 | 只解决"资源在不在"，**不解决"包在不在"**：要让引擎请求某包仍用 `+0xA8`/`+0xF8` |
-
-**两条配方**
-
-```bash
-# A) 资源级（P1）：给若干 (type,id,payload)，宿主用注册表包
-srkit extract --id <id> --type <type> --package <src> -o payload "<game>/data"
-#   组装：以现有补丁为模板（Package.parse → 清条目 → add_entry → to_bytes；别新建容器）
-python tools/resource_patch.py list  data/9ba626afa44a3aa3.patch_5      # 核条目
-python tools/resource_patch.py repack data/9ba626afa44a3aa3.patch_4 -o /tmp/r4 --index 4   # 写入器回归（要 IDENTICAL）
-
-# B) 整包级（P2/P3）
-srkit unpack "<game>/data" -o ws --package <src> --raw
-srkit pack ws -o out --name <host-package>.patch_<N>
-```
-
-工具：`tools/resource_patch.py`（list/dump/repack/build）、`srkit unpack/pack/check/list`。
-
-> **工具坑（本轮新增）**：实体库容器与普通表**不是同一种 LDLD** ——
-> 实体：`u32 type | 'LDLD' | ver | type | payload | …`（payload 尺寸在 `head+16`，头 28 B）；
-> 普通表：`'LDLD' | ver | type | payload | wide | extra`（尺寸在 `head+12`，头 24 B）。
-> 所以 `plain_edit.py` 改不了实体库；本轮补了 `tools/rack_edit.py`（任意 `--slot N=item` + `--spawn`，G1–G7 门禁）。
+- 文件 `data/<宿主包>.patch_N`，按**连续序号**合并进那个包；条目按 `file_id` **全局**可解析，**不受口数限制**；
+  宿主不限于注册表包（共享基础包 `f6fb08cc02d24255` 同样被读）。
+- 已实测：资源级 79 KB 顶掉 68 MB 包（P1）、整包 50/51 条进共享基础包与注册表包（P2/P3）、
+  整包 41 条给**载具挂载件**且战备表 `+0xA8` 全清零（P4，⚠ 待实机）。
+- **边界**：补丁只让资源可解析，**不会**让引擎主动去请求某个包 —— 那仍然只有 `+0xA8` / `+0xF8`。
 
 ## 7. 能力边界（为什么叫「有限数量」）
 
 **能做的**
 
 - 把任意**合法拾取物**（`Interactable` + 对应组件）放进投送舱的槽位；
-- 同一舱放 3~4 件**不同包**的物品（`+556 spawn` 上限 4；R10/R12/G 轮，以及 §6.9 的 P2/P3）；
+- 同一舱放 3~4 件**不同包**的物品（`+556 spawn` 上限 4；R10/R12/G 轮，以及 [资源层驻留](RESOURCE-RESIDENCY-26088801.md) 的 P2/P3）；
 - 用 `+0xF8` 顺带改变「这发战备授予的武器」；
-- **把资源（甚至整包资源）塞进常驻包，绕开声明口上限**（§6.9，✓✓ 实机）。
+- **把资源（甚至整包资源）塞进常驻包，绕开声明口上限**（[资源层驻留](RESOURCE-RESIDENCY-26088801.md)，✓✓ 实机）。
 
 **做不到 / 未验证**
 

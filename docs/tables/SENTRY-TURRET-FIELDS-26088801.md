@@ -289,7 +289,7 @@ wiki 模块来自旧 build（顺带：wiki 里 sentry `health` 一律写 200，�
 python tools/mount_table.py swap --entity 0xB0C9FAF4AF8903F9 --slot 2     --item 0x37CDE43876BA26BB --out ent.plain
 # ② 行为：313 → 658（AI 放手）；阵营已是 1，不用动
 python tools/entity_field_set.py set --plain ent.plain --block 0xBA9B803D     --key 0x37CDE43876BA26BB --field 0 --type u32 --value 658 --out ent2.plain
-# ③ 包：战备行 +0xA8 写 0x154BD6143819DF7D（或按 LIMITED-CROSS-PACKAGE §6.9 用补丁塞进常驻包）
+# ③ 包：战备行 +0xA8 写 0x154BD6143819DF7D（或按 RESOURCE-RESIDENCY 用补丁塞进常驻包）
 python tools/plain_edit.py --plain strat.dl_bin --out strat2.dl_bin --set 0x7084=u64:0x154BD6143819DF7D
 ```
 
@@ -475,7 +475,7 @@ AC-8 `54DC633A67BAA93D`、火焰 `1577E917AD1F287D`、激光 `36313BF684C1FD79`�
 
 **本局验证配置**（`D:\mod\out\sm-verify\`，已装，盘上回读逐字节一致）：
 **火箭哨戒包的资源走「资源层驻留」（`data/f6fb08cc02d24255.patch_1`），战备表 `+0xA8` 全清零** ——
-刻意不用声明口，给 [LIMITED-CROSS-PACKAGE §6.9](../engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) 的 P4 补一个"载具挂载件"案例。
+刻意不用声明口，给 [资源层驻留](../engine/RESOURCE-RESIDENCY-26088801.md) 的 P4 补一个"载具挂载件"案例。
 
 | 文件 | sha256 | 改动 |
 |---|---|---|
