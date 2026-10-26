@@ -429,3 +429,34 @@ Supply Pack 在**组件集与 Jump Pack 完全对齐**（`Jumppack` + `Recharge`
 | 明文 | `out/jumpsupply/s6b.plain`（sha256 `522561be…f68ce8`，round-trip 一致）|
 | 读回 | Supply `Unit+0x00=0x59C5CA839449B379`、Jump Pack `Unit+0x00=0x4EF9A47109239A58`；其余字段与 s5b 相同 |
 | 回滚 | `cp out/jumpsupply/entities.before-jumpsupply <game>/data/game/generated_entities.dl_bin` |
+
+## 8 收口：给别的背包加"跳跃能力"——纯数据走不通（2026-10-26 21:1x，`✗` 否证）
+
+四轮实验全表（每轮都是单变量，实机结果都是用户给的）：
+
+| 轮 | 改动（目标 = Supply Pack）| 结果 |
+|---:|---|---|
+| 1 | 插 `JumppackComponentData` 行（复制跳包）+ 插 `RechargeComponentData` = 15 s | 跳跃键**无反应** |
+| 2 | 再改 `EquipmentComponent+0xDC` 1→8 | **未测**：离线读类型名后作废（它是 `BackpackWwiseIndex`，音频）|
+| 3 | 改 `EquipmentComponent+0x80` `EquipmentType` 23→**19**（跳包类）| 跳跃键**仍无反应**；但**按 5（使用键）崩溃** |
+| 4 | 再补 `EffectReferenceComponentData`（**共享**跳包的行 478）| **仍崩** ⇒ 不是"缺某个组件" |
+| 5 | 资产互换（Supply↔JumpPack 的 `Unit+0x00`）| **未测**：用户判断与资产无关，叫停 |
+
+**结论（`✗` 否证）**
+
+1. `JumppackComponentData` 只是**参数层**（起跳速度/悬停/能力 id），**能力本身不在这里**。
+2. 把跳包独有的组件**全部补齐**（`Jumppack` + `Recharge` + `EffectReference`）并改成跳包类 `EquipmentType=19`，
+   仍然崩 ⇒ 缺的那一环在**数据表之外**（引擎按装备类别注册的能力/资产侧），本轮不再追。
+3. 但有一个**可以带走的读数**：`EquipmentType` 确实被"使用键"路径读——第 1 轮同配置不崩、第 3 轮改类后崩，
+   说明"使用键 → 跳包分支"是被这个类值打开的；它**不是**跳跃键的门（Jump Pack 改成补给类照样跳）。
+
+**复原状态（已执行）**
+
+```
+cp out/jumpsupply/entities.before-jumpsupply "<game>/data/game/generated_entities.dl_bin"
+# md5 dc744d3e2fa00fd429d0e6bb5aabb690 = 原版 + rack 47 暗液体（与 pristine 只差 3 段：2×8 B 槽位 + 校正字）
+```
+
+**留下的资产**：字段类型图（§7.4）、`--row` 共享行技巧（块满也能加组件）、
+"崩溃 = 行为分支已被进入"这个信号用法、以及"背包自身数值可以改"的完整字段表 →
+**[BACKPACK-VALUES-26088801](BACKPACK-VALUES-26088801.md)**。
