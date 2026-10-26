@@ -1859,6 +1859,66 @@ G4（6 处读回）· G6（275 块自洽）· G7（旧值全中）· G8/G9（校
 **回滚**：`cp out/mine-gas/backup/generated_entities.dl_bin.before-ap2gas data/game/generated_entities.dl_bin`
 ＋ 删 `data/f6fb08cc02d24255.patch_13{,.gpu_resources,.stream}`。
 
+#### 3.8.4.25 反向验证：把 AP 地雷阵换成 **AT 雷（`0x032489CF1D439BBA`）** —— 追问"没有实体行怎么运作"（2026-10-26 17:2x，`✓` 离线，`⚠` 待实机）
+
+毒气雷那一轮（`✓✓`）说明"原生雷互换"成立。这一轮换成 **AT 雷**，因为它有一个反常事实：
+
+**反常：AT 雷在数据里只有 mesh/physics，没有任何实体行**
+
+| 查了什么 | 结果 |
+|---|---|
+| `Thrower+0x00 = 0x032489CF1D439BBA` 在 56 张表里的出现次数 | **1 次**（就只有 AT 抛洒器自己这一格）|
+| `generated_entities` 全文件搜这个 8 字节 | 1 处（同上）；**没有组件行** |
+| `generated_entity_deltas` | 0 处 |
+| 全库资源（`srkit list --id`）| 只有 `physics` + `mesh` = `les/tank_mine/tank_mine`，**没有 `unit`** |
+| 爆炸行 **179**（= AT 抛洒器 `Minefield+0x18`）| **存在**（行 261），且 `+0x38` 粒子 `0x89B5505E263B09ED` **就在 AT 抛洒器的声明包 `12ce4bc7cddaf51c` 里** |
+
+⇒ 表现层（爆炸/粒子）是完整的，**唯独缺"实体行"**（`Unit`/`Explosive`/`Throwable` 那套）。
+对照：毒气雷/接触雷的实体行齐全，且它们的**实体 id == 自己包里的 mesh id**（`0x693028644D27FFEF` / `0xEE89CC10D80B6AFB`）；
+AT 雷同样是"mesh id = 投掷 id"，只是**没有实体行**。这让两个模型都有可能：
+
+| 模型 | 预测 |
+|---|---|
+| **M1 资源实体**：抛洒器按"mesh/physics 资源 id"造一个裸件，实体行只是**可选**的组件附加 | 换过去就能出雷、能爆 |
+| **M2 实体必需**：抛洒器要按实体行造实体，没有实体行就造不出/不能爆 | 换过去不出雷或不出伤 |
+
+**AT 抛洒器与 AP 的三处结构性差别**（这也是为什么本轮用"整行拷贝"而不是逐字段）：
+
+1. `UnitComponentData+0x00`（**发射器网格 id**）：AT = `0x72E79EF1017A2900`（`mine_launcher_tank_mine`），
+   AP/Gas/Incendiary = `0xF00C349422E8E320`（`_launcher/mine_launcher`）⇒ **AT 用的是另一套发射器模型**（本轮保留 AP 的）；
+2. `Thrower` 行里 **`+0x7C..+0xEF`（29 个字）与 `+0x150..+0x16C` 在 AT 全为 0**，AP 有值（像是出手/落地特效 id 数组）；
+3. `Thrower+0x10/+0x1C/+0x2C` 与 `Minefield+0x04/+0x08/+0x10/+0x20/+0x24` 不同 —— 其中
+   `+0x20 = 1`、`+0x24 = 2` **是 AT 独有**（其余三件都是 0），很可能是"资源式雷/场级起爆"的开关。
+
+**两包共享的 9 个资源 id 逐字节相同**（5 animation + bones + state_machine + 2 particles；
+`resource.json` 里的差异只是 `source.package`）⇒ **整包驻留没有遮蔽风险**（不会把 AP 发射器的那套资源顶掉）。
+
+**本轮做法：整行拷贝**（新写的 `out/mine-gas/rowcopy.py`，同一套 tail 宿主 + G1/G2/G3/G6/G8/G9 门禁）
+
+| 项 | 值 |
+|---|---|
+| 改动 | `Thrower` 行与 `Minefield` 行**整行**（752 B / 44 B）从 AT 实体 `0x25A2FD037B6ED25C` 拷到 AP 实体 `0xF00C349422E8E320` |
+| 结果 | 装盘回读：AP 的两行与 AT 的两行**逐字节相同**（`✓`）|
+| 明文 | `out/mine-gas/ap-to-at.plain` 47,259,408 B（+12）；密封 47,259,456 B，sha256 `066f527c7305ef7a` |
+| 驻留 | **`f6fb08cc02d24255.patch_14`** = AT 声明包 `12ce4bc7cddaf51c` 整包 28 条（toc 2,702,160 `53634198541fe163` / gpu 2,847,480 `e345e744fe289f82` / stream 1,747,680 `5bd15fb57f27d17b`）|
+| 保留 | AP 的发射器外形与声明包不变（只换"扔什么"）|
+| 回滚件 | `out/mine-gas/backup/generated_entities.dl_bin.before-ap2at`（= 毒气雷那一版 `80053101…`）|
+
+**这一局要看的（两件事，一场就能答）**
+
+| 步骤 | 做法 | 看什么 |
+|---|---|---|
+| **对照（不改数据）** | 带 **MD-17 Anti-tank Mines** 原生战备并投下 | 发射器模型是 `mine_launcher_tank_mine`（与 AP 不同形）；**有没有撒出雷**、雷长什么样、能不能爆 |
+| **实验** | 带 **Anti-Personnel Minefield**（已改成 AT 配置）并投下 | 撒出来的是不是 AT 雷（小方盘/楔形），能不能爆 |
+
+判读：
+
+| 档 | 结果 | 结论 |
+|---|---|---|
+| **A** | 两种都能出雷、都能爆 | **M1 成立**：`Thrower+0x00` 只需要"mesh/physics 资源 id"，实体行是可选附加；AT 的起爆走 `Minefield+0x18 = 179`（场级）|
+| **B** | 原生 AT 自己也不出雷/不爆 | 这个 build 的 AT 战备是**数据残件**（stub）；"没有实体行"就是原因，不是我们换坏了 |
+| **C** | 原生正常、我们的不出雷 | 除实体行外还差别的 → 下一个嫌疑：`UnitComponentData+0x00`（发射器网格）或 `Minefield+0x04` 那个未知 hash |
+
 ## 4 怎么改
 
 ### 4.1 一条命令（保内容哈希）
