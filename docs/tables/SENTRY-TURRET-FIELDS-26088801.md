@@ -463,17 +463,17 @@ AC-8 上这条规则给出的正是 state2 —— 与我们实机验证的改法
 AC-8 `54DC633A67BAA93D`、火焰 `1577E917AD1F287D`、激光 `36313BF684C1FD79`）；
 另有一份公共包 `fc5b6bff0db90aab` 存了 MG-43/加特林/迫击炮/火箭 4 份副本（字节相同）。
 
-#### 3.8.4.3 已打补丁：模板 A 的另外三个（⚠ 待实机）
+#### 3.8.4.3 已打补丁：模板 A 的另外三个
 
-| 文件 | 大小 | entry | 改动 |
-|---|---:|---|---|
-| `data/9ba626afa44a3aa3.patch_8` | 8,976 B | `state_machine 37079568DC86E9C6`（火箭） | layer0 `1 → 3`（`330CA356` → `823905BD`） |
-| 同上 | | `state_machine 820CC3BAFE962858`（火焰） | layer0 `1 → 3` |
-| 同上 | | `state_machine 56070F36CFFFA8A8`（激光） | layer0 `3 → 1` |
+| 文件 | 大小 | entry | 改动 | 状态 |
+|---|---:|---|---|---|
+| `data/9ba626afa44a3aa3.patch_8` | 4,528 B | `state_machine 820CC3BAFE962858`（火焰） | layer0 `1 → 3`（`330CA356` → `823905BD`） | ⚠ 待实机 |
+| 同上 | | `state_machine 56070F36CFFFA8A8`（激光） | layer0 `3 → 1` | ⚠ 待实机 |
+| `data/f6fb08cc02d24255.patch_1` 里附带的 `state_machine 37079568DC86E9C6`（火箭） | 41 条整包 | layer0 `1 → 0`（折叠 → **部署态本身**，见 §3.8.4.4） | ⚠ 待实机 |
 
-产物 `D:\mod\out\sm-patch8\`（spec.json + 3 个载荷），补丁序号 `patch_0..8` 连续。
+> 火箭那份 SM 现在**只存在于资源层补丁**里（patch_8 已把它去掉），这样"整包驻留"这条路线才是唯一来源。
 
-**本局验证配置**（`D:\mod\out\sm-verify\`，已装，盘上回读逐字节一致）：
+**当前验证配置**（`D:\mod\out\sm-verify\` + `D:\mod\out\rocket-res-patch\`，已装，盘上回读逐字节一致）：
 **火箭哨戒包的资源走「资源层驻留」（`data/f6fb08cc02d24255.patch_1`），战备表 `+0xA8` 全清零** ——
 刻意不用声明口，给 [资源层驻留](../engine/RESOURCE-RESIDENCY-26088801.md) 的 P4 补一个"载具挂载件"案例。
 
@@ -481,14 +481,62 @@ AC-8 `54DC633A67BAA93D`、火焰 `1577E917AD1F287D`、激光 `36313BF684C1FD79`�
 |---|---|---|
 | `generated_entities.dl_bin` | **`2a5ce9ba6b699792`** | FRV 炮手位（行 19/119 槽 0）= **A/MLS-4X 火箭哨戒** `37079568DC86E9C6`（顶掉 AC-8）；`Behavior 611→658` |
 | `generated_stratagem_settings.dl_bin` | `6c0ab66b281c2178` | 行 57（增援信标）/ 59（SOS）的 `+0xA8` **清零** ⇒ 战备表里**没有任何包被声明** |
-| `data/f6fb08cc02d24255.patch_1`（+`.gpu_resources` / `.stream`） | `a3f71af78d333f02`（toc） | **火箭哨戒包整包 41 条资源**驻留进共享基础包（toc 1.26 MB + gpu 4.37 MB + stream 2.29 MB）；其中 `state_machine 37079568DC86E9C6` 已是改好的版本（`layer0 default=3`，`resource_patch.py dump <patch> 14` 与 `sm_rocket.bin` 逐字节相同） |
+| `data/f6fb08cc02d24255.patch_1`（+`.gpu_resources` / `.stream`） | **`d387523a39cea726`**（toc）/ `9c63665fe8e4c6eb`（gpu）/ `56e9e6715ec76329`（stream） | **火箭哨戒包整包 41 条资源**驻留进共享基础包（toc 1.26 MB + gpu 4.37 MB + stream 2.29 MB）；其中 `state_machine` 是 `layer0 default=0` 那版 |
 
-⇒ 一局三件事：① 火箭哨戒在炮手位**出场即展开、原点/炮口正确**（模板 A 改法对全部 4 型成立）；
-② **不靠 `+0xA8`、只靠补丁驻留**也能把一台载具挂载件的模型/材质/动画全部拉起来（P4）；
-③ 顺带看它会不会 150 s 自己消失（`HellpodPayload +0x04`）。
 回滚到 AC-8 版：把 `D:\mod\out\frv-ac8\ent.sealed.dl_bin`（`02b740fef30a7f7a`）
 与 `…\strat.sealed.dl_bin`（`081e7879cb6575e2`）拷回 `data/game/`，并删掉
 `data/f6fb08cc02d24255.patch_1*` 三件（`patch_7/8` 保持不动）。
+
+#### 3.8.4.4 「伸出来」那一步：抬升在部署 clip 里，展开态只负责保留（2026-10-26 10:4x）
+
+**✓✓ 实机读数（第一版：默认态 = 展开态 `823905BD`）**
+
+| 项 | 结果 |
+|---|---|
+| 模型 / 材质 / 贴图 / 动画 | **全部正常**（不是紫问号、不是白模）|
+| 需不需要 `+0xA8` 声明 | **不需要**（战备表全零，纯靠 `f6fb08cc02d24255.patch_1` 41 条资源）|
+| 姿态 | **是展开状态**（模板 A 的改法对火箭也成立）|
+| 位置 | **整体缩在车体里** —— 用户判断"少了个伸出来的动作" |
+
+**壳的骨骼构成**（`srkit extract --type bones --decoded`，✓ 离线）——关键在有没有升降类骨骼：
+
+| 壳 | 骨骼数 | 升降/展开机构相关骨骼 |
+|---|---:|---|
+| 火箭 `37079568DC86E9C6` | 10 | `traverse` · **`elevator_01`** · **`elevator_02`** · `boss` |
+| 火焰 `820CC3BAFE962858` | 10 | `boss` · `traverse` · **`elevator_01`** · **`elevator_02`** |
+| 迫击炮 `51A0812E3BCE2D74` | 19 | **`base_elevation_arm`** · `base_elevation_offseter` · **`elevator_slider`** · `elevator_rotator` |
+| A/AC-8 `CBFE1FC7158347F3` | 16 | `elevator`（单根）+ `hinge` + `barrels_extension_01/02` |
+| A/LAS-98 `56070F36CFFFA8A8` | 6 | 无（只有 `root/rotator/gunhousing/sensorpod`）|
+| A/MG-43 `37CDE43876BA26BB` | 11 | 无 |
+| A/G-16 `61D9DDA22A59E9BC` | 27 | `c_elevator`（碰撞体）|
+
+**推理链**（✓ 离线推 + 一条实机反证）：
+
+1. 火箭的"伸出"只能发生在**部署过渡 clip**（`86A54B9AA49F833A`，loop=0，`DeployDone`/0.20 s）里，
+   或者展开态 clip（`3FCF5875B0663A62`）里；
+2. **实机反证**：直接从展开态出生 ⇒ **没有伸出、整体偏低** ⇒ 抬升**不在**展开态 clip 里；
+3. 正常部署流程是 `部署态 →(clip 播完 DeployDone)→ 展开态`，落地后是抬起来的
+   ⇒ 抬升在**部署 clip** 里，且引擎**跨状态保留了没被后一 clip 动画的骨骼姿态**（部件级分层）；
+4. 从展开态出生 = 跳过那唯一一次抬升 ⇒ 升降骨骼停在 bind（下位），整体沉进车体。
+   `AC-8` 之所以没这问题：它的展开态 clip 自己就把 `elevator/hinge` 摆到位了。
+
+**改法（本局已装，⚠ 待实机）**：把默认态设成**部署态本身**（火箭 layer0 `3 → 0`）——
+出生时播一次完整部署（就是"伸出来"），`DeployDone` 之后自然进展开态，抬升姿态被保留。
+
+```bash
+python tools/state_machine_edit.py --set 0=0 --out sm_rocket_s0.bin sm.bin     # 展开态 → 部署态
+python tools/whole_package_patch.py build --package 11bbdf8ce39e5fc5 \
+    --host f6fb08cc02d24255 --index 1 \
+    --edit state_machine:0x37079568DC86E9C6=sm_rocket_s0.bin --install
+```
+
+**若这版还不行**，下一步候选（按成本）：
+
+1. **把部署态的 `DeployDone→展开态` 过渡切断**（把那条 Link 的目标改成自身），让它停在部署 clip 末帧
+   —— 需要给 `state_machine_edit.py` 加"改 Link"能力；
+2. **整层**：给火箭加一层只驱动 `elevator_01/02` 的动画（把部署 clip 里那两段曲线搬出来），
+   或找已有层里"抬起位"的状态（rocket 有 8 层：layer1/2 单态 Time loop、layer5/6 Clip loop）；
+3. 换壳 / 换挂点（`Unit +0` 借 40mm 站壳）—— 用过，属绕过。
 
 **模板 B 的待办（⚠ 未验，别照抄）**：MG-43/加特林默认 `E954AED4`（loop=1），部署过渡 `79DE1870`
 播完**没有**回指状态（事件表里没有 `Deployed` 那条 Link），所以它停在部署 clip 的末帧；

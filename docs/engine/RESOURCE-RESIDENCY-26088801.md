@@ -47,10 +47,14 @@
 | **P1 资源级** | `9ba626afa44a3aa3.patch_5`（82,864 B）| 注册表包 | 19（3 `particles` + 16 `material`，79.3 KB）| 把 `SOS` 59 的 `+0xA8` **清零**后，火箭炮塔的**拖尾 / 命中爆炸 / 枪口全在** ⇒ 68 MB 的包被 79 KB 资源顶掉 `✓✓` |
 | **P2 整包·基础包** | `f6fb08cc02d24255.patch_0`（3.52 MB toc + 1.84 MB gpu + 2.65 MB stream）| 共享基础包 `f6fb08cc02d24255`（782 资源，必然常驻）| 50（LIFT-182 Warp Pack 整包）| 舱里 **Warp Pack 正常渲染**，零 `+0xA8` `✓✓` |
 | **P3 整包·注册表包** | `9ba626afa44a3aa3.patch_6`（2.74 MB + 6.06 MB + 4.19 MB）| 注册表包 | 51（GL-28 Belt-Fed 整包）| 舱里 **GL-28 正常渲染**，零声明 `✓✓` |
-| **P4 整包·基础包·挂载件** | `f6fb08cc02d24255.patch_1`（1.26 MB toc + 4.37 MB gpu + 2.29 MB stream）| 共享基础包（第 2 条）| 41（火箭哨戒包 `11bbdf8ce39e5fc5` 整包：11 animation / 9 texture / 9 particles / 6 material / 1 bones / 1 **unit** / 1 physics / 1 state_machine / 2 wwise）| ⚠ **待实机**：M-102 炮手位挂载**火箭哨戒**，战备表 `+0xA8` 已**全清零**（增援 57 与 `SOS` 59 都回 0）|
+| **P4 整包·基础包·挂载件** | `f6fb08cc02d24255.patch_1`（1.26 MB toc + 4.37 MB gpu + 2.29 MB stream）| 共享基础包（第 2 条）| 41（火箭哨戒包 `11bbdf8ce39e5fc5` 整包：11 animation / 9 texture / 9 particles / 6 material / 1 bones / 1 **unit** / 1 physics / 1 state_machine / 2 wwise）| **✓✓ 实机**：M-102 炮手位挂载**火箭哨戒**，战备表 `+0xA8` **全清零**（增援 57 与 `SOS` 59 都回 0）⇒ 模型 / 材质 / 贴图 / 动画**全部正常**（不是紫问号、不是白模），**零声明**完全成立 |
 
 **验收 rig（P2/P3，`✓✓` 三件全出）**：StA-X3 投送舱（rack 29）三件、`spawn=3` ——
 Nova 走舱行 `+0xA8`（基准）、Warp 走共享基础包补丁、GL-28 走注册表包补丁。
+
+> P4 的实机也顺手暴露了一个**与驻留无关**的问题：火箭哨戒在炮手位"是展开的、但整体缩在车体里"——
+> 那是壳的 `elevator_01/02` 升降骨骼没被抬起来（部署 clip 才抬），不是资源没加载。
+> 判据与后续改法见 [SENTRY-TURRET-FIELDS §3.8.4.4](../tables/SENTRY-TURRET-FIELDS-26088801.md)。
 
 **P4 新补的三件事**（此前三轮都没覆盖）：
 
