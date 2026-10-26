@@ -373,3 +373,39 @@ entities = `out/dogs/h1b.dl_bin`（md5 `404668faaf9255736d7d1ca838a51bc4`）。
 **装盘**：entities = `out/dogs/i1d.dl_bin`（md5 `f8ba190b2e0bee2eedcda417835f60b5`）；
 驻留 patch_18（AC-8）/patch_19（ARC-3）保持安装，本轮 ARC-3 仍需要它。
 回滚：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`（+ 删 patch_18/19 若要彻底复原）。
+
+### 11.2 更正：**原生池 ≠ 资源保证**（Dog Breath + `soldier_machinegun` = 紫问号，`✓` 反例）
+
+第四轮里 **Dog Breath** 挂的 `soldier_machinegun` `0x2ED3696E12A14D4C`（**原生挂载池成员，游戏自己挂过 2 次**）**仍然紫问号**。
+
+⇒ **"原生池"只证明"形状/行为上能被挂、能开火"，不保证"包在场"。** §7.1 里那句"原生挂载池 = 零风险 donor 源"作废。
+
+那为什么 `shuttle_gunship_turret_hmg` 那例正常？——它的宿主是**每局都在场的运输机/撤离穿梭机**，包随场景常驻，
+所以"看起来免驻留"。同理 `soldier_standard_rifle` 那类 NPC 武器，要看当场景里有没有那个 NPC 拿它。
+
+**真规则只有一条**：想不看运气 ⇒ **把 donor 的包驻留**（`patch_18` / `patch_19` 就是这么做的）。
+原生池的价值退化为：**形状白名单**（这些 item 有炮塔/武器组件、在被挂时能开火）。
+
+## 12 第五轮（修订版）：三个载体 × 同一把蓄力武器 + 一个天然常驻对照（2026-10-26 22:4x 已装，`⚠`）
+
+因为 §11.2 的教训，本轮把三只狗统一挂 **ARC-3**（`patch_19` 已驻留，必然出模型），
+只让**行为**变化——这样"能不能放电弧"的差异只能来自 `BehaviorId`：
+
+| 狗 | 无人机 | 挂的 | `BehaviorId` | 资源 |
+|---|---|---|---|---|
+| **Guard Dog** | `0xA0FF2F9A0CA6992A` | **ARC-3** `0x96DE9CD50F7306E6` | **192**（实弹狗行为）| patch_19 |
+| **Rover** | `0x5BEEC97F4C7F4AE9` | **ARC-3** | **192**（原版 191，**本轮改成 192**）| patch_19 |
+| **Dog Breath** | `0xB9BAF571FC8F9959` | **ARC-3** | **190**（喷气狗行为）| patch_19 |
+| **Hot Dog** | `0x979E9BC6D48D1FC6` | `shuttle_gunship_turret_hmg`（对照，已验证正常）| 189 | 天然常驻 |
+
+**判读**
+
+| Guard Dog(192) | Rover(191→192) | Dog Breath(190) | 结论 |
+|---|---|---|---|
+| 能放 | 能放 | 能放 | 蓄力武器只要**行为不是"按住型"**就行；或干脆与行为无关（那就是别的原因）|
+| 能放 | 能放 | 不能 | 190 也是一种"按住型"；⇒ 用 Guard Dog 的行为当通用解 |
+| 能放 | 不能 | 不能 | 行为不是唯一条件：**Rover/DB 机体**另有缺件 ⇒ 载体白名单 = 实弹狗机体 |
+| 都不能 | | | `ArcWeapon` 在无人机上根本不工作（需要手部蓄力输入）⇒ 无人机只适合按住/自动型武器 |
+
+**装盘**：entities = `out/dogs/i1e.dl_bin`（md5 `0086cc062d3155d0e76640b5abbab2dd`）；驻留 patch_18/19 保持安装。
+回滚：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`。
