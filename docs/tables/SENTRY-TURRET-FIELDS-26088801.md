@@ -465,6 +465,9 @@ AC-8 `54DC633A67BAA93D`、火焰 `1577E917AD1F287D`、激光 `36313BF684C1FD79`�
 
 #### 3.8.4.3 已打补丁：模板 A 的另外三个
 
+> ⚠ **本节是火箭/AC-8 时期的历史配置**。盘上现在跑的是 **MG-43 模板 B**（`f6fb08cc02d24255.patch_1`
+> 已被重建为 MG-43 整包 61 条），**当前配置见 §3.8.4.12**。
+
 | 文件 | 大小 | entry | 改动 | 状态 |
 |---|---:|---|---|---|
 | `data/9ba626afa44a3aa3.patch_8` | 4,528 B | `state_machine 820CC3BAFE962858`（火焰） | layer0 `1 → 3`（`330CA356` → `823905BD`） | ⚠ 待实机 |
@@ -741,29 +744,62 @@ python tools/state_machine_edit.py --set 0=3 --set 5=1 --out sm_rocket.bin sm.bi
 战备表零声明 `6c0ab66b281c2178`；
 `generated_entities.dl_bin` = **`bdd110d62a2387b8`**（sealed）—— M-102 炮手位 = **A/FLAM-40 火焰哨戒**，`Behavior 208→658`。
 
-#### 3.8.4.12 模板 B（MG-43 / 加特林 / 迫击炮）：同一个"扫视层"毛病（2026-10-26 12:3x，⚠ 待实机）
+#### 3.8.4.12 模板 B（MG-43 / 加特林 / 迫击炮）：光关"扫视层"不够，`layer0` 必须钉到**部署过渡态**（2026-10-26 13:1x，⚠ 待实机第二轮）
 
-普查里模板 B 是"状态机族不同"，但把 clip 摊开看，**病根和火箭完全同款**（以 A/MG-43 `37CDE43876BA26BB` 为例）：
+**第一轮实机否证**（2026-10-26 13:0x）：只把 `layer5` 关掉、`layer0` 留在原版 `0`（`E954AED4`），
+MG-43 挂上炮手位后 **模型出现、但未展开**（既不沉也不自转）。
+⇒ 「模板 B 的 bind 位就是展开位，所以 `layer0` 不用动」这个类比**是错的**。
 
-| 层 | 默认态 | 绑的 clip | 打了哪些骨骼 | 判断 |
-|---:|---|---|---|---|
-| L0 | s0 `E954AED4`（idle，loop=1）| **`385AC26B` 0.17 s，0 根骨骼（空 clip）** | — | 与火箭的展开态同型：本体靠 bind 位 ⇒ **保持原样** |
-| L0 | s1 `79DE1870`（部署过渡）| `31170087` 0.98 s | `rotator×14` `gunhousing×15` `sensorpod×9` `root×14` | 部署动画 |
-| L0 | s2 `D23167BF`（收起）| `F990C128` 2.48 s | `rotator×16` `gunhousing×21` `sensorpod×23` `root×34` | 收起 |
-| **L5** | **s0 `Clip` loop，21.33 s** | **`1383C954E57A0E6A`** | **`rotator×83`** `gunhousing×65` `attach_mag×1` | **← 与火箭 layer5 同型：扫视循环，会自转/乱摆** |
-| L6 | s0 `Clip` loop 0.98 s | `14D268ACF7207711` | `sensorpod×15` | 雷达盘，无害 |
-| L1–L4 | 多态 | 各自小节 | `rotator/gunhousing/attach_mag` | 开火/装填等，默认态已是空/中性 |
+**为什么**：把 `layer0` 三个状态连起来读（`--decode`）就清楚了——
 
-⇒ **模板 B 的修法 = 只关 `layer5`（`DefaultState 0→1`，选中那个 `Empty` 态）**，`layer0` 保持原版 `0`。
-（火箭是 `layer0 1→3` + `layer5 0→1`；AC-8 不需要动 `layer5`，因为它那层默认本来就是 `Empty`。）
+| state | 名字 | loop | 绑的 clip | 语义 |
+|---:|---|---:|---|---|
+| s0 | `E954AED4`（idle） | 1 | `385AC26B` 0.17 s，**0 根骨骼（空 clip）** | **部署前 idle**：空 clip ⇒ 显示 bind 位 = **折叠** |
+| s1 | `79DE1870`（部署过渡） | **0** | `31170087` 0.98 s（`root×14` `rotator×14` `gunhousing×15` `sensorpod×9`） | **这一段就是"从折叠到展开"的全过程** |
+| s2 | `D23167BF`（收起） | 0 | `F990C128` 2.48 s（`root×34` `rotator×16` `gunhousing×21` `sensorpod×23`） | 收起 |
 
-**已装（待实机）**：`f6fb08cc02d24255.patch_1` = **MG-43 包 `154bd6143819df7d` 整包补丁**
-（toc `6b973a4e371c8cf7` / gpu `7405e233a4bc9fbd` 5.0 MB / stream `640dc92956b8b150` 6.0 MB），SM 只改 `layer5=1`；
-`generated_entities.dl_bin` = `d7c9838e7c01cad6`（sealed）—— M-102 炮手位 = **A/MG-43 机枪哨戒**，`Behavior 313→658`；
-战备表仍零声明 `6c0ab66b281c2178`。
+s0 的出口只有 `0x72C4271D PackageDeploy`→s1、`0x6F8B215F PackageRetract`→s2；
+而 **s1 自己没有任何"再往前走"的过渡**（只在 retract 时去 s2）⇒ 原版一旦部署完成，
+`layer0` 就**永久停在 s1 的末帧**。⇒ **模板 B 的展开姿势 = 部署过渡 clip 的末帧**
+（引擎对 `loop=0` 且无出口的状态，就是把最后一帧保持住）。
+这也解释了为什么模板 B **没有"展开态"这一档**——它不需要。
 
-**复用到加特林/迫击炮前要先量**：它们的层数与 clip 不同（加特林 8 层、迫击炮 7 层），
-用 `animation_probe --matrix` 找"≈20 s 级、`traverse/rotator` 打几十个键"的那一层，再关它的默认态。
+⇒ **模板 B 的修法 = `layer0.DefaultState 0→1`（钉到部署过渡态）+ 关掉扫视层 `layer5`。**
+副作用反而是加分项：出生时真的播一次 0.98 s 的展开动画；s1 的 `EmitEndEvent=0x247452BF Deployed`
+会把 `layer3/layer4`（`rotator`/`gunhousing` 的部署后循环）拉起来——与原版部署完成后完全一样。
+
+**已装（第二轮，⚠ 待实机）**：同一条 SM 装了**两份、字节完全相同**，用来消掉"谁赢"的歧义（见下框）：
+
+| 文件 | sha256 | 内容 |
+|---|---|---|
+| `data/154bd6143819df7d.patch_0`（+ 空伴生） | `795d39714763f22d` | **同包补丁**：只有 `state_machine 37CDE43876BA26BB`（4,012 B）。同包 `patch_N` 是合并进那个包本身 ⇒ 同 id 必然覆盖 |
+| `data/f6fb08cc02d24255.patch_1`（+`.gpu_resources`/`.stream`） | `bfe487b98f4b6c11` | **整包补丁**：MG-43 包 `154bd6143819df7d` 61 条驻留进共享基础包（toc 1,265,488 B / gpu 5,045,152 B / stream 6,029,616 B），SM 同字节；与上一轮相比**只有 1 字节不同**（`layer0` 的默认态），gpu/stream 逐字节同 |
+| `data/game/generated_entities.dl_bin` | `d7c9838e7c01cad6` | M-102 炮手位（行 19/119 槽 0）= **A/MG-43 机枪哨戒** `37CDE43876BA26BB`，`Behavior 313→658` |
+| `data/game/generated_stratagem_settings.dl_bin` | `6c0ab66b281c2178` | 零声明（本轮未动） |
+
+SM 字节级：`layer0.DefaultState @0x74 0→1`、`layer5.DefaultState @0xB4C 0→1`，其余 4,010 B 不变（`cmp` 只 2 处差异）。
+
+> **为什么要装两份**：MG-43 这个件**自己声明了包** `154bd6143819df7d`（`mount_table` 的 `declared=` 字段），
+> 原包照常加载 ⇒ 同一份 SM 有"原包"和"补丁"两个提供者，**谁赢没有实验数据**。
+> 上一轮"未展开"因此有两种解释：①改法本身错（`layer0` 该动）②改动压根没生效（原包赢）。
+> 两份字节相同后无论谁赢结果一致；下一轮若展开正常，再**删掉整包那份**（省 11 MB）做单变量归因，
+> 就能顺手回答"同 id 两个提供者谁优先"这个一直没答的问题（记在
+> [资源层驻留](../engine/RESOURCE-RESIDENCY-26088801.md) §9）。
+
+**三台模板 B 的逐台配方**（同一套判据；另两台已量好、**未安装**）：
+
+| 哨戒 | SM | 层数 | 有没有独立"展开态" | `layer0` 设几 | 扫视层（要关） | 其余 |
+|---|---|---:|---|---|---|---|
+| A/MG-43 机枪哨戒 | `37CDE43876BA26BB` | 7 | **没有**（3 态） | **1**（部署过渡） | **L5** `1383C954` 21.33 s（`rotator×83` `gunhousing×65`） | L6 = 雷达 `14D268AC`（`sensorpod×15`），默认 0，无害 |
+| A/G-16 加特林哨戒 | `61D9DDA22A59E9BC` | 8 | **没有**（3 态，s1 的 `EmitEndEvent=0x247452BF`） | **1** | **L6** `3CEBEDCD`（state 名同为 `0x9EA750D5873EB183`） | L7 = 雷达 `5547DDA5`；L1 有 5 态（部署/开火/装填），默认 4=`Empty` |
+| A/M-12/EMS/毒气迫击炮 | `51A0812E3BCE2D74` | 7 | **有**：s3 `69484BEF`（loop=1，clip `746AA4BC` **0 骨骼**） | **3** | **L5** `732657A5` 21.67 s（`base_elevation_arm×100` `traverse×76` `elevator_rotator×65`） | L1/L3 = `Time` 循环（`traverse`/`elevation`），默认已是 `Empty` |
+
+**判据固化**（以后任何新哨戒壳照这个走，不用再猜）：
+1. `--decode` 找 **state 名 `0x9EA750D5873EB183`** 的那一层 ⇒ 那是**部署前 idle / 扫视层**，把它的 `DefaultState` 改成同层那个 `Empty`（`0x86342D70`）的索引；
+2. 看 `layer0` 里有没有 **`loop=1` 且被 `EmitEndEvent` 指到**的"展开态"：
+   有 ⇒ `layer0` 设成它（火箭/火焰/迫击炮/AC-8）；**没有** ⇒ 设成**部署过渡态**（模板 B）；
+3. 顺手用 `animation_probe --matrix` 复核：部署过渡 clip 应该同时打 `root/rotator/gunhousing`（或 `elevator_*`）——
+   如果它一根骨骼都不打，那就是真·占位，得另找。
 
 #### 3.8.4.11 火焰哨戒：同一套判据照抄（2026-10-26 12:1x，⚠ 待实机）
 

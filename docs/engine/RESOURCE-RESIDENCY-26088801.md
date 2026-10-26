@@ -82,7 +82,7 @@ Nova 走舱行 `+0xA8`（基准）、Warp 走共享基础包补丁、GL-28 走�
 
 ---
 
-## 4 三条配方
+## 4 四条配方
 
 ```bash
 # A) 资源级：几个 (type,id,payload) 进注册表包
@@ -99,7 +99,22 @@ python tools/whole_package_patch.py build \
     --package 11bbdf8ce39e5fc5 --host f6fb08cc02d24255 \
     --edit state_machine:0x37079568DC86E9C6=sm_rocket.bin \
     --out D:/mod/out/rocket-res-patch
+
+# D) 同包补丁：件"自己声明了自己的包"时，一条资源、4 KB 顶掉 11 MB
+#    语义最硬：同包 patch_N 是**合并进那个包本身**，同 id 必然覆盖
+python tools/resource_patch.py build --base 154bd6143819df7d --index 0 -o out spec.json
+#    spec.json: [{"type":"A486D4045106165C","id":"0x37CDE43876BA26BB","file":"sm_new.bin"}]
+#    ⇒ data/154bd6143819df7d.patch_0（4,208 B + 两个空伴生）
 ```
+
+**配方怎么选**（2026-10-26 载具挂载件案例）：
+
+| 场景 | 选 |
+|---|---|
+| 资源原本**不在**任何已加载的包里（外来哨戒包） | A / C：进注册表包或共享基础包（"资源层驻留"） |
+| 资源**本来就在**那个件自己声明的包里，只是想改它 | **D**：同包 `patch_N`，几 KB，语义最硬 |
+| 既不确定谁赢、又不想多花一局实机 | **D + C 装同一份字节**（内容一致 ⇒ 无论谁赢结果相同，见 §9 第 3 条） |
+
 
 资源级写入器**回归**：`resource_patch.py repack` 要打 `IDENTICAL`（它证明"解析→重写"不丢字节）。
 
@@ -336,6 +351,14 @@ if name:match('^' .. family .. '%.patch_%d+$') then ...
 5. **整包 = 真加载**：把 200 MB 级的敌人/特效包整包常驻会掉帧。
 6. **改工作区里的资源一定要同步 `resource.json` 的 sha**，否则打包出去的东西自述与实际不符
    （`whole_package_patch.py` 的 G8 就是防这个）。
+7. **`mount_table.py` 默认读的是明文参考表**（`D:\mod\refs\dlbin\plaintext-26088801\generated_entities.dl_bin`），
+   也就是**原版**；它不会去读 `data/game/` 下那份 sealed 的。用它复核"盘上现在装的是什么"会看到**原版内容**
+   （2026-10-26 就被这条骗过一次：`show --row 19` 显示 MG-206 重机枪，其实盘上已经是 MG-43 哨戒）。
+   正确姿势：①`sha256sum data/game/generated_entities.dl_bin` 与自己的产物对前缀；
+   ②要读行内容，用 `--plain <产物明文>`（如 `D:/mod/out/mg43-es/m2.plain`）。
+8. **同 id 的"两个提供者"在跨宿主时语义未测**：同宿主内是"高号胜"（见
+   [SAMEID-PATCH-PRIORITY](../cases/SAMEID-PATCH-PRIORITY-26088801.md) `✓✓`），
+   但"原包 vs 另一个宿主的补丁"谁优先还没实验。规避法见 §4 配方 D 第三行（两份装同样的字节）。
 
 ---
 
@@ -345,6 +368,8 @@ if name:match('^' .. family .. '%.patch_%d+$') then ...
 2. **启动耗时**与**内存峰值**的量化；
 3. 能不能让引擎把补丁里的资源当成"包"来请求（目前 `✗`：只能让 id 可解析）；
 4. P4 的实机读数（火箭哨戒在 FRV 炮手位是否出场即展开、材质是否正常、150 s 是否自消失）。
+5. **跨宿主同 id 优先级**（原包 vs 别的宿主的补丁）——MG-43 那份 SM 现在同字节装了两份（§4 配方 D），
+   下一轮展开正常后删掉整包那份，就顺带把这条测出来了。
 
 ---
 
