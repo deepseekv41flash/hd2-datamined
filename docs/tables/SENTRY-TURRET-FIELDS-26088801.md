@@ -482,6 +482,7 @@ AC-8 `54DC633A67BAA93D`、火焰 `1577E917AD1F287D`、激光 `36313BF684C1FD79`�
 | `generated_entities.dl_bin` | **`2a5ce9ba6b699792`** | FRV 炮手位（行 19/119 槽 0）= **A/MLS-4X 火箭哨戒** `37079568DC86E9C6`（顶掉 AC-8）；`Behavior 611→658` |
 | `generated_stratagem_settings.dl_bin` | `6c0ab66b281c2178` | 行 57（增援信标）/ 59（SOS）的 `+0xA8` **清零** ⇒ 战备表里**没有任何包被声明** |
 | `data/f6fb08cc02d24255.patch_1`（+`.gpu_resources` / `.stream`） | **`d387523a39cea726`**（toc）/ `9c63665fe8e4c6eb`（gpu）/ `56e9e6715ec76329`（stream） | **火箭哨戒包整包 41 条资源**驻留进共享基础包（toc 1.26 MB + gpu 4.37 MB + stream 2.29 MB）；其中 `state_machine` 是 `layer0 default=0` 那版 |
+| `data/f6fb08cc02d24255.patch_2`（+`.gpu_resources`） | **`52dca8710dde0d37`**（toc）/ `a5f80ec772ad57a0`（gpu） | **`unit 37079568DC86E9C6` 节点 3 的 z +2.0 m**（同宿主第 2 条，压过 patch_1 里的原件）；见 §3.8.4.6 |
 
 回滚到 AC-8 版：把 `D:\mod\out\frv-ac8\ent.sealed.dl_bin`（`02b740fef30a7f7a`）
 与 `…\strat.sealed.dl_bin`（`081e7879cb6575e2`）拷回 `data/game/`，并删掉
@@ -536,7 +537,8 @@ python tools/whole_package_patch.py build --package 11bbdf8ce39e5fc5 \
    —— 需要给 `state_machine_edit.py` 加"改 Link"能力；
 2. **整层**：给火箭加一层只驱动 `elevator_01/02` 的动画（把部署 clip 里那两段曲线搬出来），
    或找已有层里"抬起位"的状态（rocket 有 8 层：layer1/2 单态 Time loop、layer5/6 Clip loop）；
-3. 换壳 / 换挂点（`Unit +0` 借 40mm 站壳）—— 用过，属绕过。
+3. 换壳 / 换挂点（`Unit +0` 借 40mm 站壳）—— 用过，属绕过；
+4. **直接抬壳**（改 `unit` 节点位移，§3.8.4.6）—— 本轮已走这条（+2.0 m）。
 
 #### 3.8.4.5 为什么 AC-8 一次就对、火箭却沉？——看"展开态 clip"是不是全身姿态（2026-10-26 11:0x）
 
@@ -584,6 +586,54 @@ python tools/animation_probe.py <展开态 clip> --bones bones_<壳 id>.json --k
 # 全骨骼有键 ⇒ 直接把默认态设成展开态
 # 空/只有少数骨骼 ⇒ 默认态设成**部署态**（让部署 clip 抬一次），或按 §3.8.4.4 后备选处理
 ```
+
+#### 3.8.4.6 挂载槽没有位移字段 ⇒ 抬升只能改"壳"：`unit` 节点位移（2026-10-26 11:1x，⚠ 待实机）
+
+**为什么不能直接改挂载位置**：`MountInfo` 一条只有 **24 B** ——
+`{ item u64 @0 | anchor_a u32 @8 | MountSide u32 @12 | anchor_c u32 @16 | byte20 | byte21 | pad }`，
+**没有任何 offset/position 字段**。所以"把件往上抬 2 m"只能改**壳自己**。
+
+**`unit` 资源里有一套节点变换表**（`section_offsets.transform_info` 指过去）：
+
+```
+transform 段 = count u32 | 12 B | 每节点 { rot 9×f32, position 3×f32, scale 3×f32, pad } (64 B)
+              | 矩阵 count × 64 B（列主序，translation 在 [12..14]）
+              | 每节点 { increment u16, parent u16 } | 每节点 name_hash u32
+```
+
+**火箭壳（`37079568DC86E9C6`）的节点图**（64 节点，全部 rotation=单位阵 ⇒ 局部 Z 就是"上"）：
+
+| 节点 | 父 | 名字 | 作用 |
+|---:|---:|---|---|
+| 0 | 0 | `StingrayEntityRoot` | 实体根（原点）|
+| 1 | 0 | `FbxAxisSystem_ConvertNode` | FBX 轴转换 |
+| **3** | 1 | （无名字，hash `3819713832`）| **内容容器：下面四棵子树全挂它** |
+| 4 / 9 / 51 / 58 | 3 | `shadow_mesh` / `skeleton` / `collision` / `game_mesh` | 阴影 / 骨骼 / 碰撞 / 网格 |
+| 10→11→14→15 | 9 | `boss`→`traverse`→`elevator_01`→`elevator_02` | 座圈 / 回转 / 升降 |
+| 16,33,45… | 15 | `covers` / `laser` / `muzzle_02..04` / `sensor` | **枪口也在这一支里** |
+| 5-8, 59-63 | 4 / 58 | `g_turret*`（z=0.968）| 各级 LOD 网格 |
+
+⇒ 把 **节点 3 的 `position.z` 加 2.0**，`position` 与矩阵 `tz` 一起改，整个可见体（含骨骼、碰撞、
+**muzzle**）整体上移 2 m。骨骼动画只动 `boss/traverse/elevator` 的局部变换，不会覆盖这条位移。
+
+**工具**：[`tools/unit_offset.py`](../../tools/unit_offset.py)（`srkit` 的 transform 段是"只读视图"、
+编码时原样拷贝，所以本工具做**等长二进制改写**，不重编、不碰 gpu）：
+
+```bash
+python tools/unit_offset.py show  --unit 0x37079568DC86E9C6 --package 11bbdf8ce39e5fc5   # 列节点
+python tools/unit_offset.py shift --unit 0x37079568DC86E9C6 --package 11bbdf8ce39e5fc5     --host f6fb08cc02d24255 --index 2 --node 3 --dz 2.0     --out D:/mod/out/unit-offset --install
+```
+
+门禁：**G1** 段与解码 JSON 对得上（采样 position）· **G2** 等长且只有目标 float 变（本轮只变 **2 字节**）·
+**G3** 读回目标节点位移正确、其余节点未变 · **G4** 补丁条目 type/id 对、gpu 与源同尺寸 ·
+**G5** sha256。产物再经 `srkit extract --decoded` 复核：节点 3 = `[0,0,2.0]`，节点 63 仍是 `0.968` ✓。
+
+**本轮补丁**：`data/f6fb08cc02d24255.patch_2`（21,584 B + gpu 2,955,506 B，sha256 `52dca8710dde0d37`）
+—— 只含 **1 条** `unit 37079568DC86E9C6`，叠在整包补丁 `patch_1` 之上（**同宿主同 id，高号胜**）。
+
+**实机要看**：① 模型是否整体上移约 2 m、离开车体；② **弹道是不是从枪管出来**——
+若变成"从枪管下方的挂载锚出"，说明开火点不取 muzzle 骨骼而取挂载锚，那就得回到状态机/挂点那条线；
+③ 抬过头会浮在车顶上方，可按 `--dz` 微调（重建同一条补丁即可）。
 
 **模板 B 的待办（⚠ 未验，别照抄）**：MG-43/加特林默认 `E954AED4`（loop=1），部署过渡 `79DE1870`
 播完**没有**回指状态（事件表里没有 `Deployed` 那条 Link），所以它停在部署 clip 的末帧；

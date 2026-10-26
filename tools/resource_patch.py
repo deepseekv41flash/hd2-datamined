@@ -132,7 +132,7 @@ def cmd_repack(args) -> int:
     package = Package.parse(toc_raw, gpu_raw, stream_raw, name=os.path.basename(args.patch))
     toc, gpu, stream = package.to_bytes()
     os.makedirs(args.output, exist_ok=True)
-    out = os.path.join(args.output, f"{BASE}.patch_{args.index}")
+    out = os.path.join(args.output, f"{getattr(args, 'base', None) or BASE}.patch_{args.index}")
     with open(out, "wb") as handle:
         handle.write(toc)
     with open(out + ".gpu_resources", "wb") as handle:
@@ -152,7 +152,7 @@ def cmd_build(args) -> int:
         print("spec must be a non-empty JSON list")
         return 2
     root = os.path.dirname(os.path.abspath(args.spec))
-    package = Package(name=BASE)
+    package = Package(name=getattr(args, "base", None) or BASE)
     for item in spec:
         type_id = int(str(item["type"]), 16)
         file_id = int(str(item["id"]), 16)
@@ -176,7 +176,7 @@ def cmd_build(args) -> int:
         print(f"  + {type_label(type_id):<14} id={file_id:#018x} {len(blob):>9,} B{extra}  <- {os.path.basename(path)}")
     toc, gpu, stream = package.to_bytes()
     os.makedirs(args.output, exist_ok=True)
-    out = os.path.join(args.output, f"{BASE}.patch_{args.index}")
+    out = os.path.join(args.output, f"{getattr(args, 'base', None) or BASE}.patch_{args.index}")
     open(out, "wb").write(toc)
     open(out + ".gpu_resources", "wb").write(gpu)
     open(out + ".stream", "wb").write(stream)
@@ -190,8 +190,8 @@ def main() -> int:
 
     p = sub.add_parser("list"); p.add_argument("patch"); p.set_defaults(func=cmd_list)
     p = sub.add_parser("dump"); p.add_argument("patch"); p.add_argument("which"); p.add_argument("-o", "--output", required=True); p.set_defaults(func=cmd_dump)
-    p = sub.add_parser("repack"); p.add_argument("patch"); p.add_argument("-o", "--output", required=True); p.add_argument("--index", type=int, default=0); p.set_defaults(func=cmd_repack)
-    p = sub.add_parser("build"); p.add_argument("spec"); p.add_argument("-o", "--output", required=True); p.add_argument("--index", type=int, default=0); p.set_defaults(func=cmd_build)
+    p = sub.add_parser("repack"); p.add_argument("patch"); p.add_argument("-o", "--output", required=True); p.add_argument("--index", type=int, default=0); p.add_argument("--base", default=None, help="宿主包 id（默认注册表包）"); p.set_defaults(func=cmd_repack)
+    p = sub.add_parser("build"); p.add_argument("spec"); p.add_argument("-o", "--output", required=True); p.add_argument("--index", type=int, default=0); p.add_argument("--base", default=None, help="宿主包 id（默认注册表包 9ba626afa44a3aa3）"); p.set_defaults(func=cmd_build)
 
     args = ap.parse_args()
     return args.func(args)

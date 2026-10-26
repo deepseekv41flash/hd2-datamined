@@ -37,6 +37,7 @@
 | 同 id 冲突**高号胜** | `✓✓` | [SAMEID-PATCH-PRIORITY](../cases/SAMEID-PATCH-PRIORITY-26088801.md) |
 | 宿主**不限于**注册表包 `9ba626afa44a3aa3`：`data/<任意包>.patch_N` 都会被读 | `✓✓` | P2/P4（共享基础包 `f6fb08cc02d24255`）|
 | 一个宿主包可以有多条补丁（各自序号连续） | `✓✓` | `f6fb08cc02d24255.patch_0`（Warp）+ `patch_1`（火箭哨戒）|
+| 同一宿主包内**同 id 两处**：**高号胜**（可用来"只覆盖一个资源"）| ⚠ 本设计已装、待实机 | `f6fb08cc02d24255.patch_1` 整包含 unit 原件、`patch_2` 单条 unit 带 +2 m 位移 |
 
 ---
 

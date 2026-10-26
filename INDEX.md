@@ -295,6 +295,7 @@
 | `entity_field_set.py` | **任意实体组件行任意字段**的通用写入（`--block`+`--key`+`--field`），tail 宿主 + 7 门禁，可链式 | `typelib.py`、`murmur64.py` | ✓✓ 已实机（AC-8 备弹 0→40/40）|
 | `entity_batch_set.py` | **批量字段写入**：一次 tail 宿主写多个组件/多行/多字段（文件只 +12 B），9 道门禁 | `entity_field_set.py`、`pod_rack_swap.py` | ✓ 产物与实机验证件逐字节一致 |
 | `state_machine_edit.py` | **`state_machine` 资源（不是表）的读/改**：`--show` 列层/状态/默认态，`--decode` 解出事件表、每条过渡、以及 `EmitEndEvent → 部署完成态`，`--names` 用 hashlist 反查事件名，`--set 层=索引` 写 `layer.DefaultState`；改完走 `resource_patch.py` 打成补丁 | 标准库 | ✓✓ 已实机（AC-8 哨戒挂载不展开：`0x74: 3→2` 后出场即展开，触点/开火点全对；`--set 0=2` 复现的载荷与 patch_7 逐字节相同）|
+| `unit_offset.py` | **改 `unit`（壳）里某个节点的位移 → `.patch_N`**：`show` 列 64 个节点的名字/位置/父子（找"内容容器"节点），`shift --node N --dz 2.0` 做**等长二进制改写**（transform 段在 srkit 里是只读视图、编码时原样拷贝，所以不重编不碰 gpu），G1–G5 门禁 + `--install` | `srkit`、`resource_patch.py` | ✓ 离线（火箭壳节点 3 +2.0 m：只变 2 字节；`srkit extract --decoded` 复核节点 3=[0,0,2.0]）；⚠ 实机待验 |
 | `animation_probe.py` | **`animation`（动画 clip）解码**（`srkit` 只有 raw fallback）：按 filediver 格式读头 + 条目流，输出**长度**与**每个骨骼有没有关键帧**（`--matrix` 出 clip×骨骼总表、`--bones` 把索引映射成骨骼名）；用于判断"某状态绑的 clip 是不是全身姿态" | 标准库 | ✓ 离线（AC-8 展开态 14/16 骨有键含 `elevator`；火箭展开态 0 骨 = 空 clip）|
 | `armor_kit_weight.py` | **护甲三数字的唯一文件侧入口**：改某件甲 9 个部件的档位（`+16`），rating/speed/stamina 一起变；`--show` 列 135 件甲；8 道门禁 | `plain_edit.py`、`murmur64.py` | ✓ 离线（135/135 与 SDK 逐件对上），⚠ 上机待读 |
 | `passive_bonus_edit.py` | **护甲被动表编辑**：给某个 perk 加 pm/sm 行（含**中间块变长后的整容器重排**），尾部校正字保内容哈希；`--show` 打全表 | `murmur64.py` | ✓✓ 已实机（Acclimated 抗性 0.5→0.0 ⇒ 火/毒不掉血；ergonomics +30 待读） |
