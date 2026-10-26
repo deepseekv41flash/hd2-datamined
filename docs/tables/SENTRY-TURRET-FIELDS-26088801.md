@@ -481,7 +481,7 @@ AC-8 `54DC633A67BAA93D`、火焰 `1577E917AD1F287D`、激光 `36313BF684C1FD79`�
 |---|---|---|
 | `generated_entities.dl_bin` | **`2a5ce9ba6b699792`** | FRV 炮手位（行 19/119 槽 0）= **A/MLS-4X 火箭哨戒** `37079568DC86E9C6`（顶掉 AC-8）；`Behavior 611→658` |
 | `generated_stratagem_settings.dl_bin` | `6c0ab66b281c2178` | 行 57（增援信标）/ 59（SOS）的 `+0xA8` **清零** ⇒ 战备表里**没有任何包被声明** |
-| `data/f6fb08cc02d24255.patch_1`（+`.gpu_resources` / `.stream`） | **`d387523a39cea726`**（toc）/ `9c63665fe8e4c6eb`（gpu）/ `56e9e6715ec76329`（stream） | **火箭哨戒包整包 41 条资源**驻留进共享基础包（toc 1.26 MB + gpu 4.37 MB + stream 2.29 MB）；其中 `state_machine` 是 `layer0 default=0` 那版 |
+| `data/f6fb08cc02d24255.patch_1`（+`.gpu_resources` / `.stream`） | **`eb2bfca7c5408a47`**（toc）/ `9c63665fe8e4c6eb`（gpu）/ `56e9e6715ec76329`（stream） | **火箭哨戒包整包 41 条资源**驻留进共享基础包（toc 1.26 MB + gpu 4.37 MB + stream 2.29 MB）；其中 `state_machine` 是 **`layer0 default=3`（展开态）+ `layer5 default=1`（空态，关掉自转）** 那版 |
 | `data/f6fb08cc02d24255.patch_2`（+`.gpu_resources`） | **`52dca8710dde0d37`**（toc）/ `a5f80ec772ad57a0`（gpu） | **`unit 37079568DC86E9C6` 节点 3 的 z +2.0 m**（同宿主第 2 条，压过 patch_1 里的原件）；见 §3.8.4.6 |
 
 回滚到 AC-8 版：把 `D:\mod\out\frv-ac8\ent.sealed.dl_bin`（`02b740fef30a7f7a`）
@@ -575,7 +575,7 @@ AC-8 与火箭用的是**同一套状态名**，但**绑的 clip 质量完全不
 | 壳 | 展开态 clip | 有键骨骼 | 预测 |
 |---|---|---|---|
 | A/AC-8 | `314AE842` 0.98 s | 14/16（含 `elevator`）| **一次就对**（✓✓ 已证）|
-| 火箭 | `3FCF5875` 0.17 s | **0** | 沉（✓✓ 已证）→ 默认态改部署态 s0 |
+| 火箭 | `3FCF5875` 0.17 s | **0** | 沉（✓✓ 已证）；改默认态为部署态 **✗ 实机无效**（模型"压根没动"）→ 最终用 §3.8.4.6 的**壳位移**解决 |
 | 火焰 | `7A43988B` 1.00 s | **只有 `sensor×15`** | ⚠ **大概率同样沉**（它的 `elevator_01×30` 在部署 clip `0E24AEFE` 里）|
 | A/LAS-98 | `88F2CCF2` 0.08 s | **0** | 没有升降骨骼（只有 `root/rotator/gunhousing/sensorpod`）⇒ 沉不沉取决于 bind，⚠ 未知 |
 
@@ -587,7 +587,7 @@ python tools/animation_probe.py <展开态 clip> --bones bones_<壳 id>.json --k
 # 空/只有少数骨骼 ⇒ 默认态设成**部署态**（让部署 clip 抬一次），或按 §3.8.4.4 后备选处理
 ```
 
-#### 3.8.4.6 挂载槽没有位移字段 ⇒ 抬升只能改"壳"：`unit` 节点位移（2026-10-26 11:1x，⚠ 待实机）
+#### 3.8.4.6 挂载槽没有位移字段 ⇒ 抬升只能改"壳"：`unit` 节点位移（2026-10-26 11:1x，✓✓ 实机）
 
 **为什么不能直接改挂载位置**：`MountInfo` 一条只有 **24 B** ——
 `{ item u64 @0 | anchor_a u32 @8 | MountSide u32 @12 | anchor_c u32 @16 | byte20 | byte21 | pad }`，
@@ -631,9 +631,46 @@ python tools/unit_offset.py shift --unit 0x37079568DC86E9C6 --package 11bbdf8ce3
 **本轮补丁**：`data/f6fb08cc02d24255.patch_2`（21,584 B + gpu 2,955,506 B，sha256 `52dca8710dde0d37`）
 —— 只含 **1 条** `unit 37079568DC86E9C6`，叠在整包补丁 `patch_1` 之上（**同宿主同 id，高号胜**）。
 
-**实机要看**：① 模型是否整体上移约 2 m、离开车体；② **弹道是不是从枪管出来**——
-若变成"从枪管下方的挂载锚出"，说明开火点不取 muzzle 骨骼而取挂载锚，那就得回到状态机/挂点那条线；
-③ 抬过头会浮在车顶上方，可按 `--dz` 微调（重建同一条补丁即可）。
+**✓✓ 实机（2026-10-26 11:0x）**：模型整体上移约 2 m、离开车体；**弹道仍然从枪管出来**
+（说明开火点取的是 `muzzle` 骨骼，它在这一支子树里，跟着一起上移）。
+⇒ 这是"挂载件位置不对"的**通用解法**：不动挂载槽、不动状态机，只平移壳的内容容器节点。
+
+抬过头/抬不够只需换 `--dz` 重建同一条补丁（几秒钟）；回滚 = 删 `patch_2` 两件。
+
+#### 3.8.4.7 没人操作时自己左右转 = layer5 的 23 s 扫视 clip（2026-10-26 11:1x，⚠ 待实机）
+
+**现象**：位置修好后（§3.8.4.6 ✓✓），玩家不操作时炮塔自己左右转；不是 AI 抢控制权（`Behavior` 已是 658）。
+
+**诊断方法：逐层对照 AC-8**（同一套状态名 + 同一台车 + 同一个座位，AC-8 不转）——
+
+| 层 | 火箭默认态 | 绑的 clip | 这个 clip 动了哪些骨骼 | AC-8 同层默认 |
+|---:|---|---|---|---|
+| L0 | s3 展开态 | `3FCF5875` 0.17 s | 无（空 clip）| s2 展开态 |
+| L1 | s0 `Time` loop | `5A5489E3` 1.00 s | `traverse×15`（偏航）| s0 `Time` loop `F470E562`（`rotator×15`）|
+| L2 | s0 `Time` loop | `991F5044` 1.00 s | `elevator_01×7` | s0 `Time` loop（`gunhousing/hinge/barrels`）|
+| **L5** | **s0 `Clip` loop，23.33 s** | **`1D39879F`** | **`traverse×84`** `elevator_01×76` `elevator_02×26` `covers×1` | **`Empty`（`default=1`）** |
+| L6 | s0 `Clip` loop 1.00 s | `DE7DF3B6` | `sensor×15`（雷达盘） | AC-8 没有第 6 层 |
+
+⇒ **自转来自 L5**：一个 23.33 s、`traverse` 84 个关键帧的"扫视"循环。
+AC-8 之所以不转，是它**同一层的默认态是空态（`Empty`）**——这也是我们给它改 layer0 时顺手留下的对照。
+L1/L2 是 `Time` 类型（时间驱动、默认冻结），AC-8 也有同样两层且不转 ⇒ 不是它们。
+
+**改法（本局已装）**：火箭 `layer5.DefaultState` `0 → 1`（选中 `Empty`），并顺手把 `layer0` 回到 `3`（展开态，
+和 AC-8 对齐；此前试过 `0`=部署态，实机"压根没动"，无效）。
+
+```bash
+python tools/state_machine_edit.py --set 0=3 --set 5=1 --out sm_rocket.bin sm.bin
+python tools/whole_package_patch.py build --package 11bbdf8ce39e5fc5     --host f6fb08cc02d24255 --index 1     --edit state_machine:0x37079568DC86E9C6=sm_rocket.bin --install
+```
+
+**产物**：`data/f6fb08cc02d24255.patch_1` 重建，toc sha256 **`eb2bfca7c5408a47`**（其余 40 条资源不变）；
+`patch_2`（壳 +2.0 m）不动。
+
+**还想调的**：若连 `sensor` 雷达盘的转动也不要，把 `layer6` 默认态也设成 `1`（空态）——⚠ 未试；
+层号-N 的对应关系用 `state_machine_edit.py --show` 一看就有。
+
+**推广**：这类"挂着不动/乱动"的问题，**先拿同族里行为正确的那台（这里是 AC-8）做逐层默认态对照**，
+差异那一层就是答案——比逐层试三个索引快得多。
 
 **模板 B 的待办（⚠ 未验，别照抄）**：MG-43/加特林默认 `E954AED4`（loop=1），部署过渡 `79DE1870`
 播完**没有**回指状态（事件表里没有 `Deployed` 那条 Link），所以它停在部署 clip 的末帧；
