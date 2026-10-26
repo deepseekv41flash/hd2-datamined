@@ -538,6 +538,53 @@ python tools/whole_package_patch.py build --package 11bbdf8ce39e5fc5 \
    或找已有层里"抬起位"的状态（rocket 有 8 层：layer1/2 单态 Time loop、layer5/6 Clip loop）；
 3. 换壳 / 换挂点（`Unit +0` 借 40mm 站壳）—— 用过，属绕过。
 
+#### 3.8.4.5 为什么 AC-8 一次就对、火箭却沉？——看"展开态 clip"是不是全身姿态（2026-10-26 11:0x）
+
+`srkit` 对 `animation` 没有解码器，所以补了 [`tools/animation_probe.py`](../../tools/animation_probe.py)：
+按 filediver 的 `stingray/animation` 格式读头 + 条目流，输出**长度**与**每个骨骼有没有关键帧**
+（条目里骨骼是 10 bit 索引，直接映射到 `bones` 资源的顺序）。
+
+**AC-8（`CBFE1FC7158347F3`，16 骨）** —— 展开态 clip 就是全身姿态：
+
+| clip | 长度 | 用在 | 有键骨骼（数量） |
+|---|---:|---|---|
+| `314AE842A9346C76` | 0.98 s | **展开态 s2** / 收起 s1 | **14/16 全有键**：`rotator×9` `gunhousing×11` `hinge×19` `barrels_01×2` `barrels_02×18` `root×13` `attach_mag×11` **`elevator×21`** `sensorpod×1` … |
+| `3168C5722055589E` | 0.98 s | **部署态 s0** / 折叠 s3 | 13/16：`rotator×9` `gunhousing×11` `hinge×21` `barrels_02×27` `root×13` **`elevator×22`** … |
+
+⇒ AC-8 **根本没有"单独的伸出步骤"可缺**：它的展开态 clip 自己就是 0.98 s 全身姿态，`elevator` 有 21 个键。
+把它设成默认态，整机（含升降）一次摆到位——这就是"位置正确"的原因（✓✓ 实机）。
+用户记得的"往上伸的动作"是**部署 clip**（`3168C572`，同样 22 个 `elevator` 键），挂载路径并不会播它。
+
+**火箭（`37079568DC86E9C6`，10 骨）** —— 展开态 clip 是**空壳**：
+
+| clip | 长度 | 用在 | 有键骨骼 |
+|---|---:|---|---|
+| `3FCF5875B0663A62` | **0.17 s** | **展开态 s3** | **0 个**（整个文件只有 1 条 terminator）|
+| `72E968DE308896C3` | 0.08 s | 折叠态 s1 | **0 个** |
+| `86A54B9AA49F833A` | 0.98 s | **部署态 s0** | `elevator_01×30` `elevator_02×1` `boss×20` `sensor×9` ← **抬升在这里** |
+| `9EAFCC13AEDC8BCF` | 1.00 s | 收起态 s2 | `elevator_01×20` `elevator_02×6` `boss×21` `sensor×23` |
+| `1D39879F1BE5A80C` | **23.33 s** | layer5 | `traverse×84` `elevator_01×76` `elevator_02×26` `covers×1` |
+
+⇒ 火箭的展开态/折叠态都是**空 clip**（不摆任何骨骼）⇒ 站上去时升降骨骼停在 bind（下位）⇒ 缩在车体里。
+AC-8 与火箭用的是**同一套状态名**，但**绑的 clip 质量完全不同**——这就是"同构的状态机、不同构的姿态数据"。
+
+**四个模板 A 壳的对照（✓ 离线判据，可预测实机）**
+
+| 壳 | 展开态 clip | 有键骨骼 | 预测 |
+|---|---|---|---|
+| A/AC-8 | `314AE842` 0.98 s | 14/16（含 `elevator`）| **一次就对**（✓✓ 已证）|
+| 火箭 | `3FCF5875` 0.17 s | **0** | 沉（✓✓ 已证）→ 默认态改部署态 s0 |
+| 火焰 | `7A43988B` 1.00 s | **只有 `sensor×15`** | ⚠ **大概率同样沉**（它的 `elevator_01×30` 在部署 clip `0E24AEFE` 里）|
+| A/LAS-98 | `88F2CCF2` 0.08 s | **0** | 没有升降骨骼（只有 `root/rotator/gunhousing/sensorpod`）⇒ 沉不沉取决于 bind，⚠ 未知 |
+
+**判据（可复用）**：把某个哨戒挂上载具前，先跑
+
+```bash
+python tools/animation_probe.py <展开态 clip> --bones bones_<壳 id>.json --keyed
+# 全骨骼有键 ⇒ 直接把默认态设成展开态
+# 空/只有少数骨骼 ⇒ 默认态设成**部署态**（让部署 clip 抬一次），或按 §3.8.4.4 后备选处理
+```
+
 **模板 B 的待办（⚠ 未验，别照抄）**：MG-43/加特林默认 `E954AED4`（loop=1），部署过渡 `79DE1870`
 播完**没有**回指状态（事件表里没有 `Deployed` 那条 Link），所以它停在部署 clip 的末帧；
 迫击炮则显式走 `Deployed → s3（69484BEF，loop=1）`。

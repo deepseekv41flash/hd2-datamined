@@ -295,6 +295,7 @@
 | `entity_field_set.py` | **任意实体组件行任意字段**的通用写入（`--block`+`--key`+`--field`），tail 宿主 + 7 门禁，可链式 | `typelib.py`、`murmur64.py` | ✓✓ 已实机（AC-8 备弹 0→40/40）|
 | `entity_batch_set.py` | **批量字段写入**：一次 tail 宿主写多个组件/多行/多字段（文件只 +12 B），9 道门禁 | `entity_field_set.py`、`pod_rack_swap.py` | ✓ 产物与实机验证件逐字节一致 |
 | `state_machine_edit.py` | **`state_machine` 资源（不是表）的读/改**：`--show` 列层/状态/默认态，`--decode` 解出事件表、每条过渡、以及 `EmitEndEvent → 部署完成态`，`--names` 用 hashlist 反查事件名，`--set 层=索引` 写 `layer.DefaultState`；改完走 `resource_patch.py` 打成补丁 | 标准库 | ✓✓ 已实机（AC-8 哨戒挂载不展开：`0x74: 3→2` 后出场即展开，触点/开火点全对；`--set 0=2` 复现的载荷与 patch_7 逐字节相同）|
+| `animation_probe.py` | **`animation`（动画 clip）解码**（`srkit` 只有 raw fallback）：按 filediver 格式读头 + 条目流，输出**长度**与**每个骨骼有没有关键帧**（`--matrix` 出 clip×骨骼总表、`--bones` 把索引映射成骨骼名）；用于判断"某状态绑的 clip 是不是全身姿态" | 标准库 | ✓ 离线（AC-8 展开态 14/16 骨有键含 `elevator`；火箭展开态 0 骨 = 空 clip）|
 | `armor_kit_weight.py` | **护甲三数字的唯一文件侧入口**：改某件甲 9 个部件的档位（`+16`），rating/speed/stamina 一起变；`--show` 列 135 件甲；8 道门禁 | `plain_edit.py`、`murmur64.py` | ✓ 离线（135/135 与 SDK 逐件对上），⚠ 上机待读 |
 | `passive_bonus_edit.py` | **护甲被动表编辑**：给某个 perk 加 pm/sm 行（含**中间块变长后的整容器重排**），尾部校正字保内容哈希；`--show` 打全表 | `murmur64.py` | ✓✓ 已实机（Acclimated 抗性 0.5→0.0 ⇒ 火/毒不掉血；ergonomics +30 待读） |
 | `entity_hashmap_insert.py` | **给实体新增一种组件**：往组件哈希图里插一条 `(键 → 行)`，可整行复制孤儿行；哈希图是 `键 % 槽数` 线性探测（§ENTITY-LOCID 10），8 道门禁 | `pod_loadout.py`、`murmur64.py` | ✓ 离线门禁全过；**但「新增组件」这条用法已实机否证**（GL-28 插弹匣行不被采纳，删联动键后崩溃）—— 只用于读写已存在组件 |
