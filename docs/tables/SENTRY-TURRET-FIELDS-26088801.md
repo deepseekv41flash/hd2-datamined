@@ -1136,6 +1136,43 @@ SM 字节级：`layer0.DefaultState @0x74 0→1`、`layer5.DefaultState @0xB4C 0
 > 没有 `traverse` 骨骼的 MG-43 也是这个值（而 `551832871` 正是"traverse"的哈希）⇒ 它是某个 u32 角色/参数 id。
 > 所以"直接抄一条 turret 行给它"并不能保证引擎知道去转哪根骨骼。
 
+**✗ 实机否证（2026-10-26 14:4x）：layer1 不能动——它是 yaw 的方向基准**
+
+把 layer1 的 clip 换成 0 骨骼占位后：**yaw 变成反方向**，而且**连"坐工事自己座位"也一样反了**（回归！），pitch 依旧不可控。
+⇒ layer1 的 `traverse` 关键帧不只是"静止姿势"，**它承载了 yaw 的基准/方向**；删掉它 ⇒ 基准丢失 ⇒ 反向。
+⇒ **已回滚**到只改 `layer0 1→2` 的那版（`patch_6` toc 回到 `4b4392b5…` 派生版，SM 与 `hmg-emplace-sm.bin` 逐字节相同）。
+⇒ 结论：HMG 工事的"pitch 不动"**不是 layer1 造成的**，而是**它压根没有引擎级的炮塔轴**（无 `TurretComponentData`），
+而它自己的 pitch 动画链（layer2 的抓握/瞄准）又只由"坐进它自己的座位"触发。这条路到此为止（除非补 turret 组件，语义未解）。
+
+#### 3.8.4.18 第二台工事：E/AT-12 Anti-Tank（2026-10-26 14:5x，⚠ 待实机）
+
+AT-12 的层结构比 HMG **更有利**：它的**两轴都在"默认开启"的参数层里**，不像 HMG 把 pitch 藏在需要事件触发的 layer2。
+
+| 层 | 默认态 | 绑的 clip | 打到的骨骼 | 作用 |
+|---|---|---:|---|---|
+| L0 | **6 → 3** | s3 = `823905BD`（展开）`27811FE8` **0.33 s / 0 骨骼** | — | 展开态靠 bind 位；s0 部署过渡 `79A49CDE` 的 `EmitEndEvent=DeployDone` → **s3** |
+| **L1** | 0（`Time` 循环） | `7F6D09AE` 1.00 s | **`traverse×15`** | **yaw 驱动（常开）** |
+| **L2** | 0（`Time` 循环） | `4D7C0C93` 1.00 s | **`elevation×7`** | **pitch 驱动（常开）← 与 HMG 的关键差别** |
+| L3 | 1 | `EAC0C1E3` 0.17 s | `elevation×1` `barrels×2` | 小动作/音效 |
+| L4 | 0（`Empty`） | s1 `59A31B6F` 叠加 | `traverse×18` `elevation×6` + **IK 手脚 ×20–26** | "坐下"叠加（需事件）|
+| L5 | 1（`Empty`） | s0 = `Blend` 5 条 | — | 混合树（默认空）|
+| L6 | 0（`Empty`） | s1 `90BEEF8F` 0.82 s / s2 `6DBC9C1A` 0.63 s | 手柄/瞄准镜 IK | 上/下车动画（需事件）|
+
+⇒ **离线预测：AT-12 挂到 FRV 炮手位后，yaw 和 pitch 都应该能动**（两轴都在常开参数层，
+而 HMG 之所以 pitch 死，正是因为它的 pitch 在"要事件才进"的层里）。这也与你说的"AT-12 没有'没人就抬到最高'"吻合。
+
+**已装（`⚠` 待实机）**：
+
+| 文件 | sha256 | 内容 |
+|---|---|---|
+| `data/f6fb08cc02d24255.patch_7`（+gpu/stream） | `5747c1c158736bb7` / `afd9553d753f4640` / `bacb3ba4e03b98c6` | AT-12 包 `5a0f047f2695b403` **整包 49 条**驻留（toc 3.58 MB / gpu 5.04 MB / stream 1.05 MB；**单包**，无变体副本）|
+| `data/game/generated_entities.dl_bin` | `3dda2be1a87f9022` | 行 19 槽 0 = **Anti-Tank Emplacement** `0x2B11C9E4980EC479`；`Behavior 2→658` |
+| SM | 6,076 B | `layer0.DefaultState 6 → 3`（只变 1 字节）|
+
+**这一局要看的**：① 出模型、展开；② **yaw 能否跟随**（方向对不对）；③ **pitch 能否跟随**（这是本局核心）；
+④ 开火/装填（它的 L3 s2 `B127A357` 是装填动画：`shell/loader/feed/claw`）。
+若 pitch 也不行，那就把"`Traverse`/`Elevation` 参数层由谁喂"作为下一个问题（需要知道这两个 `Time` 层绑的是哪两个 SM 变量）。
+
 #### 3.8.4.11 火焰哨戒：同一套判据照抄（2026-10-26 12:1x，✓✓ 实机）
 
 **火焰的 SM（`820CC3BAFE962858`，2,100 B，4 层）逐层读数**（`--decode`）：
