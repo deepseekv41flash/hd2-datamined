@@ -1019,6 +1019,32 @@ SM 字节级：`layer0.DefaultState @0x74 0→1`、`layer5.DefaultState @0xB4C 0
 3. **出现、能转能打** ⇒ `Turret` 不是必要条件，之前"五件套"判据太严（好消息：工事也能上）；
 4. **出现但无法操作（开不了火/抢不到控制权）** ⇒ `SeatCollection` 与车位冲突，得改它的座位/交互组件。
 
+**它到底算哪一类？（2026-10-26 14:3x，`✓` 离线：三类对照）**
+
+| 组件 | AI 炮塔（MG-43） | **人操工事（HMG/AT）** | 载具（FRV） |
+|---|:--:|:--:|:--:|
+| `TurretComponentData` | ✅ | ❌ | ❌ |
+| `SeatCollectionComponentData` | ❌ | ✅（kind=**interactable**）| ✅（kind=**vehicle**）|
+| `MountComponentData`（能当**宿主**）| ❌ | ❌ | ✅ |
+| `VehicleComponentData` / `VehicleMotion` / `VehicleElectrics` / `VehicleCollisionDamage` | ❌ | ❌ | ✅ 四个全有 |
+| `UnitCustomization` / `Buoyancy` / `GroundCheck` / `Trample` | ❌ | ❌ | ✅ |
+| `RotationSoundPlayer`（有转动部件）| ❌ | **✅** | ❌ |
+| `SensorEye` / `Detector`（AI 索敌）| ✅ | ❌ | ❌ |
+
+⇒ **它是第三类**：既不是 AI 炮塔（无 `Turret`、无索敌、`AI大脑=False`），也不是载具（`Vehicle*` 四件套和 `MountComponentData` 一个都没有）。
+唯一像载具的地方就是**一个可交互座位**（`SeatCollection` + `Interactable`）。它自带 `RotationSoundPlayer` ⇒ **确实有可转部件**，
+但那个转动不是 `TurretComponentData` 给的，而是**座位上玩家的瞄准驱动骨骼**（同一套"人操"逻辑）。
+
+**能不能往它身上挂别的东西？`✗` 数据层不行**，三条独立理由：
+1. **不在 Mount 哈希图里**（`mount_table.py show --entity 0x0E977C49DB7604F9` ⇒ "没有挂载记录"；全表 165 条记录，56 条 SeatCollection 里有它、Mount 里没有）；
+2. 就算硬插一条（`entity_hashmap_insert.py` 有这能力），槽里的 `anchor_a` / `anchor_c` 是**宿主骨架上的骨骼名哈希**
+   （FRV 槽 0 = `1405010999` / `600573527`），而工事只有 **5 根骨骼**、没有任何挂点 ⇒ 挂上去没有锚点可依附；
+3. 载具的挂载能力是和 `VehicleComponentData` 那一套绑在一起的，工事整套都没有。
+
+**由此得到的下一步（若 HMG 实机"不转"）**：走**座位表**路线而不是挂载表——
+把车位那一行的 `SeatCollection` 改成 `manned_turret` 那种（表里 row 39–42 就是它的四条记录，`kind=interactable`），
+让车位的瞄准改由"人操"模式驱动。这是目前唯一有依据的备选。
+
 #### 3.8.4.11 火焰哨戒：同一套判据照抄（2026-10-26 12:1x，✓✓ 实机）
 
 **火焰的 SM（`820CC3BAFE962858`，2,100 B，4 层）逐层读数**（`--decode`）：
