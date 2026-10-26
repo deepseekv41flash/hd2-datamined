@@ -567,3 +567,69 @@ Guard Dog（`BehaviorId=192`）+ ARC-3：**偶尔能放电弧；目标丢失视�
 
 **装盘**：entities = `out/dogs/n1.dl_bin`（md5 `6aa784a3263022bccc9a6d2ff7681f5c`）；patch_18–23 保持安装。
 **回滚**：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`。
+
+### 16.1 结果：Quasar **正常开火** ⇒ ARC-3 的病因定死（2026-10-26 23:3x，`✓✓`）
+
+LAS-99 Quasar Cannon（蓄力、**蓄满自动发射**）挂在 Guard Dog 上**正常开火**。
+
+⇒ **ARC-3 失败的唯一原因就是"需要松手"**：AI 只提供"按住扳机"，不提供"释放事件"；
+只要武器是**自动释放**（Quasar）、**锁定即放**（W.A.S.P.）或**按住连发**（实弹），无人机都能用。
+
+## 17 收尾：AX 狗背包"换枪"线结项（2026-10-26 23:4x）
+
+### 17.1 一句话配方
+
+> **改无人机实体的 `MountComponentData+0x00`（u64）= 想挂的 item 实体 id。就这一个字段。**
+
+```bash
+python tools/entity_field_set.py set --block 0x3845B1E0 --key <无人机实体>     --field 0x00 --type u64 --value <donor 实体 id> --expect-old <原值>     --plain <base>.plain --out <next>.plain
+```
+
+### 17.2 三条硬规则（全部实测）
+
+| 规则 | 内容 | 违反的后果 |
+|---|---|---|
+| **R1 资源** | donor 的**包必须在场**。不在场就紫问号 | 紫问号。解法：`whole_package_patch.py build --package <LoadoutPackage+0x08> --host f6fb08cc02d24255 --install`（整包驻留）|
+| **R2 载体** | 载体决定**能不能装填**：Guard Dog(192) 通用；Hot Dog(189)/Dog Breath(190) 也有装填；Rover(191)/K-9(191) **无**装填（原生无限弹药）| 有限弹药武器打完不换弹 |
+| **R3 开火输入** | AI 只给"**按住扳机**"，不给"**松手**" | 需要松手才释放的武器（ARC-3）只在丢视线时误放 |
+
+### 17.3 白名单 / 黑名单账本（全部实机）
+
+| 类别 | donor | 结果 |
+|---|---|---|
+| 支援·实弹 | **MG-43** `0x11C27D3BABB38956` | **✓✓** 开火 + 装填（第一把验证）|
+| 支援·实弹（重）| **AC-8** `0xA8CFFB316F0B5C5F` | **✓✓** 开火 + 装填（驻留后）|
+| 支援·锁定 | **W.A.S.P.** `0xCC786F6491FE7E65` | **✓✓** 正常锁定 + 发射；**可锁目标集继承武器自身 `GuidanceTarget`** |
+| 支援·蓄力自动放 | **Quasar LAS-99** `0x35A61296619CC47E` | **✓✓** 正常开火 |
+| 主武器 | **PLAS-1 Scorcher** `0xEEA5E3CEF1E12C14` | **✓✓** 开火 + 装填 |
+| 炮塔件 | `shuttle_gunship_turret_hmg` `0x8365609B35EF6672` | **✓✓** 正常（挂在 Hot Dog 上）|
+| 支援·蓄力需松手 | **ARC-3** `0x96DE9CD50F7306E6` | **✗** 只在丢视线时放 |
+| 副武器 | **P-19 Redeemer** `0x3575AABC5F1F9326` | **✗** 不开火（槽位不适配；连全自动都不行）|
+| 原生池 NPC 武器 | `soldier_machinegun` `0x2ED3696E12A14D4C` | ⚠ 紫问号（**包不在场**，与形状无关）|
+
+### 17.4 载体映射（实测钉死）
+
+| 狗 | 无人机实体 | `BehaviorId` | 换弹 |
+|---|---|---|---|
+| Guard Dog | `0xA0FF2F9A0CA6992A` | 192 | **有** |
+| Rover | `0x5BEEC97F4C7F4AE9` | 191 | 无 |
+| Hot Dog | `0x979E9BC6D48D1FC6` | 189 | **有** |
+| Dog Breath | `0xB9BAF571FC8F9959`（排除法推定，`⚠`）| 190 | **有** |
+| K-9 | `0x4B071633584E4594` | 191 | 无 |
+
+### 17.5 没解出来的（留档，别再踩）
+
+1. **背包 → 无人机**的生成引用**不在实体表**（对 7 个背包 id / 10 个无人机 id 做 u64 xref 全是负结果）⇒ 在资产/引擎侧，和"跳跃能力不能移植"同构。
+2. **可锁目标集**写在武器自己的 `GuidanceTarget` 配置里，非明文可改（与 LOCKON 线结论一致）⇒ 换枪不改变"能锁谁"。
+3. **副武器为什么不适配**未定位（怀疑是武器槽白名单，非输入类型问题——P-19 是全自动仍不打）。
+
+### 17.6 复原状态（已执行）
+
+| 项 | 状态 |
+|---|---|
+| `data/game/generated_entities.dl_bin` | **`out/bkval/p1e.dl_bin`**（md5 `4f60109d34b6c315e3e1fc6b964507f6`）= 原版 + rack 47 暗液体 + 已验证的背包数值改动；**无任何狗换枪** |
+| `data/game/generated_stratagem_settings.dl_bin` | **原版**（md5 `168f2711620f07533f55a9480506d69f`）|
+| 实验驻留包 | `patch_18`–`patch_23`（6 个包，约 100 MB）**已从 `data/` 移除**；产物留档在 `out/res-{ac8,arc3,plas1,p19,wasp,quasar}/`，要复现直接拷回 `data/` |
+| 补丁序号 | `patch_0`–`patch_17` 保持连续（17 = 暗液体包）|
+
+**复现任意一轮**：`out/dogs/` 里对应的 `*.plain` → `dlbin_seal.py seal-key` → 拷进 `data/game/`（需要不紫问号就同时把对应 `out/res-*/` 的三件套拷回 `data/`）。
