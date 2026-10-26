@@ -234,6 +234,50 @@ python tools/boot_manifest.py --package 9ba626afa44a3aa3 --verbose
 **顺带**：boot 包里还躺着 **3,632 个 `.package` 清单**（全游戏每个包一份），
 所以"哪个包里有哪个 id"这类问题，理论上可以纯离线从这 3,632 份清单里查表得出。
 
+### 7.3 为什么社区（wiki / HD2SDK / 所有 mod）都把补丁叫 `9ba626afa44a3aa3.patch_N`
+
+**两条独立的原因，缺一不可：一层是引擎事实，一层是加载器写死的约定。**
+
+**① 引擎：`9ba626afa44a3aa3` 就是 boot 包（§7.2），内容无条件常驻**
+
+- `murmur64("packages/boot") = 0x9BA626AFA44A3AA3`，而 `data/settings.ini` 的 `boot_package = "packages/boot"`；
+- Stingray 启动即加载 boot 包（[官方文档](https://help.autodesk.com/cloudhelp/JPN/Stingray-Help/stingray_help/managing_content/loading_unloading/about_boot_package.html)），
+  所以塞进它的资源**永远在内存里**、按 `file_id` 全局可解析 —— **与"资源原来在哪个包"无关**，
+  也不受任务包流式卸载的影响。这就是我们的 mesh / material / texture / particles / animation / state_machine
+  全都能从一个补丁里生效的原因。
+- ⚠ 但**技术上并非必须**：我们 E-S 实测过 `f6fb08cc02d24255.patch_1`（打原包）零声明也能跑。
+  打 boot 是"最省事、最不挑上下文"的选择，不是唯一解。
+
+**② 约定：共享加载器把族名写死，只认这一个文件名**
+
+`refs/BingusSharedLoader-fresh`（社区 Bingus Shared Loader）：
+
+```lua
+-- src/discover.lua:8
+local family = '9ba626afa44a3aa3'
+-- src/discover.lua:299
+local handle = kernel.FindFirstFileA(prefix .. '.patch_*', buffer)
+-- src/discover.lua:311
+if name:match('^' .. family .. '%.patch_%d+$') then ...
+```
+
+它自己就是 `data/9ba626afa44a3aa3.patch_0`。⇒ **补丁若按"原包 id"命名（例如 `f6fb08cc02d24255.patch_1`），
+共享加载器根本不会枚举到它**。于是"一个 mod = 该族的一个序号"成了社区硬约定。
+
+**③ 这个约定为什么是好事（不只是历史包袱）**
+
+| 好处 | 说明 |
+|---|---|
+| 序号即槽位 | 多个 mod 各占一个 `patch_N`，按序号合并进**同一个包**；同 id 冲突"高号胜"（已实测） |
+| 一个补丁跨多个原包 | 一个 mod 常要改贴图(A) + unit(B) + state_machine(C) 里的资源 ⇒ 打 boot 可以把它们放进**一个文件**；按原包拆就得分三个族、各自编号，跨 mod 协调会变成灾难 |
+| 不受流式卸载影响 | 任务包会卸载/重载，boot 不会 |
+| 可整体回滚 | 删一个文件 |
+
+**代价 / 注意**
+
+- boot 包内容多（本 build 4,052 条），它同时是**全部补丁的宿主**，所以 `patch_0` 这个槽位是各方争抢的（Bingus loader 自己占 `patch_0`）；
+- 打原包的补丁虽然可行，但**上下文相关**：那个包只在任务里加载时，船上/预览里就看不到你的改动。
+
 ## 8 坑清单
 
 1. **实体库不是普通 LDLD**：实体 `u32 type | 'LDLD' | ver | type | payload | …`（头 28 B、尺寸在 `head+16`），
