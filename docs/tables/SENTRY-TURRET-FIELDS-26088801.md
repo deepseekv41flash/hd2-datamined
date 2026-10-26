@@ -1292,6 +1292,67 @@ FRV 炮手位仍是 **AT-12**（未动）。
 3. **换瞄准骨骼/加 `Turret`**：让它能抬高——代价大（要给件补 `TurretComponentData`，`+0x48` 语义未解）。
 4. 至于"打友军"：`SensorEye+0x20` 已实机否证不是那个开关，下一条候选是 `Detector+0x14`（特斯拉=1、哨戒=0）与 `ArcWeaponComponentData` 行。
 
+#### 3.8.4.20 非武器类战备：E/FX-12 护盾继电器 与 MS-11 Solo Silo（2026-10-26 15:3x，⚠ FX-12 已装待验）
+
+这两件都不是炮塔，判据也要换：**它们的武器组件一个都没有**（`Wieldable` / `WeaponWielder` / `Turret` / `ProjectileWeapon` 全缺），
+所以"炮手位能不能操作"根本不适用——要验的是"**挂上去之后被动/装置逻辑还跑不跑**"。
+
+| 件 | id | 组件要点 | 包 |
+|---|---|---|---|
+| **E/FX-12 护盾继电器** | `0xED13DDC480EC6910` | `ShieldComponentData` + `Ability` + `Animation` + `Destructible` + `HellpodPayload`；**无武器组件、连 `Behavior` 都没有** | `fe0db34ac2b9ac61`（32 条，SM = `gy_shield/energy_shield`）|
+| **MS-11 Solo Silo** | `0xD24156BD98FFF3FE`（变体 `0xDDDB2910FF2B24E9`）| `GuidanceTarget` + `SeekingMissile` + `SensorEye` + `Explosive` + `Ability`；无武器组件 | `0971e953fcbdd346`（含 SM）|
+| **Solo Silo 标记器** | `0xFC13460592CA79AA`（support weapon，`Wieldable=1`）| `LaserDesignatorComponentData` + **`WeaponLinkerComponentData`** + `AbilityWeapon` + `Equipment` | `18235e0c9ec0e636`（**3,522 条 animation** 的共享玩家包，本来就常驻）|
+
+**问题 1：FX-12 的护盾数据在哪？→ 实体组件 `ShieldComponentData`，没有独立护盾表（`✓`）**
+
+`data/game` 下 **55 张表里没有任何 shield 表**；护盾参数在 `generated_entities.dl_bin` 的
+块 **`ShieldComponentData`（`0x5154DB66`，行宽 344 B）**，按实体键取行。全表 **15 个实体**持有它
+（背包护盾、护盾继电器、敌人护盾模块都在同一块里）。
+
+FX-12 那一行的非零字段（`✓` 逐字节扫出）：
+
+| 偏移 | 值 | 猜测 |
+|---|---|---|
+| `+0x00` | **15.0** | 护盾半径（背包护盾那行是 `1.3`，正好对应它的小球形罩）|
+| `+0x4C` | **4000.0** | 护盾总耐久 |
+| `+0x54` | 1 (u32) | 开关/模式 |
+| `+0x58` / `+0x5C` | 0.01 / **45.0** | 未定 / 角度或延迟 |
+| `+0x60` / `+0x64` | **400.0** / **900.0** | 未定 / 可能是持续时间 |
+| `+0x70` 1.0 / `+0xB0` 2.0 / `+0xE4` 0.65 / `+0xF0` 0.75 / `+0x104` 0.5 / `+0x118` 0.25 | 一组曲线系数（衰减/再生）|
+| `+0xCC` | `1176554573` = `gunhousing`（u32 哈希）| 某个"附着骨骼"，语义未定 |
+| `+0xFC`/`+0x110`/`+0x124` | `3881139314`（重复三次）| 同一 u32 哈希（材质/曲线/音效？）|
+
+⇒ 要改护盾（半径/耐久/持续）**直接改这一行**，不涉及任何表。
+
+**问题 2：MS-11 与标记器的联动字段在明文表里吗？→ 字段在，"配对"不在（`✓`）**
+
+两边组件都在实体表里：标记器有 `LaserDesignatorComponentData`（**+0x00 = 750**，指示距离 750 m）
+与 `WeaponLinkerComponentData`（12 B = `{1, 0x06212002, 2087}`；全表仅 3 个实体持有，另两个是 `{0,…}` / `{2,0,0}`）；
+发射井有 `GuidanceTargetComponentData`（+0x0C=100、+0x10=2、+0x14/0x18=1、+0x20=0.95、+0x24=1.75）与 `SeekingMissileComponentData`。
+
+**但找不到任何"标记器 ↔ 发射井"的静态交叉引用**：
+1. `generated_stratagem_settings` 明文里**搜不到这两件的任何一个 id**；
+2. 两件的组件行之间**没有任何共享哈希**（比对过 750 / `0x06212002` / 2087 与发射井的 `3167719909` 等）；
+3. `WeaponLinker` 第三个字段只有标记器是 `2087`，另两个持有者为 0 ⇒ 更像"指示器自己的配置"，不是指向发射井。
+
+⇒ **耦合是运行时的"当前指示目标"**：标记器写一个"已指示"状态，任何带 `GuidanceTarget`+`SeekingMissile` 的弹药去追它。
+这解释了为什么没有静态字段——它本来就是**一对多**（一个指示器能给多种制导弹药指路）。
+
+**已装（`⚠` 待实机）：E/FX-12 护盾继电器挂 M-102 FRV 炮手位**
+
+| 项 | 值 |
+|---|---|
+| SM | `ED13DDC480EC6910`（2,028 B，2 层）：**`layer1.DefaultState 0 → 2`**（s0 待机循环 → **s2 激活循环** `6E1E248B`）；`layer0` 不动（s0/s1 用同一条 pod clip）|
+| 驻留 | `data/f6fb08cc02d24255.patch_9` = 包 `fe0db34ac2b9ac61` 整包 32 条（toc `6b7989a2476e861e` / gpu `d253bf15914fca23` / stream `0b7d89cd13cf1dda`）|
+| entities | `bea0e90d0ac8bcc3` —— 行 19 槽 0 = **Shield Generator Relay**；**`Behavior` 组件根本不存在，无需改** |
+| 五件套 | `Turret=False` **`Wieldable=False` `WeaponWielder=False` `ProjectileWeapon=False`** —— 这是**第一件完全没有任何武器组件的挂载件** |
+
+**这一局要看的**：
+1. 车上**出不出**继电器模型（`Wieldable=False` 会不会让挂载槽直接拒绝？本局最大未知）；
+2. 激活外观对不对（`layer1 → s2` 是否就是"开着转"那一态）；
+3. **护盾泡出不出现、挡不挡伤害**（`ShieldComponentData` 自驱动，半径 15 m 会罩住车）；
+4. 会不会**跟着车跑**。
+
 #### 3.8.4.11 火焰哨戒：同一套判据照抄（2026-10-26 12:1x，✓✓ 实机）
 
 **火焰的 SM（`820CC3BAFE962858`，2,100 B，4 层）逐层读数**（`--decode`）：
