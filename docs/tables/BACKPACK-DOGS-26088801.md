@@ -181,3 +181,51 @@ Rover 若吐电弧 ⇒ 电弧类可挂。若出现紫问号/武器不可见 ⇒ 
 
 **装盘**：entities = `out/dogs/e1c.dl_bin`（md5 `5eb21f5bc27761055996c1e0a65c04db`，round-trip 一致）；
 战备表已回滚原版。回滚实体：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`。
+
+### 6.2 第二轮结果：玩家支援武器直接可挂，且**装填正常**（2026-10-26 22:1x，`✓✓` / `⚠`）
+
+| 无人机 | 挂的东西 | 实机结果 | 读数 |
+|---|---|---|---|
+| Guard Dog `0xA0FF2F9A0CA6992A` | **MG-43** `0x11C27D3BABB38956` | **开火 + 装填都正常** | 玩家支援武器**可直接挂**；顺带**定死映射**：Guard Dog 用的就是这架 |
+| Rover `0x5BEEC97F4C7F4AE9` | ARC-3 电弧 `0x96DE9CD50F7306E6` | **紫色问号**（挂上了、资源没加载）| ⚠ 两因未分：包没加载 / 电弧类不兼容 |
+
+**用户实机补充（重要约束）**：**Rover 没有装填机制**（它原生就是激光，无限弹药）；挂**非无限弹药**的武器要用 **Guard Dog**——
+因为只有它能装填。⇒ 以后"有限弹药 donor"一律挂在 Guard Dog 上。
+
+### 6.3 背包 ↔ 无人机映射（`✓` 实测钉死 2 件 + 资产名交叉）
+
+| 狗 | 无人机实体 | `BehaviorId` | 原生武器族 |
+|---|---|---|---|
+| **Guard Dog**（AX/AR-23）| **`0xA0FF2F9A0CA6992A`** | **192** | 实弹 |
+| **Rover**（AX/LAS-5）| **`0x5BEEC97F4C7F4AE9`** | **191** | 光束 |
+| 其余 8 架 | `0x01954430…`/`0xF800D5F6…` = 192 · `0x1DB272DD…` = **315** · `0x7956C174…` = 192 · `0x4B071633…`(K-9) = 191 · `0x979E9BC6…`(HotDog) = **189** · `0xB9BAF571…`(DogBreath) = **190** · `0xF9D52196…` = 192 | | |
+
+⇒ **`BehaviorId` 是按狗分的行为类**：实弹狗 192 / 光束·电弧狗 191 / 喷火狗 189 / 喷气狗 190 / `AbilityWeapon` 变异 315。
+
+### 6.4 狗的弹药池（背包侧 `Deposit`，`✓`）
+
+| 狗背包 | `capacity` / `start` / `refill` | `DepositRefill(+0x80)` |
+|---|---|---|
+| Guard Dog `0x255EBC5767D7CEEC` | **8 / 8 / 8** | 1 |
+| Guard Dog `0xDFC8…` / `0xE88A…` | 4 / 4 / 2 | 3 |
+| Rover | 4 / 4 / 2 | 3 |
+| HotDog / DogBreath / K-9 | 6 / 6 / 6 | 1 |
+
+## 8 第三轮实验：重武器 + 能不能把 Rover 改造成"会装填的狗"（2026-10-26 22:2x 已装，`⚠`）
+
+| 无人机 | 改动 | 测什么 |
+|---|---|---|
+| **Guard Dog** `0xA0FF2F9A0CA6992A` | `Mount+0x00` MG-43 → **AC-8 Autocannon** `0xA8CFFB316F0B5C5F` | 重武器能否挂、能否装填 |
+| **Rover** `0x5BEEC97F4C7F4AE9` | `Mount+0x00` 电弧 → **MG-43** `0x11C27D3BABB38956`，且 `BehaviorComponentData+0x00` **191 → 192**（换成 Guard Dog 的行为类）| Rover 能不能被"改成会装填的狗" |
+
+**判读**
+
+| Guard Dog | Rover | 结论 |
+|---|---|---|
+| 机炮能打能装填 | 能打且**能装填** | **`BehaviorId` 就是装填门** ⇒ 任何狗都能改造成有限弹药载体 `✓✓` |
+| 机炮能打能装填 | 能打但**不装填** | 装填不在 Behavior ⇒ 下一候选：背包 `DepositRefill +0x80`（1 vs 3）、或无人机侧别的件 |
+| 机炮能打不能装填 | — | 装填能力与武器耦合（AC-8 的弹匣/后坐流程），只对部分武器有效 |
+| 机炮紫问号 | Rover 紫问号 | 不是武器侧问题而是**无人机侧资源**（Rover 机体缺件），Guard Dog 才是唯一稳的载体 |
+
+**装盘**：entities = `out/dogs/f1c.dl_bin`（md5 `70af3e1da11cf1c43ffa4ad162d2190b`，round-trip 一致）。
+回滚：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`（回到"只改背包数值"的干净态）。
