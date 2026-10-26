@@ -488,3 +488,40 @@ Guard Dog（`BehaviorId=192`）+ ARC-3：**偶尔能放电弧；目标丢失视�
 
 **装盘**：entities = `out/dogs/l1.dl_bin`（md5 `de3567c727f871e8e152dc0eb00352bc`，47,259,504 B）；patch_18–21 保持安装。
 **回滚**：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`（= 只保留背包数值改动）。
+
+### 14.1 结果：副武器挂在 Guard Dog 上**仍然不开火**（2026-10-26 23:2x，`✗`）
+
+| 狗 | 挂的 | 结果 |
+|---|---|---|
+| Guard Dog（行为 192，有装填）| **P-19 Redeemer（副武器）** | **模型正常、不开火** |
+
+用户判断（`⚠` 合理）：**开发者大概率没给"副武器挂载"做适配**；而且 P-19 本身是**全自动**武器，
+按"按住扳机"的 AIBEH 逻辑本该能连发 ⇒ 更像**武器槽白名单**问题（支援武器 ✓ / 主武器 ✓ / 副武器 ✗），
+而不是"点射 vs 按住"的输入类型问题（ARC-3 才是后者）。
+
+## 15 第八轮：锁定武器 —— StA-X3 W.A.S.P. Launcher（2026-10-26 23:2x 已装，`⚠`）
+
+用户想看看"**装上锁定武器会是什么行为**"。
+
+| 项 | 值 |
+|---|---|
+| 目标件 | **W.A.S.P. Launcher `StA-X3`** 实体 `0xCC786F6491FE7E65`（背包 `0xB8FEB0CC191C1EF3` 不动）|
+| 挂到 | **Guard Dog** 无人机 `0xA0FF2F9A0CA6992A`（行为 192，唯一改动；其余狗原版）|
+| 驻留 | 包 `0x5795E99A988D10B7`（54 条：texture17 / material9 / bones6 / mesh6 / anim5 / particles4 / physics3 / state_machine2）→ **patch_22** |
+
+**为什么值得测**：W.A.S.P. 的组件表里有 **`GuidanceTarget`（锁定/制导）**、`SensorEye`、`EntityBind`、`WeaponAssistedReload`；
+而无人机本身就有 `Targeting` / `MultiTarget` / `SensorEye` / `Detector`。
+⇒ 要么**无人机自己的索敌顶替了玩家的锁定输入**（能锁定开火），要么**制导武器要玩家锁定事件**（同 ARC-3 的"缺输入"）。
+
+**判读**
+
+| 现象 | 结论 |
+|---|---|
+| 正常锁定 + 发射 | 锁定武器可用（无人机的 `Targeting` 顶上玩家输入）⇒ 制导类进白名单 |
+| 有锁定动作但不发射 | 制导要玩家扳机事件（同 ARC-3 的缺输入），无人机只做"瞄准"不做"确认发射"|
+| 不锁定、直射/乱射 | `GuidanceTarget` 失效但弹道仍在 ⇒ 当普通火箭用 |
+| **紫问号** | 驻留没生效（patch_22）⇒ 查补丁加载 |
+| 崩溃 | `GuidanceTarget` 与无人机 `Targeting`/`MultiTarget` 冲突 ⇒ 记录为"不能挂" |
+
+**装盘**：entities = `out/dogs/m1.dl_bin`（md5 `7ab6d4d1515a83db1e2877c8cc115af2`）；patch_18–22 保持安装。
+**回滚**：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`。
