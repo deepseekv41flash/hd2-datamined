@@ -741,6 +741,30 @@ python tools/state_machine_edit.py --set 0=3 --set 5=1 --out sm_rocket.bin sm.bi
 战备表零声明 `6c0ab66b281c2178`；
 `generated_entities.dl_bin` = **`bdd110d62a2387b8`**（sealed）—— M-102 炮手位 = **A/FLAM-40 火焰哨戒**，`Behavior 208→658`。
 
+#### 3.8.4.12 模板 B（MG-43 / 加特林 / 迫击炮）：同一个"扫视层"毛病（2026-10-26 12:3x，⚠ 待实机）
+
+普查里模板 B 是"状态机族不同"，但把 clip 摊开看，**病根和火箭完全同款**（以 A/MG-43 `37CDE43876BA26BB` 为例）：
+
+| 层 | 默认态 | 绑的 clip | 打了哪些骨骼 | 判断 |
+|---:|---|---|---|---|
+| L0 | s0 `E954AED4`（idle，loop=1）| **`385AC26B` 0.17 s，0 根骨骼（空 clip）** | — | 与火箭的展开态同型：本体靠 bind 位 ⇒ **保持原样** |
+| L0 | s1 `79DE1870`（部署过渡）| `31170087` 0.98 s | `rotator×14` `gunhousing×15` `sensorpod×9` `root×14` | 部署动画 |
+| L0 | s2 `D23167BF`（收起）| `F990C128` 2.48 s | `rotator×16` `gunhousing×21` `sensorpod×23` `root×34` | 收起 |
+| **L5** | **s0 `Clip` loop，21.33 s** | **`1383C954E57A0E6A`** | **`rotator×83`** `gunhousing×65` `attach_mag×1` | **← 与火箭 layer5 同型：扫视循环，会自转/乱摆** |
+| L6 | s0 `Clip` loop 0.98 s | `14D268ACF7207711` | `sensorpod×15` | 雷达盘，无害 |
+| L1–L4 | 多态 | 各自小节 | `rotator/gunhousing/attach_mag` | 开火/装填等，默认态已是空/中性 |
+
+⇒ **模板 B 的修法 = 只关 `layer5`（`DefaultState 0→1`，选中那个 `Empty` 态）**，`layer0` 保持原版 `0`。
+（火箭是 `layer0 1→3` + `layer5 0→1`；AC-8 不需要动 `layer5`，因为它那层默认本来就是 `Empty`。）
+
+**已装（待实机）**：`f6fb08cc02d24255.patch_1` = **MG-43 包 `154bd6143819df7d` 整包补丁**
+（toc `6b973a4e371c8cf7` / gpu `7405e233a4bc9fbd` 5.0 MB / stream `640dc92956b8b150` 6.0 MB），SM 只改 `layer5=1`；
+`generated_entities.dl_bin` = `d7c9838e7c01cad6`（sealed）—— M-102 炮手位 = **A/MG-43 机枪哨戒**，`Behavior 313→658`；
+战备表仍零声明 `6c0ab66b281c2178`。
+
+**复用到加特林/迫击炮前要先量**：它们的层数与 clip 不同（加特林 8 层、迫击炮 7 层），
+用 `animation_probe --matrix` 找"≈20 s 级、`traverse/rotator` 打几十个键"的那一层，再关它的默认态。
+
 #### 3.8.4.11 火焰哨戒：同一套判据照抄（2026-10-26 12:1x，⚠ 待实机）
 
 **火焰的 SM（`820CC3BAFE962858`，2,100 B，4 层）逐层读数**（`--decode`）：
