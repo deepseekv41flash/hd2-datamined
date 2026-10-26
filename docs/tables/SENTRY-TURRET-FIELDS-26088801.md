@@ -2060,6 +2060,42 @@ bones+physics+mesh 在包里 `2947afe42063062f`，若本轮失败可作为下一
 现场：`generated_entities.dl_bin` = **`9ff170f12f9ce893`**（单位资产改成四件套；挂载槽与 rack 未动），
 `generated_stratagem_settings.dl_bin` = `e187240b8df5fffb`，`patch_15` 未动。
 
+**✗ 实机（19:25）：换成四件套 asset 之后"还是什么都没有"** ⇒ 上述"unit 资产四件套"假设**被否证**（或至少不是充分条件）。
+
+**再排查（`✓` 离线，用 122 件"引擎自己会挂"的件当对照组）**
+
+1. 把 `MountComponentData` 里出现过的 **122 个不同 item** 全量做组件普查：只有 `Attachable`（118/122）与 `Unit`（116/122）近乎普遍
+   ⇒ **不是"缺某个组件"**（`Animation` 并不普遍，所以它也不是门槛）；
+2. `Attachable +0x20` 在 **116/122** 里都是 **0.0**（我们那 11 台恰好是 180.0）⇒ 这一格**不是**门槛；
+3. `LoadoutPackage +0x08` 有 8/122 是 0 ⇒ 也不是硬门槛；
+4. **真正只被 MS-11 违反的一条**：
+
+| 字段 | 11 台通件 | `0x8AFF7F0793A5BCED`（见下） | **MS-11 `0xD24156BD98FFF3FE`** |
+|---|---|---|---|
+| **`Ability +0x04`** | **全 0** | **0** | **2474**（变体 `0xDDDB2910FF2B24E9` = 2085）|
+
+⇒ **假设：`Ability+0x04` 非零 = "这枚件是由能力投放的"**，挂载路径不实例化它（`Ability` 行形状是
+`{0xC,能力id} ×4`，通件都是 `{0xC,0}×4`）。
+
+**本轮改法：改挂同一个包里的真身 `0x8AFF7F0793A5BCED`**（不是改 MS-11 的字段）
+
+它是 `0971e953fcbdd346` 包里 **mesh/bones/physics/SM 全部挂在自己 id 下**的那个实体，17 个组件：
+`Ability`+`Animation`+`Attachable`+`Behavior`+`Faction`+`Gore`+`GuidanceTarget`+`Health`+`LoadoutPackage`+
+`ProjectileWeapon`+`SensorEye`+`Tag`+`Unit`+`VisibilityMask`+`WeaponData`+`WeaponMagazine`+`Wieldable`
+—— **`Ability+0x04 = 0`、`Unit+0x00 = 自己`、而且它本来就在挂载表里**：
+主机 `0xB0C9FAF4AF8903F9` = **TD-110 Maelstrom** 的**槽 3/4** 就挂着它 ⇒ **引擎原生就会实例化这个件**，这是最硬的可行性证据。
+
+| 项 | 值 |
+|---|---|
+| 挂载 | mount 行 19 槽 0：MG-206 → **`0x8AFF7F0793A5BCED`** |
+| 投送舱 | 仍 = 标记器（rack 47 槽 0/1 = `0xFC13460592CA79AA`，本轮未动）|
+| 驻留 | `patch_15` 已含该资产（mesh 2.4 MB GPU 在 `.gpu_resources` 里）|
+| entities | **`db0162775ae5f357`** |
+
+**这一局只看**：车上出不出东西（应是"发射管/井"形态，且它是 `Wieldable`+`ProjectileWeapon` 的武器件，
+炮手位**说不定还能直接开火**）。若还不出 ⇒ 下一手是**变体 B**（`0xDDDB2910FF2B24E9`，asset `0xA841CB05F3FD938B`
+在包 `2947afe42063062f`，需另加驻留），或把 MS-11 的 `Ability+0x04` 清零后重试（才 1 个字，但会动对照组那台）。
+
 ## 4 怎么改
 
 ### 4.1 一条命令（保内容哈希）
