@@ -1582,6 +1582,38 @@ Thermite 的引信是由**玩家投掷动作**（`Equipment`/投掷流程）启�
 | 驻留 | **`patch_11`** = 包 `d6d42eefe4936690` 整包 21 条（toc `58996c54548d5e19` 2.99 MB / gpu `f9c9932872a021bc` 0.54 MB / stream `ea8761507c7d52ac` 0.09 MB；含 animation×10 + state_machine×1 + mesh×1）。<br>**这份驻留是必需的**：它的行为/状态机/网格都在这个包里，而测试时玩家不会带 G-60 |
 | entities | `c55510c8196aeeaa`（补丁序列 `f6fb08cc02d24255.patch_0…11` 连续）|
 
+
+**第二轮结果（G-60 Anti-Tank Seeker）：`✗` 也没激活** ⇒ "自带行为就会自己跑"这条不成立（至少在这个生成路径下）。
+
+**新证据：`ExplosiveComponentData+0x00` 是"触发类型枚举"，三种实体各不相同**
+
+| 实体 | `Explosive+0x00` | `Explosive+0x24`（爆炸 id）| 判读 |
+|---|---:|---:|---|
+| `contact_mine`（原生，能正常布雷）| **2** | 367 | **地雷型**：靠近/接触即触发 |
+| `incendiary_mine`（原生）| **2** | 72 | 同上 |
+| `Thermite`（失败）| **3** | 201 | **引信型**：需要投掷动作点火 |
+| `Lure Mine` | **4** | 117 | 诱饵雷型 |
+| `Anti-Tank Seeker`（失败）| —（自导）| — | 靠 `Behavior`/`Navigation` 自行推进 |
+
+⇒ **最可能的机制：抛洒器的"布设"只对 `+0x00 = 2`（地雷型）生效**。换成 3/4/自导型，
+实体虽然被扔出来，但没有任何东西把它"装上引信/启动行为"，于是静默。
+
+**第三轮：换 TM-1 Lure Mine（`0xA20683199DFC19E8`，2026-10-26 16:4x，`⚠` 待实机）**
+
+Lure Mine 是**投掷物栏位的地雷**（18 组件：`Throwable`+`Explosive`+`Sticky`+`Equipment`+`Wieldable`+`Faction`+`Health`+`EffectReference`…），
+比 Thermite 多了 `Faction`/`Health`/`EffectReference`（说明它是有生命值、会自我表现的地雷），但 `Explosive+0x00 = 4` **仍不是地雷型 2**。
+
+| 项 | 值 |
+|---|---|
+| 改动 | `Thrower+0x00`：Seeker → **`0xA20683199DFC19E8`**（u64，读回一致）|
+| 驻留 | **`patch_12`** = 包 `fae34acb79502f53` 整包 22 条（toc `21bd4c9bc44bfb05` 2.41 MB / gpu `2a622f0864b2b21e` 1.40 MB / stream `58ba2893b8478c88` 0.35 MB；含 particles×8 + state_machine×1 + mesh×1）|
+| entities | `e7d700de940d0797`（补丁序列 `patch_0…12` 连续）|
+
+**四档判读**：
+1. **能布设、能触发** ⇒ `+0x00=4` 也被接受，那"2"就不是唯一门槛；
+2. **布设但不触发**（与 Thermite/Seeker 同现象）⇒ 证实 `+0x00` 枚举是门槛；
+3. **抛出的是诱饵雷并且有闪烁/音效** ⇒ 说明"表现"正常但"触发"没接上；
+4. 若第 2 档成立，下一轮就是**决定性实验**：把 Lure Mine（或 Thermite）的 `Explosive+0x00` 从 4/3 **改成 2**，看它会不会立刻变成能踩爆的雷。
 **这一局要看的**：
 1. 抛出来的是**自导反坦克雷**（小飞行器形态），并且**自己飞向目标**——按原参数是 **6 批 × 8 颗 = 48 颗**、每 0.7 s 一批、45°、速度 5–15 m/s；
 2. 它们会不会**互相抢目标**、绕圈、或者因为 48 个 AI 同时跑而明显掉帧；
