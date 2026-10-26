@@ -119,3 +119,65 @@
 - 背包数值（冷却/跳高/补给次数/护盾半径）：[BACKPACK-VALUES-26088801](BACKPACK-VALUES-26088801.md)
 - 背包家族与"能力不能移植"的收口：[BACKPACK-LINE-26088801](BACKPACK-LINE-26088801.md)
 - 载具挂点（同一 `MountComponentData` 字段、另一套用法）：[MOUNT-SEATS-26088801](MOUNT-SEATS-26088801.md)
+
+### 6.1 第一轮结果：`Mount` 权威，战备行 `+0xF0` 不改武器（2026-10-26 22:0x，`✓✓` + `✗`）
+
+| 实验 | 实机结果 | 结论 |
+|---|---|---|
+| **A** Guard Dog 的 3 架 AR-23 无人机 `Mount+0x00` → Rover 激光武器 | **狗吐激光** | **`Mount+0x00` 就是挂载句柄** `✓✓` |
+| **B** Rover 战备行 `+0xF0` → GD 实弹武器 | **Rover 仍打激光** | 战备行 `+0xF0` **不决定武器**（负结果）|
+
+⇒ **换狗枪配方 = 改无人机 `MountComponentData+0x00` 一个 u64**。战备表已回滚原版（`md5 168f2711…`）。
+
+## 7 还能挂什么：候选池（`✓` 全表扫 + 名字表分类）
+
+### 7.1 引擎自己验证过"能挂"的池子：**80 件**（164 条 `Mount` 行里出现的不同 item）
+
+| 类别 | 件数 | 说明 / 举例 |
+|---|---:|---|
+| **带武器组件** | **56** | 实弹 38 · 炮塔(`Turret`) 14 · 喷射 6 · 光束 3 · 电弧 2 · `AbilityWeapon` 2（有重叠）|
+| 无武器组件 | **24** | 挂上去只会"挂在下面"不会开火：`conscript_jumppack` `0xE2E62FDD…`、`conscript_backpack_lmg` `0x426B3DF0…`、`soldier_chainsaw` `0x4FB6077F…`、`conscript_melee_claw` `0x2D1636F2…` |
+
+**最稳的几个原生挂件**（被多处宿主用过）：
+
+| item | 名字 / 形状 | 原生被挂次数 |
+|---|---|---:|
+| `0x070BC8D3E18BB8F9` | `/soldier_standard_rifle`（实弹）| **8** |
+| `0x8365609B35EF6672` | `shuttle_gunship_turret_hmg`（炮塔+实弹）| 4 |
+| `0x2ED3696E12A14D4C` | `soldier_machinegun`（实弹）| 2 |
+| `0x2A346BF4552997E2` | `wep_scoutwalker_hmg`（实弹）| 2 |
+| `0x8FB47DD28B398CF7` | `cyborg_tank_turret_cannon`（炮塔+实弹）| 2 |
+| `0xF196069E7E14C497` | 炮塔+光束 | 2 |
+| `0x5D142C3A73EBC634` | `tank_turret_rocketlauncher`（炮塔+实弹）| 1 |
+| `0x49674794A165EDA8` | `tank_turret_autocannons`（炮塔+实弹）| 1 |
+| `0xCD28A27A79BE53D5` | `turret_command_bunker_hmg`（炮塔+实弹）| 1 |
+| `0x9926876B2375A1BB` | `turret_small_autocannon`（炮塔+实弹，载具线测过）| 1 |
+
+### 7.2 池子之外、形状兼容可以试的三类
+
+| 类 | 数量 | 例子（实体 id） | 预期 |
+|---|---:|---|---|
+| **玩家支援武器** `kind=support_weapon` | 46 | MG-43 `0x11C27D3BABB38956` · AC-8 `0xA8CFFB316F0B5C5F` · MG-206 `0x085C1EDB038EC24E`（**已在原生挂载池里出现 2 次**）· GL-21 `0x02EECD0B1FA49630` · RS-422 `0x2E9D0BDC48B09E60` · FLAM-40 `0x39AB99895147A3BF` · ARC-3 `0x96DE9CD50F7306E6` · LAS-98 `0xD54B9505C0F72873` | 形状与狗武器**完全同构**（`WeaponData`+`ProjectileWeapon`/`Magazine`/`Reload`）⇒ 最可能直接开火 |
+| **炮塔/载具武器**（`Turret`+武器） | 14 | 见 §7.1 下半 | 炮塔件带 `TurretComponentData`（阵地行为），挂在无人机上可能"能射但转向由无人机接管" |
+| **NPC 武器** | 多 | `soldier_standard_rifle`（8 次）、`soldier_machinegun`、`cyborg_tank_turret_cannon` | 包常在基础共享包 ⇒ 渲染最稳 |
+
+**唯一硬风险 = 包是否加载**（载具线老账）：共享包里的 unit 零预热；他车/他包的 item 要"在场"才渲染，否则紫问号。
+⇒ 挂**玩家武器**时，玩家最好同时带那把武器。
+
+### 7.3 第二轮实验（2026-10-26 22:1x 已装，`⚠`）
+
+一次召唤同时回答两件事：**这个 donor 能不能挂/能不能打**，以及**这只狗用的是哪个无人机实体**（留一个原生武器当对照）。
+
+| 无人机 | 挂上去的东西 | 类别 |
+|---|---|---|
+| `0xA0FF2F9A0CA6992A` | **MG-43** `0x11C27D3BABB38956` | 玩家支援武器 |
+| `0x019544309FAC4508` | **`shuttle_gunship_turret_hmg`** `0x8365609B35EF6672` | 炮塔+实弹（原生挂 4 次）|
+| `0xF800D5F62789246C` | 原版 `0x3D4970D1C4E640EE`（**对照**，未动）| 原生实弹 |
+| Rover `0x5BEEC97F4C7F4AE9` | **Arc Thrower ARC-3** `0x96DE9CD50F7306E6` | 玩家电弧武器 |
+| Rover `0x7956C174E9FAEFE0` | 原版激光（**对照**，未动）| 原生光束 |
+
+**判读**：召唤 Guard Dog 看它打成什么——MG-43 弹链 / 机炮炮塔弹 / 原版实弹，三者任一都能同时定位"哪架无人机"和"这类比能不能打"；
+Rover 若吐电弧 ⇒ 电弧类可挂。若出现紫问号/武器不可见 ⇒ 包没加载（挂载成功但资源缺），也能从外观判断是哪一架。
+
+**装盘**：entities = `out/dogs/e1c.dl_bin`（md5 `5eb21f5bc27761055996c1e0a65c04db`，round-trip 一致）；
+战备表已回滚原版。回滚实体：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`。
