@@ -597,6 +597,23 @@ rack 29 三个槽（Nova / Warp Pack / GL-28 Belt-Fed，`+556` 设 3），三个
 | **P1 资源级** | `9ba626afa44a3aa3.patch_5`（82,864 B）| 注册表包 | 19（3 `particles` + 16 `material`，载荷 79.3 KB）| 把 `SOS Beacon` 59 的 `+0xA8` **清零**后，火箭炮塔的**拖尾 / 命中爆炸 / 枪口全在** ⇒ 一个 68 MB 的包被 **79 KB 资源**顶掉 |
 | **P2 整包·基础包** | `f6fb08cc02d24255.patch_0`（3.52 MB toc + 1.84 MB gpu + 2.65 MB stream）| **共享基础包** `f6fb08cc02d24255`（782 资源，必然常驻）| 50（LIFT-182 Warp Pack 整包：mesh/unit/bones/material/texture/physics/animation/state_machine…）| 舱里 **Warp Pack 正常渲染**，且**没有任何 `+0xA8` 声明它** |
 | **P3 整包·注册表包** | `9ba626afa44a3aa3.patch_6`（2.74 MB + 6.06 MB + 4.19 MB）| 注册表包 `9ba626afa44a3aa3` | 51（GL-28 Belt-Fed 整包）| 舱里 **GL-28 正常渲染**，同样零声明 |
+| **P4 整包·基础包·挂载件** | `f6fb08cc02d24255.patch_1`（1.26 MB toc + 4.37 MB gpu + 2.29 MB stream）| **共享基础包** `f6fb08cc02d24255`（第 2 条补丁）| 41（火箭哨戒包 `11bbdf8ce39e5fc5` 整包：11 animation / 9 texture / 9 particles / 6 material / 1 bones / 1 mesh / 1 physics / 1 state_machine / 2 wwise）| ⚠ 待实机：FRV 炮手位挂载**火箭哨戒**，`+0xA8` 已**全清零**（`SOS` 59 与增援 57 两行都回 0）|
+
+**P4 补的三件事（此前三轮都没覆盖）**：
+
+1. **第一次用于「载具挂载件」而不是投送舱 rack 物品** —— 挂载路径（`MountInfo.item`）同样只按 `file_id` 取资源，
+   不需要包被"请求"；
+2. **同一条补丁里可以既放"整包原样拷贝"又放"我们自己改过的资源"**：流程是先 `srkit unpack --raw` 出工作区，
+   直接改 `resources/<type>_<id>/toc.bin`（并用新 sha256 更新同目录 `resource.json` 的 `blobs` / `payloads`），
+   再 `srkit pack` —— 本轮的 `state_machine 37079568DC86E9C6` 就是这样把 `layer0.DefaultState` 改成 3 带进去的
+   （`resource_patch.py dump <patch> 14` 出来的 4,364 B 与 `sm_rocket.bin` 逐字节相同）；
+3. **`+0xA8` 清零后依然出模型**（这是 P1 的 0 声明结论在"整包 + 挂载"上的复现）。
+
+**顺带修正一条旧判断**：`content/fac_helldivers/hellpod/aa_turret`（AC-8 壳）的 `bones/mesh/physics/state_machine`
+**在 `54dc633a67baa93d` 与 `418322d5ff8b13bc` 里各有一整套**（`srkit list --id 0xCBFE1FC7158347F3` 共 8 条，两个包各 4 条，
+逐项同尺寸）；火箭哨戒壳更是只在 `11bbdf8ce39e5fc5` + 副本包 `fc5b6bff0db90aab` 里。而且**整个库里这两套壳都没有
+`unit` 类型的资源**（挂载件的 `Unit +0` 只指向 mesh/bones/physics/state_machine 这一组）——
+所以之前"AC-8 必须声明两个包"其实是保守做法，一个包就够；真正必需的是**这一组的四个资源能被解析**。
 
 **验收 rig（✓✓ 实机：三件全出）**：StA-X3 投送舱（rack 29）三件、`spawn=3` ——
 Nova 走**舱行** `+0xA8`（基准，已知可）、Warp 走**共享基础包补丁**、GL-28 走**注册表包补丁**；

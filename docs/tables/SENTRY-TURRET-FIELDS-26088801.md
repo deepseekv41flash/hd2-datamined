@@ -474,15 +474,21 @@ AC-8 `54DC633A67BAA93D`、火焰 `1577E917AD1F287D`、激光 `36313BF684C1FD79`�
 产物 `D:\mod\out\sm-patch8\`（spec.json + 3 个载荷），补丁序号 `patch_0..8` 连续。
 
 **本局验证配置**（`D:\mod\out\sm-verify\`，已装，盘上回读逐字节一致）：
+**火箭哨戒包的资源走「资源层驻留」（`data/f6fb08cc02d24255.patch_1`），战备表 `+0xA8` 全清零** ——
+刻意不用声明口，给 [LIMITED-CROSS-PACKAGE §6.9](../engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) 的 P4 补一个"载具挂载件"案例。
 
 | 文件 | sha256 | 改动 |
 |---|---|---|
 | `generated_entities.dl_bin` | **`2a5ce9ba6b699792`** | FRV 炮手位（行 19/119 槽 0）= **A/MLS-4X 火箭哨戒** `37079568DC86E9C6`（顶掉 AC-8）；`Behavior 611→658` |
-| `generated_stratagem_settings.dl_bin` | `0958505e34d4e14b` | 行 57/59 `+0xA8` = `11BBDF8CE39E5FC5`（火箭哨戒包） |
+| `generated_stratagem_settings.dl_bin` | `6c0ab66b281c2178` | 行 57（增援信标）/ 59（SOS）的 `+0xA8` **清零** ⇒ 战备表里**没有任何包被声明** |
+| `data/f6fb08cc02d24255.patch_1`（+`.gpu_resources` / `.stream`） | `a3f71af78d333f02`（toc） | **火箭哨戒包整包 41 条资源**驻留进共享基础包（toc 1.26 MB + gpu 4.37 MB + stream 2.29 MB）；其中 `state_machine 37079568DC86E9C6` 已是改好的版本（`layer0 default=3`，`resource_patch.py dump <patch> 14` 与 `sm_rocket.bin` 逐字节相同） |
 
-⇒ 一局：**火箭哨戒在炮手位上应该像 AC-8 那样"出场即展开、原点/炮口都对"**。
+⇒ 一局三件事：① 火箭哨戒在炮手位**出场即展开、原点/炮口正确**（模板 A 改法对全部 4 型成立）；
+② **不靠 `+0xA8`、只靠补丁驻留**也能把一台载具挂载件的模型/材质/动画全部拉起来（P4）；
+③ 顺带看它会不会 150 s 自己消失（`HellpodPayload +0x04`）。
 回滚到 AC-8 版：把 `D:\mod\out\frv-ac8\ent.sealed.dl_bin`（`02b740fef30a7f7a`）
-与 `…\strat.sealed.dl_bin`（`081e7879cb6575e2`）拷回 `data/game/` 即可（`patch_7/8` 保持不动）。
+与 `…\strat.sealed.dl_bin`（`081e7879cb6575e2`）拷回 `data/game/`，并删掉
+`data/f6fb08cc02d24255.patch_1*` 三件（`patch_7/8` 保持不动）。
 
 **模板 B 的待办（⚠ 未验，别照抄）**：MG-43/加特林默认 `E954AED4`（loop=1），部署过渡 `79DE1870`
 播完**没有**回指状态（事件表里没有 `Deployed` 那条 Link），所以它停在部署 clip 的末帧；
