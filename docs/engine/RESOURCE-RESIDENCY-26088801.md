@@ -35,7 +35,8 @@
 | **类型不挑**：`lua` / `texture` / `bones` / `physics` / `particles` / `material` / `state_machine` / `unit`… | `✓✓` | 见 §3 表 |
 | 带 GPU / stream 负载的类型（`texture`、`unit`、`geometry_group`…）必须配套同名 `.gpu_resources` / `.stream` | `✓✓` | 缺了就是白模/紫问号 |
 | 同 id 冲突**高号胜** | `✓✓` | [SAMEID-PATCH-PRIORITY](../cases/SAMEID-PATCH-PRIORITY-26088801.md) |
-| 宿主**不限于**注册表包 `9ba626afa44a3aa3`：`data/<任意包>.patch_N` 都会被读 | `✓✓` | P2/P4（共享基础包 `f6fb08cc02d24255`）|
+| 宿主 `9ba626afa44a3aa3` **就是 Stingray 的 boot 包**（`packages/boot`）⇒ 挂它 = 往启动包里加资源，永远在内存 | `✓` 离线 | `data/settings.ini` 的 `boot_package` + `murmur64`（§7.2）|
+| 宿主**不限于** boot 包：`data/<任意包>.patch_N` 都会被读 | `✓✓` | P2/P4（共享基础包 `f6fb08cc02d24255`）|
 | 一个宿主包可以有多条补丁（各自序号连续） | `✓✓` | `f6fb08cc02d24255.patch_0`（Warp）+ `patch_1`（火箭哨戒）|
 | **宿主包对动画有影响**：同一份字节，`9ba626afa44a3aa3`（注册表）宿主 → **动画正常播**；`f6fb08cc02d24255`（共享基础包）宿主 → **动画不播** | `✓✓` | E-R vs P4（§7.1，两块补丁 toc 逐字节相同：`eb2bfca7c5408a47`）|
 | 同一宿主包内**同 id 两处**：**高号胜**（可用来"只覆盖一个资源"）| `✓✓` 实机 | `f6fb08cc02d24255.patch_1` 整包含 unit 原件、`patch_2` 单条 unit 带 +2 m 位移 |
@@ -201,6 +202,59 @@ python tools/whole_package_patch.py build \
 
 **本机当前装的是 E-R**：`data/9ba626afa44a3aa3.patch_10`（41 条）＋ `patch_9`（4,560 B，同 id 同字节的 SM，兼作序号补位）
 ＋ 战备表 `6c0ab66b281c2178`（零声明）。
+
+### 7.2 「必然常驻」是谁说了算：`data/settings.ini`（2026-10-26，`✓` 离线，本 build 实测）
+
+不用运行时探针、也不用问社区——**游戏自己的 Stingray 配置里写着**（
+[Stingray: ブート パッケージについて](https://help.autodesk.com/cloudhelp/JPN/Stingray-Help/stingray_help/managing_content/loading_unloading/about_boot_package.html)：
+每个游戏至少有一个 boot package，启动时自动加载，并且建议把 core 资源都放进去）。
+
+`<game>/data/settings.ini`：
+
+```ini
+pre_boot_package           = "packages/pre_boot"
+boot_package               = "packages/boot"
+fallback_resource_package  = "packages/fallback_resources"
+```
+
+包 id = `murmur64(路径)`（`srkit hash` 现算）：
+
+| 设置 | 路径 | 包 id | 清单条目 | 组成 |
+|---|---|---|---:|---|
+| `pre_boot_package` | `packages/pre_boot` | **`bca0ea9bbcb1a2f0`** | **2** | `havok_ai_properties` / `havok_physics_properties` |
+| **`boot_package`** | `packages/boot` | **`9ba626afa44a3aa3`** | **4,052** | `package×3632` `strings×265` `shading_env_mapping×59` `material×28` `texture×23` `wwise_metadata×11` `entity×7` `lua×6` … |
+| `fallback_resource_package` | `packages/fallback_resources` | **`495cd5b6043a104d`** | **25** | 缺失资源兜底（texture/material/unit/level/physics/flow/particles/prefab）|
+
+> ★ **`packages/boot` 的 id 就是 `9ba626afa44a3aa3`** —— 也就是所有 mod 补丁（`9ba626afa44a3aa3.patch_N`）挂的那个
+> "注册表包"。所以"注册表包"这个叫法是**结果不是原因**：
+> 它就是 Stingray 的 **boot 包**，`.patch_N` 挂它 = **往启动包里塞资源**，
+> 这才是"补丁里的东西永远在内存里"的**真正地基**。
+
+**`.package` 资源的格式**（每个包的清单，全部躺在 boot 包里）：
+
+```
+u32 version(=1) | u32 unk | u64 count | count × (u64 type_id, u64 file_id)
+```
+
+⇒ "必然常驻的包"在本 build 上是 **3 个**（pre_boot / boot / fallback_resources）；
+其中真正"内容丰富、可当宿主"的只有 **boot**（4,052 条）。另外两个：pre_boot 只有 2 条（havok 属性）、
+fallback 只有 25 条（兜底替身），**都不适合当宿主**。
+
+**这条事实同时解释了 §7.1 的宿主差异**：boot 包在**启动时**就把内容载入，动画库随之建立；
+`f6fb08cc02d24255`（共享基础包）是**任务期**为 hellpod / 穿梭机 / 武器架载入的，
+往它上面打动画补丁时，绘制类资源仍按 id 现取（所以 mesh/材质正常），动画注册却赶不上。
+（⚠ 仍需 E-S 排除 `layer5` 这个混杂变量。）
+
+**工具**：[`tools/boot_manifest.py`](../../tools/boot_manifest.py) —— 读 `settings.ini` → 算 id →
+抽 `.package` 清单 → 打类型直方图。`--package <id>` 还能看任意包的组成：
+
+```bash
+python tools/boot_manifest.py
+python tools/boot_manifest.py --package 9ba626afa44a3aa3 --verbose
+```
+
+**顺带**：boot 包里还躺着 **3,632 个 `.package` 清单**（全游戏每个包一份），
+所以"哪个包里有哪个 id"这类问题，理论上可以纯离线从这 3,632 份清单里查表得出。
 
 ## 8 坑清单
 
