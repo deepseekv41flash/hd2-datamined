@@ -168,7 +168,13 @@ python tools/entity_hashmap_insert.py --block <JumppackComponentData 0x54270608>
 
 **实机结果（2026-10-26 20:4x）**：跳跃键**完全没反应** ⇒ 走第三行分支，进入 §7.3。
 
-### 7.3 第一轮否证 + 第二轮：`Equipment+0xDC` = "使用键行为类"（`✗` 结果 / `✓` 离线 / `⚠` 已装待测）
+### 7.3 第一轮否证 + 第二轮：`Equipment+0xDC` = "使用键行为类"（`✗` 已被 §7.4 推翻）
+
+> **2026-10-26 20:5x 更正（`✓` 已读到字段名）**：本节的"`+0xDC` = 使用行为开关"**假设作废**。
+> 从 typelib 的成员类型表读出 `EquipmentComponent+0xDC` 的类型是 **`BackpackWwiseIndex`**（Wwise = 音频中间件），
+> 同区还有 `+0xD8 EquipmentWwiseIndex` ⇒ **那是音频索引，不是行为门**。第二轮 A/C 实验因此无效（见 §7.4）。
+> 本节保留原始推理，只作为"怎么错的"记录：单看数值相关性会得出错误结论，必须叠类型名。
+
 
 **否证结论**：`JumppackComponentData` 行 + `RechargeComponentData` 行**不足以**让一件背包会用跳跃键。
 同时可以排掉 `AbilityComponentData`：35 件背包那一行是**逐字节相同**的 `0C 00 … 0C 00 00`（32 B，无任何 id），
@@ -230,3 +236,97 @@ python tools/entity_hashmap_insert.py --block <JumppackComponentData 0x54270608>
 | 门禁 | `entity_field_set.py` 两次全过（G1/G2/G3/G4/G7/G8/G6）；读回：Supply `+0xDC=8`、Jump `+0xDC=1`，Supply 的 `Jumppack`/`Recharge` 行仍在 |
 | 回滚 | `cp out/jumpsupply/entities.before-jumpsupply <game>/data/game/generated_entities.dl_bin`（回到"未插跳跃"状态）|
 
+
+### 7.4 背包字段从哪来（本地/网上资料盘点，`✓`）+ 第三轮实验：`EquipmentType`
+
+#### 7.4.1 资料盘点（谁给了什么）
+
+| 来源 | 本地位置 / 链接 | 给到什么 | 用法 |
+|---|---|---|---|
+| **本仓库 typelib 解析器** | `tools/typelib.py`（LTLD v4：type/enum/member 描述 + 字符串表） | **成员类型表**：每个字段偏移上"是什么类型"（`EquipmentType` / `AbilityId` / `CApiVector3` …） | 本次关键证据来源；成员**名字**被剥离（`ns=0`，字符串表 0 字节），只有类型还在 |
+| **HD2Runtime `schemas/entity_fields.json`** | `refs/hd2runtime-repo/schemas/entity_fields.json` | 语义字段名 + 记录内偏移 + 单位 + 是否可写（`jump.vertical_launch_velocity +0x00`、`hover.duration +0x09C`、`recharge.time +0x00`、`deposit.capacity/start/refill +0x00/+0x04/+0x08`） | 与本地字节逐条对照后**全部吻合** ⇒ 可直接当"人话字段名"用 |
+| HD2Runtime 背包能力目录 | `refs/hd2runtime-repo/sdk/BackpackAuthoringCapabilities.json` + `docs/backpack-authoring.md` | 16 件背包 × 85 字段实例（可写 71 / 只读 14）、证据分级（gameplay_proven / schema_proven / native_correlated）、**"补给包与地狱火的充能语义未证实"** | 判"哪些字段有人实机验证过"；**没人做过"把跳跃能力搬到别的背包"** |
+| 名字表（filediver `dl_type_names.txt` 派生） | `dl-type-names.json`（6,696 条） | **枚举名与枚举值名**：`EquipmentType_*` 30 条、`ExplosionType_*` 205 条、`AbilityId_*` 等 | 注意：**只有名字，没有枚举值序号**，不能直接 index→name |
+| 社区枚举 dump | `refs/helldiversdata/enums_*.json` | 枚举值**列表**（顺序 ≠ 枚举序号，已用 `ExplosionType` 逐位比对证伪：251 vs 205 条、逐位只对 1 条） | 只能当"这个名字存在"的证据，不能当序号表 |
+| Shodan stat editor 几何 dump | `C:\Users\Admin\HD2SDK-CommunityEdition\docs\shodan-acquisition-path.md:146` | 每个组件块的 `offset/indices/records/stride`（例如 `JumppackComponentData stride=280 indices=6 records=4`） | 与本地现算几何一致（本 build 背包 35 件 vs 它的 34 件 = 差一个新增件） |
+| HD2 Modding Wiki（网上） | [Audio Modding](https://boxofbiscuits97.github.io/HD2-Modding-Wiki/dev/audio/overview.html#wwise) | 确认 HD2 用 **Wwise**（`Wwise 2023.1.7.8574`）+ 音频 mod 走 `.wem` | 佐证 `*WwiseIndex` = 音频索引 |
+| 其它 | — | `deadworks.net/db/*` 是 **Deadlock** 的库，与 HD2 无关（死路，记录以免重踩） | — |
+
+**结论**：本地资料足够画出"**字段 → 类型**"的完整图，但**没有**任何来源给出 `EquipmentComponent` 的成员名（引擎成员名被剥），
+也没有人做过"背包能力移植"。所以"哪个字段是使用键行为门"只能靠**类型名 + 值→成员集对照 + 实机单变量**三步。
+
+#### 7.4.2 `EquipmentComponent`（232 B）字段图（`✓` typelib 类型名）
+
+| 偏移 | 类型 | 备注 |
+|---|---|---|
+| `+0x000` | u32 | 全表恒 0 |
+| `+0x004` / `+0x010` / `+0x020` / `+0x02C` | `CApiVector3` | 坐标/朝向类 |
+| `+0x080` | **`EquipmentType`** | **装备类枚举**（背包 12 个类，见 §7.4.3）|
+| `+0x084` | u8 | 351 行里只有 2 行非零 |
+| `+0x088` | **`EquipmentDropMode`** | 掉落模式枚举：全表 `{0:158, 1:182, 2:11}`（背包里的跳/补给都是 1）|
+| `+0x0B8` | **`AbilityId`** | **35 件背包全是 `2066`**（197/351 行非零）⇒ 共享值，不是判别位 |
+| `+0x0BC` | **`AbilityId`** | 背包全 0 |
+| `+0x0C0` | `WeaponGripType` | 握法枚举（武器侧）|
+| `+0x0D8` | **`EquipmentWwiseIndex`** | 音频索引 |
+| `+0x0DC` | **`BackpackWwiseIndex`** | 音频索引 ← **§7.3 的误判点**（8 只表示"音效组 8"）|
+
+#### 7.4.3 `EquipmentType` 值 → 类（`✓` 全表 351 行现算；名字为语义对齐的推断）
+
+| 值 | 件数 | 成员（背包侧）| 枚举名（推断）|
+|---:|---:|---|---|
+| 10 | 2 | Chemical Backpack、`0x8726D02AEAF98E86` | （老旧名表无此值）|
+| 17 | 10 | 10 件补给/弹药类背包 | `BackpackSupport` |
+| 18 | 3 | Maxigun、`0xBB4B15B588F974FD`、Cremator | `BackpackSupport` 变体 |
+| **19** | **2** | **Jump Pack `0x59C5CA839449B379` + HOVER PACK `0x5EC80F4F1CDB66CF`** | **`BackpackJumppack`** |
+| 20 | 1 | MEDIC BACKPACK | `BackpackMedic` |
+| 21 | 7 | 狗类/补给类 7 件 | `BackpackDrone` |
+| 22 | 1 | Shield Generator Pack | `BackpackEnergyShield` |
+| 23 | 1 | **Supply Pack `0x4EF9A47109239A58`** | **`BackpackSupply`** |
+| 24 | 1 | Warp Pack | `BackpackDisplacement` |
+| 25 | 4 | `0x967E…`（MeleeShield）、`0x5F9A…`、`BACKPACK-a`、`0xA4E7…` | `BackpackShield` |
+| 26 | 1 | Dark Fluid Vessel | （老旧名表无此值）|
+| 27 | 1 | 便携地狱火 | （老旧名表无此值）|
+| 28 | 40 | Larva Container 等任务物件 | `Objective` |
+
+**关键读数**：值 **19 收的正好是游戏里仅有的两件跳包**（Jump Pack / HOVER PACK），且 `EquipmentType` 是
+`EquipmentComponent` 里唯一区分"跳包 vs 补给包"的**具名枚举**（其余差异是 hash/资源引用）。
+⇒ 它是"使用键行为派发"的最佳候选（引擎很可能按这个类选装备行为类）。
+
+#### 7.4.4 背包族组件字段图（`✓` 类型名 + 与 HD2Runtime 语义名对照）
+
+| 组件 | stride | 关键字段 |
+|---|---:|---|
+| `JumppackComponentData` | 280 | `+0x000 f32` = **`jump.vertical_launch_velocity`**（Jump/HOVER = **40.0**，Dark Fluid = 35.0）；`+0x09C f32` = **`hover.duration`**（Jump Pack = **-1.0** = 无悬停；HOVER PACK = 6.0）；`+0x048…+0x060` 六个 **`AbilityId`**（Jump 行 = 2055/2056/2057/2058/2059/2060 连号）；`+0x044` = `SurfaceImpactType` |
+| `RechargeComponentData` | 4 | `+0x000 f32` = **`recharge.time`**（Jump 15 / HOVER 11.5 / Dark Fluid 8）|
+| `DepositComponentData` | 152 | `+0x000` `deposit.capacity`、`+0x004` `start_amount`、`+0x008` `refill_amount`、`+0x020/+0x024 AbilityId`、`+0x080 DepositRefill` |
+| `BackpackComponentData` | 1 | 纯标记（35 件全 `01`）|
+| `EquipmentComponentData` | 232 | 见 §7.4.2 |
+| `AbilityComponentData` | 32 | 行 = **`SpawnAbility[4]`**（35 件背包逐字节相同 `0C 00 …`）|
+
+#### 7.4.5 第三轮实验（2026-10-26 20:5x 已装，两件互不干扰的单变量）
+
+| 实验 | 目标件 | 改动 | 预测 |
+|---|---|---|---|
+| **A 正向** | Supply Pack `0x4EF9A47109239A58` | `EquipmentComponent+0x80` **23 → 19**（`Jumppack`/`Recharge` 行保留）| 按跳跃键生效 |
+| **C 反向** | Jump Pack `0x59C5CA839449B379` | `EquipmentComponent+0x80` **19 → 23** | 跳跃键失灵 |
+
+判读矩阵：
+
+| A（Supply）| C（Jump Pack）| 结论 |
+|---|---|---|
+| 能跳 | 失灵 | **`EquipmentType` = 使用行为派发门** `✓✓`；配方收口 = `Jumppack` 行 + `Recharge` 行 + `EquipmentType=19` |
+| 能跳 | 仍能跳 | 充分非必要（`EquipmentType` 只是"类标签"，另有路径）|
+| 不能跳 | 失灵 | 必要但不充分 ⇒ 下一候选只剩资源层（unit 状态机/动画是否含跳跃分支）或 `EffectReferenceComponentData`（3912 B，693 行全满、要扩块）|
+| 不能跳 | 仍能跳 | `EquipmentType` 与本机制无关 ⇒ 背包能力**不能靠纯数据移植**，收口为否证 |
+
+**风险**：`EquipmentType` 可能同时驱动军械库/配装 UI 的分类或图标 ⇒ Supply Pack 可能显示成跳包样式；不影响回滚。
+
+**装盘记录**
+
+| 项 | 值 |
+|---|---|
+| 注入件 | `out/jumpsupply/s4b.dl_bin`（md5 `84d593f54ef7257e5929a131925ad2d1`，47,259,488 B）|
+| 明文 | `out/jumpsupply/s4b.plain`（sha256 `29630cf8…bf252a`，round-trip 一致）|
+| 读回 | Jump Pack `EquipmentType=23`、Supply `EquipmentType=19`；两件都仍有 `Jumppack`(launch 40.0/hover −1.0) + `Recharge` 15.0 |
+| 被丢弃的中间件 | `s3b.*`（`+0xDC` 音频实验，§7.3 已作废）|
+| 回滚 | `cp out/jumpsupply/entities.before-jumpsupply <game>/data/game/generated_entities.dl_bin` |
