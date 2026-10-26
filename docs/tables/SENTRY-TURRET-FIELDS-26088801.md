@@ -672,6 +672,41 @@ python tools/whole_package_patch.py build --package 11bbdf8ce39e5fc5     --host 
 **推广**：这类"挂着不动/乱动"的问题，**先拿同族里行为正确的那台（这里是 AC-8）做逐层默认态对照**，
 差异那一层就是答案——比逐层试三个索引快得多。
 
+#### 3.8.4.8 普查：34 个「能被装」的炮塔壳，只有 AC-8 是自带姿态（2026-10-26 11:2x）
+
+**方法**（[`tools/turret_shell_survey.py`](../../tools/turret_shell_survey.py)）：
+① 从 `refs/entity-components.json` 取「`Turret` + `Wieldable` + `WeaponWielder` + `Unit` + `WeaponData`」的实体（只认 `ProjectileWeapon` 会漏掉火焰的 `SprayWeapon` 和激光的 `BeamWeapon`）；
+② 读 `Unit +0` 得壳 id（按壳去重）；③ 壳 id 在 `state_machine` 全库清单里找同 id 的 SM → 取所在包；
+④ 解出**展开态 clip**（状态名 `0x823905BD…`），用 `animation_probe` 数它**打到了几根骨骼**，与骨架总数比。
+
+**判据**：`A` = 有键 ≥60% 且（壳里有升降骨骼的话）升降也被打到；`B` = 半身 / 升降没打到；`C` = 空 clip（0 键）；`C0` = 空 clip 但壳里没有升降机构；`E` = 模板 B（状态机族不同，另算）；`D` = 没有部署机构（静态站 / 车顶站）。
+
+| 类 | 名称 | 壳 id | 展开态 clip | 有键/骨架 | 升降键到没到 | 结论 |
+|---|---|---|---|---|---:|---|
+| A 全身姿态（自带，不用调） | A/AC-8 Autocannon Sentry; 未知 | `0xCBFE1FC7158347F3` | `0x314AE842A9346C76` | 14/16 | 是 | **自带姿态，挂上就用** |
+| B 半身/升降没被打到（要调） | 未知 | `0x73681FFD58FA1A90` | `0xE0F4D80B2A9F57F4` | 1/8 | 否 | 升降没打到 ⇒ 要调 |
+| B 半身/升降没被打到（要调） | A/FLAM-40 Flame Sentry | `0x820CC3BAFE962858` | `0x7A43988B623CBEC1` | 1/10 | 否 | 升降没打到 ⇒ 要调 |
+| C 空 clip（要调位置） | A/MLS-4X Rocket Sentry | `0x37079568DC86E9C6` | `0x3FCF5875B0663A62` | 0/10 | 否 | 空 clip ⇒ 要调（+dz） |
+| C0 空 clip 但无升降机构（bind 或许就行，未验） | A/LAS-98 Laser Sentry | `0x56070F36CFFFA8A8` | `0x88F2CCF215A33E3B` | 0/6 | 无此机构 | 空 clip 但无升降 ⇒ bind 也许就行（未验） |
+| E 模板B（族不同，未验） | A/MG-43 Machine Gun Sentry; Gatling Sentry | `0x37CDE43876BA26BB` | — | — | 无此机构 | 模板 B，未验 |
+| E 模板B（族不同，未验） | A/GM-17 Gas Mortar Sentry; A/M-12 Mortar Sentr | `0x51A0812E3BCE2D74` | — | — | 无此机构 | 模板 B，未验 |
+| E 模板B（族不同，未验） | A/G-16 Gatling Sentry; 未知 | `0x61D9DDA22A59E9BC` | — | — | 无此机构 | 模板 B，未验 |
+
+**读数**：**34 个壳里只有 1 个 A —— 就是 AC-8**（`✓✓` 实机）。其余哨戒要么升降没被打到（火焰），
+要么展开态是空 clip（火箭、激光），要么根本是另一套状态机（MG-43 / 加特林 / 迫击炮）。
+
+**D 类 26 个（没有部署机构）** —— 不用改状态机、也不用调位置，挂上就是它的常态：
+`40mm 炮塔站` `9872EEB31A5F88FD`（FRV 原生件，`✓✓`）、`Ballistic Missile` `5D142C3A73EBC634`（TD-110 上位置正确、能转，`✓` 旧档）、`AA Emplacement` `49674794A165EDA8`、`Bunker Turret` `9926876B…` / `CD28A27A…`、`Cannon Turret` `4E342031…` / `CECD6979…`、`SAM Launcher` `A1BDB3A1…`、`Automaton Mortar Emplacement` `6293D7AB…`，以及敌机炮塔（Fusion Repeater / Gazer / Vox Engine / Factory Strider / War Strider / gunship turret 等）与 6 个没有 SM 的静态壳。
+
+⚠ 阵营要单独看：`AA Emplacement` / `Ballistic Missile` / `Bunker Turret` 是 **Faction 8（机器人）**、`Cannon Turret` 是 4、`SAM Launcher` 是 1；要让玩家操作还得 `Faction=1` + `Behavior=658`。
+
+**怎么再跑一遍**（34 个壳约 3 分钟）：
+
+```bash
+python tools/turret_shell_survey.py survey --out D:/mod/out/shell-survey \
+    --json D:/mod/out/shell-survey/survey.json
+```
+
 **模板 B 的待办（⚠ 未验，别照抄）**：MG-43/加特林默认 `E954AED4`（loop=1），部署过渡 `79DE1870`
 播完**没有**回指状态（事件表里没有 `Deployed` 那条 Link），所以它停在部署 clip 的末帧；
 迫击炮则显式走 `Deployed → s3（69484BEF，loop=1）`。
