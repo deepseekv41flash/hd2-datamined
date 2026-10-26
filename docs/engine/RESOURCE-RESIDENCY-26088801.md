@@ -162,6 +162,18 @@ python tools/whole_package_patch.py build \
 2. 非必要不整包驻留（我们的 7.6 MB 火箭 / 1.9 MB 火焰整包属于"实验方便"，发布版应瘦身）；
 3. 贴图类替换尽量**同 id 替换**而不是新增（同 id 只换数据，不增加条目数）。
 
+**社区仓库里有没有这类讨论？**（2026-10-26 实测检索）
+
+- `Boxofbiscuits97/HD2SDK-CommunityEdition` 的 issues/PRs 搜 `performance` 命中 5 条，
+  **全部是 SDK 工具自身的速度/内存**（mesh 导入导出提速、slim 文件加载、压缩/非压缩文件混放导致的内存暴涨），
+  **没有一条**讨论"mod 装多了拖累游戏"；
+- `Boxofbiscuits97/HD2-Modding-Wiki` 搜 `performance/memory/lag`：**0 条**。
+- 社区真正成文的性能纪律在**另一层** —— Lua/JIT 共享代码缓存：Bingus loader 的规则要求 mod
+  **不得 `jit.flush()`、不得下调 `jit.opt.start` 的 `maxmcode/maxtrace`、不得 `jit.attach`**，
+  因为这些缓存是**游戏与所有 mod 共享**的，一个 mod 违规会伤到全部（本项目
+  `docs/loader-authoring-rules.md` / `docs/public-re-offsets.md` 有记录）。
+  ⇒ "mod 太多会不会掉帧"在社区语境里**主要指这件事**，不是补丁包体积。
+
 **能怎么量**（本机现成入口）：`settings.ini` 里有
 `resource_memory_usage = "%APPDATA%/Arrowhead/Helldivers2/resource_memory_usage.txt"`，
 游戏正常退出后会写一份逐资源的内存占用报告。**装 mod 前后各跑一局、对比这个文件**就能把上面的推理变成数据
