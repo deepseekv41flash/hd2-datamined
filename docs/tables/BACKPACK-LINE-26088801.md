@@ -100,3 +100,49 @@
 - 投送舱换载荷：[POD-RACK-26088801](POD-RACK-26088801.md)
 - 战备额外条目：[UNRELEASED-STRATAGEMS-26088801](UNRELEASED-STRATAGEMS-26088801.md)
 - 实体表字段图：[ENTITY-TABLE-25988413](ENTITY-TABLE-25988413.md)
+
+## 7 背包的"特性"由哪些字段控制（`✓` 35 件全扫）
+
+**`BackpackComponentData` 只是一字节标记**（`01`），不携带任何参数 ⇒ 一件背包的"特性"取决于**它有哪些专用组件**。
+35 件里"非通用组件"的出现次数：
+
+| 组件 | 件数 | 控制什么 |
+|---|---:|---|
+| `AbilityComponentData` | **35** | 槽位存在，但 35 件的行都是 `{0xC,0}×4`（**无 id**）⇒ 背包的主动效果**不走 ability 槽** |
+| **`DepositComponentData`** | **23** | 最普遍的"功能件"标记（可存放/取出类，补给/弹药/狗类都有）|
+| `BehaviorComponentData` | 4 | 有 AI/行为（狗类、暗液体、便携地狱火）|
+| `VisibilityMaskComponentData` / `TwoPointChainComponentData` | 3 / 3 | — |
+| **`JumppackComponentData`** | **3** | **跳/悬浮能力本身**（Jump Pack、HOVER PACK、暗液体）|
+| **`RechargeComponentData`** | **3** | 与上一条**同现**：单个 f32 = 使用间隔（**15 / 11.5 / 8 s**）|
+| `ObjectiveCarryComponentData` | 3 | 任务搬运（暗液体、Larva 等）|
+| `ShieldComponentData` | 1 | 护盾背包的护盾参数（另有 `ShieldControllerComponentData` / `HitReact` 各 1）|
+| `InteractableMinigame` / `InteractableObjectiveTerminal` | 1 / 1 | 便携地狱火的交互玩法 |
+| `MaterialSwapComponentData` | 2 | 材质替换（外观变化）|
+| `WeaponDataComponentData` / `MeleeShield` / `Displacement` / `CarryEffect` … | 各 1–2 | 单件特色 |
+
+**三个代表件的"特色组件"（对照就一眼看出差别）**
+
+| 件 | 特色组件 |
+|---|---|
+| **Jump Pack** | `Ability` + **`Jumppack`** + **`Recharge`** |
+| **HOVER PACK** | 同上（只差 `Recharge` = 11.5 s）|
+| **Chemical Backpack（暗液体）** | `Ability` + `Jumppack` + `Recharge`(8 s) + `Behavior` + `GroundCheck` + `MaterialSwap` + `ObjectiveCarry` + `ObjectiveDynamicLink` |
+| Shield Generator Pack | `Ability` + `Shield` + `HitReact` |
+
+⇒ **"跳/悬浮"这一族的全部特性 = `JumppackComponentData`（参数）+ `RechargeComponentData`（间隔）**。
+三件的 `Jumppack` 行**前 4 个 float 完全相同**（`20 0 0 1`）⇒ 差别不在跳包参数里，而在冷却与其它组件。
+
+### 7.1 给别的背包加"Jumppack 配置"：能，做法是**插一行**
+
+```
+python tools/entity_hashmap_insert.py --block <JumppackComponentData 0x54270608> \
+    --key 0x<目标背包> --copy-row-from 0x59C5CA839449B379   # 源 = Jump Pack
+    # 想连冷却一起给：再插 Recharge 行（0x1F42878E，4 B）或直接改已有的那格 f32
+```
+
+- `entity_hashmap_insert.py` 会做**哈希图插入 + 行整行复制**，门禁含"全部旧键仍可查"（探测链不被破坏）；
+- 也可只 `--row` 指向已有孤儿行，代价是那一行内容被共享；
+- 反向操作（去掉跳跃）用 `--delete`。
+
+**可检验的预测**：给 Supply Pack 插 `Jumppack` 行 + 设 `Recharge` 后，它应当**能被跳跃键使用**（图标/技能条可能不变，因为那由配装/图标资源决定）。
+**风险**：该背包的 unit 没有推进器挂点/特效 ⇒ 跳跃动作可能没有视觉特效；`Behavior`/动画也可能不匹配。
