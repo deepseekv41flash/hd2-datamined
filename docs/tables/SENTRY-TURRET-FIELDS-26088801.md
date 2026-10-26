@@ -1035,15 +1035,68 @@ SM 字节级：`layer0.DefaultState @0x74 0→1`、`layer5.DefaultState @0xB4C 0
 唯一像载具的地方就是**一个可交互座位**（`SeatCollection` + `Interactable`）。它自带 `RotationSoundPlayer` ⇒ **确实有可转部件**，
 但那个转动不是 `TurretComponentData` 给的，而是**座位上玩家的瞄准驱动骨骼**（同一套"人操"逻辑）。
 
-**能不能往它身上挂别的东西？`✗` 数据层不行**，三条独立理由：
+**能不能往它身上挂别的东西？`✗` 数据层不行**，两条理由（第三条已作废，见下方更正）：
 1. **不在 Mount 哈希图里**（`mount_table.py show --entity 0x0E977C49DB7604F9` ⇒ "没有挂载记录"；全表 165 条记录，56 条 SeatCollection 里有它、Mount 里没有）；
-2. 就算硬插一条（`entity_hashmap_insert.py` 有这能力），槽里的 `anchor_a` / `anchor_c` 是**宿主骨架上的骨骼名哈希**
-   （FRV 槽 0 = `1405010999` / `600573527`），而工事只有 **5 根骨骼**、没有任何挂点 ⇒ 挂上去没有锚点可依附；
-3. 载具的挂载能力是和 `VehicleComponentData` 那一套绑在一起的，工事整套都没有。
+2. 载具的挂载能力是和 `VehicleComponentData` 那一套绑在一起的，工事整套都没有（`Vehicle*` 四件套 + `MountComponentData` 全缺）。
+
+> **⚠ 更正（2026-10-26 14:3x）**：先前写的"它只有 5 根骨骼、没有挂点所以挂不上去"**是错的**，两处都错：
+> ① 它的骨架其实是 **28 根**（`bones 0E977C49DB7604F9`：`traverse`、`weapon_pitch`、`weapon_swivel`、`weapon_hinge`、
+> `r_barrel`/`l_barrel`（双枪管）、`attach_gunner`、`IK_left_turret`/`IK_right_turret`、脚蹬/弹药箱/抛壳盖…）；
+> ② **挂载槽的锚点是"件侧"的**：`anchor_c = 600573527` 正好是原版 MG-206 的 `gun` 骨骼哈希
+> （比对了 MG-206 的 12 根骨骼）。我们把槽里的件换成 MG-43/G-16/迫击炮/激光时**没改锚点**（仍是 MG-206 的 `gun`），
+> 五台却全部正常 ⇒ **锚点不是"能不能用"的硬条件**，更不能拿它当"宿主没挂点"的证据。
+> 结论部分不受影响（"不能当宿主"仍成立），但**理由只剩上面两条**。
+
+**它的骨架完全能转——缺的只是"驱动者"（`✓` 离线，2026-10-26 14:3x）**：
+`traverse`（yaw 轴，`551832871`）、`weapon_pitch`（pitch 轴，`4098057313`）、双 `r_barrel`/`l_barrel`、
+`attach_gunner`（炮手锚点）、`IK_left_turret`/`IK_right_turret`（与 MG-206 同名同哈希 ⇒ 玩家手部 IK 同约定）。
+⇒ 它"人操能转"靠的是**座位上玩家的瞄准驱动这些骨骼**（外加 `RotationSoundPlayer`），
+而不是 `TurretComponentData`。所以挂到车上能否转，取决于**车位的 aim 声明能不能指到这几根骨骼**——这正好接上下面那张座位表的差异。
+
+**座位记录：结构完全一样，内容差 4 组字段（2026-10-26 14:3x，`✓` 离线）**
+
+`SeatCollectionComponentData` 只有一张表、行宽固定 **424 B**，工事和载具用的是同一套 schema：
+
+| 行内偏移 | 字段 | 说明 |
+|---|---|---|
+| `+0` | `transition_id` u32 | 进座过渡动画 id |
+| `+8 … +264` | 16 个乘客槽 × 16 B | `{u32 a, u32 b, u64 entity}`（预置乘员/座位占用）|
+| `+264 … +272` | `flags` 8 B | 行为位图 |
+| `+296` / `+300` | u32 ×2 | 未解 |
+| `+308 … +396` | **`aim` 22 × u32** | 瞄准相关（见下）|
+| `+396 … +418` | `tail_flags` 22 B | 未解 |
+
+逐条对比（`mount_table.py seats` + 自定义 dump）：
+
+| 记录 | kind | transition | flags | `aim` 非零 | 乘客槽 |
+|---|---|---:|---|---:|---|
+| `M-102 Gunner FRV`（row 8/46） | `vehicle` | 26 | `01111101` | **4** | 0 |
+| `M-103 Supply FRV`（row 48） | `vehicle` | 27 | `01111101` | **4** | 0 |
+| `M-104 Incinerator FRV`（row 47） | `vehicle` | 28 | `01111101` | **4** | 0 |
+| `manned_turret`（row 39–42） | `interactable` | 32 | `00111000` | 0 | 0 |
+| `HMG Emplacement`（row 37/38） | `interactable` | 32 | `00011000` | 0 | 0 |
+| `Anti-Tank Emplacement`（row 33） | `interactable` | **1** | `00001000` | 0 | 0 |
+| 对照 `Scout Strider`（row 5） | `vehicle` | 20 | `01011000` | 0 | 1（Trooper）|
+
+**四条硬结论**：
+1. **schema 相同、行宽相同、字段位置相同** ⇒ 工事的座位不是"另一种结构"，只是同一种结构的另一种填法；
+2. `kind` 字段不同（`vehicle` vs `interactable`）——这决定了**进车**还是**按 E 坐上去**；
+3. `transition_id` 是**每个座位自己的**入座过渡动画（三台 FRV 26/27/28 各不相同，HMG=32、AT-12=1）；
+4. **`aim` 22×u32：全表 56 行里只有那 4 条 FRV 座位非零（恰好 4 个值），工事全零**，
+   且三台 FRV 型号的 4 个值**完全相同**（`0xC734BAB7` / `0x04A36AB4` / `0x7CFDDD00` / `0x46868CEE`）
+   ⇒ 这是**宿主侧**的引用，不是"挂件侧"的。
+   已排除两种解释：**不是 FRV 骨架节点哈希**（FRV `unit` 193 个节点里没有），**也不是原版 MG-206 的骨骼哈希**（12 根里没有）
+   ⇒ 更像瞄准/相机类预设的 u32 名字哈希（`⚠` 含义待定）。
+
+⇒ 所以"工事在车上能不能转"的答案落在第 4 条上：**它的座位不声明任何 `aim`**，
+车位的 4 个 aim 引用是给 FRV 自己那套炮手武器的；工事挂上去后**既没有 `TurretComponentData`，也没有座位 aim 指到它的 `traverse`/`weapon_pitch`**
+⇒ 结构上预期**不转**（但仍可能出模型、能开火）。
 
 **由此得到的下一步（若 HMG 实机"不转"）**：走**座位表**路线而不是挂载表——
 把车位那一行的 `SeatCollection` 改成 `manned_turret` 那种（表里 row 39–42 就是它的四条记录，`kind=interactable`），
-让车位的瞄准改由"人操"模式驱动。这是目前唯一有依据的备选。
+让车位的瞄准改由"人操"模式驱动；或者试着把 `aim` 的 4 个槽换成工事骨架上的轴骨骼
+（`traverse = 551832871`、`weapon_pitch = 4098057313`、`attach_gunner = 3603131125`）——前提是先解出 `aim` 字段真正的语义。
+
 
 #### 3.8.4.11 火焰哨戒：同一套判据照抄（2026-10-26 12:1x，✓✓ 实机）
 
