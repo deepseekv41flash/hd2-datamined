@@ -147,7 +147,7 @@ python tools/entity_hashmap_insert.py --block <JumppackComponentData 0x54270608>
 **可检验的预测**：给 Supply Pack 插 `Jumppack` 行 + 设 `Recharge` 后，它应当**能被跳跃键使用**（图标/技能条可能不变，因为那由配装/图标资源决定）。
 **风险**：该背包的 unit 没有推进器挂点/特效 ⇒ 跳跃动作可能没有视觉特效；`Behavior`/动画也可能不匹配。
 
-### 7.2 首个实验：给 Supply Pack 插跳跃（2026-10-26 20:4x，已装，`⚠` 待实机）
+### 7.2 首个实验：给 Supply Pack 插跳跃（2026-10-26 20:4x，`✗` 否证 → 见 §7.3）
 
 | 项 | 值 |
 |---|---|
@@ -165,3 +165,68 @@ python tools/entity_hashmap_insert.py --block <JumppackComponentData 0x54270608>
 | 能起跳但**没有推进器特效/动作怪** | 参数够了，缺视觉资源（unit 无推进器挂点/动画）⇒ 属资源层，数据层到此为止 |
 | 跳跃键**毫无反应** | 还缺其它件：下一步候选是 `EquipmentComponentData` 的类型字段、或 `AbilityComponentData` 的 id（35 件背包这一格全是 0，但**背包的"使用键"绑定可能就吃它**）|
 | 背包**不能装备/游戏异常** | 立刻回滚（`cp` 回滚件即可）|
+
+**实机结果（2026-10-26 20:4x）**：跳跃键**完全没反应** ⇒ 走第三行分支，进入 §7.3。
+
+### 7.3 第一轮否证 + 第二轮：`Equipment+0xDC` = "使用键行为类"（`✗` 结果 / `✓` 离线 / `⚠` 已装待测）
+
+**否证结论**：`JumppackComponentData` 行 + `RechargeComponentData` 行**不足以**让一件背包会用跳跃键。
+同时可以排掉 `AbilityComponentData`：35 件背包那一行是**逐字节相同**的 `0C 00 … 0C 00 00`（32 B，无任何 id），
+它不可能是判别位。
+
+**离线排查（`✓` 全表扫）**：把 Jump Pack / HOVER PACK / Dark Fluid Vessel / 便携地狱火 这四件
+"**按使用键主动激活**"的背包当一组，在**全部 17 个背包组件 × 每 4 字节**里找"四件同值、外件没有"的字段，
+**唯一命中**：
+
+| 命中 | 值 | 独占性 |
+|---|---|---|
+| **`EquipmentComponentData +0xDC`** | **8** | 35 件背包里只有这 4 件是 8；其余 31 件没有 8 |
+
+`+0xDC` 在整个 `EquipmentComponentData`（351 行）里的分布也支持"背包专用枚举"：
+**非零行恰好 30 个且全是背包**（321 行为 0）。
+
+**按 `+0xDC` 给 35 件分组（`✓`，与"特色组件"完全自洽）**
+
+| `+0xDC` | 件数 | 代表件 | 该组组件特征 |
+|---:|---:|---|---|
+| 0 | 6 | 两个未发布 `BACKPACK`、C4 Pack、3 个补给件 | 无"主动使用"组件 |
+| 1 | 1 | **Supply Pack** `0x4EF9A47109239A58` | `Deposit` |
+| 2 | 5 | Maxigun、`0x0949…`、`0x26BD…` 等 | `Deposit`（部分带 `Tag`/`Animation`/`TwoPointChain`）|
+| 3 / 4 / 5 | 3 | `0x5F9A…`、两件盾（弹道盾/定向盾）、Warp Pack | `Shield`/`ShieldController`/`MeleeShield`/`Displacement` |
+| 6 | 7 | 补给类（含两件 Recoilless/Spear 类）| `Deposit` |
+| 7 | 1 | Shield Generator Pack | `Shield`+`HitReact` |
+| **8** | **4** | **Jump Pack / HOVER PACK / Dark Fluid Vessel / 便携地狱火** | `Jumppack`（地狱火为 `Behavior`+`InteractableMinigame`）|
+| 9 | 1 | MEDIC BACKPACK | `Deposit` |
+| 10 | 3 | 补给类 | `Deposit` |
+| 13 / 14 | 2 | Chemical Backpack / Larva Container | `ObjectiveCarry`+`CarryEffect` |
+| 15 | 1 | Cremator Backpack | `Deposit`+`TwoPointChain`+`Animation` |
+
+⇒ 判读：`+0xDC` = **"背包的使用键行为类"**（8 = 需要玩家按键激活的主动能力；**具体效果**仍由
+`Jumppack` / `Behavior` / `InteractableMinigame` 这些件提供）。这与"地狱火（不是跳包）也是 8"吻合 ——
+它共享的是"按键激活"这一层，不是"跳跃"。
+
+**第二轮实验（2026-10-26 20:5x 已装，两个互相独立的单变量，一局两个读数）**
+
+| 实验 | 目标件 | 改动 | 预测 |
+|---|---|---|---|
+| **A 正向** | Supply Pack `0x4EF9A47109239A58` | `EquipmentComponentData+0xDC` **1 → 8**（`Jumppack`/`Recharge` 行保留）| 跳跃键生效 |
+| **C 反向** | Jump Pack `0x59C5CA839449B379` | `EquipmentComponentData+0xDC` **8 → 1** | 跳跃键失灵 |
+
+判读矩阵：
+
+| A（Supply）| C（Jump Pack）| 结论 |
+|---|---|---|
+| 能跳 | 失灵 | **`+0xDC` 就是使用行为开关** `✓✓`；配方 = `Jumppack` 行 + `Recharge` 行 + `+0xDC=8` |
+| 能跳 | 仍能跳 | `+0xDC` 充分非必要 ⇒ 还有第二条路径，继续查 |
+| 不能跳 | 失灵 | `+0xDC` 必要但不充分 ⇒ 下一候选 **`EffectReferenceComponentData`**（3912 B，跳/盾/位移/搬运类才有；**该块 693 行全满，插行要先扩块**）|
+| 不能跳 | 仍能跳 | `+0xDC` 与本机制无关 ⇒ 下一轮改用 `+0x80`（19↔23）与 `Attachable+0x00` |
+
+**装盘记录**
+
+| 项 | 值 |
+|---|---|
+| 注入件 | `out/jumpsupply/s3b.dl_bin`（md5 `45bcd28dab62f89c2e4d084625850b5c`，47,259,488 B）|
+| 明文 | `out/jumpsupply/s3b.plain`（sha256 `6b327ce5…fea337`，round-trip 一致）|
+| 门禁 | `entity_field_set.py` 两次全过（G1/G2/G3/G4/G7/G8/G6）；读回：Supply `+0xDC=8`、Jump `+0xDC=1`，Supply 的 `Jumppack`/`Recharge` 行仍在 |
+| 回滚 | `cp out/jumpsupply/entities.before-jumpsupply <game>/data/game/generated_entities.dl_bin`（回到"未插跳跃"状态）|
+
