@@ -45,6 +45,7 @@
 | **只给某一件甲加效果** | [ARMOR-PASSIVE-STATS](docs/tables/ARMOR-PASSIVE-STATS-26088801.md) | **§2 单件级（改 kit 的 `+0x1C`）· §6 配方 · §2 末尾「没有空被动」的否证** | `26088801` |
 | **投送舱送什么（战备空投舱换载荷）** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§1 槽位结构 · §2 前 N 个槽才生成 · §3 换物品配方** | `26088801` |
 | **换进来的物品只有紫问号 / 网格材质不加载** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§4 两个包槽（`+0xA8` + `+0xF8`）· §5 item→包解析表** | `26088801` |
+| **狗背包（AX/AR-23 Guard Dog 及同类）的武器怎么挂上去** | [BACKPACK-DOGS](docs/tables/BACKPACK-DOGS-26088801.md) | **§1 三层链路 · §2 十架无人机全表 · §3 战备行 `+0xF0` · §6 换枪实验** | `26088801` |
 | **改背包数值（跳跃冷却/跳跃高度/补给次数/护盾半径/位移距离）** | [BACKPACK-VALUES](docs/tables/BACKPACK-VALUES-26088801.md) | **§1 五个组件的字段表（偏移+语义名+现值）· §2 一条命令 · §3 第一轮已装盘** | `26088801` |
 | **背包能不能"换特性"（把跳跃搬到补给包）** | [BACKPACK-LINE](docs/tables/BACKPACK-LINE-26088801.md) | **§8 收口：纯数据走不通（四轮实验 + 按 5 崩溃）· §7.4 字段类型图（typelib + HD2Runtime）** | `26088801` |
 | **哨戒炮/炮塔多久自动消失、各字段含义** | [SENTRY-TURRET-FIELDS](docs/tables/SENTRY-TURRET-FIELDS-26088801.md) | **§2 寿命字段（`HellpodPayload +0x04`）· §3 逐组件字段表 · §4 一条命令** | `26088801` |
@@ -182,6 +183,7 @@
 | ★ [POD-RACK-26088801](docs/tables/POD-RACK-26088801.md) | 投送舱换载荷：rack 568 B 行 / 槽位语义 / **`+0xA8`+`+0xF8` 双包声明** / item→包解析表 / 六轮实机 / **§8 整包补丁驻留（✓✓：一个舱三件、两个零声明）** | `26088801` |
 | ★★ [TURRET-SM-RECIPES-26088801](docs/tables/TURRET-SM-RECIPES-26088801.md) | **炮塔/工事状态机配方总表（手册型）**：一个 u32 修好一件（出场即展开、不自转、能瞄准）。五条判据 = 模板 A 选展开态 / 模板 B 钉"部署过渡末帧定格" / 按 state 名 `0x9EA750D5` 关扫视层 / 人操两轴只看"是不是常开 `Time` 层 + 有键 clip" / 字节级自检；**11 件逐件配方**（AC-8·火箭·火焰·激光·迫击炮·特斯拉·MG-43·加特林·HMG-101·AT-12·FX-12）+ 一件一行总表 + 11 条已踩坑 | `26088801` |
 | ★★ [BACKPACK-VALUES-26088801](docs/tables/BACKPACK-VALUES-26088801.md) | **背包自身数值的字段表 + 改法（手册型）**：`Jumppack +0x00` 起跳速度 40（`+0x9C` 悬停 = −1 无/6 s）、`Recharge +0x00` 冷却 15、`Deposit +0x00/+0x04/+0x08` 补给次数 4/4/1、`Shield +0x00/+0x4C/+0x58/+0x5C/+0x60` 半径与耐久回充、`Displacement +0x78…` 位移全套；一条命令一个字段 + 第一轮已装盘（冷却 5 s / 跳高 60 / 补给 8 次 / 护盾 2 m） | `26088801` |
+| ★★ [BACKPACK-DOGS-26088801](docs/tables/BACKPACK-DOGS-26088801.md) | **AX 狗背包的武器挂载**：三层实体（战备行 → 背包 item → 无人机）—— 无人机是完整飞行单位（18 组件），武器是独立实体（18 组件），**挂载句柄 = `MountComponentData+0x00` 一个 u64**（与载具同字段）；十架无人机 × 四族武器（实弹/激光/电弧/喷射）；战备行 `+0xF0` 全表仅 4 行非零；背包→无人机的生成引用 xref 负结果 | `26088801` |
 | ★ [BACKPACK-LINE-26088801](docs/tables/BACKPACK-LINE-26088801.md) | 背包族开线档：35 件全集与投放两条路线 / **§7.4 字段类型图（typelib 类型名 × HD2Runtime 语义名）** / **§8 收口：给别的背包加跳跃能力 = 纯数据走不通**（四轮实测，按 5 崩溃；`--row` 共享行技巧可给满块加组件） | `26088801` |
 | ★ [WEAPON-AMMO-RESERVE-26088801](docs/tables/WEAPON-AMMO-RESERVE-26088801.md) | 三种供弹模型 / `Rounds` 与 `Magazine` **两套备弹字段** / 五把背包武器改成自带备弹（已实机）/ 清空槽位的坑 | `26088801` |
 | ★ [PROJECTILE-PROXIMITY-26088801](docs/tables/PROJECTILE-PROXIMITY-26088801.md) | **近炸引信字段**（弹丸行 `+0x94` 半径 / `+0x88` 阈值角 / `+0xA0` 保险距离）；AC-8 在备弹 289 上 | `26088801` |
