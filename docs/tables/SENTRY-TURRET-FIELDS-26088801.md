@@ -750,6 +750,10 @@ mesh/material/texture 都行）；但**动画播放器/包级注册**可能仍�
 
 ⇒ 这就是 AC-8 当初的形态：**声明口负责让包（连带动画）被加载，补丁只负责改资源**。
 
+**✓✓ 实机（C3）**：不叫原版、不靠肉身带战备，炮手位上那台**位置正确、不卡车体、不自转** —— 「包走 `+0xA8` 声明 + 修正走补丁」这套配方成立。
+
+**接着测 E-R**（已装）：把同一 41 条整包改走**注册表包**（`9ba626afa44a3aa3.patch_10`，7.6 MB）、战备表**零声明**、`patch_9` 保留补位；用来判定"两种宿主对动画是否都无效"（见 [资源层驻留 §7.1](../engine/RESOURCE-RESIDENCY-26088801.md)）。
+
 **已备好、未安装的 C 变体**：`D:/mod/out/sm-verify/strat_declare_rocket.sealed.dl_bin`
 （sha256 `dae271681b372bbb`，行 57 `+0xA8` = `11BBDF8CE39E5FC5`，行 59 仍为 0）。
 装它：拷成 `data/game/generated_stratagem_settings.dl_bin` 即可（其余不动）。
