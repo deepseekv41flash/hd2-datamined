@@ -280,3 +280,50 @@ Rover 若吐电弧 ⇒ 电弧类可挂。若出现紫问号/武器不可见 ⇒ 
 
 **装盘**：entities = `out/dogs/g2.dl_bin`（md5 `5de91c96fe0b515f59f3ac4201876550`，47,259,584 B，round-trip 一致）。
 回滚：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`（回到"只改背包数值"的干净态）。
+
+## 10 紫问号的解法：把 donor 的包做**整包驻留**（2026-10-26 22:5x 已装，`✓` 机制 / `⚠` 待实机）
+
+**问**：能不能把挂那把枪的包驻留下来，避免紫问号？
+**答**：能，这正是 `.patch_N` 的整包驻留路线（载具线 P1–P4 已实测过多轮）。
+
+### 10.1 为什么紫问号是"包不在场"
+
+- 紫问号 = **该 item 的网格/材质/贴图没加载**，不是 `Mount` 写错（写错是"什么都没有"或崩）。
+- 用户判断：上一轮 MG-43 能显示，很可能是**那局地图上刚好刷出了 MG-43**（世界里的拾取物会把它的包拉进内存），
+  而不是"玩家带着"——也就是**靠运气**。要脱离运气，就得让包常驻。
+
+### 10.2 实现（一条命令一个包）
+
+```bash
+python tools/whole_package_patch.py build     --package <item 的 LoadoutPackageComponentData+0x08>     --host f6fb08cc02d24255 --install
+```
+`.patch_N` 把资源按 `file_id` 塞进**已经常驻的宿主包**，全局可查——不受 `+0xA8` 那几个"有限跨包口"的限制。
+
+| donor | 包（`LoadoutPackage+0x08`）| 包内资源 | toc / gpu / stream | 产出 |
+|---|---|---|---|---|
+| **AC-8 自动加农炮** `0xA8CFFB316F0B5C5F` | `0x6AD7CC21015A5F85` | 51 条（texture13/anim10/particles7/material6/mesh4/physics2/bones1/state_machine1…）| 3.86 / 4.39 / 4.87 MB | **patch_18** |
+| **ARC-3 电弧** `0x96DE9CD50F7306E6` | `0x2A9FB8F5D0576EAE` | 44 条（texture13/particles8/material8/anim7/bones2/mesh2/state_machine1…）| 4.50 / 4.06 / 3.65 MB | **patch_19** |
+
+**注意**：这两个包里**没有 `unit`** 资源，只有网格/材质/贴图/动画/状态机 ⇒ 说明紫问号缺的是**渲染资源**；
+item 的 `unit` 多半在别处（大概率在常驻的 base 共享包里）——这一点是**推断，未单独验证**（`⚠`）。
+
+### 10.3 第四轮（已装，`⚠`）
+
+| 狗 | 无人机 | 挂的 donor | 驻留 |
+|---|---|---|---|
+| **Guard Dog** | `0xA0FF2F9A0CA6992A` | **AC-8** `0xA8CFFB316F0B5C5F` | **patch_18**（已装）|
+| **Rover** | `0x5BEEC97F4C7F4AE9` | **ARC-3** `0x96DE9CD50F7306E6` | **patch_19**（已装）|
+
+**测法（关键）**：这一局**不要**携带 AC-8 / ARC-3，也尽量别让地图上刷出它们，直接召唤 Guard Dog / Rover。
+
+**判读**
+
+| 现象 | 结论 |
+|---|---|
+| 两把都正常出模型、能开火 | **驻留 = 紫问号的正解** `✓✓` ⇒ 任意 donor 都能"无条件挂"，不再看运气 |
+| 仍然紫问号 | 缺的不在 `LoadoutPackage+0x08` 这个包里 ⇒ 要找到真正含 `unit` 的包（下一候选：`srkit list --id <item 资产 id> --type unit` 全库定位）|
+| 出模型但不开火 | 资源解决了、行为/弹道不匹配（回到 `BehaviorId` / 武器族问题）|
+
+**装盘**：`f6fb08cc02d24255.patch_18`（51 条）+ `.gpu_resources` + `.stream`；`patch_19`（44 条）同理；
+entities = `out/dogs/h1b.dl_bin`（md5 `404668faaf9255736d7d1ca838a51bc4`）。
+**回滚**：删掉 `data/f6fb08cc02d24255.patch_18*` 与 `patch_19*` 六个文件；entities 回 `out/bkval/p1e.dl_bin`。
