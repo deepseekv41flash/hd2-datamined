@@ -1985,6 +1985,56 @@ AT 的 `+0x20 = 1` 与那 8 条一致，`+0x24 = 2` 则在 13 条里**独此一�
 盘上最终状态：`AP 地雷阵 = 原生 AT 配置`（`generated_entities.dl_bin` sha256 `066f527c7305ef7a` + `patch_14` 整包驻留）；
 `+0x18=367` 那次是实验件，已回滚。
 
+#### 3.8.4.26 MS-11 Solo Silo 三件套：挂车 + 标记器塞进 MG-43 投送舱 + 额外战备对照组（2026-10-26 19:0x，`⚠` 待实机）
+
+§3.8.4.20 里 MS-11 只做到"查清字段"，本轮把没做的那半截补完。**三处改动，一次装盘**：
+
+| # | 改什么 | 文件 | 值 |
+|---:|---|---|---|
+| 1 | **把发射井挂到车**：M-102 FRV 炮手位（mount 行 19 槽 0）| `generated_entities.dl_bin` | `0x085C1EDB038EC24E`（MG-206）→ **`0xD24156BD98FFF3FE`**（Solo Silo）|
+| 2 | **标记器塞进 MG-43 支援武器的投送舱**（rack 行 **47**，`spawn=1`）| 同上 | 槽 0/1 `0x11C27D3BABB38956`（Machine Gun）→ **`0xFC13460592CA79AA`**（Solo Silo Targeting Remote）|
+| 3 | 标记器的**包声明**（`+0xF8` = 该物品的 `LoadoutEntry`）| `generated_stratagem_settings.dl_bin` | 行 `TEAM WEAPONS. MACHINEGUN`（id 95，组8 行17）`0x1B4F8FA2` → **`0xADF7054D`** |
+| 4 | **对照组**：额外战备 | 同上 | 行 34（`Resupply`）`+0xC8`：0 → **92**（`Solo Silo`）⇒ 带 Resupply 就同时来一台原生 MS-11 |
+| 5 | 挂车那台的**资源驻留** | `data/f6fb08cc02d24255.patch_15` | 包 **`0971e953fcbdd346`** 整包 47 条（toc 17,608,656 `006e0ac6d9df73d0` / gpu 2,935,704 `314adda447ccb65c` / stream 5,739,888 `dd757d60a76db28f`）|
+
+**本轮的三条离线结论（`✓`）**
+
+1. **MS-11 不需要状态机修复**：它的 SM `0x8AFF7F0793A5BCED`（300 B）只有 **1 层 1 个状态（`Empty`, loop=1）**
+   —— 没有折叠/展开机构，挂上去不需要改 `DefaultState`（与十一件炮塔都不同）。
+2. **MS-11 也没有武器组件、连 `Behavior` 都没有**（14 个组件：`Ability`+`Attachable`+`EffectReference`+
+   `EncyclopediaEntry`+`Explosive`+`Faction`+`GuidanceTarget`+`Health`+`LoadoutPackage`+`SeekingMissile`+
+   `SensorEye`+`Tag`+`Unit`+`Visibility`）⇒ 不用改 658，属于"FX-12 那一类被动装置"。
+   发射井的 unit 资产 = `0xEFDE46FE38A7087B`（只有 mesh，无 bones/physics），在包 `0971e953fcbdd346`
+   （另一副本在 `65ee777b72347cb4`）。
+3. **"标记器 ↔ 发射井"确实没有静态交叉引用**（§3.8.4.20 的结论），所以本轮不靠字段配对，靠**运行时指示**：
+   标记器 `LaserDesignatorComponentData`（指示距离 750 m）+ `WeaponLinkerComponentData`，发射井 `GuidanceTarget`+`SeekingMissile`。
+
+**标记器的资源不需要额外驻留**：它的 unit 资产 `0x64CDB52ACA152BE1`（bones+physics+mesh）全在 **`18235e0c9ec0e636`**
+这份共享玩家包里；本轮只把 `+0xF8` 指向它的 `LoadoutEntry`，让引擎按"第二个包槽"把这一包带进来
+（[POD-RACK §4](POD-RACK-26088801.md) 的两包机制），**不动 `+0xA8`**（那还是 MG-43 的包，保证舱体本身能渲染）。
+
+**判读（一局两验）**
+
+| 步骤 | 做法 | 看什么 |
+|---|---|---|
+| **对照** | 配装里带 **Resupply**（会自动多出 **Solo Silo** 条目）；炮手位那台 MS-11 先不管 | ① 任务开始的战备栏里**有没有 Solo Silo 图标**；② 叫它下来**出不出发射井**；③ 拿标记器（来自 MG-43 舱）**指一个敌人 → 井会不会发射** |
+| **实验** | 同一局里看**车上那台**（炮手位 MS-11）| ④ 车上**出不出井**（`Wieldable=False` 也能挂，参照 FX-12）；⑤ 标记同一个目标时，**车上那台会不会也发射** |
+
+| 观察 | 结论 |
+|---|---|
+| ③ 原生井能打、⑤ 车上井也能打 | **挂载件参与"当前指示"** ⇒ MS-11 可以做成"车载发射井"，`Ability` 在挂载路径下依然工作 |
+| ③ 能打、⑤ 不打 | 挂载的井**丢了 Ability 触发链**（或它只在自己被战备投放时启用）⇒ 下一手查 `Ability` 行的触发条件 |
+| ③ 也不打 | 说明"标记器 → 井"这条链**需要装备/配装语义**（不是纯数据耦合），`SensorEye`/`GuidanceTarget` 之外还有关卡 |
+| ④ 不出井 | 挂载槽拒绝（或资源缺）⇒ 先看是不是紫色问号（资源）还是干脆没有（槽拒绝）|
+
+**现场**：`generated_entities.dl_bin` = `0f5b1a764919e257`、`generated_stratagem_settings.dl_bin` = `e187240b8df5fffb`、
+`patch_15` 已装（序号 0…15 连续）。回滚件在 `out/ms11/backup/`（`entities.before-ms11` / `stratagem.before-ms11`）。
+
+**⚠ 本轮踩到的一个工具坑（必须记）**：`pod_rack_swap.py` 的 `--slot0` / `--slot1` **带默认值**
+（帮助里那两行 `GL-21 Grenade Launcher` / `B-1 Supply Pack` 就是默认值，不是注释）。
+**只给 `--slot0` 不给 `--slot1` ⇒ 槽 1 会被静默写成 B-1 Supply Pack**（本轮第一版就是这样，G4 还会报"2 处读回一致"，
+因为它的"镜像槽"就是槽 1）。⇒ **只改一格也要把两个参数都显式给出**，或事后回读 `--show`。
+
 ## 4 怎么改
 
 ### 4.1 一条命令（保内容哈希）
