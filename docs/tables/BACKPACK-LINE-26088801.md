@@ -330,3 +330,51 @@ python tools/entity_hashmap_insert.py --block <JumppackComponentData 0x54270608>
 | 读回 | Jump Pack `EquipmentType=23`、Supply `EquipmentType=19`；两件都仍有 `Jumppack`(launch 40.0/hover −1.0) + `Recharge` 15.0 |
 | 被丢弃的中间件 | `s3b.*`（`+0xDC` 音频实验，§7.3 已作废）|
 | 回滚 | `cp out/jumpsupply/entities.before-jumpsupply <game>/data/game/generated_entities.dl_bin` |
+
+### 7.5 第三轮结果：`EquipmentType` 不是"跳"的开关，但**按 5 会崩** ⇒ 行为分支确实被进去了（`✗`+`✓`）
+
+| 实验 | 结果（2026-10-26 21:0x 实机） | 读数 |
+|---|---|---|
+| **A** Supply `EquipmentType 23→19`（跳包类）| 跳跃键**仍不能跳** | 单改类**不产生跳跃** |
+| **C** Jump Pack `EquipmentType 19→23`（补给类）| **仍能正常跳** | `EquipmentType` **不是跳跃的必要条件** ⇒ 它不参与"跳跃键"这条路 |
+| **新现象** | Supply Pack **按 5（原版使用键）→ 游戏崩溃** | **关键**：说明我们的改动**确实被行为层读到了**——"使用键"这条路把 Supply Pack 当跳包处理，然后踩空崩掉 |
+
+**推理（`✓` 事实 + 推断）**
+
+1. 第一轮（只有 `Jumppack`+`Recharge` 行、类是原版 23）**不崩**；
+   第三轮（多改了类 19）**按 5 崩** ⇒ **`+0x80` 类值参与了"使用键"的派发**（否则不会换代码路径），只是不参与跳跃键。
+2. 崩 = 跳包能力分支被进入，但 Supply Pack **缺这条分支要的东西**（空指针）。
+   缺件候选（按可能性）：
+   - **`EffectReferenceComponentData`**（3912 B，只有跳/悬浮/盾/位移/搬运类才有）——跳包分支可能直接索引"推进器特效"；
+   - **`DepositComponentData`** 与跳包能力同时存在 ⇒ 使用键可能先被"取补给"吃掉、或在合成配置上踩空；
+   - **unit 资产/状态机**（Supply 的 asset 没有推进器骨骼与跳跃动画状态）——资源层。
+3. 因此第四轮的设计目标：**把跳包组件集补齐**，看"补件"能否救活。
+
+### 7.6 第四轮：给 Supply Pack 补齐跳包组件集（2026-10-26 21:0x 已装，`⚠`）
+
+| 项 | 值 |
+|---|---|
+| 目标件 | Supply Pack `0x4EF9A47109239A58` |
+| 已有（第一轮）| `Jumppack`（行 3，复制自 Jump Pack）+ `Recharge` = 15 s（行 3）|
+| **新增①** | **`EffectReferenceComponentData`**（块 `0x604434C9`，stride 3912）：**共享** Jump Pack 的行 **478**（只加键、不改行内容）|
+| **新增②** | `EquipmentComponent+0x80` `EquipmentType` = **19**（跳包类）|
+| 对照件 | Jump Pack **完全原版**（`EquipmentType=19`、行 1/1/478）|
+| 注入件 | `out/jumpsupply/s5b.dl_bin`（md5 `c8ac576fb4669600619e5936cb5ecdf3`，47,259,488 B；明文 sha256 `382d29c5…2b7635` round-trip 一致）|
+
+**工具要点（新增能力，值得记）**：`entity_hashmap_insert.py --row <行号>` **可以指向已被别的键占用的行**（只插键、不改行内容）
+⇒ **块满（`EffectReference` 693 行 / 693 键，无孤儿行）时不必扩块**，直接共享别件的行即可。本轮 `--row 478` 门禁 G1–G6 全过
+（槽 500 = 起点，0 步探测）。
+
+**判读**
+
+| Supply 现象 | 结论 |
+|---|---|
+| **能跳** | 背包跳跃 = **组件集齐就够**（`Jumppack`+`Recharge`+`EffectReference`+类 19）⇒ `✓✓` 配方收口，可推广到其它背包 |
+| **仍崩（按 5）** | 缺的不是组件而是**资源**（unit 资产缺推进器/跳跃状态机）⇒ 与 MS-11 车载发射井同构，**纯数据到不了**，只能换壳 |
+| **不崩但也不跳** | 组件够、`EquipmentType` 不是派发门 ⇒ 派发键在别处（下一候选只剩身份字段：`Unit+0x00` 资产 / `Attachable+0x00` / `Spottable+0x38`）|
+| 补给功能坏了但别的正常 | 预期副作用（使用键被跳包分支占用）|
+
+**若仍崩，第五轮的两个候选（按顺序）**：① 去掉 Supply 的 `DepositComponentData` 键（`entity_hashmap_insert.py --delete`）；
+② **换壳**：`UnitComponentData+0x00` 改成 Jump Pack 的资产 `0x59C5CA839449B379`（会变成跳包外观，但能判定"能力是否在资产里"）。
+
+**回滚**：`cp out/jumpsupply/entities.before-jumpsupply <game>/data/game/generated_entities.dl_bin`（回到未插跳跃的干净态）。
