@@ -146,3 +146,22 @@ python tools/entity_hashmap_insert.py --block <JumppackComponentData 0x54270608>
 
 **可检验的预测**：给 Supply Pack 插 `Jumppack` 行 + 设 `Recharge` 后，它应当**能被跳跃键使用**（图标/技能条可能不变，因为那由配装/图标资源决定）。
 **风险**：该背包的 unit 没有推进器挂点/特效 ⇒ 跳跃动作可能没有视觉特效；`Behavior`/动画也可能不匹配。
+
+### 7.2 首个实验：给 Supply Pack 插跳跃（2026-10-26 20:4x，已装，`⚠` 待实机）
+
+| 项 | 值 |
+|---|---|
+| 目标件 | **Supply Pack `0x4EF9A47109239A58`**（已发布背包，配装里直接带即可） |
+| 改动 1 | **插 `JumppackComponentData` 行**（块 `0x54270608`，280 B）——整行复制自 Jump Pack `0x59C5CA839449B379`；工具用**孤儿行 3**，门禁全过（含 G4b 行内容==源行、G5 全部旧键仍可查） |
+| 改动 2 | **插 `RechargeComponentData` 行**（块 `0x1F42878E`，4 B）——同样复制自 Jump Pack ⇒ **15 s** |
+| 验证 | 读回：Jumppack 行存在且与 Jump Pack 逐字节相同；Recharge = 15 ✓ |
+| entities | `4495379a8eb193c4`（回滚件 `out/jumpsupply/entities.before-jumpsupply`）|
+
+**判读**
+
+| 观察 | 结论 |
+|---|---|
+| 按跳跃键**能起跳** | `Jumppack` 行就是唯一门槛 ⇒ **背包特性可以任意拼装**（护盾+跳跃、补给+跳跃…）|
+| 能起跳但**没有推进器特效/动作怪** | 参数够了，缺视觉资源（unit 无推进器挂点/动画）⇒ 属资源层，数据层到此为止 |
+| 跳跃键**毫无反应** | 还缺其它件：下一步候选是 `EquipmentComponentData` 的类型字段、或 `AbilityComponentData` 的 id（35 件背包这一格全是 0，但**背包的"使用键"绑定可能就吃它**）|
+| 背包**不能装备/游戏异常** | 立刻回滚（`cp` 回滚件即可）|
