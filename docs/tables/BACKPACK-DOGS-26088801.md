@@ -903,3 +903,31 @@ P-19 是**唯一两个都空**的武器（`+0x000 = 0` 且 `+0x80 = 0`）⇒ 无
 | 一切照旧 | `cust+0x80` 不是弹匣/装填的入口 ⇒ 转"弹匣实体"路线（照 Guard Dog Magazine 那种独立 item）|
 
 **回滚**：`cp out/dogs/t4.dl_bin <game>/data/game/generated_entities.dl_bin`。
+
+### 24.1 结果：弹匣**出现了**，但仍不开火（2026-10-27 15:1x，`⚠` 部分成立）
+
+补 `WeaponCustomization+0x80 = 0xC891ACF9E8DBDA97` 之后：**P-19 的弹匣模型在无人机上出现了**，
+但**仍然不开火**。⇒ `cust+0x80` 是**弹匣渲染**的入口（这一半假设成立 `✓`），不是装填/弹丸的入口。
+
+按 §24 的判读矩阵，进入下一格：**弹丸仍要来自 `Proj+0x000`** ⇒ 两条一起补。
+
+## 25 第十七轮：弹匣引用 + 弹丸 type 双补（2026-10-27 15:1x 已装，`⚠`）
+
+在上轮基础上**再加一条**（本次唯一新增变量）：`ProjectileWeaponComponentData+0x000`：**0 → 205**（Bolt 的弹丸）。
+
+| 项 | 值 |
+|---|---|
+| 已有（上轮）| `WeaponCustomization+0x80 = 0xC891ACF9E8DBDA97`（弹匣 physics）|
+| 新增（本轮）| `ProjectileWeapon+0x000 = 205` |
+| 载体 | 四只狗仍全挂 P-19（Rover/GuardDog/HotDog/K-9）|
+| entities | `out/dogs/w1.dl_bin`（md5 `5FEEE79A688D93DD0A1700743D4C081E`）|
+
+**判读**
+
+| 现象 | 结论 |
+|---|---|
+| **能开火** | 配方齐了 `✓✓`：**弹匣资源（渲染）+ 弹丸 type（开火）两条独立门**；P-19 在无人机上缺的正是这两样 |
+| 仍不开火（且弹丸/枪口特效出现）| 弹丸路径通了但 AI 不扣扳机 ⇒ 回到 AIBEH（P-19 的 `Equipment`/`WeaponData` 里还有 AI 不认的东西）|
+| 崩/异常 | 205 与 P-19 的 `WeaponData`/弹匣不匹配 ⇒ 换成 P-19 自己的弹丸（下一步：从包内资源或同名弹丸反查）|
+
+**回滚**：`cp out/dogs/t4.dl_bin <game>/data/game/generated_entities.dl_bin`（P-19 原值 + 四载体）。
