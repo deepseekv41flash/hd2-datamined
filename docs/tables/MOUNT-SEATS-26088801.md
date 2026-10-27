@@ -910,3 +910,41 @@ python tools/resdep.py chain --entity 0x1D5943301A29C940 --dry-run   # 枪变体
 所以纯数据上**不建议**；唯一已验证的"玩家使用"路径就是挂载/座位。
 
 > 组合结论：墙版 GL-21 = **独立武器 + 工事挂载 + 非装备表物品**。它是一个"功能性武器"，但不是"可携带物品"。
+
+### 12.7 能挂 Guard Dog 吗？—— 组件差集 + 单变量实验（2026-10-27 17:3x 已装，`⚠` 待实机）
+
+**组件对比**（狗原生枪 `0xA32621E3BDE13379`，18 组件；6 个成功 donor = P-19/P-2/MG-43/AC-8/WASP/Quasar，交集 15 组件）：
+
+| 判据 | 结果 |
+|---|---|
+| 墙版 GL-21 组件数 | **18**（与狗原生枪同量级）|
+| 狗原生枪有、墙版**缺** | **`LoadoutPackageComponentData`**、**`MeleeAttackComponentData`** |
+| 墙版有、狗原生枪没有 | `EncyclopediaEntryComponentData`、`EntityBindComponentData`（不影响开火）|
+| 相对 6 donor 交集 | 只缺上面两个 |
+| 武器链字段 | `ProjectileWeapon+0 = 285`（GL-21 弹丸）· `+8` rpm 有值 · `+236 = 0x1` · `WeaponMagazine` 60 发 · `WeaponReload`/`WeaponData`/`WeaponCustomization+0x80` 齐 · `Wieldable`/`Attachable`/`Equipment` 齐 |
+
+⇒ **组件层面能挂**：
+- 缺 `LoadoutPackage` = 资源不会被声明加载 ⇒ 用**整包驻留**补（狗线通用做法，不是硬伤）；
+- 缺 `MeleeAttack` = 不能近战，狗 AI 不近战 ⇒ 无关；
+- 狗原生枪自己也**没有** `LoadoutEntry`/`Spottable` ⇒ 这两个不是狗挂载的必需组件；
+- **真正会挡路的不是组件，是弹药**：`WeaponMagazine` 备弹 0/0（60 发打完没法补；狗有装填能力也白搭）。要持续输出得给 `+0x90/+0x94` 写备弹。
+
+**本轮实验**（单变量：只换 Guard Dog 的挂载物）
+
+| 项 | 值 |
+|---|---|
+| 改动 | Guard Dog `Mount` **行 98 槽 0**：P-2 `0x05E4E5C2DB6E44A2` → **墙版 GL-21 `0x1D5943301A29C940`**（其余三狗不动：Rover/HotDog/K-9 仍 P-19）|
+| 驻留 | **新增 patch_33**：源包 `9d4eb484c405e7a2`（75 条，toc 3.07 MB / gpu 6.14 MB / stream 2.45 MB，G1–G7 全过）|
+| entities | `out/dogs/z6.dl_bin`（md5 `aa6d961746bc60d590fbe690ef1a19e7`，47,259,656 B；明文 sha256 `b7434061…`）|
+| 门禁 | `entity_field_set` G1–G8 全 PASS；对 z5 基线**恰好 1 个槽变**（行 98 槽 0）；哈希仍 `0x8E49771B181FFAA1`；seal 回读逐字节相等 |
+
+**判读**
+
+| 现象 | 结论 |
+|---|---|
+| 能开火（60 发榴弹）| 组件分析成立：狗挂载不依赖 `LoadoutEntry`/`LoadoutPackage`/`MeleeAttack`；门槛只有驻留 |
+| 打空后不能装填 | **预期**（备弹 0/0）；要补弹就写 `+0x90/+0x94` |
+| 紫问号 | patch_33 没生效/包不对；**先别开火**（§7.6）|
+| 完全不开火 | 说明狗 AI 还需要"武器之外的运行时条件"（如装备表状态）⇒ 记录后转运行时方向 |
+
+**回滚**：entities 回 `out/mount-frv/z5.dl_bin`（M-102=P-19、GuardDog=P-2 的上个通过版）；或删 `patch_33` 三件。
