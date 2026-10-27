@@ -6,6 +6,10 @@
 > **事实类**文档文件名带 build 号，结论只对那个 build 成立；**方法类**不带 build 号，跨 build 有效。
 > 每个 build 到底改了什么 → [§2 的 `builds/` 小节（跨 build 对照表）](#builds)；新 build 到手先跑哪三步 → **[BUILDS.md](BUILDS.md)**。
 > 链接自检：`python tools/check_links.py`（0 断链才算过）。
+>
+> **网络层已独立成仓库：** [hd2-warlab](https://github.com/deepseekv41flash/hd2-warlab) ——
+> 战况接口（`Status` / `GWE`）的抓包、effect 菜单、以及「改写 Status 能做什么」的实验记录。
+> 本仓库只管离线数据表；两边唯一的接口是本地 presence 表的 137 个身份键。
 
 ## 0. 三十秒：我该从哪进
 
