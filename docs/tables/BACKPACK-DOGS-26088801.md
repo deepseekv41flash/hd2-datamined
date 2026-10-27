@@ -1157,4 +1157,32 @@ id→名清单写到 `out/wiki-proj-names.json`（59 个 id）。样例：
 
 `⚠` 命名混时代：同一个 id 可能有两个名字（本档 1 例：`281` 也出现在 StA-52 的 `AR-23_P`）——当线索，别当唯一名。
 
+## 29 第二十一轮：P-2 Peacemaker 挂 **Guard Dog** —— 休眠型第二把（2026-10-27 16:1x 已装，`⚠` 待实机）
+
+设计（单变量）：只把 **Guard Dog** 的挂载物从 P-19 换成 P-2；P-2 实体按 §28 的"手工复刻 delta"配方补两个值；其余三只狗保持 P-19 作对照。
+
+| 项 | 值 |
+|---|---|
+| 载体 | **Guard Dog 192**（`0xA0FF2F9A0CA6992A`）→ `Mount+0` = **P-2 Peacemaker `0x05E4E5C2DB6E44A2`** |
+| P-2 改动 1 | `ProjectileWeapon+0`：**0 → 342**（= 默认弹种 `PISTOL-SMG 9x20mm. HOLLOW POINT` 的 delta 值，见 §28.5）|
+| P-2 改动 2 | `WeaponCustomization+0x80`（u64）：**0 → `0x4F839E923046E631`**（= 默认弹匣 `Pistol 12x20mm. Standard` 的 AddPath，即弹匣 physics/mesh 资源）|
+| 不动 | Rover / Hot Dog / K-9 仍挂 P-19；P-19 实体的 `296` + 弹匣修复保持原样 |
+| 驻留 | **不需要新增**：patch_27（包 `bf2250de0b17285c`）里已有 `physics 0x4F839E923046E631` + `mesh 0x4F839E923046E631 = P-2 Peacemaker Mag`（`srkit list` 实测）|
+| entities | `out/dogs/z1.dl_bin`（md5 `09A3ED8998E4016A7FA3C64A67FDA962`，47,259,584 B；明文 sha256 `fce5a7e4…`）|
+| 门禁 | 三次 `entity_field_set` 全 PASS（G1/G2/G3/G4/G7/G8/G6）· 明文哈希仍 `0x8E49771B181FFAA1` · 装盘后 unseal 回读与暂存明文**逐字节相等** |
+
+**判读**
+
+| 现象 | 结论 |
+|---|---|
+| 能开火、弹匣模型在、手感/伤害与玩家 P-2 一致（**100·20**，320 m/s）| 休眠型配方在第二把武器复现 `✓✓`，"实体=休眠值 + 配件 delta=真值"可通用化（§28.6）|
+| 能开火但**弹匣不渲染** | P-2 弹匣资源不在这个包里（需另找 Mag 包驻留）——与 `srkit list` 的结论冲突，优先复核补丁序号 |
+| 能开火但**弹容量不对**（30 而不是玩家的 15）| **预期**：无人机读实体 base 值（`WeaponMagazine +136 = 30 / +140 = 6`），默认弹匣 delta 才写成 15 / 5；若确认是 30，按同一"复刻 delta"逻辑补 `+136=15 / +140=5 / +144=8 / +148=8` 即可 |
+| 完全不开火 | Guard Dog 路径对 P-2 还有别的门槛（半自动/AIBEH…）⇒ 回到逐项排查 |
+
+**预测（先记下）**：按 §28 的模型，本轮**弹匣容量大概率是 30 而不是 15** —— `WeaponMagazine` 的 base 值（30/6）是休眠值，默认弹匣 delta 才写 15/5，无人机不跑 delta。
+
+**回滚**：`cp out/dogs/y1.dl_bin "<game>/data/game/generated_entities.dl_bin"`（四狗全挂 P-19、已实机通过的版本）。
+
+
 
