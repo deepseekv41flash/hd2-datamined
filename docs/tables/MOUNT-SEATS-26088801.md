@@ -565,6 +565,10 @@ python tools/dlbin_deploy.py restore --file generated_entities.dl_bin
 | 换件后"模型正常" | 有条件的 A | 件包必须驻留（共享基包 / 本车包 / 带车同行）；敌阵营件还要改 `Faction`（本工具不做） |
 | 改变"哪个座位控制哪个槽" | **不在数据层** | §6 三条证据；memmod 也只能靠运行时 `Behaviour`/wielder 干预 |
 
+> ⚠ **槽类型决定判据**：上表"必须 `Turret` / 必须 `Wielder`"只适用于**炮塔槽**（AI 炮塔、机械限位）；
+> **M-102 枪手位**这种"玩家操作、座位给瞄准"的槽，原生件就没有 `Turret` / `WeaponWielder` 也能用，
+> 见 §11。
+
 ---
 
 ## 9. 未解项
@@ -607,3 +611,52 @@ python tools/mount_table.py verify out/mount-swap/x.plain
 数据来源（全部只读）：`D:\mod\refs\dlbin\plaintext-26088801\generated_entities.dl_bin`（明文，
 哈希 `0x8E49771B181FFAA1`）、同目录 `dl_library.dl_typelib`、`refs/entity-locid-names.json`、
 `refs/entity-components.json`、`refs/srkit-names.json`、`D:\mod\dl-type-names.json`。
+
+## 11. M-102 枪手位 = 武器挂点？（2026-10-27 已装，`⚠` 待实机）
+
+问题："M-102 Gunner FRV 的炮塔是不是也能像 Guard Dog 一样挂武器？之前测的都是往载具上挂各种炮塔，
+原版它挂的是 MG-206 Heavy Machine Gun。"
+
+### 11.1 离线结论：**能换，而且原版挂的本来就是"武器 item"，不是炮塔**
+
+`python tools/mount_table.py show --entity 0xCC21C7FFD3EBEFB9` 的读数：
+
+| 项 | 值 |
+|---|---|
+| 载具 | **M-102 Gunner FRV `0xCC21C7FFD3EBEFB9`**（另有一条重复行 `0xE9CD1D0D118886AF`），挂载记录 row 19 / 119 |
+| 槽 0（唯一非空，`side=Common`）| item = **`0x085C1EDB038EC24E` = MG-206 重机枪（M-102 枪手位）** |
+| 原生件组件 | **23 个**：`ProjectileWeapon` + `WeaponMagazine` + `WeaponReload` + `Wieldable` + `Behavior` + `LoadoutEntry`/`Encyclopedia` …；**无 `Turret`、无 `WeaponWielder`** |
+| 几何 / 包 | inline mesh（3 条，2.45 MB）；包 `81da0125…` / **`902c54afb4ed396f`** / `0bdf199f…`，其中 `902c54afb4ed396f` 是本车 loadout 声明的包 |
+| 座位 | M-102 的 `SeatCollection`（TransitionId 26）**带 `ActiveAimConstraint`**（§5.3）|
+
+三条推论：
+
+1. **FRV 枪手位挂的就是普通武器 item**（MG-206 的一个变体），不是炮塔 ⇒ "能不能挂武器"在结构上不是问题：
+   槽里放什么由 `MountInfo.item` 决定（与 Guard Dog 同一个 u64、同一张表）。
+2. §8 的"能瞄/能打 = 件必须自带 `Turret` + `ProjectileWeapon`"**只适用于炮塔槽**；M-102 原生件
+   `Turret=False` 照样能用，因为**瞄准限制在座位**（`ActiveAimConstraint` + 相机 preset，§5.3/§4.7）。
+3. §8 的"玩家能操作 = 件必须 `Wieldable` + `WeaponWielder`"对 M-102 也不成立（原生件 `WeaponWielder=False`）——
+   玩家自己就是 wielder，座位→武器绑定在代码侧（§6）。
+
+⇒ **预测**：M-102 枪手位可以挂任意普通武器 item；限制只会来自 ① 包驻留 ② 武器自身数据
+（休眠型要补两处，见 [BACKPACK-DOGS §28](BACKPACK-DOGS-26088801.md)）③ 代码侧座位逻辑。
+
+### 11.2 本轮实验（单变量）：FRV 变体 → 通用 MG-206 支援武器 item
+
+| 项 | 值 |
+|---|---|
+| 改动 | 两个 M-102 实体的 `Mount` 槽 0 item：`0x085C1EDB038EC24E`（FRV 变体，23 组件）→ **`0x2152D5147B0AC418`（通用 MG-206 支援武器 item，22 组件，无 `Behavior`）** |
+| 为什么选它 | 它与原生件在**同一个包 `902c54afb4ed396f`**（本车 loadout 已声明）⇒ 零驻留风险，纯单变量"变体 vs 通用" |
+| entities | `out/mount-frv/z2.dl_bin`（md5 `759974667b2c3ce07db7e944f59e4ea2`，47,259,600 B；明文 sha256 `4d39bd25…`）|
+| 门禁 | 两次 `mount_table.py swap` 全 PASS（G1–G10）；对基线 `verify`：**恰好两个槽变**（row 19 / row 119 槽 0），哈希仍 `0x8E49771B181FFAA1`；装盘后 unseal 回读与暂存明文逐字节相等 |
+
+### 11.3 判读
+
+| 现象 | 结论 |
+|---|---|
+| 模型正常 + 坐枪手位能瞄能打（MG-206 手感）| **FRV 枪手位 = 通用武器挂点**，FRV 变体不是必需 ⇒ "像狗一样挂武器"成立；下一步可直接换 MG-43 / P-19（补驻留 / §28 两处修复）|
+| 模型在但**打不了** | 差异落在变体的 `Behavior`/`HitEffect` 或代码侧座位绑定；下一步换 **MG-43**（普通武器、无 `Behavior`）区分"变体必需"还是"武器类别门槛" |
+| 紫问号 | 与同包预期冲突；**先别开火**（紫问号下开火会崩，§7.6）→ 复核补丁序号 |
+| 崩 | 记录调用栈，回滚 |
+
+**回滚**：`cp out/dogs/z1.dl_bin "<game>/data/game/generated_entities.dl_bin"`（GuardDog=P-2、其余三狗 P-19 的上一个通过版）。
