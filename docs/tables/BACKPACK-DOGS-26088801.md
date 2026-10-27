@@ -666,3 +666,39 @@ python tools/entity_field_set.py set --block 0x3845B1E0 --key <无人机实体> 
 
 **装盘**：entities = `out/dogs/p92.dl_bin`（md5 `f8d67bea4a649a8e7df2bc4b81cc5977`）；patch_18 = P-92 包。
 **回滚**：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin` + 删 `patch_18` 三件套。
+
+### 18.1 结果：P-92 Warrant **真能打** ⇒ 副武器槽不是硬门槛（2026-10-27 13:1x，`✓✓`）
+
+| 武器 | 槽位 | `GuidanceTarget` | 实机 |
+|---|---|---|---|
+| P-19 Redeemer | 副武器 | 无 | ✗ 不开火 |
+| **P-92 Warrant** | 副武器 | **有** | **✓✓ 能打**（社区说法成立）|
+| StA-X3 W.A.S.P. | 支援 | 有 | ✓✓ 锁定+发射 |
+
+⇒ 制导假说目前 **3/3 吻合**；同时否掉了"副武器一律不适配"的粗判据（P-19 是**个例**，不是槽位通例）。
+
+## 19 第十一轮：四只狗 × 四把**无制导**副武器（2026-10-27 13:2x 已装，`⚠`）
+
+这是判决"制导到底是不是判据"的实验：四把副武器**全都没有 `GuidanceTarget`**，
+若"制导"是真判据 ⇒ 四只狗应当**全部不开火**；只要有一把能打，就说明 P-19/P-92 的差异另有原因。
+
+| 狗 | 无人机 | 挂的副武器 | `GuidanceTarget` | 驻留补丁 |
+|---|---|---|---|---|
+| **Rover** | `0x5BEEC97F4C7F4AE9` | **LAS-7 Dagger** `0x7B06196E90154C88`（激光手枪）| **无** | patch_19（包 `82DCD83D81A385F3`，68 条）|
+| **Guard Dog** | `0xA0FF2F9A0CA6992A` | **P/40-K Bolt Pistol** `0xDBB6C961C59FADC1` | **无** | patch_20（包 `9514615D563612F1`，34 条）|
+| **Hot Dog** | `0x979E9BC6D48D1FC6` | **P-72 Crisper** `0x3F92BA65EF65CCA9`（喷火手枪）| **无** | patch_21（包 `41CE78FE8F96BEBE`，25 条）|
+| **Dog Breath** | `0xB9BAF571FC8F9959` | **PLAS-15 Loyalist** `0xAA69A60D74A3EC54`（等离子手枪）| **无** | patch_22（包 `9EFFC1C882578BAF`，52 条）|
+| K-9 | `0x4B071633584E4594` | 原版电弧（对照，未动）| — | — |
+
+**判读**
+
+| Rover(Dagger) | GD(Bolt) | HD(Crisper) | DB(Loyalist) | 结论 |
+|---|---|---|---|---|
+| ✗ | ✗ | ✗ | ✗ | **制导就是判据** `✓✓`：无制导副武器一律不发射（P-19 不是特例，是通例）|
+| 任意一把能打 | | | | 制导不是判据 ⇒ 差异在别处（下一候选：`WeaponMagazine`/`ProjectileWeapon` 的 wielder 槽、或该枪的 `EquipmentType` 类别）|
+| 有锁定/瞄准动作但不发射 | | | | 同 ARC-3：缺"确认发射"事件 |
+| 紫问号 | | | | 对应 patch_N 未生效 |
+
+**装盘**：entities = `out/dogs/q4.dl_bin`（md5 `4543d8b918cf917ee96d6323e1c70709`）；
+驻留 patch_18（上一轮 P-92）+ patch_19–22（本轮四把），盘上补丁现在到 `patch_22`。
+**回滚**：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`；删 patch_18–22 可回收本轮体积。
