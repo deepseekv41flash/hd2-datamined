@@ -32,6 +32,9 @@
 | 阵营过滤 | 读 `planetStatus.owner` 后逐星球筛，避免把虫族词条写到机器人星球（v1.26 修复） |
 | 客机 | 房主装、客机零安装即可见变种；证据是主机日志里**没有客机的任何 REQ**，而客机星图也出现词条 ⇒ 引擎把房主的战况板整张同步给客机 |
 
+> 仓库边界：本节只做**机制结论**。网络层工具（代理补丁、抓包、effect 菜单对表）按定位放在该仓库之外
+> （本地目录 `D:/mod/work/variant-net/`），本仓库只保留离线数据表这条线的笔记与工具。
+
 **它对我们的价值**：把"变种"拆成了可观测的三段 ——
 `galacticEffectId`（服务器）→ `presence` 身份键（本地表里有）→ 引擎固化实现（本地表里没有）。
 前两段我们已经能在本地对上（§3.4 的 16/16 对表），第三段决定了它必须走代理。
@@ -269,7 +272,6 @@ E2 的键值取自 `out/planet/presence-variants.json`。
 * [LEVELGEN-FIELDS-26088801](LEVELGEN-FIELDS-26088801.md) —— 关卡生成链字段图（451 行）+ 分布；数据 `out/planet/levelgen.json`
 * `out/planet/presence-variants.json` —— 16 变种 × effect id × presence 行 × 身份/类别键
 * `tools/probes/planet/presence_scan_all.py`、`presence_arrays.py`、`join_variants.py` —— §3 的三段证据（只读，绝对路径输入）
-* [GWECAPTURE](../tools/GWECAPTURE.md) 的两个工具 —— `tools/gwe_capture.py`（给第三方代理加只读落盘开关）+ `tools/gwe_join.py`（effect 菜单 → presence/战备对表，产出能力边界报告）：它们回答的是 **§4 之后的问题——这条通道还能做什么**
 
 **五个坑**（本会话实际踩到）：
 
