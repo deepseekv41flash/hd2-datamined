@@ -864,3 +864,42 @@ P-19 是**唯一两个都空**的武器（`+0x000 = 0` 且 `+0x80 = 0`）⇒ 无
 | 崩/异常 | 弹丸 type 与 P-19 的 `WeaponData`/弹匣不匹配（205 是 Bolt 的弹丸）⇒ 换成 P-19 自己的弹丸 type（需另找）|
 
 **回滚**：`cp out/dogs/t4.dl_bin <game>/data/game/generated_entities.dl_bin`（回到"P-19 原值 + 四载体"状态）。
+
+### 23.1 P-19 是否"多份数据"？答：**不是** —— 缺的是**弹匣资源引用**（2026-10-27 14:2x，`✓` 离线）
+
+**① "假 P-19 / 多份副本"假设 → 否证。**
+- 全表里 **共用 P-19 同一张壳**（`Unit+0x00 = 0x3575AABC5F1F9326`）的实体 **只有 1 个**（就是它自己）；
+- 全档扫描：只有 `generated_collision_event_settings` 引用它 1 次，**没有任何第二份"只能看不能打"的 P-19**；
+- 名字表里那两个"P-19 Redeemer"是**资源名**（`bones` / `physics`），不是第二份武器数据。
+
+**② 弹丸从哪来：`ProjectileWeapon+0x000` 与 `WeaponCustomization+0x80` 两条路，P-19 两条都空。**
+`WeaponCustomization+0x80` 不是普通哈希——它在资源索引里解出来是**弹匣/挂件的物理资源**：
+
+| 武器 | `cust+0x80` | 资源类型 | 实机 |
+|---|---|---|---|
+| **P-19 Redeemer** | **0** | — | **✗（弹匣模型也不渲染）** |
+| P/40-K Bolt | `0x619795F79CEDA1B3` | `physics` | ✓ |
+| P-4 Senator | `0xB96CC3B704A76464` | `physics`（`…/equipment/sidearm_weapon/…`）| ✓ |
+| LAS-58 Talon | `0xE53E4B0C20563D21` | `physics` | ✓ |
+| P-44 Mist | `0x1D908F18A11708E6` | `bones` | ✓ |
+
+**③ 关键发现：P-19 自己的包里就有一个"P-19 Redeemer"物理资源没被引用**
+`0xC891ACF9E8DBDA97`（type=`physics`，name=`P-19 Redeemer`，包 `99f20df1c4cf885a`）——
+这正好是 `cust+0x80` 该放的东西。⇒ **P-19 的行漏了这条弹匣引用**，所以弹匣模型不渲染、也(可能)装不上弹。
+
+## 24 第十六轮：给 P-19 补回弹匣资源引用（2026-10-27 14:2x 已装，`⚠`）
+
+**单变量**：`WeaponCustomizationComponentData+0x80`（u64）**0 → `0xC891ACF9E8DBDA97`**（P-19 包内自带的 `P-19 Redeemer` physics）。
+其余不变（四只狗仍全挂 P-19）。entities = `out/dogs/v1.dl_bin`（md5 `e90c4e67ac3a5b4ae6e98dde08a38d44`）。
+
+> 备用变体：上一轮把 `ProjectileWeapon+0x000` 写成 205 的版本（`out/dogs/u1.dl_bin`，md5 `3ca381cc…`）**未测**，若本轮仍失败可换它。
+
+**判读**
+
+| 现象 | 结论 |
+|---|---|
+| **弹匣模型出现 + 能开火** | 根因定死 `✓✓`：P-19 缺的是**弹匣资源引用**；"弹匣不渲染"与"不开火"同源 |
+| 弹匣出现了但仍不开火 | 弹匣引用解决了渲染，但弹丸仍要来自 `Proj+0x000` ⇒ 叠加 205 才是完整配方 |
+| 一切照旧 | `cust+0x80` 不是弹匣/装填的入口 ⇒ 转"弹匣实体"路线（照 Guard Dog Magazine 那种独立 item）|
+
+**回滚**：`cp out/dogs/t4.dl_bin <game>/data/game/generated_entities.dl_bin`。
