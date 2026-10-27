@@ -46,7 +46,8 @@
 | **投送舱送什么（战备空投舱换载荷）** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§1 槽位结构 · §2 前 N 个槽才生成 · §3 换物品配方** | `26088801` |
 | **换进来的物品只有紫问号 / 网格材质不加载** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§4 两个包槽（`+0xA8` + `+0xF8`）· §5 item→包解析表** | `26088801` |
 | **改了弹丸/爆炸，怎么知道漏了哪些粒子/实体/声音资源** | [RESDEP](docs/tools/RESDEP.md) | **`chain` 扫引用 · `plan` 分「同包/跨包/缺失」· `--apply` 一键装盘+整体回滚 · `VERIFY.md` 实机清单 · HIRC 事件目录** | `26088801` |
-| **狗背包（AX 系）换枪**（**✓ 结项**） | [BACKPACK-DOGS](docs/tables/BACKPACK-DOGS-26088801.md) | **§17 收尾**：配方 = 改无人机 `Mount+0x00` 一个 u64 · 三条硬规则（资源驻留 / 载体装填 / 开火输入）· **§17.3 白名单账本** | `26088801` |
+| **某个 id 在整个数据里被谁引用 / 原版武器的弹丸从哪来** | [REFSCAN](docs/tools/REFSCAN.md) | **`exact` 全档 u32 账本 · `columns` 引用面普查 · `delta-info/-show/-ammo` 解配件 delta 链（弹种槽 6 → `ProjectileWeapon+0`）· 本 build 组件索引表** | `26088801` |
+| **狗背包（AX 系）换枪**（**✓ 结项**） | [BACKPACK-DOGS](docs/tables/BACKPACK-DOGS-26088801.md) | **§17 收尾**：配方 = 改无人机 `Mount+0x00` 一个 u64 · 三条硬规则（资源驻留 / 载体装填 / 开火输入）· **§17.3 白名单账本** · **§27.1 副武器 P-19 实机通过 · §28 根因链（弹种 delta 写 `Proj+0=296`）** | `26088801` |
 | **改背包数值（跳跃冷却/跳跃高度/补给次数/护盾半径/位移距离）** | [BACKPACK-VALUES](docs/tables/BACKPACK-VALUES-26088801.md) | **§1 五个组件的字段表（偏移+语义名+现值）· §2 一条命令 · §3 第一轮已装盘** | `26088801` |
 | **背包能不能"换特性"（把跳跃搬到补给包）** | [BACKPACK-LINE](docs/tables/BACKPACK-LINE-26088801.md) | **§8 收口：纯数据走不通（四轮实验 + 按 5 崩溃）· §7.4 字段类型图（typelib + HD2Runtime）** | `26088801` |
 | **哨戒炮/炮塔多久自动消失、各字段含义** | [SENTRY-TURRET-FIELDS](docs/tables/SENTRY-TURRET-FIELDS-26088801.md) | **§2 寿命字段（`HellpodPayload +0x04`）· §3 逐组件字段表 · §4 一条命令** | `26088801` |
@@ -176,7 +177,7 @@
 | ★ [MOUNT-SEATS-26088801](docs/tables/MOUNT-SEATS-26088801.md) | **载具挂载 / 座位两表全解**：Mount = 328 槽 + 165 × 120 B（`MountComponent` = 5 × `MountInfo`，`MountSide` 已有资源名直证）；SeatCollection = 112 槽 + 56 × 424 B（`TransitionId` + `Passenger[16]` + `ActiveAimConstraint[22]`）；**122 件挂载件分桶与 memmod 旧账逐桶吻合**（16/4/1/**11**/37/53）+ 四条旧实测交叉；`mount_table.py` 换件保哈希（G1–G10）+ 两个 sealed 工件 | `26088801` |
 | [LOCID-NAMES-25988413](docs/tables/LOCID-NAMES-25988413.md) | 32 位本地化 ID：`.strings` 全局 ID→文本表怎么打通六张表的名字 | `25988413` |
 | [ROW-NAMING-25988413](docs/tables/ROW-NAMING-25988413.md) | 逐行名字的两条取法、判据、以及位置法取错过名的两张表 | `25988413` |
-| ★ [WEAPON-CUSTOMIZATION-DECODED](docs/tables/WEAPON-CUSTOMIZATION-DECODED.md) | 武器配件总表：88 B 行、九类槽位枚举、252 行可读导出 | `25988413` |
+| ★ [WEAPON-CUSTOMIZATION-DECODED](docs/tables/WEAPON-CUSTOMIZATION-DECODED.md) | 武器配件总表：88 B 行、九类槽位枚举、252 行可读导出；**§7 配件 → entity delta 落地链（build `26088801`：`AmmoType` 写 `ProjectileWeapon+0`、`Magazine` 写 `cust+0x80`，含组件索引表与坑）** | `25988413` · §7 `26088801` |
 | ★ [STRATAGEM-SETTINGS-DECODED](docs/tables/STRATAGEM-SETTINGS-DECODED.md) | 战备表 400 B 行 / 12 组解码，含三处旧结论的自我否证 | `25988413` |
 | ★ [STRATAGEM-FIELDS-26088801](docs/tables/STRATAGEM-FIELDS-26088801.md) | 战备字段总表：面板公式（先预测后实测）、散布、**Eagle 回收（§5.4）**、条目 ID 重复=崩溃 | `26088801` |
 | ★ [DAMAGE-SETTINGS-26088801](docs/tables/DAMAGE-SETTINGS-26088801.md) | 伤害表 76 B 行字段图：5 张引用表 / 共享伤害行 / **行内零 padding 的宿主策略** / 完整改值链 | `26088801` |
@@ -184,7 +185,7 @@
 | ★ [POD-RACK-26088801](docs/tables/POD-RACK-26088801.md) | 投送舱换载荷：rack 568 B 行 / 槽位语义 / **`+0xA8`+`+0xF8` 双包声明** / item→包解析表 / 六轮实机 / **§8 整包补丁驻留（✓✓：一个舱三件、两个零声明）** | `26088801` |
 | ★★ [TURRET-SM-RECIPES-26088801](docs/tables/TURRET-SM-RECIPES-26088801.md) | **炮塔/工事状态机配方总表（手册型）**：一个 u32 修好一件（出场即展开、不自转、能瞄准）。五条判据 = 模板 A 选展开态 / 模板 B 钉"部署过渡末帧定格" / 按 state 名 `0x9EA750D5` 关扫视层 / 人操两轴只看"是不是常开 `Time` 层 + 有键 clip" / 字节级自检；**11 件逐件配方**（AC-8·火箭·火焰·激光·迫击炮·特斯拉·MG-43·加特林·HMG-101·AT-12·FX-12）+ 一件一行总表 + 11 条已踩坑 | `26088801` |
 | ★★ [BACKPACK-VALUES-26088801](docs/tables/BACKPACK-VALUES-26088801.md) | **背包自身数值的字段表 + 改法（手册型）**：`Jumppack +0x00` 起跳速度 40（`+0x9C` 悬停 = −1 无/6 s）、`Recharge +0x00` 冷却 15、`Deposit +0x00/+0x04/+0x08` 补给次数 4/4/1、`Shield +0x00/+0x4C/+0x58/+0x5C/+0x60` 半径与耐久回充、`Displacement +0x78…` 位移全套；一条命令一个字段 + 第一轮已装盘（冷却 5 s / 跳高 60 / 补给 8 次 / 护盾 2 m） | `26088801` |
-| ★★ [BACKPACK-DOGS-26088801](docs/tables/BACKPACK-DOGS-26088801.md) | **AX 狗背包换枪线（✓ 结项）**：挂载句柄 = 无人机 `MountComponentData+0x00` 一个 u64；**三规则**：R1 包必须驻留否则紫问号 / R2 载体决定装填（GD·HotDog·DogBreath 有，Rover·K-9 无）/ R3 AI 只"按住"不给"松手"（ARC-3 ✗、Quasar ✓、W.A.S.P. 锁定 ✓）；**白名单** MG-43·AC-8·PLAS-1·W.A.S.P.·Quasar·炮塔 ✓✓，副武器 P-19 ✗；十架无人机映射 + `BehaviorId` 账本 + 未解项 | `26088801` |
+| ★★ [BACKPACK-DOGS-26088801](docs/tables/BACKPACK-DOGS-26088801.md) | **AX 狗背包换枪线（✓ 结项）**：挂载句柄 = 无人机 `MountComponentData+0x00` 一个 u64；**三规则**：R1 包必须驻留否则紫问号 / R2 载体决定装填（GD·HotDog·DogBreath 有，Rover·K-9 无）/ R3 AI 只"按住"不给"松手"（ARC-3 ✗、Quasar ✓、W.A.S.P. 锁定 ✓）；**白名单** MG-43·AC-8·PLAS-1·W.A.S.P.·Quasar·炮塔 ✓✓；**副武器 P-19 ✓✓（§27.1 四狗开火、手感与玩家版一致）**，根因链见 **§28：实体记录是休眠值，弹种配件 delta 才写 `Proj+0=296`**；十架无人机映射 + `BehaviorId` 账本 + 未解项 | `26088801` |
 | ★ [BACKPACK-LINE-26088801](docs/tables/BACKPACK-LINE-26088801.md) | 背包族开线档：35 件全集与投放两条路线 / **§7.4 字段类型图（typelib 类型名 × HD2Runtime 语义名）** / **§8 收口：给别的背包加跳跃能力 = 纯数据走不通**（四轮实测，按 5 崩溃；`--row` 共享行技巧可给满块加组件） | `26088801` |
 | ★ [WEAPON-AMMO-RESERVE-26088801](docs/tables/WEAPON-AMMO-RESERVE-26088801.md) | 三种供弹模型 / `Rounds` 与 `Magazine` **两套备弹字段** / 五把背包武器改成自带备弹（已实机）/ 清空槽位的坑 | `26088801` |
 | ★ [PROJECTILE-PROXIMITY-26088801](docs/tables/PROJECTILE-PROXIMITY-26088801.md) | **近炸引信字段**（弹丸行 `+0x94` 半径 / `+0x88` 阈值角 / `+0xA0` 保险距离）；AC-8 在备弹 289 上 | `26088801` |
@@ -286,6 +287,7 @@
 | `table_locid_names.py` | 按槽位表把本地化 ID 倒成文本，输出 JSON（`name` / `name_source` / 原始 ID），带「文本匹配 → 大写回退」 | PyNaCl（无）+ `typelib.py` | ✓ 六张表：弹丸 225/355、配件 234/252、护甲 389/422、被动 33/33、载具 11/12、星球 399/438 |
 | `entity_locid_scan.py` | 解实体库（275 块 → `[哈希图][行数组][尾数组]`），定位本地化 ID 槽。实体名只有一处：`EncyclopediaEntryComponentData`（块 56） | PyNaCl（无）+ `typelib.py` | ✓ 643/1,939 实体有名字，205/211 条带代码条目精确命中 wiki 标题 |
 | `entity_components.py` | 实体 → 组件清单（用每个组件块自己的哈希图反查，不用块 0 的 u16）；附带「谁引用了某值」的列扫描 | PyNaCl（无）+ `typelib.py` | ✓ 1,932 实体 / 272 种组件；用它查出 explosion 68 被 `Bombardment +64` 引用 |
+| `ref_scan.py` | **引用反查 + 配件 delta 解码（只读）**：`exact` 扫全档 `u32 == VALUE` 并归因到（文件/块/行/槽/实体键）· `columns` 找「整列都是目标表 id」的引用面（不猜偏移）· `entity` 打单个实体全部组件行 · **`delta-info`/`delta-show`/`delta-ammo` 解 `ComponentEntityDeltaStorage` 三级索引**（配件 AddPath → 组件 → 成员偏移 → 字节），带本 build 组件索引表（[REFSCAN](docs/tools/REFSCAN.md)）| `entity_locid_scan.py`、`table_dictionary.py` | ✓ 用它破案：P-19 的 `Proj+0 = 296` 来自默认弹种 delta（[BACKPACK-DOGS §28](docs/tables/BACKPACK-DOGS-26088801.md)）；67 个弹种配件 → 各自弹丸 |
 | `explosion_names_from_chain.py` | 爆炸行没有名字字段，改从引用链命名：投掷物 `+144/+156` → 爆炸 `+0`，输出每个爆炸行的消费方 | PyNaCl（无）+ `typelib.py` | ✓ 210 条边 / 0 悬空；103 个爆炸行有名字（97 唯一 + 6 共用） |
 | `strings_inventory.py` | 清点 `.strings` 语料：语言分布（`ThinHash` 反查 15 种语言）、每个 bundle 的 distinct 英文 blob 数、ID 并集。**只读文件头 16 字节** | 标准库 | ✓ 证明英文语料是全局唯一那 18 个 blob |
 | `table_dictionary.py` | **全表字典**：解封 55 张表 → 组/行数/步长/尾块 + 每个类型的字段偏移树（需自备 `recipient.sk`） | PyNaCl + `typelib.py` | ✓ 55/55 表解析（18 张几何完全闭合） |

@@ -949,8 +949,12 @@ P-19 是**唯一两个都空**的武器（`+0x000 = 0` 且 `+0x80 = 0`）⇒ 无
 | P-19 的"弹匣包" `b15cd2256a2e677b`（hashlist `Mag` 映射：`P-19 Redeemer`）| 只有 6 条资源：**texture×3 / physics×1 / mesh×1 / material×1**，没有数据实体 |
 | 实体表 | P-19 只有一份（共用同壳的实体仅它自己）|
 
-⇒ 结论：**P-19 的弹丸是引擎内置默认（或运行时按武器 hash 查表），不在任何数据表里**。
+⇒ 当时结论：**P-19 的弹丸是引擎内置默认（或运行时按武器 hash 查表），不在任何数据表里**（**`✗` 已否证，见 §28**）。
 玩家侧能打，是因为玩家开火路径会走这个内置默认；无人机路径不会。
+
+> **2026-10-27 更正（→ §28）**：它**在**数据里——不在实体记录，而在 `generated_entity_deltas.dl_bin` 的**弹种配件 delta** 里。
+> P-19 的默认弹种是 `PISTOL-SMG 9x20mm. FULL METAL JACKET`（配件槽 6），它的 delta 把 `ProjectileWeapon+0` 写成 **`296`**。
+> 实体记录里的 `0` 是**休眠值**：玩家建造武器时被 delta 覆盖，无人机挂载路径不跑这条链 ⇒ 才需要手工补。
 
 **"两处都为 0"的全表普查（`✓`）**：278 个有 `ProjectileWeapon` 的实体里 **13 个**两处都是 0；其中 **11 个有 `WeaponRounds` 弹药池**（弹丸由池子给，如 Senator、Bushwhacker ✓），
 **只有 2 个"既无直给弹丸、又无弹药池"**：**P-19 Redeemer** 与 **P-2 Peacemaker**（都只有 `WeaponMagazine`）。⇒ 这一对就是"必须手补弹丸"的名单。
@@ -1004,9 +1008,10 @@ Penetration Slowdown 25% / 70 Standard · 12 Durable）。用这组数字在 **3
 | 218 | 82 | 90 / 18 | 同族另一变体 |
 
 ⇒ **P-19 的原生弹丸 = type `296`**（9 mm / 375 m/s / 7 g / drag 1.2 / dmg 70·12）。
-之前"数据里查不到"是因为它**既不在武器行、也不在弹匣行**——它只是引擎内置默认引用的那张弹丸表行，需要靠**面板数值指纹**反查。
+之前"数据里查不到"是因为它**既不在武器行、也不在弹匣行**——当时误判成"引擎内置默认"；**§28 找到了真正的引用**：
+P-19 默认弹种配件的 entity delta 就是写 `ProjectileWeapon+0 = 296` 的那一步。
 
-## 27 第十九轮：P-19 装回**原生弹丸 296**（2026-10-27 15:5x 已装，`⚠` 待实机）
+## 27 第十九轮：P-19 装回**原生弹丸 296**（2026-10-27 15:5x 已装 → **`✓✓` 实机通过**）
 
 | 项 | 值 |
 |---|---|
@@ -1016,6 +1021,106 @@ Penetration Slowdown 25% / 70 Standard · 12 Durable）。用这组数字在 **3
 | entities | `out/dogs/y1.dl_bin`（md5 `8D111EE35FBEAF601AA0A957CC3807F2`）|
 
 **判读**：能开火且**手感/伤害与玩家手里那把 P-19 完全一致** ⇒ 配方收口（"无人机挂 P-19"= 弹匣资源 + 原生弹丸 296）。
-若伤害仍不对 ⇒ 用 167（110/18）或 218（90/18）再对一次，用面板数字挑。
+
+### 27.1 结果：**能开火，且与玩家手里的 P-19 完全一致**（2026-10-27 16:1x，`✓✓`）
+
+四只狗（Rover 191 / Guard Dog 192 / Hot Dog 189 / K-9 191）全挂 P-19 + `cust+0x80 = 0xC891ACF9E8DBDA97` + `Proj+0 = 296`：
+**开火正常，手感/伤害与玩家自己那把 P-19 无差别**。
+
+⇒ "无人机挂 P-19" 配方**收口**；也说明第 16 轮补的弹匣资源确实是**那一个**（`Pistol 9x20mm. Extended` 配件的 AddPath），不是随便一个 physics。
+数据侧为什么这两个值就是对的 ⇒ **§28**（296 不是猜的：它就是官方默认弹种 delta 写进去的值）。
 
 **回滚**：`cp out/dogs/x1.dl_bin <game>/data/game/generated_entities.dl_bin`（208 版）。
+
+## 28 第二十轮：找到弹丸 `296` 的引用 —— 原版 P-19 的运行逻辑闭环（2026-10-27 16:0x，`✓✓` 离线 + 实机）
+
+用户追问："看看有没有任何对这个弹头的引用，或许能解释原版 P-19 的运行逻辑" —— **有，而且它一句话解释了三件事**：
+P-19 为什么原版能打、无人机为什么不打、我们手工补的那两个值为什么与玩家版完全一致（§27.1 已实机确认）。
+
+### 28.1 一句话
+
+实体记录里 `ProjectileWeapon+0 = 0` **不是缺陷，是休眠值**；P-19 的弹丸由它**默认弹种配件**（配件槽 6）的 **entity delta** 在"武器建造"时写进 `+0`。
+玩家拾取/装备武器 = 走一次建造 ⇒ delta 生效 ⇒ 打 `296`；无人机挂载 = 直接读实体记录、不跑玩家武器那条 delta 链 ⇒ 读到 `0` ⇒ 不开火。
+
+### 28.2 引用藏在哪：`generated_entity_deltas.dl_bin`
+
+全档唯一块 `0x683E604F` = **`ComponentEntityDeltaStorage`**（352,345 B）。payload 结构（本 build 实测，`python tools/ref_scan.py delta-info` 可复现）：
+
+| 区 | payload 内偏移 | 条数 | 每条 | 结构 |
+|---|---:|---:|---:|---|
+| header | `+0` | 5 组 | 80 B | 每组 `(u64 offset, u64 count)` |
+| hashmap | `+0x50` | 1024 槽（572 非空）| 16 B | `{u64 AddPath, u32 settingsIndex, u32 pad}` |
+| settings | `+0x4050` | 1144 | 8 B | `{u32 componentCount, u32 firstComponent}` |
+| component | `+0x6410` | 1038 | 12 B | `{u32 组件索引, u32 firstDelta, u32 deltaCount}` |
+| delta | `+0x94B8` | 6119 | 12 B | `{u32 成员偏移, u32 宽度, u32 data 偏移}` |
+| data | `+0x1B38C` | 240,817 B | — | 被打进去的字节本身 |
+
+**组件索引 → 组件名（本 build 实测，换 build 必须重测）**：
+
+| 索引 | 组件 | 索引 | 组件 |
+|---:|---|---:|---|
+| `5` | `WeaponMagazineComponentData` | `239` | `WeaponDataComponentData` |
+| `114` | `WeaponReloadComponentData` | `274` | `WeaponCustomizationComponentData` |
+| `119` | `WeaponRoundsComponentData` | `324` | `ProjectileWeaponComponentData` |
+
+### 28.3 完整链：P-19 Redeemer
+
+| # | 环节 | 本 build 的值 |
+|---:|---|---|
+| 1 | 实体 `WeaponCustomizationComponentData`（row 139）默认槽 | slot 5 `0xB269A0B3` · slot 6 **`0x4B7F0B70`** · slot 1 `0x2F7B4497` · slot 2 `0x469F34D9` |
+| 2 | slot 6 的配件行（`weapon_customization_settings`）| **`PISTOL-SMG 9x20mm. FULL METAL JACKET`**（`+8 = 0x4B7F0B70`，`+32 AddPath = 0xC756800DA816EFE1`）|
+| 3 | 该 AddPath 的 delta | comp **324**（`ProjectileWeaponComponentData`）成员 `+0` 宽 4 → data `28010000` = **`296`**（data 偏移 `0xCB4C`，文件绝对 `0x027EF4`）|
+| 4 | slot 5 的配件行 | `Pistol 9x20mm. Extended`（`+32 AddPath = 0xC891ACF9E8DBDA97`）|
+| 5 | 该 AddPath 的 delta | comp **5**：`+136=31 / +140=4 / +144=6 / +148=6`（弹匣容量/初始/补给/备弹）＋ comp **274** **`+0x80` 宽 8 = `0xC891ACF9E8DBDA97`**（弹匣 physics）|
+| 6 | 玩家建造武器 | 两处 delta 依次打进组件记录 ⇒ `Proj+0 = 296`、`cust+0x80 = 0xC891ACF9E8DBDA97` |
+| 7 | 无人机挂载 | 不走建造链 ⇒ 实体记录保持 `Proj+0 = 0`、`cust+0x80 = 0`（= §22.1 那两扇门）|
+
+**所以第 16/19 轮手工写的那两个值，正好就是官方 delta 写的那两个值** —— 不是"借用别的武器"，是**手工复刻建造链**。
+§27.1 实机结果（四只狗开火、手感伤害与玩家 P-19 完全一致）正是这条链的**行为侧**验证。
+
+### 28.4 全档"296"账本（为什么之前搜不到）
+
+`u32 == 296` 全档共 **180 处**，逐处归因后**只有 1 处是弹丸引用**：
+
+| 位置 | 处数 | 性质 |
+|---|---:|---|
+| `generated_planet_territory_graphs` | 111 | 图数据里的普通整数 |
+| `generated_entities` | 38 | 37 处是哈希图的"行号 = 296"（`{key, row}` 的 row 字段）＋ 1 处 `BehaviorComponentData` 的 `BehaviorId = 296`（行为 id，不是弹丸）|
+| `generated_entity_deltas` | 9 | 8 处结构性字段（`settingsIndex=296`、delta 行的成员偏移 = 296 等）；**1 处是 data 里的 `296` = P-19 弹种 delta 的弹丸值** |
+| 其余 8 张表 | 22 | 各表内的普通数值/索引（如 `damage_settings` 的 1 处不在行数组里）|
+
+⇒ 之前"查不到"的根因不是表里没有，而是**它不在实体记录里**：实体记录只有休眠的 `0`，真值在**配件 delta 的 data 段**。data 段是"被打进去的字节"，不是行数组的一列 ⇒ 按字段扫实体/按行扫表都扫不到。
+
+### 28.5 旁证 + 可验证预测：P-2 Peacemaker 的弹丸不同（`342`）
+
+同一套链解 P-2：默认 slot 6 = **`PISTOL-SMG 9x20mm. HOLLOW POINT`**（`0xABEA8C15`，AddPath `0x70564BCA8BDD43D1`）→ delta → `ProjectileWeapon+0 = **342**`。
+
+| 弹丸 | 面板对应字段（弹丸表行内）| 伤害行 | 标准 / 耐久 |
+|---|---|---|---:|
+| `296`（P-19 的 FMJ）| 9 mm · **375 m/s** · 7 g · drag 1.2 · grav 1.0 · pen 0.25 | 80 | **70 / 12** |
+| `342`（P-2 的 HOLLOW POINT）| 9 mm · **320 m/s** · 7 g · drag 1.2 · grav 1.0 · pen 0.25 | 83 | **100 / 20** |
+
+> **预测（可 1 分钟验证）**：游戏里 P-2 Peacemaker 的弹丸面板应显示 **320 m/s + 100·20**，而不是 P-19 的 375 m/s + 70·12。
+> 若成立 ⇒ "实体=休眠值、弹种 delta=真值"的模型在第二把武器上复现。
+
+### 28.6 对配方/方法论的影响
+
+| 问题 | 以前（§25.2 口径）| 现在（§28 口径）|
+|---|---|---|
+| P-19 的原生弹丸在哪 | "数据里没有，靠面板指纹反推 296" | **默认弹种 delta 直接写 296**（面板指纹与 delta 双向吻合）|
+| 无人机为什么必须手补 | "无人机不认引擎默认" | **无人机挂载不跑玩家武器的建造/配件 delta 链**（行为侧已证；引擎内部路径 `⚠` 未证）|
+| 换弹种怎么写 | 只能猜 id | 直接读该弹种的 delta：`Proj+0 = <该弹种 delta 的值>`（例：`PISTOL-SMG 9x20mm. THERMITE` → `288`）|
+| 哪些武器是"休眠型" | 只有 P-19/P-2 两把碰巧发现 | 规则：**实体 `Proj+0 = 0` 且默认配件带 slot 6 弹种** ⇒ delta 型；本 build 有 **67** 个弹种配件的 delta 写 comp 324 `+0`（与社区 HD2Runtime 0.28.1 文档的 67 一致），slot 7 的 15 个备选弹种写 comp 119 `+68` |
+
+### 28.7 复现命令
+
+```bash
+python tools/ref_scan.py delta-info                    # 存储几何 + 组件索引直方图
+python tools/ref_scan.py delta-show 0xC756800DA816EFE1 # P-19 弹种 delta -> +0 = 296
+python tools/ref_scan.py delta-show 0xC891ACF9E8DBDA97 # P-19 弹匣 delta -> cust+0x80
+python tools/ref_scan.py delta-ammo --component 324 --member 0 --slot AmmoType   # 67 个弹种 -> 各自弹丸
+python tools/ref_scan.py exact 296                     # 全档 296 账本
+```
+
+工具手册：[REFSCAN](../tools/REFSCAN.md)。配件表结构：[WEAPON-CUSTOMIZATION-DECODED](WEAPON-CUSTOMIZATION-DECODED.md) §7。
+

@@ -88,3 +88,67 @@ python tools/table_export.py --table weapon_customization_settings \
 * 行名来自**每行自带的 `+0` 指针**（`DebugNameOffset`），不是尾部的平行数组：指针名与位置名
   在 8 个组上 240/240 一致，而位置法在第 9 组（12 个染料，块里混着颜色二进制）会吐出碎片。
   抽取方式见 `tools/table_row_names.py`、`tools/probe_row_name_offsets.py` 与字典文档 §0.5。
+
+## 7. 选项怎么"落地"：entity delta 链（build `26088801` 实测）
+
+> 上面 §1–§6 是 `25988413` 的表结构。本节是**动作侧**：配件选中之后，游戏到底改了哪个组件、改成什么 ——
+> 这部分不在本表里，在 `generated_entity_deltas.dl_bin`（`ComponentEntityDeltaStorage`，块类型 `0x683E604F`）。
+
+### 7.1 链
+
+```
+实体 WeaponCustomizationComponentData 的默认 (slot, optionId) 对
+  -> 本表（weapon_customization_settings）按 +8 ID 找到配件行，取 +32 AddPath（u64 资源哈希）
+  -> generated_entity_deltas.dl_bin 的 hashmap 按 AddPath 找到 settingsIndex
+  -> settings/component/delta 三级索引 -> (组件索引, 成员偏移, 宽度, data 偏移)
+  -> 建造武器时把 data 里的字节打进该组件记录
+```
+
+### 7.2 delta 存储结构（本 build，`python tools/ref_scan.py delta-info` 可复现）
+
+| 区 | payload 内偏移 | 条数 | 每条 | 结构 |
+|---|---:|---:|---:|---|
+| header | `+0` | 5 组 | 80 B | 每组 `(u64 offset, u64 count)` |
+| hashmap | `+0x50` | 1024 槽（572 非空）| 16 B | `{u64 AddPath, u32 settingsIndex, u32 pad}` |
+| settings | `+0x4050` | 1144 | 8 B | `{u32 componentCount, u32 firstComponent}` |
+| component | `+0x6410` | 1038 | 12 B | `{u32 组件索引, u32 firstDelta, u32 deltaCount}` |
+| delta | `+0x94B8` | 6119 | 12 B | `{u32 成员偏移, u32 宽度, u32 data 偏移}` |
+| data | `+0x1B38C` | 240,817 B | — | 被打进去的字节本身 |
+
+### 7.3 组件索引表（本 build 实测；换 build 必须重测）
+
+| 索引 | 组件 | 本 build 见到的补丁 |
+|---:|---|---|
+| `5` | `WeaponMagazineComponentData` | 弹匣容量/初始/补给/备弹（`+136/+140/+144/+148`）|
+| `114` | `WeaponReloadComponentData` | 装填常量与动画资源哈希 |
+| `119` | `WeaponRoundsComponentData` | 弹药池 A/B 弹丸（`+64/+68`，slot 7 备选弹种走这里，15 条）|
+| `239` | `WeaponDataComponentData` | 射速/后坐/散布等（`+964…`）|
+| `274` | `WeaponCustomizationComponentData` | **`+0x80` 宽 8 = 当前弹匣/挂件 AddPath** |
+| `324` | `ProjectileWeaponComponentData` | **`+0` 宽 4 = 弹丸 type id**（slot 6 弹种，67 条）|
+
+### 7.4 两个实测例子（P-19 Redeemer）
+
+| 配件槽 | 选中的配件 | AddPath | delta 干了什么 |
+|---|---|---|---|
+| slot 6 `AmmoType` | `PISTOL-SMG 9x20mm. FULL METAL JACKET` | `0xC756800DA816EFE1` | comp 324 `+0 = 296`（弹丸）|
+| slot 5 `Magazine` | `Pistol 9x20mm. Extended` | `0xC891ACF9E8DBDA97` | comp 5 `+136=31 /+140=4 /+144=6 /+148=6`；comp 274 `+0x80 = 0xC891ACF9E8DBDA97` |
+
+这解释了为什么 P-19 实体记录里 `ProjectileWeapon+0 = 0`、`WeaponCustomization+0x80 = 0` 却仍能正常开火：
+**两个值都是休眠值，建造时被 delta 覆盖**。完整证据链与实机验证见
+[BACKPACK-DOGS §28](BACKPACK-DOGS-26088801.md)。
+
+### 7.5 复现
+
+```bash
+python tools/ref_scan.py delta-info
+python tools/ref_scan.py delta-show 0xC756800DA816EFE1
+python tools/ref_scan.py delta-ammo --component 324 --member 0 --slot AmmoType
+```
+
+### 7.6 坑
+
+1. **组件索引是 build 相关的**。社区 HD2Runtime 0.28.1 文档里的索引（如 `[113] WeaponReload`）与本 build（`114`）不同 ⇒ 别跨 build 抄。
+2. **delta 里的数值也会漂**。例：`RIFLE 5,5x50mm. FULL METAL JACKET` 在 HD2Runtime 0.28.1 文档里是弹丸 `276`，本 build 是 `281` ⇒ 以本档解出来的为准。
+3. **data 段是字节流，不是行数组**：按字段扫实体记录 / 按行扫表都找不到它，必须解 delta。
+4. `⚠` 引擎侧"无人机挂载为什么不跑 delta 链"还没证到代码；目前证据是行为侧（记录 = 0 不开火、= 296 开火且手感一致）+ 数据侧（delta 链就写这两个值）。
+
