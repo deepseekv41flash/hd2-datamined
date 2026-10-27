@@ -414,27 +414,95 @@ def cmd_plan(a) -> int:
             print("✗ 拒绝出驻留计划（对应『缺失粒子阻止安装』）——确认为占位再加 --allow-missing")
             return 2
     need = [p for p in cross if p not in assume and p not in installed]
-    if not need:
+    order = sorted(need, key=lambda q: -len(cross[q]))
+    plan_pkgs = ([roots[0]] if roots and roots[0] not in installed else []) + order
+    if a.max_pkgs:
+        plan_pkgs = plan_pkgs[: a.max_pkgs]
+    if not plan_pkgs:
         print("✓ 不需要新增驻留：跨包资源都已常驻")
-        return 0
-    if a.dry_run:
         return 0
     pdir = pathlib.Path(a.out)
     pdir.mkdir(parents=True, exist_ok=True)
+    # —— plan.sh（命令清单，可人工核对）
+    idx_next = nxt
     lines = [f"# resdep 驻留计划：{label}",
              f"# 声明包 {', '.join(roots) or '-'}｜host {HOST_PKG}｜起始序号 {nxt}", ""]
-    idx_next = nxt
-    if roots and roots[0] not in installed:
-        lines += ["# ① 目标件自己的包（没有随装备加载时才需要）",
-                  f"python tools/whole_package_patch.py build --package {roots[0]} "
-                  f"--host {HOST_PKG} --index {idx_next} --out {pdir / roots[0]} --install", ""]
-        idx_next += 1
-    lines.append("# ② 跨包依赖（漏掉这些 = 模型在但特效/音效/联动物件缺）")
-    for i, pkg in enumerate(sorted(need, key=lambda p: -len(cross[p]))):
-        lines.append(f"python tools/whole_package_patch.py build --package {pkg} "
+    for i, pkg in enumerate(plan_pkgs):
+        note = "# ① 目标件自己的包" if roots and pkg == roots[0] else "# ② 跨包依赖"
+        lines.append(note + chr(10) + f"python tools/whole_package_patch.py build --package {pkg} "
                      f"--host {HOST_PKG} --index {idx_next + i} --out {pdir / pkg} --install")
-    (pdir / "plan.sh").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(f"\n写入 {pdir / 'plan.sh'}（{len(need)} 个跨包包待驻留）")
+    (pdir / "plan.sh").write_text(chr(10).join(lines) + chr(10), encoding="utf-8")
+    print(chr(10) + f"写入 {pdir / 'plan.sh'}（{len(plan_pkgs)} 个包）")
+    # —— 实机验证清单
+    kinds = {}
+    for comp, off, val, got in out:
+        kinds[got["type"]] = kinds.get(got["type"], 0) + 1
+    vlines = [f"# 实机验证清单：{label}", "",
+              f"- 驻留包：{len(plan_pkgs)} 个（host `{HOST_PKG}`，序号 {nxt}–{nxt + len(plan_pkgs) - 1}）",
+              "- 跨包资源：" + ("、".join(f"{kk}×{vv}" for kk, vv in sorted(kinds.items())) or "—"),
+              f"- 缺失资源：{len(miss)}（G3 {'拦下' if miss else '通过'}）", "",
+              "## 三级结论（不要混）",
+              "1. **资源解析到**（resdep 保证）→ 2. **驻留写进去**（whole_package_patch G1–G8 保证）→ 3. **游戏里对**（只有下面这张表能证）", "",
+              "## 验证表（逐条打勾，全绿才算过）", "",
+              "| # | 检查项 | 期望 | 结果 | 备注 |", "|---:|---|---|---|---|"]
+    rows = []
+    if "particles" in kinds:
+        rows.append(("粒子特效", "触发时出现预期特效，**不是灰块/半透明方块**（灰块=粒子资源仍没加载）"))
+    if "camera_shake" in kinds:
+        rows.append(("震屏", "命中/爆炸时有震屏"))
+    if any(k.startswith("wwise") for k in kinds):
+        rows.append(("音效", "有声音；**没声音不等于装失败，但也不等于通过**（事件可能未登记）"))
+    if any(k in kinds for k in ("mesh", "physics", "bones", "animation", "state_machine")):
+        rows.append(("模型", "外观正确、不紫问号、不悬空不缩地"))
+    rows += [("开火", "能正常开火，弹道/伤害符合预期"),
+             ("装填/弹药", "能装填且备弹显示正常（若该武器有弹匣）"),
+             ("稳定性", "连续使用 30 秒不崩溃、不掉帧到不可玩")]
+    for i, (item, expect) in enumerate(rows, 1):
+        vlines.append(f"| {i} | {item} | {expect} | ☐ | |")
+    vlines += ["", "## 回滚",
+               "```bash",
+               f"# 删掉本次驻留补丁（{len(plan_pkgs)} 个包 × 3 个文件）"]
+    for i in range(len(plan_pkgs)):
+        n = nxt + i
+        vlines.append(f'rm -f "{{game}}/{HOST_PKG}.patch_{n}"{{,.gpu_resources,.stream}}')
+    vlines += ["```", "",
+               f"> 目标件本身的字段改动回滚：用你改之前的那份 `.plain` 重新封包装盘"]
+    (pdir / "VERIFY.md").write_text(chr(10).join(vlines) + chr(10), encoding="utf-8")
+    print(f"写入 {pdir / 'VERIFY.md'}（{len(rows)} 条验证项）")
+    if not a.apply:
+        print("（只生成了计划；加 --apply 才会真正装盘）")
+        return 0
+    # —— 一键装盘（失败整体回滚）
+    nxt2, contiguous2, companions2 = patch_state(a.game, HOST_PKG)
+    if not contiguous2 or companions2:
+        print(f"✗ 装盘前检查失败：序号连续={contiguous2} 伴生缺失={len(companions2)} —— 先修盘再装")
+        return 3
+    root = HERE.parent
+    made: list[tuple[str, int]] = []
+    for i, pkg in enumerate(plan_pkgs):
+        idx_use = nxt2 + i
+        print(f"[{i+1}/{len(plan_pkgs)}] 驻留 {pkg} → patch_{idx_use} …")
+        proc = subprocess.run([sys.executable, str(HERE / "whole_package_patch.py"), "build",
+                               "--package", pkg, "--host", HOST_PKG, "--index", str(idx_use),
+                               "--out", str(pdir / pkg), "--install"],
+                              cwd=str(root), capture_output=True, text=True,
+                              encoding="utf-8", errors="replace")
+        if proc.returncode != 0:
+            print(f"✗ 失败：{proc.stdout[-500:]}{proc.stderr[-300:]}")
+            print("↩ 整体回滚本次已装的补丁…")
+            for done_pkg, n in made:
+                for ext in ("", ".gpu_resources", ".stream"):
+                    q = pathlib.Path(a.game) / f"{HOST_PKG}.patch_{n}{ext}"
+                    if q.is_file():
+                        q.unlink()
+                print(f"   删除 patch_{n}（{done_pkg}）")
+            print("✗ 已回滚到装盘前状态")
+            return 4
+        made.append((pkg, idx_use))
+    nxt3, contiguous3, companions3 = patch_state(a.game, HOST_PKG)
+    print(chr(10) + f"✓ 装盘完成：{len(made)} 个补丁（patch_{nxt2}–patch_{nxt2 + len(made) - 1}）")
+    print(f"G4 复检：序号连续 {'PASS' if contiguous3 else 'FAIL'}；伴生缺失 {len(companions3)}")
+    print(f"→ 下一步：按 {pdir / 'VERIFY.md'} 进游戏逐条打勾")
     return 0
 
 
@@ -460,6 +528,8 @@ def main() -> int:
         p.add_argument("--assume", default="")
         p.add_argument("--out", default="D:/mod/out/resdep/plan")
         p.add_argument("--dry-run", action="store_true")
+        p.add_argument("--apply", action="store_true", help="plan: 真正装盘（失败整体回滚）")
+        p.add_argument("--max-pkgs", type=int, default=0, help="plan: 最多装几个包（自测用）")
         p.add_argument("--json", default=None)
         p.set_defaults(func=func)
 

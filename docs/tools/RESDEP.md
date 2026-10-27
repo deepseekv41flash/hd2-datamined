@@ -11,7 +11,7 @@
 |---|---|---|
 | `index` | `srkit list --json` 拉全档清单（**约 20 秒**），建 `资源 id → {类型, 名字, 宿主包}` 索引，缓存到 `refs/resdep/` | 322,810 行 / **62,915** 个去重 id / 3,427 包 → G1 PASS |
 | `chain` | 从 `--weapon` / `--entity` / `--explosion` 走引用链，对每一行做**全 u64 扫描**并解析 | 爆炸 213：粒子 + 震屏，9 包，**0 缺失** |
-| `plan` | 以**目标件自己声明的包**（`LoadoutPackage+0x08`）为基准，把叶子分「同包 / **跨包** / 缺失」；缺失默认**拒绝出计划**；产出 `plan.sh` | MG-43：同包 7 条 / **跨包 11 条（5 包）** / 0 缺失 |
+| `plan` | 以**目标件自己声明的包**（`LoadoutPackage+0x08`）为基准，把叶子分「同包 / **跨包** / 缺失」；缺失默认**拒绝出计划**；产出 `plan.sh` + **`VERIFY.md`**；`--apply` = **一键装盘 + 失败整体回滚** | MG-43：同包 7 条 / **跨包 11 条（5 包）** / 0 缺失 |
 | `sound-catalog` / `sound` | 解 wwise bank（16 B 包装头 → BKHD/DIDX/DATA/**HIRC**）建 `事件 id → bank` 目录；查单条事件 | 3 个 bank 样本 → 100 个事件；全量 641 bank ≈ 23 分钟 |
 
 ```bash
@@ -67,3 +67,46 @@ python tools/resdep.py sound --event 0x0153E8DE
 - `whole_package_patch.py`：`plan.sh` 里生成的就是它的命令（整包驻留，host `f6fb08cc02d24255`）；
 - `entity_field_set.py` / `plain_edit.py`：改字段（保 murmur64）；
 - 三者串起来就是一条完整闭环：**改字段 → resdep 看漏了什么 → 整包驻留 → 实机**。
+
+## 7 一键装盘 + 实机验证清单（`plan --apply`）
+
+`plan` 默认只生成计划；加 `--apply` 就**真的装盘**，并同时产出实机验证清单。
+
+```bash
+python tools/resdep.py plan --weapon "MG-43"            # 只出 plan.sh + VERIFY.md
+python tools/resdep.py plan --weapon "MG-43" --apply    # 一键装盘（失败整体回滚）
+python tools/resdep.py plan --explosion 213 --apply --max-pkgs 1   # 自测用：只装 N 个包
+```
+
+产出三件套（默认 `out/resdep/plan/`）：
+
+| 文件 | 内容 |
+|---|---|
+| `plan.sh` | 每条 `whole_package_patch.py build … --install` 命令，可人工核对/改序号 |
+| `VERIFY.md` | **实机验证清单**：按本次叶子资源的类型自动长出来的检查项（粒子/震屏/音效/模型/开火/装填/稳定性）+ 回滚命令 |
+| `<包id>/` | 每个驻留包的产物（toc / gpu_resources / stream）|
+
+**装盘纪律（对应社区那条"多包写入失败整体回滚"）**
+
+1. 装盘前先查 **G4**（序号连续 + `.gpu_resources`/`.stream` 伴生齐全）——不过就**不开始**（退出码 3）；
+2. 逐包装，任一失败 → **删掉本次已装的补丁**（每包 3 个文件）→ 退出码 4，盘面回到装盘前；
+3. 全部成功 → 复检 G4，并提示按 `VERIFY.md` 进游戏逐条打勾。
+
+**验证清单长什么样**（`explosion 213` 实测）：
+
+| # | 检查项 | 期望 |
+|---:|---|---|
+| 1 | 粒子特效 | 出现预期特效，**不是灰块/半透明方块**（灰块=粒子仍没加载）|
+| 2 | 震屏 | 命中/爆炸时有震屏 |
+| 3 | 开火 | 能开火，弹道/伤害符合预期 |
+| 4 | 装填/弹药 | 能装填且备弹显示正常 |
+| 5 | 稳定性 | 连续用 30 秒不崩、不掉帧到不可玩 |
+
+清单里的检查项是**按资源类型生成的**：有 `particles` 才出"粒子特效"行，有 `camera_shake` 才出"震屏"行，
+有 `wwise_*` 才出"音效"行（且注明"没声音不等于装失败，也不等于通过"）。
+
+## 8 生态：这套 srkit 打包也被别人用着
+
+- **SHODAN Stat Editor**（`127MU`，<https://github.com/127MU/SHODAN-Stat-Editor>）也在用本项目的 `srkit` 打包；
+  他们更新日志里踩的正是第 1 节那四个坑（猜包漏粒子 / 缺失粒子要拦 / 音效不能当已验证 / 归属要用原始基准）。
+  ⇒ `resdep` 的门禁设计直接对齐他们的需求，两边可以互相对照。
