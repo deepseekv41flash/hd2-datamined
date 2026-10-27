@@ -33,7 +33,7 @@
 | 客机 | 房主装、客机零安装即可见变种；证据是主机日志里**没有客机的任何 REQ**，而客机星图也出现词条 ⇒ 引擎把房主的战况板整张同步给客机 |
 
 > 仓库边界：本节只做**机制结论**。网络层（代理补丁、抓包、effect 菜单、可达性/阵营注入实验）
-> 已独立成仓库 **[hd2-warlab](https://github.com/deepseekv41flash/hd2-warlab)**；
+> 已独立成仓库 **[hd2-network-proxy](https://github.com/deepseekv41flash/hd2-network-proxy)**；
 > 本仓库只保留离线数据表这条线的笔记与工具。
 
 **它对我们的价值**：把"变种"拆成了可观测的三段 ——
