@@ -775,7 +775,7 @@ python tools/mount_table.py verify out/mount-swap/x.plain
 > 想做到"不靠玩家背包"：后续可查三条路——① 把 `Autocannon Backpack` 挂进 M-102 空槽；② 直接给枪的
 > `WeaponRounds` 写备弹（`+80/+84`，此路用户此前已实测可行）；③ 找载具自身的弹药池字段。任一成立就能让车自己带弹。
 
-### 11.8 第四轮：手枪 —— **P-19 Redeemer**（2026-10-27 17:1x 已装，`⚠` 待实机）
+### 11.8 第四轮：手枪 —— **P-19 Redeemer**（2026-10-27 17:1x 已装 → **`✓✓` 实机正常**）
 
 用户点名"最特殊的那两个之一"（休眠型武器）：枪手位换 **P-19 Redeemer `0x3575AABC5F1F9326`**。
 
@@ -800,3 +800,82 @@ python tools/mount_table.py verify out/mount-swap/x.plain
 若装填正常 ⇒ 进一步证明"车座弹药链 = 枪自己的弹匣/弹药池，背包只在枪依赖背包时介入"。
 
 **回滚**：entities 回 `out/mount-frv/z4.dl_bin`（AC-8 版，已实机正常）。
+
+### 11.8.1 结果：正常（`✓✓`）
+
+用户回报：**模型/瞄准/开火/装填全部正常**。手枪在枪手位可用；P-19 自带 31 发弹匣，**不需要背包**（与 AC-8 形成对照）。
+
+⇒ "载具枪手位 = 通用武器挂点"已覆盖：支援武器（MG-206 通用件 / MG-43 / AC-8）+ 手枪（P-19）；
+休眠型武器只要 **包驻留 + 实体复刻 delta** 两件套就位即可。
+
+### 11.9 规则汇总（载具 / 工事挂载线收尾，2026-10-27）
+
+| # | 规则 | 依据 | 态 |
+|---|---|---|---|
+| R1 | 挂载句柄 = `MountComponentData` → `MountInfo.item`（u64）；**载具 / 机甲 / 工事 / 无人机同一张表、同一个字段**；换件只写这 8 字节，`side` / `anchor` / `flag` 一律不动 | §2 · §11 · §12 | `✓✓` |
+| R2 | 挂载路径**不加载挂载件声明的包**（`LoadoutPackage+0x08` 不兑现）；跨包件必须**整包驻留**（`whole_package_patch`），否则紫问号；原生件能显示是因为资源在**宿主自己的包**里有一份副本 | §11.4 实机 | `✓✓` |
+| R3 | 判据按**槽类型**分：炮塔槽要 `Turret`+`WeaponWielder`（AI/机械限位）；**玩家枪手位不需要**（瞄准来自座位/相机，玩家就是 wielder）| §8 修订 · §11.1 | `✓` |
+| R4 | 弹道与射速完全由**枪自己的组件**决定（`ProjectileWeapon` 逐字节相同 ⇒ 同弹道）；挂载点不参与 | §11 · §12 | `✓` |
+| R5 | **弹药链**：枪自带弹匣/弹药池 ⇒ 自给自足（P-19 31 发可装填）；枪+背包分离（AC-8）⇒ **车座认玩家背的对应背包**，空手打空后装不上 | §11.7.1 · §11.8.1 实机 | `✓✓` |
+| R6 | 武器类别不设限（支援武器 / 手枪都行），门槛只有：**包驻留** + 休眠型武器的**实体复刻 delta**（`Proj+0` / `cust+0x80`）| §11.5–§11.8 | `✓✓` |
+| R7 | 工程流程：`mount_table.py swap`（G1–G10）→ `dlbin_seal.py seal-key` → 装盘 → unseal 回读逐字节相等；单变量、留回滚 | §7 | `✓✓` |
+
+## 12. E/GL-21 Grenadier Battlement：墙 + 挂载的 GL-21 变体（2026-10-27，`✓` 离线解剖）
+
+用户问："它是一个墙，上面有一把 60 发弹容量的 GL-21。看看它和原版 GL-21 除弹容、备弹之外的区别，以及 E/GL-21 Grenadier Battlement 的 mount 字段。"
+
+### 12.1 两个实体（一个墙 + 一把枪，枪是独立 item）
+
+| 角色 | 实体键 | 组件数 | 说明 |
+|---|---|---:|---|
+| **墙（E/GL-21 Grenadier Battlement）** | `0x0C8257D1C0255593` | 20 | 含 `Mount` + `SeatCollection` + `ExpandableCover` + `Health`/`Destructible` + `HellpodPayload` + `Faction` …（工事本体）|
+| **墙上的 GL-21 变体（独立 item）** | `0x1D5943301A29C940` | 18 | `ProjectileWeapon` + `WeaponMagazine` + `WeaponReload` + `WeaponData` + `WeaponCustomization` + `Wieldable` …；**没有** `LoadoutEntry` / `LoadoutPackage` / `MeleeAttack` / `Spottable` |
+| **原版 GL-21（支援武器）** | `0x02EECD0B1FA49630` | 22 | 以上 18 个 + `LoadoutEntry` + `LoadoutPackage` + `MeleeAttack` + `Spottable` |
+
+> 两个实体在百科里都叫 `Grenadier Battlement` / `E/GL-21`（枪变体沿用了同一个显示名），但它们的
+> `EncyclopediaEntry` 行内容不同（各自 locid）。
+
+### 12.2 mount 字段（完整）
+
+| 项 | 值 |
+|---|---|
+| 记录 | `MountComponentData` 行 **105**（行基址 `0x1CCE22C`，5 槽 × 24 B）|
+| 槽 0 | `item = 0x1D5943301A29C940`（GL-21 变体）· `side = 0 Common` · `anchor_a = 3976219499 (0xED004B6B)` · `anchor_c = 600573527 (0x23CC0657)` · `flag20 = 1` · `flag21 = 0` |
+| 槽 1–4 | 空（全 0）|
+| 座位 | `SeatCollectionComponentData` 行 **35**：`TransitionId = 25`（Grenadier Battlement / Expandable Cover 家族），无 Passenger，**`ActiveAimConstraint[22]` 全 0** |
+| 声明包 | 墙自己的 `LoadoutPackage +0x08 = 0x9D4EB484C405E7A2`（= GL-21 资产包；枪变体的弹匣 physics `0x5207AEE5F447A3E4` 也在这个包里）⇒ **墙+枪不需要额外驻留** |
+
+> 对照：原版 GL-21 的 `LoadoutPackage +0x08 = 0x0089BBE3E284FCAA`（另一个 GL-21 资产包副本）。
+> 两个包都含同一把 GL-21 的 unit 资源。
+
+### 12.3 与原版 GL-21 的区别（除弹容 / 备弹外）
+
+共享组件逐字节比对（当前明文）：
+
+| 组件 | 结果 |
+|---|---|
+| `ProjectileWeaponComponentData`（616 B）| **逐字节相同** ⇒ 同弹丸、同射速、同弹道标记 |
+| `UnitComponentData`（136 B）| **相同** ⇒ 同一个 GL-21 壳资源 |
+| `Ability` / `Attachable` / `Animation` / `Interactable` / `Equipment` / `EntityBind` / `PhysicsImpactEffect` / `NetworkPhysics` / `CollisionEvent` / `EquipmentShowcase` / `Wieldable` | 逐字节相同 |
+| `WeaponMagazineComponentData` | `+0x88` 容量 **60 vs 10** · `+0x8C` 初始弹匣 **0 vs 2** · `+0x90` 补给 **0 vs 3** · `+0x94` 备弹 **0 vs 3**（其余相同）|
+| `WeaponCustomizationComponentData` | `+0x80`（弹匣/弹药模型资源）：**`0x5207AEE5F447A3E4`（physics） vs `0xB98F2B3D1BDE24B0`（bones `nade_launcher_ammo_frag`）** |
+| `WeaponReloadComponentData` | `+0x0C` / `+0x18` 两组（共 4 个 u32）不同 ⇒ 装填动画/事件哈希不同（`⚠` 语义未定）|
+| `WeaponDataComponentData` | `+0x00/+0x04` = **后坐 x/y：25/25 vs 170/175**（与 wiki GL-21 的 `recoilxy` 170/175 对上 ⇒ 字段语义确认）；`+0x1C/+0x20` = **20/30 vs 60/90**（`⚠` 疑似散布/后坐倍率，未定）；`+0x3A8` = `0xAE6CC371` vs `708.0f`（`⚠` 未定）|
+| `EncyclopediaEntryComponentData` | 名字 / 代码 / 描述 locid 不同（条目不同：`E/GL-21` vs `GL-21`）|
+| 组件集 | 墙版少 `LoadoutEntry` / `LoadoutPackage` / `MeleeAttack` / `Spottable`（不是可拾取物品、无近战、不可扫描）|
+
+⇒ **墙版 GL-21 = 同一条弹道 + 低后坐（25/25 vs 170/175）+ 60 发 + 无备弹 + 独立弹匣模型/装填动画**；
+除弹容/备弹外，差异集中在"操作手感（后坐）"、"弹药/装填资源"、以及"物品类组件被裁掉"。
+
+### 12.4 可换性（与 §11 同规则）
+
+- 墙的挂载点就是 `MountInfo.item` 一个 u64 ⇒ 可以换别的枪（和 M-102 / 狗同一条配方）；
+- 但**墙只声明了 `0x9D4EB484C405E7A2` 一个包** ⇒ 换成不在这个包里的件要整包驻留（R2）；
+- 墙的枪变体**自己没有 `LoadoutPackage`** ⇒ 它只在这个墙里能"零驻留"用，搬到别处同样要驻留。
+
+### 12.5 复现命令
+
+```bash
+python tools/mount_table.py show --entity 0x0C8257D1C0255593     # 墙的挂载记录 + 五件套
+python tools/resdep.py chain --entity 0x1D5943301A29C940 --dry-run   # 枪变体的组件/资源叶子
+```
