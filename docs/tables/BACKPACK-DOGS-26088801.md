@@ -1091,17 +1091,24 @@ P-19 为什么原版能打、无人机为什么不打、我们手工补的那两
 
 ⇒ 之前"查不到"的根因不是表里没有，而是**它不在实体记录里**：实体记录只有休眠的 `0`，真值在**配件 delta 的 data 段**。data 段是"被打进去的字节"，不是行数组的一列 ⇒ 按字段扫实体/按行扫表都扫不到。
 
-### 28.5 旁证 + 可验证预测：P-2 Peacemaker 的弹丸不同（`342`）
+### 28.5 第二把武器验证：P-2 Peacemaker 的弹丸是 `342`（`✓✓` 面板 + wiki 双证）
 
 同一套链解 P-2：默认 slot 6 = **`PISTOL-SMG 9x20mm. HOLLOW POINT`**（`0xABEA8C15`，AddPath `0x70564BCA8BDD43D1`）→ delta → `ProjectileWeapon+0 = **342**`。
 
-| 弹丸 | 面板对应字段（弹丸表行内）| 伤害行 | 标准 / 耐久 |
-|---|---|---|---:|
-| `296`（P-19 的 FMJ）| 9 mm · **375 m/s** · 7 g · drag 1.2 · grav 1.0 · pen 0.25 | 80 | **70 / 12** |
-| `342`（P-2 的 HOLLOW POINT）| 9 mm · **320 m/s** · 7 g · drag 1.2 · grav 1.0 · pen 0.25 | 83 | **100 / 20** |
+| 弹丸 | size | velocity | mass | drag | gravity | penSlow | 伤害行 | 标准 / 耐久 |
+|---|---|---:|---:|---:|---:|---:|---:|---|
+| `296`（P-19 的 FMJ）| 9 mm | **375 m/s** | 7 g | 1.2 | 1.0 | 0.25 | 80 | **70 / 12** |
+| `342`（P-2 的 HOLLOW POINT）| 9 mm | **320 m/s** | 7 g | 1.2 | 1.0 | 0.25 | 83 | **100 / 20** |
 
-> **预测（可 1 分钟验证）**：游戏里 P-2 Peacemaker 的弹丸面板应显示 **320 m/s + 100·20**，而不是 P-19 的 375 m/s + 70·12。
-> 若成立 ⇒ "实体=休眠值、弹种 delta=真值"的模型在第二把武器上复现。
+**两条独立验证都落在 342 行上**：
+
+| 验证源 | 结果 |
+|---|---|
+| **实机面板**（用户 2026-10-27 截图）| 9 mm / 7 g / **320 m/s** / Drag 120% / Gravity 100% / Pen 25% / **100 Ballistic · 20 Ballistic** ⇒ 与 342 行**逐项相同** |
+| **本地 wiki 镜像**（`refs/wiki/wiki.sqlite`）| P-2 的 weapon 模块 `attacks[0].name = P-2_P`；该 projectile 模块 = 9 mm / **320 m/s** / 7 g / pen 0.25，damage 模块 = **100 / 20** ⇒ 与 342 行 **6/6 全中** |
+
+⇒ "实体记录=休眠值、默认弹种 delta=真值"的模型在**第二把武器**上复现。
+顺带把两边的枚举名对上了：P-19 的 `296` = `Pistol_9x20mm_fmj`，P-2 的 `342` = `P-2_P`（wiki 旧命名）。
 
 ### 28.6 对配方/方法论的影响
 
@@ -1123,4 +1130,31 @@ python tools/ref_scan.py exact 296                     # 全档 296 账本
 ```
 
 工具手册：[REFSCAN](../tools/REFSCAN.md)。配件表结构：[WEAPON-CUSTOMIZATION-DECODED](WEAPON-CUSTOMIZATION-DECODED.md) §7。
+
+### 28.8 附带成果：用**本地 wiki 镜像**给弹丸 id 贴枚举名（61 武器 / 59 个 id）
+
+`refs/wiki/wiki.sqlite`（763 页 / 235 个 weapon 模块 / **701 条 projectile 模块** / 1340 条 damage 模块）里有枚举名和字段。
+做法：实体百科 `(code, name)` → wiki 页标题 **`"<code> <name>"`** → weapon 模块 `attacks[0].name` 得枚举名；
+我们这边 id = 默认弹种 delta（INDIRECT）或实体自带 `Proj+0`（ACTIVE_DIRECT）。工具：`python tools/xcheck_projectile_names.py`。
+
+| 判据 | 结果 |
+|---|---|
+| 精确 join 到的武器 | **61** |
+| size / velocity / mass / penSlow 一致 | **61 / 61**（弹道参数全中）|
+| dmg / dmg2 一致 | 49 / 60、50 / 60 |
+| 全字段一致 | **49** |
+| 不一致的 12 个 | **只有伤害**——wiki 是旧快照：P-19 60/5 vs 现 70/12、AR-23 80/15 vs 90/22、MP-98 65/7 vs 90/18、P-4 200/70 vs 225/75 … |
+
+⇒ 说明"delta 解出的 id"与官方命名/弹道参数自洽；wiki 数值不能当现值（版本旧），但**名字/结构**可用。
+id→名清单写到 `out/wiki-proj-names.json`（59 个 id）。样例：
+
+| id | wiki 枚举名 | id | wiki 枚举名 |
+|---:|---|---:|---|
+| `296` | `Pistol_9x20mm_fmj` | `342` | `P-2_P` |
+| `281` | `Rifle_5.5x50mm_fmj`（AR-23 / M-105）| `150` | `Rifle_8x60mm_fmj`（MG-43）|
+| `205` | `P/40-K_P` | `167` | `P-44_P` |
+| `241` | `P-69_P` | `314` | `Pistol_13x40mm_fmj`（P-4）|
+
+`⚠` 命名混时代：同一个 id 可能有两个名字（本档 1 例：`281` 也出现在 StA-52 的 `AR-23_P`）——当线索，别当唯一名。
+
 

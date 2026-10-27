@@ -84,8 +84,38 @@ python tools/ref_scan.py delta-ammo --component 324 --member 0 --slot AmmoType
    文档里 Liberator 的 FMJ 弹丸是 `276`，本 build 是 `281`）。
 6. 只读：不解封游戏目录、不写 `data/game`、不启动游戏；`--plaintext` 指向已解好的明文缓存即可。
 
-## 6. 相关文档
+## 6. 弹丸 id ↔ 枚举名：本地 wiki 镜像交叉验证
 
-* [BACKPACK-DOGS §28](../tables/BACKPACK-DOGS-26088801.md) —— 用它破的案：P-19 的原版运行逻辑 + 实机验证
+`ref_scan.py` 只能给出数字 id；名字在本地 wiki 镜像里（`refs/wiki/wiki.sqlite`：
+763 页 / 235 个 weapon 模块 / **701 条 projectile 模块** / 1340 条 damage 模块）。配套工具
+`tools/xcheck_projectile_names.py` 把两边 join 起来并批量核数值：
+
+```bash
+python tools/xcheck_projectile_names.py   # 默认读 D:\mod 下的 wiki / 明文缓存 / 配件 CSV，写 out/wiki-proj-names.json
+```
+
+做法：
+1. 实体百科 `(code, name)` → wiki 页标题 `"<code> <name>"`（如 `P-19 Redeemer`）→ weapon 模块 `attacks[0].name` = 弹丸枚举名；
+2. 我们的 id = 默认弹种配件的 delta（INDIRECT）或实体自带 `ProjectileWeapon+0`（ACTIVE_DIRECT）；
+3. 比 `size/caliber`、`velocity`、`mass`、`pen_slow`（弹道）与小伤害行 `dmg/dmg2`。
+
+本 build 实测（2026-10-27）：
+
+| 判据 | 结果 |
+|---|---|
+| 精确 join 到的武器 | **61** |
+| size / velocity / mass / penSlow 一致 | **61 / 61** |
+| dmg / dmg2 一致 | 49 / 60、50 / 60 |
+| 全字段一致 | **49** |
+| 不一致的 12 个 | 只有伤害——wiki 是旧快照（P-19 60/5 vs 现 70/12 等）|
+
+产出 `out/wiki-proj-names.json`（59 个 id）：`296 → Pistol_9x20mm_fmj`、`342 → P-2_P`、
+`281 → Rifle_5.5x50mm_fmj`、`150 → Rifle_8x60mm_fmj`（MG-43）、`205 → P/40-K_P` …
+`⚠` wiki 数值是旧版本，只能当**名字/结构**线索；同 id 多名字会出现（本档 `281` 也有 `AR-23_P` 的叫法）。
+
+## 7. 相关文档
+
+* [BACKPACK-DOGS §28](../tables/BACKPACK-DOGS-26088801.md) —— 用它破的案：P-19 的原版运行逻辑 + 实机验证 + wiki 交叉验证
 * [WEAPON-CUSTOMIZATION-DECODED §7](../tables/WEAPON-CUSTOMIZATION-DECODED.md) —— 配件表 → entity delta 的落地链
 * [RESDEP](RESDEP.md) —— 反过来：从一个武器/实体出发把**资源**依赖扫全（驻留计划）
+

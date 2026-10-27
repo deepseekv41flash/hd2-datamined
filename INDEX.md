@@ -46,7 +46,7 @@
 | **投送舱送什么（战备空投舱换载荷）** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§1 槽位结构 · §2 前 N 个槽才生成 · §3 换物品配方** | `26088801` |
 | **换进来的物品只有紫问号 / 网格材质不加载** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§4 两个包槽（`+0xA8` + `+0xF8`）· §5 item→包解析表** | `26088801` |
 | **改了弹丸/爆炸，怎么知道漏了哪些粒子/实体/声音资源** | [RESDEP](docs/tools/RESDEP.md) | **`chain` 扫引用 · `plan` 分「同包/跨包/缺失」· `--apply` 一键装盘+整体回滚 · `VERIFY.md` 实机清单 · HIRC 事件目录** | `26088801` |
-| **某个 id 在整个数据里被谁引用 / 原版武器的弹丸从哪来** | [REFSCAN](docs/tools/REFSCAN.md) | **`exact` 全档 u32 账本 · `columns` 引用面普查 · `delta-info/-show/-ammo` 解配件 delta 链（弹种槽 6 → `ProjectileWeapon+0`）· 本 build 组件索引表** | `26088801` |
+| **某个 id 在整个数据里被谁引用 / 原版武器的弹丸从哪来 / 某个弹丸 id 叫什么** | [REFSCAN](docs/tools/REFSCAN.md) | **`exact` 全档 u32 账本 · `columns` 引用面普查 · `delta-info/-show/-ammo` 解配件 delta 链（弹种槽 6 → `ProjectileWeapon+0`）· §6 wiki 镜像交叉验证（61 武器 / 59 个 id→枚举名）· 本 build 组件索引表** | `26088801` |
 | **狗背包（AX 系）换枪**（**✓ 结项**） | [BACKPACK-DOGS](docs/tables/BACKPACK-DOGS-26088801.md) | **§17 收尾**：配方 = 改无人机 `Mount+0x00` 一个 u64 · 三条硬规则（资源驻留 / 载体装填 / 开火输入）· **§17.3 白名单账本** · **§27.1 副武器 P-19 实机通过 · §28 根因链（弹种 delta 写 `Proj+0=296`）** | `26088801` |
 | **改背包数值（跳跃冷却/跳跃高度/补给次数/护盾半径/位移距离）** | [BACKPACK-VALUES](docs/tables/BACKPACK-VALUES-26088801.md) | **§1 五个组件的字段表（偏移+语义名+现值）· §2 一条命令 · §3 第一轮已装盘** | `26088801` |
 | **背包能不能"换特性"（把跳跃搬到补给包）** | [BACKPACK-LINE](docs/tables/BACKPACK-LINE-26088801.md) | **§8 收口：纯数据走不通（四轮实验 + 按 5 崩溃）· §7.4 字段类型图（typelib + HD2Runtime）** | `26088801` |
@@ -288,6 +288,7 @@
 | `entity_locid_scan.py` | 解实体库（275 块 → `[哈希图][行数组][尾数组]`），定位本地化 ID 槽。实体名只有一处：`EncyclopediaEntryComponentData`（块 56） | PyNaCl（无）+ `typelib.py` | ✓ 643/1,939 实体有名字，205/211 条带代码条目精确命中 wiki 标题 |
 | `entity_components.py` | 实体 → 组件清单（用每个组件块自己的哈希图反查，不用块 0 的 u16）；附带「谁引用了某值」的列扫描 | PyNaCl（无）+ `typelib.py` | ✓ 1,932 实体 / 272 种组件；用它查出 explosion 68 被 `Bombardment +64` 引用 |
 | `ref_scan.py` | **引用反查 + 配件 delta 解码（只读）**：`exact` 扫全档 `u32 == VALUE` 并归因到（文件/块/行/槽/实体键）· `columns` 找「整列都是目标表 id」的引用面（不猜偏移）· `entity` 打单个实体全部组件行 · **`delta-info`/`delta-show`/`delta-ammo` 解 `ComponentEntityDeltaStorage` 三级索引**（配件 AddPath → 组件 → 成员偏移 → 字节），带本 build 组件索引表（[REFSCAN](docs/tools/REFSCAN.md)）| `entity_locid_scan.py`、`table_dictionary.py` | ✓ 用它破案：P-19 的 `Proj+0 = 296` 来自默认弹种 delta（[BACKPACK-DOGS §28](docs/tables/BACKPACK-DOGS-26088801.md)）；67 个弹种配件 → 各自弹丸 |
+| `xcheck_projectile_names.py` | **弹丸 type id ↔ wiki 枚举名 + 批量数值交叉验证**：实体百科 `(code,name)` → wiki 页 → weapon 模块 `attacks[].name`；我们这边取默认弹种 delta / `Proj+0`；比 size/velocity/mass/penSlow 与伤害（[REFSCAN §6](docs/tools/REFSCAN.md)）| `entity_locid_scan.py` + 本地 wiki 镜像 `refs/wiki/wiki.sqlite` | ✓ 61 武器 join、弹道参数 61/61、49 个全字段一致（其余为 wiki 旧快照伤害）；`296→Pistol_9x20mm_fmj`、`342→P-2_P`、`281→Rifle_5.5x50mm_fmj` |
 | `explosion_names_from_chain.py` | 爆炸行没有名字字段，改从引用链命名：投掷物 `+144/+156` → 爆炸 `+0`，输出每个爆炸行的消费方 | PyNaCl（无）+ `typelib.py` | ✓ 210 条边 / 0 悬空；103 个爆炸行有名字（97 唯一 + 6 共用） |
 | `strings_inventory.py` | 清点 `.strings` 语料：语言分布（`ThinHash` 反查 15 种语言）、每个 bundle 的 distinct 英文 blob 数、ID 并集。**只读文件头 16 字节** | 标准库 | ✓ 证明英文语料是全局唯一那 18 个 blob |
 | `table_dictionary.py` | **全表字典**：解封 55 张表 → 组/行数/步长/尾块 + 每个类型的字段偏移树（需自备 `recipient.sk`） | PyNaCl + `typelib.py` | ✓ 55/55 表解析（18 张几何完全闭合） |
