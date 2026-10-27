@@ -110,3 +110,28 @@ python tools/resdep.py plan --explosion 213 --apply --max-pkgs 1   # 自测用�
 - **SHODAN Stat Editor**（`127MU`，<https://github.com/127MU/SHODAN-Stat-Editor>）也在用本项目的 `srkit` 打包；
   他们更新日志里踩的正是第 1 节那四个坑（猜包漏粒子 / 缺失粒子要拦 / 音效不能当已验证 / 归属要用原始基准）。
   ⇒ `resdep` 的门禁设计直接对齐他们的需求，两边可以互相对照。
+
+## 9 声音这一步的实际边界（`✓` 目录可建 / `✗` 绑定字段未定位）
+
+**已做成**：`sound-catalog` 全量跑完 —— **9,627 个 Wwise 事件 / 420 个去重 bank**（清单里 641 行是重复副本），
+缓存 `refs/resdep/resdep-sound-26088801.json`；`sound --event 0x…` 可即时判断"这个 id 在不在任何 bank 里"。
+
+**没做成（老实说）**：**数据表里"哪个字段放事件 id"还没定位**。本 build 实测：
+
+| 检查 | 结果 |
+|---|---|
+| 爆炸表 424 行 × 每 4 字节一列，与 9,627 个事件 id 求交 | **0 命中**（u64 列同样 0）|
+| `+0x40`（我方文档里"未知 32 位哈希"那格）| **0/424 命中** ⇒ **不是 Wwise 事件 id**，方向排除 |
+
+⇒ 现在的结论分级是：
+1. **资源（粒子/震屏/模型）**：能自动推导到包 ✓（`chain`/`plan` 已经可用）；
+2. **音效**：只能给"事件目录 + 未定位提示"，**不能**从爆炸行/武器行推出它该用哪个事件（`⚠` 未解）。
+   爆炸音很可能挂在**粒子资源自身**或 `hit_effect_settings`/`unit_effect_settings` 那一层，本轮没到。
+
+这也正好对应社区那条纪律：**"未定位音效明确提示，不把写入成功等同于游戏音效已验证"** ——
+`chain` 现在对音效只做两件事：命中就标"已登记"，没命中就写"未定位"，绝不写成"音效正常"。
+
+### 下一步（若要做全音效依赖）
+1. 先解 `generated_hit_effect_settings` / `generated_unit_effect_settings` 的行字段（本仓库 TABLE-DICTIONARY 已有几何）；
+2. 看粒子资源（`particles`）的 codec 里是否带 `wwise` 事件槽；
+3. 若都没有，则音效多半由**动画事件**（`generated_animation_event_trigger_settings`）驱动 —— 那条链要另开。
