@@ -702,3 +702,41 @@ python tools/entity_field_set.py set --block 0x3845B1E0 --key <无人机实体> 
 **装盘**：entities = `out/dogs/q4.dl_bin`（md5 `4543d8b918cf917ee96d6323e1c70709`）；
 驻留 patch_18（上一轮 P-92）+ patch_19–22（本轮四把），盘上补丁现在到 `patch_22`。
 **回滚**：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`；删 patch_18–22 可回收本轮体积。
+
+### 19.1 结果：**四把无制导副武器全都能打** ⇒ 制导假说否证、槽位假说否证（2026-10-27 13:3x，`✗✗`）
+
+| 狗 | 挂的 | `GuidanceTarget` | 实机 |
+|---|---|---|---|
+| Rover | LAS-7 Dagger | 无 | **✓** |
+| Guard Dog | P/40-K Bolt Pistol | 无 | **✓** |
+| Hot Dog | P-72 Crisper | 无 | **✓** |
+| Dog Breath | PLAS-15 Loyalist | 无 | **✓** |
+
+两条假设同时被推翻：
+- **✗ 制导不是判据**（四把无制导副武器全开火）；
+- **✗ 副武器槽不适配也不成立**（副武器在四只狗上都能用）。
+
+⇒ **P-19 Redeemer 是孤例**（唯一测过"渲染正常、死活不开火"的武器）。问题从"副武器能不能挂"收缩成
+**"P-19 为什么不工作"**，候选：`WeaponMagazine`（全自动、大弹匣）、`ProjectileWeapon` 的 wielder 槽、
+`EquipmentType` 类别、`WeaponData+0x184`（fnid）。本轮把 P-19 重新挂到 **K-9** 上复测，先排除"上轮是配置/驻留问题"。
+
+## 20 第十二轮：四把新副武器 + P-19 复测（2026-10-27 13:3x 已装，`⚠`）
+
+| 狗 | 无人机 | 挂的副武器 | 驻留 | 备注 |
+|---|---|---|---|---|
+| **Rover** | `0x5BEEC97F4C7F4AE9` | **LAS-58 Talon** `0x416D053372C4E433` | **复用 patch_19**（与 Dagger 同包 `82dcd83d81a385f3`）| 同厂同包，省一个补丁 |
+| **Guard Dog** | `0xA0FF2F9A0CA6992A` | **P-113 Verdict** `0x1A437158E1B8D2A1` | patch_23（包 `b47514ae19a494f0`，36 条）| |
+| **Hot Dog** | `0x979E9BC6D48D1FC6` | **P-69 Veto** `0xC780BCD79547DA0F` | patch_24（包 `58038f21c4334481`，41 条）| |
+| **Dog Breath** | `0xB9BAF571FC8F9959` | **P-44 Mist** `0x027DEC442CC26A90` | patch_25（包 `7160179c08dd7d81`，44 条）| |
+| **K-9** | `0x4B071633584E4594` | **P-19 Redeemer** `0x3575AABC5F1F9326` | patch_26（包 `99f20df1c4cf885a`，46 条）| **孤例复测**（原挂电弧）|
+
+**判读**
+
+| 四把新副武器 | K-9 上的 P-19 | 结论 |
+|---|---|---|
+| 全都能打 | **还是不开火** | P-19 确实是**个体问题** ⇒ 下一轮做"P-19 换本体检定"（把它的 `ProjectileWeapon`/`WeaponMagazine` 行与能打的副武器逐字段对比）|
+| 全都能打 | **这次能打** | 上轮是环境问题（驻留/加载时序）⇒ 结论要改写，副武器全线无坑 |
+| 有不能打的 | — | 副武器内部还有分类差异（按不能打那把的组件去找共同点）|
+
+**装盘**：entities = `out/dogs/r5.dl_bin`（md5 `a5765df1639fad5822922f43dd06ccd0`）；
+盘上驻留补丁 `patch_18`–`patch_26`（9 个实验包，连续）。回滚同上（`cp out/bkval/p1e.dl_bin …`）。
