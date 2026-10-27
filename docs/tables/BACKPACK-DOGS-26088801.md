@@ -633,3 +633,36 @@ python tools/entity_field_set.py set --block 0x3845B1E0 --key <无人机实体> 
 | 补丁序号 | `patch_0`–`patch_17` 保持连续（17 = 暗液体包）|
 
 **复现任意一轮**：`out/dogs/` 里对应的 `*.plain` → `dlbin_seal.py seal-key` → 拷进 `data/game/`（需要不紫问号就同时把对应 `out/res-*/` 的三件套拷回 `data/`）。
+
+## 18 第十轮：副武器 + 制导 —— P-92 Warrant 交叉验证（2026-10-27 13:1x 已装，`⚠`）
+
+社区反馈：**给 Guard Dog 挂副武器 P-92 Warrant 可以正常使用**，理由是"它是锁定类武器"。
+我方此前实测 **P-19 Redeemer（副武器）✗ 不开火**。两条信息合起来，数据层给了一个很干净的解释：
+
+| 武器 | 槽位 | `GuidanceTarget` | 实机 |
+|---|---|---|---|
+| **P-19 Redeemer** `0x3575AABC5F1F9326` | 副武器 | **无** | **✗ 不开火**（已实测）|
+| **P-92 Warrant** `0xCF8934FF6567A42D` | 副武器 | **有** | 社区称可用（本轮验证）|
+| StA-X3 W.A.S.P. `0xCC786F6491FE7E65` | 支援 | **有** | **✓✓ 正常锁定+发射**（已实测）|
+
+⇒ 假设（`⚠`）：**制导类武器把"瞄准/确认"交给无人机的 `Targeting`/`MultiTarget`，自己不需要玩家输入**，
+所以能绕过"副武器在无人机上不开火"的问题；而普通副武器（P-19，全自动）仍卡住。
+两件事可能是**叠加**的（槽位不适配 + 制导补偿），本轮就是把这两个变量交叉验证。
+
+| 项 | 值 |
+|---|---|
+| 目标件 | **P-92 Warrant** `0xCF8934FF6567A42D`（23 个组件，含 `GuidanceTarget`+`SensorEye`）|
+| 挂到 | **Guard Dog** `0xA0FF2F9A0CA6992A`（唯一改动；其余狗原版）|
+| 驻留 | 包 `0x5D5C93EF05A46880`（39 条：texture12 / animation10 / material5 / mesh4 / physics2 / particles2 / bones1 / wwise_bank1 / state_machine1）→ **patch_18** |
+
+**判读**
+
+| 现象 | 结论 |
+|---|---|
+| **能打** | 副武器**不是硬门槛**，制导确实能救 ⇒ 白名单增加"制导副武器"，社区说法成立 |
+| 有锁定动作但不发射 | 与 ARC-3 同类：制导也要"确认发射"事件，无人机给不了 |
+| 完全不开火/无锁定 | 副武器槽是硬门槛 ⇒ 社区的案例另有条件（可能他们改的不是同一架无人机，或同时改了别的件）|
+| 紫问号 | patch_18 未生效 |
+
+**装盘**：entities = `out/dogs/p92.dl_bin`（md5 `f8d67bea4a649a8e7df2bc4b81cc5977`）；patch_18 = P-92 包。
+**回滚**：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin` + 删 `patch_18` 三件套。
