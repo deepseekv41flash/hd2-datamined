@@ -45,6 +45,7 @@
 | **只给某一件甲加效果** | [ARMOR-PASSIVE-STATS](docs/tables/ARMOR-PASSIVE-STATS-26088801.md) | **§2 单件级（改 kit 的 `+0x1C`）· §6 配方 · §2 末尾「没有空被动」的否证** | `26088801` |
 | **投送舱送什么（战备空投舱换载荷）** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§1 槽位结构 · §2 前 N 个槽才生成 · §3 换物品配方** | `26088801` |
 | **换进来的物品只有紫问号 / 网格材质不加载** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§4 两个包槽（`+0xA8` + `+0xF8`）· §5 item→包解析表** | `26088801` |
+| **改了弹丸/爆炸，怎么知道漏了哪些粒子/实体/声音资源** | [RESDEP](docs/tools/RESDEP.md) | **`resdep.py chain` 扫引用 · `plan` 分「同包/跨包/缺失」· 缺失拒绝出计划 · HIRC 事件目录** | `26088801` |
 | **狗背包（AX 系）换枪**（**✓ 结项**） | [BACKPACK-DOGS](docs/tables/BACKPACK-DOGS-26088801.md) | **§17 收尾**：配方 = 改无人机 `Mount+0x00` 一个 u64 · 三条硬规则（资源驻留 / 载体装填 / 开火输入）· **§17.3 白名单账本** | `26088801` |
 | **改背包数值（跳跃冷却/跳跃高度/补给次数/护盾半径/位移距离）** | [BACKPACK-VALUES](docs/tables/BACKPACK-VALUES-26088801.md) | **§1 五个组件的字段表（偏移+语义名+现值）· §2 一条命令 · §3 第一轮已装盘** | `26088801` |
 | **背包能不能"换特性"（把跳跃搬到补给包）** | [BACKPACK-LINE](docs/tables/BACKPACK-LINE-26088801.md) | **§8 收口：纯数据走不通（四轮实验 + 按 5 崩溃）· §7.4 字段类型图（typelib + HD2Runtime）** | `26088801` |
@@ -326,6 +327,7 @@
 | 工具 | 用途 | 依赖 | 验证 |
 |---|---|---|---|
 | `resource_patch.py` | **任意** Stingray 资源类型的 `.patch_N` 构建/查看/解包/重打 | `srkit`（构建时） | ✓ |
+| `resdep.py` | **资源依赖自动追踪 + 驻留计划**：`index` 建全档 `资源 id → 宿主包` 索引（322,810 行 / 62,915 id，约 20 s）· `chain` 从武器/实体/爆炸走引用链并**全 u64 扫描**（不猜字段）· `plan` 按目标件声明包分「同包/跨包/缺失」并出 `whole_package_patch` 命令 · `sound-catalog`/`sound` 解 wwise **HIRC** 建事件目录。G1–G5，**缺失资源默认拒绝出计划** | `srkit`（`python -m srkit`） | ✓ 爆炸 213 → 粒子+震屏 9 包 0 缺失；MG-43 → 同包 7 / 跨包 11（5 包）/ 0 缺失；3 bank 样本 100 事件 |
 | `whole_package_patch.py` | **整包资源 → `<宿主包>.patch_N`**（资源层驻留）：`list` 列包内资源；`build` 解包→`--edit` 换资源（自动同步 `resource.json` 的 size/sha）→打包→复核；`check` 核对成品。G1–G8 门禁；序号默认自动取下一个连续值；`--install` 可选部署 | `srkit`（`python -m srkit`）+ `resource_patch.py` | ✓ 复现证明：重跑 P4 补丁，三件产物与盘上**逐字节相同**（toc `a3f71af78d333f02`）|
 | `swap_texture.py` | 把一张 PNG 换进 `.patch_N` 里的某个贴图并重打 | Pillow | ✓ 已实机 |
 | `export_textures.py` | 把 `.patch_N` 里每个贴图导出成可编辑 DDS | Pillow | ✓ |
