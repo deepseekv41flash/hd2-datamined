@@ -269,6 +269,7 @@ E2 的键值取自 `out/planet/presence-variants.json`。
 * [LEVELGEN-FIELDS-26088801](LEVELGEN-FIELDS-26088801.md) —— 关卡生成链字段图（451 行）+ 分布；数据 `out/planet/levelgen.json`
 * `out/planet/presence-variants.json` —— 16 变种 × effect id × presence 行 × 身份/类别键
 * `tools/probes/planet/presence_scan_all.py`、`presence_arrays.py`、`join_variants.py` —— §3 的三段证据（只读，绝对路径输入）
+* [GWECAPTURE](../tools/GWECAPTURE.md) 的两个工具 —— `tools/gwe_capture.py`（给第三方代理加只读落盘开关）+ `tools/gwe_join.py`（effect 菜单 → presence/战备对表，产出能力边界报告）：它们回答的是 **§4 之后的问题——这条通道还能做什么**
 
 **五个坑**（本会话实际踩到）：
 
