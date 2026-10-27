@@ -818,3 +818,49 @@ LAS-58 Talon / P-113 Verdict / P-69 Veto / P-44 Mist —— **四把全部正常
 
 **装盘**：entities = `out/dogs/t4.dl_bin`（md5 `64f10eacfeada51e700dad318ea22f59`）；
 驻留仍为 `patch_18`–`patch_29`（P-19 用 patch_26）。回滚：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`。
+
+### 22.1 结果：四只载体全都不行 ⇒ P-19 本体问题定死 + 关键新线索（2026-10-27 14:1x，`✗`）
+
+Rover / Guard Dog / Hot Dog / K-9 四只载体挂 P-19 **全部不开火**（含两个万能载体 192/189）
+⇒ **P-19 是纯个体问题**，与载体无关。同时用户给了一条更硬的观察：
+
+> **P-19 的弹匣模型在所有无人机上都不渲染**，怀疑"没弹匣 ⇒ 不能开火"。
+
+**数据层对照（`✓` 全表现算，本 build）**
+
+| 武器 | `ProjectileWeapon+0x000`（弹丸 type）| `WeaponCustomization+0x80`（弹匣/定制引用）| 实机 |
+|---|---|---|---|
+| **P-19 Redeemer** | **0** | **0** | **✗** |
+| P-4 Senator | **0** | `0xB96CC3B704A76464` | ✓ |
+| P-92 Warrant | 331 | `0xFC1F0A3B3FC97238` | ✓ |
+| P/40-K Bolt | 205 | `0x619795F79CEDA1B3` | ✓ |
+| P-113 Verdict | 16 | `0x005C2262F672CAF4` | ✓ |
+| P-69 Veto | 241 | **0** | ✓ |
+| LAS-58 Talon | 146 | `0xE53E4B0C20563D21` | ✓ |
+| P-44 Mist | 167 | `0x1D908F18A11708E6` | ✓ |
+
+**读出来的机理（`⚠` 强假设）**：武器的弹丸有两个来源 ——
+① `ProjectileWeapon+0x000` 直给；② 走**弹匣/定制引用**（`WeaponCustomization+0x80`）解析。
+P-19 是**唯一两个都空**的武器（`+0x000 = 0` 且 `+0x80 = 0`）⇒ 无人机 AI 拿不到弹丸类型 ⇒ 不发射，
+弹匣模型也因为没有引用而不渲染。Senator 虽然 `+0x000 = 0`，但 `+0x80` 有效，所以能打；Veto 反之。
+
+## 23 第十五轮：给 P-19 补一个弹丸 type（2026-10-27 14:1x 已装，`⚠`）
+
+**单变量**：只把 `P-19` 的 `ProjectileWeaponComponentData+0x000` 从 **0 → 205**（205 = P/40-K Bolt 的弹丸 type，已被证明能在无人机上打）。
+
+| 项 | 值 |
+|---|---|
+| 改动 | `ProjectileWeaponComponentData`（块 `0x45171B68`）键 `0x3575AABC5F1F9326` `+0x000` u32：**0 → 205** |
+| 载体 | 四只狗都不变（Rover/GuardDog/HotDog/K-9 全挂 P-19，行为 191/192/189/191）|
+| entities | `out/dogs/u1.dl_bin`（md5 `3ca381cc7be9f11bcecd1cf2f15a7ad0`）|
+
+**判读**
+
+| 现象 | 结论 |
+|---|---|
+| **能开火** | 假设成立 `✓✓`：P-19 缺的就是"弹丸来源"，补一个就能用；顺带说明**"弹匣模型不渲染"是同一根因的症状** |
+| 能打但**弹匣仍不渲染** | 弹丸来源与弹匣模型是两件事（模型另有引用，可能是 `+0x80`）|
+| 仍不开火 | 弹丸不是唯一条件 ⇒ 下一候选：给 `WeaponCustomization+0x80` 写一个有效引用（照抄 Senator 的）|
+| 崩/异常 | 弹丸 type 与 P-19 的 `WeaponData`/弹匣不匹配（205 是 Bolt 的弹丸）⇒ 换成 P-19 自己的弹丸 type（需另找）|
+
+**回滚**：`cp out/dogs/t4.dl_bin <game>/data/game/generated_entities.dl_bin`（回到"P-19 原值 + 四载体"状态）。
