@@ -29,7 +29,7 @@
 | **Eagle 回收时间** | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | **§5.4 `EAGLE. REARM` 独立行** | `26088801` |
 | **Eagle 冷却 / 回收的升级公式** | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | **§5.4.4**（两个公式都已实机解开） | `26088801` |
 | 爆炸半径 / 破片数 / 粒子 / 震屏 / 外观移植 · 状态爆 | [EXPLOSION-VISUAL](docs/explosions/EXPLOSION-VISUAL-26088801.md) | §1 字段图 · §4 无主行账本（265/424，✓ 实机用过 254）· §5 `+0xA8` 跨包加载 | `26088801` |
-| **给载具换武器 / 往空槽加件** | [MOUNT-SEATS](docs/tables/MOUNT-SEATS-26088801.md) | **§2 `MountInfo` 24 B（只写 item）· §4 五件套 + 两条否决项 · §7 换件配方与 G1–G10 · §8 能力判定 · §11 M-102 枪手位挂普通武器（原生件本身就是武器 item；§11.4 紫问号 = 声明包不被载具加载，整包驻留 patch_30 已修）** | `26088801` |
+| **给载具换武器 / 往空槽加件** | [MOUNT-SEATS](docs/tables/MOUNT-SEATS-26088801.md) | **§2 `MountInfo` 24 B（只写 item）· §4 五件套 + 两条否决项 · §7 换件配方与 G1–G10 · §8 能力判定 · §11 M-102 枪手位 = 通用武器挂点（✓✓ 通用 MG-206 实机正常；§11.4 声明包不被载具加载 → 整包驻留 patch_30；§11.6 MG-43 + patch_31 已装待实机）** | `26088801` |
 | 换弹头（整行搬运）/ 换爆炸效果 | [EXPLOSION-PROJECTILE](docs/explosions/EXPLOSION-PROJECTILE-25988413.md) | 全文 | `25988413` |
 | 武器数值 / 可选弹种 / 独立弹药池 | [ENTITY-TABLE](docs/tables/ENTITY-TABLE-25988413.md) | §9 | `25988413` |
 | 武器配件与槽位 | [WEAPON-CUSTOMIZATION-DECODED](docs/tables/WEAPON-CUSTOMIZATION-DECODED.md) | 全文 | `25988413` |
@@ -174,7 +174,7 @@
 | ★ [TABLE-DICTIONARY-25988413](docs/tables/TABLE-DICTIONARY-25988413.md) | **全表字典**：55 张表几何 + 类型库字段偏移（1,208 类型 / 7,349 成员） | `25988413` |
 | ★ [ENTITY-TABLE-25988413](docs/tables/ENTITY-TABLE-25988413.md) | 47 MB 实体库离线改写：组件块、哈希闸门、校正字、可选弹种、LoadoutEntry 否证 | `25988413` |
 | [ENTITY-LOCID-26088801](docs/tables/ENTITY-LOCID-26088801.md) | 实体 → 游戏内名字的唯一出处（`EncyclopediaEntry`，643 行可解） | `26088801` |
-| ★ [MOUNT-SEATS-26088801](docs/tables/MOUNT-SEATS-26088801.md) | **载具挂载 / 座位两表全解**：Mount = 328 槽 + 165 × 120 B（`MountComponent` = 5 × `MountInfo`，`MountSide` 已有资源名直证）；SeatCollection = 112 槽 + 56 × 424 B（`TransitionId` + `Passenger[16]` + `ActiveAimConstraint[22]`）；**122 件挂载件分桶与 memmod 旧账逐桶吻合**（16/4/1/**11**/37/53）+ 四条旧实测交叉；`mount_table.py` 换件保哈希（G1–G10）+ 两个 sealed 工件；**§11 M-102 枪手位 = 武器挂点（原生挂的是 MG-206 武器变体，非炮塔；§11.4 换通用件紫问号 ⇒ 声明包不被载具加载，整包驻留 patch_30 已修）** | `26088801` |
+| ★ [MOUNT-SEATS-26088801](docs/tables/MOUNT-SEATS-26088801.md) | **载具挂载 / 座位两表全解**：Mount = 328 槽 + 165 × 120 B（`MountComponent` = 5 × `MountInfo`，`MountSide` 已有资源名直证）；SeatCollection = 112 槽 + 56 × 424 B（`TransitionId` + `Passenger[16]` + `ActiveAimConstraint[22]`）；**122 件挂载件分桶与 memmod 旧账逐桶吻合**（16/4/1/**11**/37/53）+ 四条旧实测交叉；`mount_table.py` 换件保哈希（G1–G10）+ 两个 sealed 工件；**§11 M-102 枪手位 = 武器挂点（✓✓ 通用 MG-206 实机正常；§11.4 紫问号 = 声明包不被载具加载，整包驻留 patch_30；§11.6 第二轮 MG-43 + patch_31 已装待实机）** | `26088801` |
 | [LOCID-NAMES-25988413](docs/tables/LOCID-NAMES-25988413.md) | 32 位本地化 ID：`.strings` 全局 ID→文本表怎么打通六张表的名字 | `25988413` |
 | [ROW-NAMING-25988413](docs/tables/ROW-NAMING-25988413.md) | 逐行名字的两条取法、判据、以及位置法取错过名的两张表 | `25988413` |
 | ★ [WEAPON-CUSTOMIZATION-DECODED](docs/tables/WEAPON-CUSTOMIZATION-DECODED.md) | 武器配件总表：88 B 行、九类槽位枚举、252 行可读导出；**§7 配件 → entity delta 落地链（build `26088801`：`AmmoType` 写 `ProjectileWeapon+0`、`Magazine` 写 `cust+0x80`，含组件索引表与坑）** | `25988413` · §7 `26088801` |
