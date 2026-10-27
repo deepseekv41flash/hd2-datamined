@@ -87,7 +87,7 @@
 | `+0x14` | 4 | 枚举（0..4，118 行非零）| ⚠ 语义未证（`kind`）|
 | `+0x18` | 1 | bool（仅 20 行 =1）| ⚠ |
 | `+0x1C` | 4 | **RaceType**：0 none / 1 superearth / 2 terminid / 3 automaton / 4 illuminate | ✓ 与案例目录的 faction 逐条吻合（§3.4）|
-| `+0x20` | 4×2 | **身份键** `(lo,hi)` 两个 u32 | 103 组互异；见 §3.4 |
+| `+0x20` | 4×2 | 表内**身份字段** `(lo,hi)` 两个 u32 —— **不是服务器侧的键**（服务器用的是 `murmur32(presence 名)`，见 §3.6） | 103 组互异；见 §3.4 |
 | `+0x28` | 8 | **类别键**（32 个不同值）| 同类别行共享，例：`bots_increased_*` 四条共用 `0x92EA56303ABF23E5` |
 | `+0x48` | 4 | f32（137 行非零，0.33..1.0）| ⚠ 权重类 |
 | `+0x4C` | 4 | f32 恒 1.0 | ✓ |
@@ -133,6 +133,23 @@ bugs_acid vs bugs_burrower：diff 出现在 +0x20..+0x2F（身份/类别键）�
 
 **另有 27 条敌人味 presence 不在目录里**（原版自用）：`bugs_acid`、`bugs_defiler`、
 `bots_increased_tanks`、`bots_orbital_superweapon`、`illuminate_fleet`、6 条 `illuminate_facility_*` 等。
+
+### 3.6 服务器侧的键 = `murmur32(presence 名)`（✓ 实测，2026-10-27 抓包）
+
+从官方 API 抓到的 `GalacticWarEffects`（310 条）里，`effectType=71` 的 `values[0]` 就是
+**`murmur32(presence 名)`** —— 即 Stingray 的 32 位名字哈希（`murmur64(seed=0) >> 32`）：
+
+| presence | `murmur32` | GWE 里对应 effect 的 `values[0]` |
+|---|---|---|
+| `bugs_super_predator` | `0xE9DB526C` | 3923464812 = 0xE9DB526C ✓ |
+| `bugs_gloom` | `0x60280611` | 1613235729 ✓ |
+| `bots_cyborgs` | `0xA087D5A7` | 2693256615 ✓ |
+| `seaf` | `0x492F408A` | 1227833482 ✓ |
+| `illuminate_invading` | `0x37640CC3` | 929303747 ✓ |
+
+**所以 §3.2 里那对 `(lo,hi)` 不是服务器键**，拿它去对 API 值会全对不上。按此口径，本地 137 条
+presence 里 **67 条**能在 effect 菜单里找到对应项（其余是纯视觉/事件类）。核对命令：
+`python -m srkit hash <presence 名>` → 取 `murmur32=`。
 
 ### 3.5 全局检索：presence 在本地只被两处引用，且都不是刷怪
 
