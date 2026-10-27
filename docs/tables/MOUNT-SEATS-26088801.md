@@ -957,3 +957,27 @@ python tools/resdep.py chain --entity 0x1D5943301A29C940 --dry-run   # 枪变体
 机制的完整证据、分段装填（AC-8 两段）与配方影响见 **[BACKPACK-DOGS §30](BACKPACK-DOGS-26088801.md)**。
 
 **回滚**：entities 回 `out/mount-frv/z5.dl_bin`（M-102=P-19、GuardDog=P-2 的上个通过版）；或删 `patch_33` 三件。
+
+### 12.8 第五轮：给墙换武器 —— 挂 **MG-43**（2026-10-27 18:0x 已装，`⚠` 待实机）
+
+单变量：墙 `0x0C8257D1C0255593` 的 `Mount` **行 105 槽 0**：墙版 GL-21 `0x1D5943301A29C940` → **MG-43 `0x11C27D3BABB38956`**。
+
+| 项 | 值 |
+|---|---|
+| 件 | MG-43 Machine Gun（支援武器，无 `Turret`/`WeaponWielder`；`ProjectileWeapon`+`WeaponMagazine`+`WeaponReload`+`Wieldable` 齐）|
+| 驻留 | **不需要新增**：MG-43 包 `c024a2e8ae639757` 已由 patch_31 常驻 |
+| entities | `out/mount-frv/z8.dl_bin`（md5 `17320909b05841dae2659f616c1e270f`，47,259,680 B；明文 sha256 `ceee4035…`）|
+| 门禁 | `entity_field_set` G1–G8 全 PASS；对 z7 基线**恰好 1 个槽变**（墙行 105 槽 0）；哈希仍 `0x8E49771B181FFAA1`；seal 回读逐字节相等 |
+| 其余不动 | GuardDog=AC-8（`+92=10`）、M-102=P-19、其余三狗=P-19/P-2 |
+
+**判读**
+
+| 现象 | 结论 |
+|---|---|
+| 模型出现 + 坐墙位能瞄能打（MG-43 弹道）| **工事挂载件可任意替换**，与 M-102 / 狗同一条规则（R1/R2）|
+| 装填从备弹池扣（MG-43 自身 supply/spare 有值）| 工事座位走**玩家弹药路径**（不是狗那套"直接填匣"）；记录备弹变化 |
+| 打空后不能装填 | 记录（MG-43 base 备弹字段见 §2 字段表）；下一轮可补备弹字段 |
+| 紫问号 | patch_31 未生效/包不对；**先别开火**（§7.6）|
+| 位置/比例怪 | 挂点锚点是给 GL-21 设计的，属视觉问题、不影响判定 |
+
+**回滚**：entities 回 `out/dogs/z7.dl_bin`（GuardDog=AC-8 + `+92=10` 的上个通过版）。
