@@ -85,10 +85,29 @@ def presence_names() -> list[str]:
     return names
 
 
+def name_by_locid() -> dict[int, str]:
+    """locid -> 显示名。
+
+    ★ 关键：`refs/locid-names.json` 里 planet_data 的条目是**按名字字母序排的**，
+    列表下标不是行星行号（名字集合对、顺序不对）。每条自带 `id`（就是行里的 locid），
+    所以必须用 locid 做 join，不能按下标取。
+    """
+    path = ROOT / "refs" / "locid-names.json"
+    if not path.exists():
+        return {}
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    out = {}
+    for rec in (doc.get("tables", {}).get("planet_data", {}) or {}).get("data", []):
+        if rec.get("status") == "known" and isinstance(rec.get("id"), int) and rec.get("name"):
+            out[rec["id"]] = rec["name"]
+    return out
+
+
 def load_planets() -> list[dict]:
     if not PLANET_JSON.exists():
         raise SystemExit(f"缺少 {PLANET_JSON}（先跑 planet-data 解码）")
     rows = json.loads(PLANET_JSON.read_text(encoding="utf-8"))
+    names = name_by_locid()
     out = []
     for r in rows:
         setup = ""
@@ -98,7 +117,8 @@ def load_planets() -> list[dict]:
         reg = r.get("region_lowland") or {}
         out.append({
             "index": r["index"],
-            "name": r.get("planet_name") or "",
+            # 用本行的 locid 去查名字（不要用 planet-data.json 里那份按名字排序的结果）
+            "name": names.get((r.get("locids") or {}).get("name"), "") or r.get("planet_name") or "",
             "biome": BIOME.get(r.get("planet_type"), str(r.get("planet_type"))),
             "planet_type": r.get("planet_type"),
             "setup": setup,
@@ -169,10 +189,32 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--live-dir", default=str(DEFAULT_LIVE), help="抓包目录（含 Status json），缺省 D:/mod/out/gwe")
     ap.add_argument("--no-md", action="store_true", help="只写 json/csv，不写 markdown")
+    ap.add_argument("--find", default="", help="按英文名查编号（大小写不敏感，支持子串）")
     a = ap.parse_args()
 
     rows = load_planets()
     live = load_live(pathlib.Path(a.live_dir))
+
+    if a.find:
+        q = a.find.strip().lower()
+        hits = [r for r in rows if q in (r["name"] or "").lower()]
+        if not hits:
+            near = [r for r in rows if q and q[:4] in (r["name"] or "").lower()][:8]
+            print(f'没有匹配 "{a.find}"；相近的：' + (", ".join(f'{r["index"]}={r["name"]}' for r in near) or "（无）"))
+            return 1
+        for r in hits:
+            p = live.get(r["index"]) or {}
+            print(f'#{r["index"]:3d}  {r["name"]:28s} 生态={r["biome"]:12s} setup={r["setup"] or "—"}')
+            print(f'       region={r["region"]} debug={r["debug_name"]}')
+            if p:
+                print(f'       抓包快照: owner={p.get("owner")} effects={p.get("effects")} '
+                      f'presences={", ".join(dict.fromkeys(p.get("presences") or [])) or "—"}')
+            else:
+                print('       抓包快照: 该星球在快照里没有任何生效效果')
+        print()
+        print(f"命中 {len(hits)} 行。注意：抓包快照有时间戳，战局变化后 owner/effects 可能已过期——"
+              "以代理日志里的实时判定为准。")
+        return 0
 
     md = ROOT / "docs" / "tables" / "PLANET-INDEX-26088801.md"
     if not a.no_md:

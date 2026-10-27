@@ -1,6 +1,7 @@
 # 行星索引表（build 26088801）
 
-> 行号 = 游戏里的行星索引（`planetActiveEffects.index` / `planetStatus.index` 用的就是它）。
+> ⚠ **第一列是 `planet_data` 的行号，不是游戏索引**：这张表按名字字母序排列（GACRUX→GAR HAREN→GATRIA…），实测 `HEZE BAY` 行号 191 而游戏索引 **182**、`NEW STOCKHOLM` 行号 96 而游戏索引 **93**，偏移不是常数。
+> 游戏索引（`planetStatus.index` / `planetActiveEffects.index`）只能从实机日志标定；名称与 locid 的对应仍可信（用 locid join 复核过）。
 > 名称取自 `planet_data.+0x008` 的 locid（**本 build 数据里只有英文语料**），生态取自 `+0x1B8 PlanetType`，
 > region 取自 `+0x060 RegionLowland`（指向 `region_settings` 段 1）。
 > 39 行没有名字：都是模板行（`Inherits` 为空），`debug_name` 保留生态提示。
