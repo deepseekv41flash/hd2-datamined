@@ -53,6 +53,7 @@
 | **哨戒炮/炮塔多久自动消失、各字段含义** | [SENTRY-TURRET-FIELDS](docs/tables/SENTRY-TURRET-FIELDS-26088801.md) | **§2 寿命字段（`HellpodPayload +0x04`）· §3 逐组件字段表 · §4 一条命令** | `26088801` |
 | **哨戒挂到载具上「不出模型 / 未展开 / 开火点悬空」** | [SENTRY-TURRET-FIELDS](docs/tables/SENTRY-TURRET-FIELDS-26088801.md) | **§3.8.4 改 `state_machine` 的 `layer.DefaultState`（✓✓ 实机）· §3.8.4.1 四态语义 + 部署完成态判据 · §3.8.4.2 九哨戒 = 七份 SM / 两套模板** | `26088801` |
 | **炮塔/工事挂到载具：状态机改哪一层、改成几（每件/每类配方）** | [TURRET-SM-RECIPES](docs/tables/TURRET-SM-RECIPES-26088801.md) | **§1 五条判据 · §3 模板 A 逐件 · §4 模板 B 逐件 · §5 人操工事两轴判据 · §6 非武器件 · §7 一件一行总表 · §9 十一条坑** | `26088801` |
+| **星球/关卡表能改什么 / 敌人变种（掠食·孢裂）能不能本地做** | [PLANET-TABLES](docs/tables/PLANET-TABLES-26088801.md) | **§1 案例拆解（`variant_mod` = MITM 代理，只改 `/api/WarSeason/801/Status` 的 `planetActiveEffects`）· §2 20 张星球表全景 · §3 presence 表 137 行解码 + 16 变种对表 16/16 · §4 判定 ✗（presence 在关卡侧只接天气，无敌人 override）· §5 `planet_data` 41 字段 · §6 关卡生成链闭合 + `EnemyTag` 1014/1019=0 · §7 可改点排序与三个实验 · §8 五个坑** | `26088801` |
 | **有限数量的跨包加载（通用产出）** | [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) | **§2 三个可编辑量 · §3 解析链 · §5 一条命令 · §6.9 指针 · §7 边界** | `26088801` |
 | **声明口不够用 / 想不占口就加载一整个包的资源** | [RESOURCE-RESIDENCY](docs/engine/RESOURCE-RESIDENCY-26088801.md) | **§1 两条路线分工 · §3 P1–P4 实测 · §4 三条配方 · §5 `whole_package_patch.py` · §8 坑** | `26088801` |
 
@@ -189,6 +190,9 @@
 | ★ [BACKPACK-LINE-26088801](docs/tables/BACKPACK-LINE-26088801.md) | 背包族开线档：35 件全集与投放两条路线 / **§7.4 字段类型图（typelib 类型名 × HD2Runtime 语义名）** / **§8 收口：给别的背包加跳跃能力 = 纯数据走不通**（四轮实测，按 5 崩溃；`--row` 共享行技巧可给满块加组件） | `26088801` |
 | ★ [WEAPON-AMMO-RESERVE-26088801](docs/tables/WEAPON-AMMO-RESERVE-26088801.md) | 三种供弹模型 / `Rounds` 与 `Magazine` **两套备弹字段** / 五把背包武器改成自带备弹（已实机）/ 清空槽位的坑 | `26088801` |
 | ★ [PROJECTILE-PROXIMITY-26088801](docs/tables/PROJECTILE-PROXIMITY-26088801.md) | **近炸引信字段**（弹丸行 `+0x94` 半径 / `+0x88` 阈值角 / `+0xA0` 保险距离）；AC-8 在备弹 289 上 | `26088801` |
+| ★ [PLANET-TABLES-26088801](docs/tables/PLANET-TABLES-26088801.md) | **星球侧 20 张表全景 + 「变种能不能本地做」判定**：`planet_data` 438 行星 41 字段（12 个 PlanetType、生态 setup 36/36 一一对应、216 行星各 1 个修饰符只 8 种）· `galactic_presence_settings` 137 行 = 星球效果载荷（RaceType / 身份键 / 类别键 / `+0x1F8` 修饰符数组；enemy_tag 行几乎全空）· 16 变种 × effect id 对表 16/16 · 关卡链路 `planet_data → region(876/876) → zone(438/438, 67/88)` · `location_groups` 的 `EnemyTag/GuardForceType/StampRaceAffiliation` 是全库仅有敌人字段（EnemyTag 几乎全 0）· **结论：变种无本地开关，presence 的官方扩展点只有天气** | `26088801` |
+| [PLANET-DATA-FIELDS-26088801](docs/tables/PLANET-DATA-FIELDS-26088801.md) | `planet_data` 41 成员逐字段表（offset · size · name · evidence · 三态）+ 876/876 region join + 生态 setup 36/36 与 PlanetType 一一对应 + 438 行解码口径 | `26088801` |
+| [LEVELGEN-FIELDS-26088801](docs/tables/LEVELGEN-FIELDS-26088801.md) | 关卡生成链 6 表字段图（zone/region/planet_region/types/scenario/solar_system）+ **「本地敌人组成开关」否证**（54 表全字节扫 presence + `EnemyTag` 1014/1019=0 + presence 只接天气 override）+ 本地可改点排序 | `26088801` |
 | [STRATAGEM-REFERENCE-CHAIN-25988413](docs/tables/STRATAGEM-REFERENCE-CHAIN-25988413.md) | 战备→弹丸→爆炸：只有弹丸↔爆炸一跳，战备→弹丸是否证 | `25988413` |
 
 ### `explosions/`
@@ -288,6 +292,7 @@
 | `entity_locid_scan.py` | 解实体库（275 块 → `[哈希图][行数组][尾数组]`），定位本地化 ID 槽。实体名只有一处：`EncyclopediaEntryComponentData`（块 56） | PyNaCl（无）+ `typelib.py` | ✓ 643/1,939 实体有名字，205/211 条带代码条目精确命中 wiki 标题 |
 | `entity_components.py` | 实体 → 组件清单（用每个组件块自己的哈希图反查，不用块 0 的 u16）；附带「谁引用了某值」的列扫描 | PyNaCl（无）+ `typelib.py` | ✓ 1,932 实体 / 272 种组件；用它查出 explosion 68 被 `Bombardment +64` 引用 |
 | `ref_scan.py` | **引用反查 + 配件 delta 解码（只读）**：`exact` 扫全档 `u32 == VALUE` 并归因到（文件/块/行/槽/实体键）· `columns` 找「整列都是目标表 id」的引用面（不猜偏移）· `entity` 打单个实体全部组件行 · **`delta-info`/`delta-show`/`delta-ammo` 解 `ComponentEntityDeltaStorage` 三级索引**（配件 AddPath → 组件 → 成员偏移 → 字节），带本 build 组件索引表（[REFSCAN](docs/tools/REFSCAN.md)）| `entity_locid_scan.py`、`table_dictionary.py` | ✓ 用它破案：P-19 的 `Proj+0 = 296` 来自默认弹种 delta（[BACKPACK-DOGS §28](docs/tables/BACKPACK-DOGS-26088801.md)）；67 个弹种配件 → 各自弹丸 |
+| `planet_tables.py` | **星球侧表读取（明文，只读）**：`survey` 全表几何（多容器分开列 + `1/grp+tail` 形态标记，避免把组内数组尾算成行）· `fields` typelib 成员表 · `dump` 解行（字符串指针 / `(offset,count)` 数组 / 标量）· `names` 组尾字符串 | `typelib.py` | ✓ 用它解出 20 张星球表几何、presence 137 行、planet_data 438 行；抓出 `region_settings` 第二容器的 15,719 B |
 | `xcheck_projectile_names.py` | **弹丸 type id ↔ wiki 枚举名 + 批量数值交叉验证**：实体百科 `(code,name)` → wiki 页 → weapon 模块 `attacks[].name`；我们这边取默认弹种 delta / `Proj+0`；比 size/velocity/mass/penSlow 与伤害（[REFSCAN §6](docs/tools/REFSCAN.md)）| `entity_locid_scan.py` + 本地 wiki 镜像 `refs/wiki/wiki.sqlite` | ✓ 61 武器 join、弹道参数 61/61、49 个全字段一致（其余为 wiki 旧快照伤害）；`296→Pistol_9x20mm_fmj`、`342→P-2_P`、`281→Rifle_5.5x50mm_fmj` |
 | `explosion_names_from_chain.py` | 爆炸行没有名字字段，改从引用链命名：投掷物 `+144/+156` → 爆炸 `+0`，输出每个爆炸行的消费方 | PyNaCl（无）+ `typelib.py` | ✓ 210 条边 / 0 悬空；103 个爆炸行有名字（97 唯一 + 6 共用） |
 | `strings_inventory.py` | 清点 `.strings` 语料：语言分布（`ThinHash` 反查 15 种语言）、每个 bundle 的 distinct 英文 blob 数、ID 并集。**只读文件头 16 字节** | 标准库 | ✓ 证明英文语料是全局唯一那 18 个 blob |
