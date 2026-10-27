@@ -879,3 +879,34 @@ python tools/mount_table.py verify out/mount-swap/x.plain
 python tools/mount_table.py show --entity 0x0C8257D1C0255593     # 墙的挂载记录 + 五件套
 python tools/resdep.py chain --entity 0x1D5943301A29C940 --dry-run   # 枪变体的组件/资源叶子
 ```
+
+### 12.6 它到底是挂件还是独立武器？玩家能直接手持吗？
+
+**① 是独立武器实体，以"挂载"方式装上去的。** 全档引用扫描（`u64 == 0x1D5943301A29C940`，20 处）：
+
+| 引用位置 | 说明 |
+|---|---|
+| `EntitySettingsHashmap` 索引 1 处 | 它自己是**独立实体**（有自己的实体条目） |
+| 17 张组件表各一行（哈希图槽） | 自己的 `ProjectileWeapon`/`WeaponMagazine`/`WeaponReload`/`WeaponData`/`WeaponCustomization`/`Unit`/`Wieldable`/`Encyclopedia`… 全套 |
+| **`MountComponentData` row 105 +0x0** | **唯一的外部引用 = 墙的挂载槽**（键 `0x0C8257D1C0255593`） |
+
+⇒ 它不是墙模型的一部分、也不是一个"mount 组件"；墙只是通过 `MountInfo.item` 指向它（和 M-102 指向 MG-206 完全一样）。
+
+**② 不能"直接"手持。** 依据：
+
+| 判据 | 墙版 GL-21 | 原版 GL-21 |
+|---|---|---|
+| 在 `LoadoutEntryComponentData`（玩家装备表）里 | **无行**（不可选中、不进装备菜单）| 有行（`item_type=2` 支援武器）|
+| 在 `LoadoutPackageComponentData`（声明包）里 | **无行** | 有行（`0x0089BBE3E284FCAA`）|
+| `MeleeAttack` / `Spottable` | 无（无近战、不可扫描）| 有 |
+| `Wieldable` / `Equipment` / `Interactable` | 有（与原版逐字节相同）| 有 |
+
+⇒ 它是"世界里的枪"（由工事/座位持有），**没有经过玩家装备系统**，所以正常游戏里不能捡起/装备/手持。
+
+**③ 但"玩家操作"是可以的**：只要把它放进**玩家可操作的槽位**（M-102 枪手位、或它自己墙的座位），
+玩家就能像用 P-19 一样使用它——因为武器组件是完整的（`ProjectileWeapon` 与原版逐字节相同）。
+若要让它变成"可装备手持武器"，需要给它补 `LoadoutEntry` + `LoadoutPackage`；而**给实体新增组件这条路已被
+否证**（[ENTITY-LOCID 附记的 GL-28 实验](../tables/ENTITY-LOCID-26088801.md)：插行不被采纳、删联动键后崩溃），
+所以纯数据上**不建议**；唯一已验证的"玩家使用"路径就是挂载/座位。
+
+> 组合结论：墙版 GL-21 = **独立武器 + 工事挂载 + 非装备表物品**。它是一个"功能性武器"，但不是"可携带物品"。
