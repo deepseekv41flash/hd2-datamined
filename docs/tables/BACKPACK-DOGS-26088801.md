@@ -740,3 +740,32 @@ python tools/entity_field_set.py set --block 0x3845B1E0 --key <无人机实体> 
 
 **装盘**：entities = `out/dogs/r5.dl_bin`（md5 `a5765df1639fad5822922f43dd06ccd0`）；
 盘上驻留补丁 `patch_18`–`patch_26`（9 个实验包，连续）。回滚同上（`cp out/bkval/p1e.dl_bin …`）。
+
+### 20.1 结果：四把新副武器**也全都能打**（2026-10-27 13:4x，`✓✓`）
+
+LAS-58 Talon / P-113 Verdict / P-69 Veto / P-44 Mist —— **四把全部正常开火**（K-9 上的 P-19 本轮没测）。
+
+⇒ 到这一轮为止，**副武器在无人机上已是常态可用**（累计 9 把副武器 ✓：P-92、Dagger、Bolt、Crisper、Loyalist、Talon、Verdict、Veto、Mist），
+唯一的例外仍然只有 **P-19 Redeemer**。所以结论进一步收紧成一句话：
+**"副武器能不能挂"这个问题已经不存在了；剩下的唯一问题是 P-19 个体为什么不工作。**
+
+## 21 第十三轮：三把新副武器（含散弹手枪）+ P-19 复测（2026-10-27 13:4x 已装，`⚠`）
+
+| 狗 | 无人机 | 挂的副武器 | 驻留 | 备注 |
+|---|---|---|---|---|
+| **Rover** | `0x5BEEC97F4C7F4AE9` | **P-2 Peacemaker** `0x05E4E5C2DB6E44A2` | patch_27（包 `bf2250de0b17285c`，41 条）| |
+| **Guard Dog** | `0xA0FF2F9A0CA6992A` | **P-4 Senator** `0x8D3D52A3B2F19402` | patch_28（包 `94b554570b12c088`，42 条）| |
+| **Hot Dog** | `0x979E9BC6D48D1FC6` | **SG-22 Bushwhacker** `0x2B28E17FFED05F7C` | patch_29（包 `2350348a9acf49c4`，39 条）| **散弹手枪**（首次测非"单发/连发枪"族的副武器）|
+| **Dog Breath** | `0xB9BAF571FC8F9959` | **P-19 Redeemer** `0x3575AABC5F1F9326` | **复用 patch_26**（包 `99f20df1c4cf885a`）| **孤例复测（换载体）** |
+| K-9 | `0x4B071633584E4594` | 原版电弧（对照，未动）| — | — |
+
+**判读**
+
+| Bushwhacker（散弹）| P-19（在 Dog Breath 上）| 结论 |
+|---|---|---|
+| 能打 | **还是不开火** | 副武器全族可用 + **P-19 是稳定复现的个体问题** ⇒ 进入"本体检定"：拿 P-19 的 `ProjectileWeapon`/`WeaponMagazine`/`WeaponData` 行与能打的那 9 把逐字段 diff |
+| 能打 | **这次能打** | 上一轮 P-19 失败可能是**载体相关**（Guard Dog 上不行 / 别的狗上可以）⇒ 记"P-19 需要特定载体" |
+| 不能打 | — | 散弹族在无人机上不工作（`SprayWeapon`/多弹丸 path 差异）⇒ 补一条族级否证 |
+
+**装盘**：entities = `out/dogs/s4.dl_bin`（md5 `602f2cad3214ee4c53631640e61a7c18`）；盘上驻留补丁 `patch_18`–`patch_29`（12 个实验包，连续）。
+**回滚**：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`；实验补丁可整段删除回收体积（`patch_18`–`patch_29`）。
