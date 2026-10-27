@@ -769,3 +769,52 @@ LAS-58 Talon / P-113 Verdict / P-69 Veto / P-44 Mist —— **四把全部正常
 
 **装盘**：entities = `out/dogs/s4.dl_bin`（md5 `602f2cad3214ee4c53631640e61a7c18`）；盘上驻留补丁 `patch_18`–`patch_29`（12 个实验包，连续）。
 **回滚**：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`；实验补丁可整段删除回收体积（`patch_18`–`patch_29`）。
+
+### 21.1 结果：两通两不通，**载体行为（AIBEH）成了主线**（2026-10-27 14:0x，`✓✓`+`✗`）
+
+| 狗 | `BehaviorId` | 挂的 | 实机 |
+|---|---|---|---|
+| **Hot Dog** | **189** | SG-22 Bushwhacker（散弹手枪）| **✓** |
+| **Guard Dog** | **192** | P-4 Senator | **✓** |
+| **Rover** | **191** | P-2 Peacemaker | **✗ 不开火** |
+| **Dog Breath** | **190** | P-19 Redeemer | **✗ 不开火** |
+
+**用户归因（`⚠` 合理，与已有记录一致）**：
+1. **Rover（191 = 光束狗）带实弹武器可能不发射** —— 与 ARC-3 那轮"只在丢视线时放"、以及本轮 P-2 沉默一致；
+2. **Dog Breath（190）有"给敌人挂中毒效果然后不打"的特性**（制作组更新日志提过）⇒ **不适合当测试载体，停用**；
+3. **稳定载体收敛为 Guard Dog(192) + Hot Dog(189)**（这两只到现在为止对每一个 donor 都能打）。
+
+**载体 × 实弹 donor 账本（累计）**
+
+| `BehaviorId` | 狗 | 实弹/锁定/蓄力类 donor 表现 |
+|---|---|---|
+| **192** | **Guard Dog** | **✓** MG-43 · AC-8 · PLAS-1 · W.A.S.P. · Quasar · P-92 · Dagger · Bolt · Verdict · Senator |
+| **189** | **Hot Dog** | **✓** gunship HMG 炮塔 · Crisper · Bushwhacker |
+| **191** | Rover / K-9 | **✗** 实弹：Rover+P-2 不打、ARC-3 只在丢视线放；K-9+ARC-3 同 |
+| **190** | Dog Breath | 中毒特性（不打），停用 |
+
+⇒ 这一轮把之前"某把枪在某个载体上失败"的混乱解释清了大半：**载体行为比武器型号更重要**。
+唯一还没归位的仍是被怀疑的 **P-19 Redeemer**。
+
+## 22 第十四轮：四只载体**全带 P-19**（2026-10-27 14:1x 已装，`⚠`）
+
+设计：同一把 P-19 同时挂到 **Rover(191) / Guard Dog(192) / Hot Dog(189) / K-9(191)** —— 这是"P-19 到底有没有问题"的判决轮，
+因为 192 与 189 已被证明是万能载体。
+
+| 狗 | `BehaviorId` | 挂的 | 驻留 |
+|---|---|---|---|
+| Rover `0x5BEEC97F4C7F4AE9` | 191 | **P-19 Redeemer** `0x3575AABC5F1F9326` | patch_26（复用）|
+| Guard Dog `0xA0FF2F9A0CA6992A` | 192 | **P-19** | patch_26 |
+| Hot Dog `0x979E9BC6D48D1FC6` | 189 | **P-19** | patch_26 |
+| K-9 `0x4B071633584E4594` | 191 | **P-19** | patch_26 |
+
+**判读**
+
+| Guard Dog(192) | Hot Dog(189) | Rover/K-9(191) | 结论 |
+|---|---|---|---|
+| ✗ | ✗ | ✗ | **P-19 本体问题**定死（两个万能载体也不打）⇒ 下一轮做"P-19 vs 能打副武器"逐字段 diff |
+| ✓ | ✓ | ✗ | **P-19 没问题**；之前 GD 上的失败是**那一次的环境/时序**问题 ⇒ 结论改写为"191 载体才是门槛" |
+| ✓ | ✓ | ✓ | 之前的失败全部是环境问题 ⇒ 副武器/载体矩阵已完成，收线 |
+
+**装盘**：entities = `out/dogs/t4.dl_bin`（md5 `64f10eacfeada51e700dad318ea22f59`）；
+驻留仍为 `patch_18`–`patch_29`（P-19 用 patch_26）。回滚：`cp out/bkval/p1e.dl_bin <game>/data/game/generated_entities.dl_bin`。
