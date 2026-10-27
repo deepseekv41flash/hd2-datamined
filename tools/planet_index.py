@@ -2,9 +2,16 @@
 """planet_index.py -- 行星编号 ↔ 名称 ↔ 生态 的一张表（build 26088801）。
 
 WHY
-    `planet_data` 的行号就是游戏里的行星索引（`planetActiveEffects.index` / `planetStatus.index`
-    用的就是它），但那个数字本身没有任何可读信息。这个工具把已解出的字段拼成一张可以直接查的表，
-    并且把「服务器侧当前生效的 presence」并进来（那一列来自抓包，属于网络层，输出到仓库外）。
+    `planet_data` 的表行号**不等于**游戏里的行星索引 —— 行是按某种内部顺序排的，
+    游戏索引（`planetActiveEffects.index` / `planetStatus.index`）是另一套编号。
+    两者的对应关系写在 `planet_data` 文件**尾部那 3504 字节**里：438 行 × 8 B，
+    每条第 4 字节起是 `settingsHash`，而 `settingsHash` 正好是服务器 warinfo 里
+    `planetInfos[].settingsHash`。于是：
+
+        warinfo.planetInfos[].settingsHash  →  尾部第 N 条第 4 字节  →  planet_data 第 N 行
+
+    这个工具把行号、游戏索引、名字、生态拼成一张可以直接查的表；「当前 presence」列
+    来自抓包（网络层，输出到仓库外）。
 
 NAMES
     名称取自 `locid-names.json` 的 `tables.planet_data`（`+0x008` 的 locid → 英文字符串），
@@ -166,22 +173,61 @@ def load_live(directory: pathlib.Path) -> dict:
     return live
 
 
-def render_md(rows: list[dict], live: dict) -> str:
+def game_index_map(war_dir: pathlib.Path, n_rows: int) -> dict[int, int]:
+    """planet_data 行号 -> 游戏索引。
+
+    `planet_data` 尾部有 `n_rows × 8 B`：每条第 4 字节起是 `settingsHash`，而服务器
+    warinfo 的 `planetInfos[].settingsHash` 与之一一对应 —— hash 落在尾部第 N 条，
+    就说明它是第 N 行。找不到 warinfo 时返回 {}（表格该列显示 —）。
+    """
+    import struct
+    from planet_tables import PLAIN
+
+    path = PLAIN / "generated_planet_data.dl_bin"
+    if not path.exists() or not war_dir.exists():
+        return {}
+    files = sorted(war_dir.glob("*warinfo*.json"), key=lambda p: p.stat().st_mtime)
+    if not files:
+        return {}
+    data = path.read_bytes()
+    start = len(data) - n_rows * 8
+    if start <= 0:
+        return {}
+    h2row: dict[int, int] = {}
+    for r in range(n_rows):
+        h = struct.unpack_from("<I", data, start + r * 8 + 4)[0]
+        h2row.setdefault(h, r)
+    try:
+        info = json.loads(files[-1].read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    out: dict[int, int] = {}
+    for p in info.get("planetInfos") or []:
+        row = h2row.get(p.get("settingsHash"))
+        if row is not None and isinstance(p.get("index"), int):
+            out[row] = p["index"]
+    return out
+
+
+def render_md(rows: list[dict], live: dict, gmap: dict[int, int]) -> str:
     L = ["# 行星索引表（build 26088801）", "",
-         "> 行号 = 游戏里的行星索引（`planetActiveEffects.index` / `planetStatus.index` 用的就是它）。",
+         "> **两套编号**：`行` = `planet_data` 的表行（0..437）；`游戏索引` = 服务器/客户端用的编号",
+         "> （`planetStatus.index` / `planetActiveEffects.index`），只有上战场的 273 颗有。",
+         "> 两者的桥是 `settingsHash`：`planet_data` 尾部 `438 × 8 B` 的第 4 字节 = 该行的 settingsHash，",
+         "> 与 warinfo 的 `planetInfos[].settingsHash` 一一对应。**行号 ≠ 游戏索引，偏移不是常数**。",
          "> 名称取自 `planet_data.+0x008` 的 locid（**本 build 数据里只有英文语料**），生态取自 `+0x1B8 PlanetType`，",
          "> region 取自 `+0x060 RegionLowland`（指向 `region_settings` 段 1）。",
-         "> 39 行没有名字：都是模板行（`Inherits` 为空），`debug_name` 保留生态提示。",
          "> 「当前 presence」列只有抓到 Status 时才有（网络层，不入库）。", ""]
     named = sum(1 for r in rows if r["name"])
-    L += [f"共 **{len(rows)}** 行，其中 **{named}** 行有显示名。", "",
-          "| # | 名称 | 生态 | setup | region | 当前 presence | debug_name |",
-          "|---:|---|---|---|---|---|---|"]
+    L += [f"共 **{len(rows)}** 行，其中 **{named}** 行有显示名，**{len(gmap)}** 行有游戏索引。", "",
+          "| 行 | 游戏索引 | 名称 | 生态 | setup | region | 当前 presence | debug_name |",
+          "|---:|---:|---|---|---|---|---|---|"]
     for r in rows:
         p = live.get(r["index"]) or {}
         pres = ", ".join(dict.fromkeys(p.get("presences") or [])) or ""
-        L.append(f'| {r["index"]} | {r["name"] or "—"} | {r["biome"]} | {r["setup"] or "—"} | '
-                 f'{r["region"] or "—"} | {pres} | `{r["debug_name"]}` |')
+        gi = gmap.get(r["index"])
+        L.append(f'| {r["index"]} | {gi if gi is not None else "—"} | {r["name"] or "—"} | {r["biome"]} | '
+                 f'{r["setup"] or "—"} | {r["region"] or "—"} | {pres} | `{r["debug_name"]}` |')
     return "\n".join(L) + "\n"
 
 
@@ -194,17 +240,23 @@ def main() -> int:
 
     rows = load_planets()
     live = load_live(pathlib.Path(a.live_dir))
+    gmap = game_index_map(pathlib.Path(a.live_dir), len(rows))
 
     if a.find:
         q = a.find.strip().lower()
         hits = [r for r in rows if q in (r["name"] or "").lower()]
+        if not hits and q.isdigit():                      # 也支持按游戏索引查
+            want = int(q)
+            hits = [r for r in rows if gmap.get(r["index"]) == want]
         if not hits:
             near = [r for r in rows if q and q[:4] in (r["name"] or "").lower()][:8]
             print(f'没有匹配 "{a.find}"；相近的：' + (", ".join(f'{r["index"]}={r["name"]}' for r in near) or "（无）"))
             return 1
         for r in hits:
             p = live.get(r["index"]) or {}
-            print(f'#{r["index"]:3d}  {r["name"]:28s} 生态={r["biome"]:12s} setup={r["setup"] or "—"}')
+            gi = gmap.get(r["index"])
+            print(f'行 {r["index"]:3d} / 游戏索引 {gi if gi is not None else "—":>4}  {r["name"] or "—":28s} '
+                  f'生态={r["biome"]:12s} setup={r["setup"] or "—"}')
             print(f'       region={r["region"]} debug={r["debug_name"]}')
             if p:
                 print(f'       抓包快照: owner={p.get("owner")} effects={p.get("effects")} '
@@ -218,8 +270,8 @@ def main() -> int:
 
     md = ROOT / "docs" / "tables" / "PLANET-INDEX-26088801.md"
     if not a.no_md:
-        md.write_text(render_md(rows, live), encoding="utf-8")
-        print(f"wrote {md} ({len(rows)} rows, {sum(1 for r in rows if r['name'])} named)")
+        md.write_text(render_md(rows, live, gmap), encoding="utf-8")
+        print(f"wrote {md} ({len(rows)} rows, {sum(1 for r in rows if r['name'])} named, {len(gmap)} indexed)")
 
     js = ROOT / "out" / "planet" / "planet-index.json"
     payload = [dict(r, **({"live": live[r["index"]]} if r["index"] in live else {})) for r in rows]
