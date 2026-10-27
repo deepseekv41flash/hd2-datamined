@@ -706,7 +706,7 @@ python tools/mount_table.py verify out/mount-swap/x.plain
 | 原版挂的是"武器 item"不是炮塔 | `✓` 离线组件构成 |
 | 跨包件需要驻留（`LoadoutPackage` 声明不兑现）| `✓✓` 实机（patch_30 前紫问号 / 后正常）|
 
-### 11.6 第二轮：换 **MG-43**（2026-10-27 16:5x 已装，`⚠` 待实机）
+### 11.6 第二轮：换 **MG-43**（2026-10-27 16:5x 已装 → **`✓✓` 实机正常**）
 
 单变量：两个 M-102 实体的槽 0：通用 MG-206 `0x2152D5147B0AC418` → **MG-43 Machine Gun `0x11C27D3BABB38956`**
 （LoadoutEntry `item_type=2` 支援武器；`ProjectileWeapon+Magazine+Reload+Wieldable`，无 `Turret`/`WeaponWielder`）。
@@ -728,3 +728,31 @@ python tools/mount_table.py verify out/mount-swap/x.plain
 | 紫问号 | patch_31 未生效或包不对 ⇒ 核对补丁序号/重开游戏；**先别开火**（§7.6）|
 
 **回滚**：entities 回 `out/mount-frv/z2.dl_bin`（MG-206 版，已实机通过）；或删 `patch_31` 三件回"MG-43 无驻留"状态。
+
+**结果（`✓✓`）**：模型/瞄准/开火均正常 ⇒ 载具枪手位挂**任意同构支援武器**成立；驻留用同样配方（patch_32 起都是"声明包 → 整包驻留"）。
+
+### 11.7 第三轮：带背包的武器 —— **AC-8 Autocannon**（2026-10-27 17:0x 已装，`⚠` 待实机）
+
+单变量：两个 M-102 实体槽 0：MG-43 `0x11C27D3BABB38956` → **AC-8 Autocannon `0xA8CFFB316F0B5C5F`**。
+
+| 项 | 值 |
+|---|---|
+| 件 | **AC-8 `0xA8CFFB316F0B5C5F`**（`item_type=2` 支援武器），23 组件：`ProjectileWeapon` + **`WeaponRounds`** + `WeaponReload` + **`WeaponAssistedReload`** + `Wieldable`；几何 inline（mesh 1 条，2.08 MB）|
+| 背包 | 背包是**独立 item**：`0xE60AE045E0090F4C` / `0x26BDDF070C31B275`（"Autocannon Backpack"）。本轮**不挂背包**（枪手位只有枪）|
+| 驻留 | **新增 patch_32**：源包 `6ad7cc21015a5f85`（AC-8 的 `LoadoutPackage+0x08` 声明包；51 条，toc 3.86 MB / gpu 4.39 MB / stream 4.87 MB，G1–G7 全过）|
+| entities | `out/mount-frv/z4.dl_bin`（md5 `5ef97d0e099ed2dd84ff9c9caa185816`，47,259,632 B；明文 sha256 `aed648ed…`）|
+| 门禁 | 两次 swap G1–G10 全 PASS；对 z3 基线恰好两个槽变；哈希仍 `0x8E49771B181FFAA1`；seal 回读逐字节相等 |
+
+**数据侧先记一笔**：AC-8 的 `WeaponRounds`（行 23）`+64` 弹丸 = **117**，`+72` 弹匣 = **10.0**，`+80/+84` 备弹 = **0/0**；
+`WeaponReload` 行 226 有值；另有 `WeaponAssistedReload`（队友协作装填）。背包不在枪的实体上。
+
+**判读**
+
+| 现象 | 结论 |
+|---|---|
+| 模型正常、能打（打空后能装填）| 带背包的武器在**枪手位**同样可用；装填走弹药池/后备弹药，不依赖背包装备位 |
+| 能打但**打空后装不上/弹量停在初始值** | AC-8 的备弹/装填依赖背包 item（本轮没挂）⇒ 下一轮把 **Autocannon Backpack** 挂到空槽（槽 1–4）或补背包路径 |
+| 紫问号 | patch_32 未生效/包不对；**先别开火**（§7.6）|
+| 崩 | 记调用栈、回滚 |
+
+**回滚**：entities 回 `out/mount-frv/z3.dl_bin`（MG-43 版，已实机正常）；或删 `patch_32` 三件。
