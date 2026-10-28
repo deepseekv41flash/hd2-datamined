@@ -19,7 +19,7 @@
 | 可装备实体（`generated_entities`） | 219 | **5** | 有 code + 有名字 + wiki 无任何记载 |
 | 无名字行 | 153 | **8** | `name_id` 与 `upper_id` 在本 build 字符串表**都不存在** |
 
-未发布的 10 行战备里，**7 行已经实机验证可用**（走 `+0xC8` 额外战备链），**3 行还没测**（§7）。
+未发布的 10 行战备 **10/10 全部实机验证可用**（走 `+0xC8` 额外战备链；最后 3 行于 2026-10-28 一局验完，§7.1）。
 
 ---
 
@@ -98,9 +98,9 @@
 | **50** | 35 | `EAGLE FLY BY` | Eagle Fly By（飞鹰掠过） | 无 | 无 wiki 页 | `✓✓` 有名字有图标，纯演出 |
 | **145** | 36 | `ORBITAL CONFETTI` | Orbital Confetti（轨道彩纸礼花） | 无 | 无 wiki 页 | `✓✓` 有名字有图标，能用 |
 | **64** | 81 | `ORBITAL. WALKING BARRAGE SMOKE` | Orbital Walking Barrage Smoke（移动弹幕烟雾） | 无 | 无 wiki 页 | `✓✓` 有名字有图标，能用 |
-| **80** | 14 | `CONSUMABLES. HEALTH PACK RACK` | Medical Supplies（医疗补给） | 无 | 无 wiki 页 | `⚠` **未测** |
-| **93** | 87 | `PRESIDENT REWARDS. HEALTH PACK RACK` | Medical Supplies（医疗补给） | 无 | 无 wiki 页 | `⚠` **未测** |
-| **20** | 89 | `PRESIDENT REWARDS. MEDIC BACKPACK` | MEDIC BACKPACK（`B/MED-18` 医疗背包） | 无 | 无 wiki 页 | `⚠` **未测** |
+| **80** | 14 | `CONSUMABLES. HEALTH PACK RACK` | Medical Supplies（医疗补给） | 无 | 无 wiki 页 | `✓✓` 有名字有图标，可用 |
+| **93** | 87 | `PRESIDENT REWARDS. HEALTH PACK RACK` | Medical Supplies（医疗补给） | 无 | 无 wiki 页 | `✓✓` 可用（与 80 同名，出现两条是预期） |
+| **20** | 89 | `PRESIDENT REWARDS. MEDIC BACKPACK` | MEDIC BACKPACK（`B/MED-18` 医疗背包） | 无 | 无 wiki 页 | `✓✓` 可用 |
 | **119** | 147 | `SEAF Squad` | （无名字） | 无 | 名字双缺 | `✓✓` 能带能叫，但运输机投下空无一物 |
 | **138** | 142 | `VEHICLES. FAST RECON VEHICLE (Ramming Flamethrower)` | Incinerator FRV（炽灼型 FRV） | **有页** | **`source = N/A`** | `✓✓` 车辆正常投放能开；军械库无此车 |
 
@@ -189,9 +189,9 @@ settings.UNLOCKS = {
 | 4 | Orbital Confetti | 战备 | id 145 | `✓✓` 实机可带可叫 |
 | 5 | Orbital Walking Barrage Smoke | 战备 | id 64 | `✓✓` 实机可带可叫 |
 | 6 | SEAF Squad | 战备 | id 119 | `✓✓` 可带可叫，**投下空无一物**（半成品） |
-| 7 | Medical Supplies（`CONSUMABLES. HEALTH PACK RACK`） | 战备 | id 80 | **⚠ 未测** |
-| 8 | Medical Supplies（`PRESIDENT REWARDS. HEALTH PACK RACK`） | 战备 | id 93 | **⚠ 未测** |
-| 9 | `B/MED-18` MEDIC BACKPACK | 战备 + 背包实体 | id 20 / `0x0A55E504092B981D` | **⚠ 未测** |
+| 7 | Medical Supplies（`CONSUMABLES. HEALTH PACK RACK`） | 战备 | id 80 | `✓✓` 实机可用（2026-10-28） |
+| 8 | Medical Supplies（`PRESIDENT REWARDS. HEALTH PACK RACK`） | 战备 | id 93 | `✓✓` 实机可用（2026-10-28） |
+| 9 | `B/MED-18` MEDIC BACKPACK | 战备 + 背包实体 | id 20 / `0x0A55E504092B981D` | `✓✓` 实机可用（2026-10-28） |
 | 10 | M-104 Incinerator FRV | 战备（载具） | id 138 / 车辆 `0x2D85BFE3D8717FE5` | `✓✓` 实机可带能开；wiki `source = N/A` |
 | 11 | P-41 Ombudsman | 副武器 | `0xBDE1F2534280300D` | `⚠ 未证`（需要实体解锁路线，不是战备路线） |
 | 12 | LAS-22 Shear | 主武器 | `0x7E3145A5BAA4B948` | `⚠ 未证` |
@@ -206,21 +206,27 @@ settings.UNLOCKS = {
 
 ## 7 还没实机测过的（可上机清单）
 
-### 7.1 未发布战备 —— 只剩 3 行（`+0xC8` 额外战备链，一次可挂 3 条）
+### 7.1 未发布战备 —— 已清零（2026-10-28 一局验完 3 行）
 
-| id | 内部名 | 显示名 | 结构提示 |
-|---:|---|---|---|
-| **80** | `CONSUMABLES. HEALTH PACK RACK` | Medical Supplies（医疗补给） | 类别 `CONSUMABLES`，与 Resupply(34) 同族 → 大概率是「投下一个医疗包架」，最值得试 |
-| **93** | `PRESIDENT REWARDS. HEALTH PACK RACK` | Medical Supplies（医疗补给） | 与 80 **`name_id` 完全相同**（2673704303），区别只在 `+0xC8` 前缀族；可能是同一件的两份注册 |
-| **20** | `PRESIDENT REWARDS. MEDIC BACKPACK` | `B/MED-18` MEDIC BACKPACK | 背包类，有 `name_upper` 但**没有 `name_cased`**（`3085348034` → 空）→ 进游戏可能显示大写名 |
+剩下的三行于 2026-10-28 用**一条链**（`Resupply(34) → 80 → 93 → 20`）一局测完，用户回执
+**「全都可以正常用」** ⇒ 三行全部 `✓✓ 实机`。结构与结果：
 
-一条链就能试完：
+| id | 内部名 | 显示名 | 投放 | 次数 | 冷却 | 结果 |
+|---:|---|---|---:|---:|---:|---|
+| **80** | `CONSUMABLES. HEALTH PACK RACK` | Medical Supplies（医疗补给） | 2 | ∞ | 300 s | `✓✓` 有名字有图标，可用 |
+| **93** | `PRESIDENT REWARDS. HEALTH PACK RACK` | Medical Supplies（与 80 同名） | 2 | 1 | 30 s | `✓✓` 可用 |
+| **20** | `PRESIDENT REWARDS. MEDIC BACKPACK` | `B/MED-18` MEDIC BACKPACK | 2 | 1 | 600 s | `✓✓` 可用 |
+
+配方（留档，实测有效）：
 
 ```bash
-# 链式：Resupply(34) 带 80，80 带 93，93 带 20 —— 一局三件全看到
 python tools/stratagem_extra.py --chain 34:80,93,20 --out out/stratagem-extra/medical.plain --seal
-python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin     --sealed out/stratagem-extra/medical.dl_bin
+python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin     --sealed out/stratagem-extra/medical.dl_bin --accept-current
 ```
+
+**由此得到一条可用的通用规律**（`✓✓ 实机`）：`+0x3C 投放方式 = 2`（投掷/空投）的未发布行
+**一律能叫、且真的掉东西**；唯一失败的是 `投放方式 = 6` 的 `SEAF Squad`(119)（有呼叫流程、投下空的）。
+⇒ 以后判断「这条未发布行值不值得试」，先看 `+0x3C`，命中 `2` 就基本稳。
 
 ⚠ 链式会覆盖中间行原有的 `+0xC8`；测完记得回原版（见
 [`UNRELEASED-STRATAGEMS-26088801`](UNRELEASED-STRATAGEMS-26088801.md) §5.2 的「每条宿主只挂 1 条」做法）。
