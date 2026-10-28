@@ -329,8 +329,9 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 
 | 目标 | 供体 | 换上的载荷 | 实机结果 |
 |---|---|---|---|
-| **106** Carpet Bomb | 18 Eagle Airstrike | `0x2EA01CB1676ACA29` + 包 `0x1E33CC1600FF38F3` | **`✓✓` 不再崩溃，真的会扔出东西** |
+| **106** Carpet Bomb | 18 Eagle Airstrike | `0x2EA01CB1676ACA29` + 包 `0x1E33CC1600FF38F3` | **`✓✓` 干净配装下正常（不再崩、不出紫问号、真的出弹）** |
 | 135 Nuke | 121 Orbital Precision Strike | `0xC897C0D84448AB2C`（该轮**未**抄包） | `✗` 仍失败，HUD 明确弹 **「Stratagem Failed」** |
+| **111** Scrambler | 104 Supply Pack | `0x31400A6A3003E29C` + `0x73F8498BFFDCF415` + 包 `0x519980A75EBD50AD`（另把 `+0xC0 enabled` 0→1） | **`✓✓` 干净配装下正常掉出 Supply Pack** |
 
 > **这一条是本页最有价值的结果**：一条载荷实体**已被官方删除**的战备行，
 > 只要把它的 `payload` 换成现役祖的载荷，就能从「投出即崩」变成「正常工作」。
@@ -350,6 +351,45 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 `+0x078`(248)、`+0x0E4`、`+0x0BC cost`(3) 这几个语义未知的，以及**解码表里 `selectable = 1`**
 （44 条隐藏行里**只有它一条是 1**）。下一步要么把 121 的整组标量移植过来做范围收缩，
 要么承认这条依赖「已解锁状态」而放弃。
+
+#### 7.2.3 SEAF Squad（id 119）为什么「投下空无一物」—— 查到了夹层
+
+它不是投送舱行：`HellpodRackComponentData` 的 72 个实体键里**没有**它的两个载荷实体
+（`0x75F7E96AF7DCD303` 士兵 / `0x3EC790806D0B0540` 运输机）。
+
+它走的是另一张表 **`SquadTransportComponentData`（`0xD2B93CD8`，6 行 × 168 B）**，运输机是第 2 行。
+这行有个 **96 字节数组 `+0x20`（12 个 u64）**：
+
+```
++0x20 96B = 00BCF8247A544CDC  000000004190F652  ---- ×10
+```
+
+**只有第 1 项非空**。而 `0x00BCF8247A544CDC` 解出来不是实体键，是一条 **bones 资源**：
+
+| 项 | 值 |
+|---|---|
+| 资源 | `content/fac_cyborgs/vehicles/cyborg_tank/cyborg_tank` |
+| 所在包 | **`8e9247646ccea917`** |
+| 该包内容 | 81 条：3 mesh / 3 bones / 12 texture / 4 material / 28 animation / 3 state_machine / 2 physics … |
+
+⇒ SEAF 的运输机把「投送内容」指向了一套 **Cyborg 阵营坦克资产**，而这个包**按阵营/星球加载**，
+普通任务里不在内存 —— 与「紫问号」是同一个病根：**声明口管包在不在，补丁管资源在不在**。
+
+> 注意：Cyborg 在本 build 里是「回归阵营」（播报有整套 "So the Cyborgs are back…" / "We've touched down on Cyberstan itself…"），
+> 不是纯遗留；所以包真实存在、只是按需加载。
+>
+> 另一个旁证：同一行的「赛博运输机」（`cyborg_dropship`，能正常投兵）用的是**同一个** `cyborg_tank` 值 ——
+> 说明填这个值本身是对的形态，SEAF 这行是从同一模板抄来、指向了别的阵营的资产。
+
+**因果检验补丁**（2026-10-28，待实机）：整包驻留 `8e9247646ccea917` 到 boot 包
+
+```bash
+python tools/whole_package_patch.py build --package 8e9247646ccea917 --host 9ba626afa44a3aa3     --out D:/mod/out/cyborg-res-patch
+# → data/9ba626afa44a3aa3.patch_10(.gpu_resources/.stream)，81 条 / 30.6 MiB，G1–G8 全过
+```
+
+验证链：补给(34) → 106 → 111 → **119 SEAF Squad**。判读：
+**开始掉东西（哪怕掉出坦克）⇒ 就是缺资源**；仍空 ⇒ `+0x20` 不是投送内容，得换字段。
 
 ---
 
