@@ -438,6 +438,25 @@ python tools/whole_package_patch.py build --package 8e9247646ccea917 --host 9ba6
 `slot1` 保持共享运输机 `0x75BE82ED8592A6B3` 不动，即可让运输机按原流程投下一名可行动的友军 NPC。
 本次用的是未发布的 138 Incinerator FRV，改坏不影响正常游玩。
 
+#### 一支小队：11 个 SEAF 变体一次投（2026-10-28 晚，已装盘）
+
+SHODAN 4.1.0 源码里有一张带实体哈希的 SEAF 变体表（`stat_editor.lua:718–728`），**11 个变体在本 build 全部存在**，
+每个 46 个组件、都带 `AiSquadMemberComponentData`：
+
+| 兵种 | 变体 | 实体键 |
+|---|---|---|
+| SEAF Soldier | V1–V4 | `75F7E96AF7DCD303`（已实测能走能打）/ `6B22AE8E5F669D4F` / `A00331F24DEEF2EE` / `548136F66F5C9B5C` |
+| SEAF Leader | V1–V2 | `BCFC57848F206106` / `78DABC7344E50234` |
+| SEAF Medic | V1–V3 | `14453B8FCB040099` / `6FB1E73E00A84329` / `C47287D738BE91C3` |
+| SEAF Specialist | V1–V2 | `BFB5C88D557595D8` / `A6DCC225E1263606` |
+
+做法：新工具 `tools/stratagem_payload_multi.py` 把 138 的载荷数组从 2 槽**扩到 12 槽**
+（11 个变体 + 共享运输机 `0x75BE82ED8592A6B3` 放最后）。扩容手法：把新数组追加到目标组 payload 末尾、
+组 size 相应增加、行内 `+0x98` 改指新位置、`+0xA0` 改成 12，再用 Murmur 反解校正字把内容哈希复原。
+G1/G2/G3/G4/G6 全过；82,400 → 82,504 B，封包 t10（sha `3a40dd89`）。
+
+⚠ 同一哈希重复会被去重（飞鹰编队那次已验），所以 11 槽必须是**11 个不同**的实体键。
+
 未解：`SquadTransportComponentData +0x00 = 3`（SEAF 侧的小队规模）属于**119 那条坏通路**，
 本通路一次只投 1 名（同一哈希重复会被去重，与飞鹰编队那次同理）。
 
