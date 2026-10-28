@@ -407,6 +407,26 @@ python tools/whole_package_patch.py build --package 8e9247646ccea917 --host 9ba6
 | `VehicleShuttleComponentData` | 11 个运输单位**逐字段几乎相同**（`+0x08` 都是 180.0） | 不是病灶 |
 | 小队编队 | `SquadTransportFormationComponentData +0x00` 48 B **有内容**（`2E07E43D 01000000 …`，与 `SquadTransportComponentData +0x08` 同值 `0x3DE4072E`） | 编队非空 |
 
+### 换宿主：用「已验证的运输机投送」来投 SEAF 士兵（2026-10-28 晚，已装盘）
+
+119 自己那条投送路径三次否证后仍然不通，于是改思路：**不修 119，改用一条投送路径已经实机验证过的行来投士兵**。
+
+全表按载荷实体组件分类，得到两条现成通路：
+
+| 通路 | 行 | 槽位结构 | 状态 |
+|---|---|---|---|
+| **运输机投送** | 类目 3（载具空投）整类：`1 / 10 / 26 / 27 / 38 / 41 / 52 / 74 / 75 / 91 / 94 / 97 / 105 / 108 / 138 / 141 / 152` | `slot0 = 被投物，slot1 = 共享运输机 0x75BE82ED8592A6B3` | `✓✓` 机甲 / FRV / 坦克都验过 |
+| **地狱舱投角色** | `96 TUTORIAL REINFORCEMENT BEACON`（类目 4） | `slot0 = 角色实体（带 CharacterName/CharacterVoice），slot1 = 地狱舱 0x73F8498BFFDCF415` | 增援本身就是投角色 |
+
+选 **138 Incinerator FRV** 做宿主（未发布，投送路径 `✓✓`，改坏不影响正常游玩）：
+
+* `slot0`: `0x2D85BFE3D8717FE5`（M-104 车辆）→ **`0x75F7E96AF7DCD303`（SEAF 士兵）**
+* `slot1` 共享运输机不动；`+0xA8` 不动；士兵本体包仍由 42.4 MiB 驻留补丁兜着
+* 链：补给(34) → 106 → 111 → **138**，t9（sha `79f9a846`）
+
+判读：运输机飞来后**掉出一个 SEAF 士兵** ⇒ 119 的问题在它自己的投送路径（category 6 全表唯一、多半是任务脚本专用），
+**不阻断「投人」这件事本身**；仍空 ⇒ 该类目不接受 NPC 作为 slot0，再换 96 试。
+
 ### 唯一还没解释的差异
 
 `SquadTransportComponentData` 6 行里，SEAF 那行有**三个全表独有的值**：

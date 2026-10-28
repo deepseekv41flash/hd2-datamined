@@ -90,6 +90,8 @@ def main() -> int:
     ap.add_argument("--show", action="store_true")
     ap.add_argument("--set", action="append", default=[], metavar="ID:OFF=VALUE",
                     help="顺手改一个 u32 字段，如 --set 135:0x94=0（cooldown_type 2->0）")
+    ap.add_argument("--payload", action="append", default=[], metavar="TARGET:SLOT=VALUE",
+                    help="直接写某一行的载荷槽，如 --payload 138:0=0x75F7E96AF7DCD303")
     ap.add_argument("--copy-package", action="store_true",
                     help="连 +0xA8 package 一起抄（默认不抄：本 build 里 package=0 的行大多正常工作）")
     ap.add_argument("--seal", action="store_true")
@@ -106,7 +108,7 @@ def main() -> int:
                   f"{rec['name'][:32]:32}{miss}")
         return 0
 
-    if not a.repair and not a.set:
+    if not a.repair and not a.set and not a.payload:
         raise SystemExit("✗ 要修就用 --repair DONOR:TARGET；只想看用 --show")
 
     data, gs, rows = load(a.plain)
@@ -122,6 +124,7 @@ def main() -> int:
     allowed = set()
     plan = []
     plan_sets = []
+    plan_payload = []
 
     for spec in a.repair:
         if ":" not in spec:
@@ -151,6 +154,25 @@ def main() -> int:
             struct.pack_into("<Q", edited, pbase, dpkg)
             allowed |= set(range(pbase, pbase + 8))
         plan.append((dh, th, dhs, tbase, tcnt, dpkg))
+
+    for spec in a.payload:
+        m = re.match(r"^(\d+):(\d+)=(0x[0-9A-Fa-f]+|\d+)$", spec.strip())
+        if not m:
+            raise SystemExit(f"✗ --payload 形如 TARGET:SLOT=VALUE，收到 {spec!r}")
+        sid, slot, val = int(m.group(1)), int(m.group(2)), int(m.group(3), 0)
+        if sid not in by_id:
+            raise SystemExit(f"✗ id {sid} 不在表里")
+        tgt = by_id[sid]
+        p = payloads[tgt["group"]]
+        off = struct.unpack_from("<Q", tgt["row"], PAYLOAD_OFF)[0]
+        cnt = struct.unpack_from("<I", tgt["row"], PAYLOAD_OFF + 8)[0]
+        if not (0 <= slot < cnt):
+            raise SystemExit(f"✗ id {sid} 只有 {cnt} 个载荷槽，取不到 slot {slot}")
+        base = gs[tgt["group"]]["at"] + 24 + off + slot * 8
+        oldv = struct.unpack_from("<Q", edited, base)[0]
+        struct.pack_into("<Q", edited, base, val)
+        allowed |= set(range(base, base + 8))
+        plan_payload.append((sid, slot, oldv, val))
 
     for spec in a.set:
         m = re.match(r"^(\d+):(0x[0-9A-Fa-f]+|\d+)=(-?\d+|0x[0-9A-Fa-f]+)$", spec.strip())
@@ -183,6 +205,8 @@ def main() -> int:
         print(f"  {'PASS' if cond else 'FAIL'}  {tag}{('  ' + detail) if detail else ''}")
 
     print(f"明文 {len(data):,} B → {len(edited):,} B  hash=0x{h0:016X}")
+    for sid, slot, old, val in plan_payload:
+        print(f"  id {sid} payload[{slot}]: 0x{old:016X} → 0x{val:016X}")
     for sid, off, old, val, wide in plan_sets:
         print(f"  id {sid} +0x{off:02X}: {old} → {val}" + ("  (u64)" if wide else ""))
     for dh, th, dhs, tbase, tcnt, dpkg in plan:
@@ -194,7 +218,10 @@ def main() -> int:
     chk("G2 差异集合", diff <= allowed, f"diff={len(diff)}")
     got = murmur64(bytes(edited))
     chk("G3 哈希复原", got == h0, f"0x{got:016X}")
-    rb = all(struct.unpack_from("<Q" if wide else "<I", edited, by_id[sid]["abs"] + off)[0]
+    rb = all(struct.unpack_from("<Q", edited, gs[by_id[sid]["group"]]["at"] + 24
+                                + struct.unpack_from("<Q", by_id[sid]["row"], PAYLOAD_OFF)[0] + slot * 8)[0] == val
+             for sid, slot, _o, val in plan_payload) and all(
+             struct.unpack_from("<Q" if wide else "<I", edited, by_id[sid]["abs"] + off)[0]
              == (val & (0xFFFFFFFFFFFFFFFF if wide else 0xFFFFFFFF))
              for sid, off, _o, val, wide in plan_sets)
     for dh, th, dhs, tbase, tcnt, dpkg in plan:
