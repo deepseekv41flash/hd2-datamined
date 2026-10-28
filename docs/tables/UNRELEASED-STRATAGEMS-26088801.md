@@ -5,6 +5,12 @@
 > **已经实机验证可用**的是 **M-104 Incinerator FRV（id 138）**；本页把剩下值得试的挑出来排好序。
 >
 > 机制与配方：[RECON-SHODAN-EXTRA-STRATAGEM](../cases/RECON-SHODAN-EXTRA-STRATAGEM-26088801.md)（`+0xC8`，不占配装位、跟链、成环崩）
+>
+> **2026-10-28 补**：本页只看「战备表内部名」。把 **SHODAN 4.1.0 名称表 + 本地 wiki 镜像的 `source` 字段**
+> 叠进来做全量盘点后，结论修正见 [`UNRELEASED-INVENTORY-26088801`](UNRELEASED-INVENTORY-26088801.md)：
+> 玩家向未发布战备共 **10 行**（本页 T1 的 8 条里 7 条已实机、加上本页漏掉的 **id 80 / 93 / 20** 三条未测）；
+> 另外本页 §2 说的「无名行」实际是 **8 行 `name_id` 与 `upper_id` 双缺失**（id 36 / 114 / 135 / 89 / 119 / 48 / 98 / 62），
+> 不是解析链漏了；且新增 **4 件未发布装备**（不属于战备路线）。
 
 ## 1 判据（三条，全部可离线复核）
 
@@ -67,6 +73,19 @@
 ⚠ 任务行里 `MISSIONS. REINFORCEMENT BEACON`(127)、`MISSIONS CLAN STATION. Nuke`(135)、
 `MISSIONS CLAN STATION. Carpet Bombing Run`(106) 这几条**结构上就是"叫东西下来"**，理论上可试；
 但任务物件往往依赖任务状态（终端、目标点），带进普通任务可能无反应或报错。
+
+### 3.1 本页漏掉的三条（2026-10-28 盘点补入，玩家向、`✓ 离线` 未发布、**均未实机**）
+
+| id | 内部名 | 显示名 | 为什么漏 | 结构提示 |
+|---:|---|---|---|---|
+| **80** | `CONSUMABLES. HEALTH PACK RACK` | Medical Supplies（医疗补给） | 不在 T1/T2 任何一组 | 与 Resupply(34) 同族 `CONSUMABLES`，最像「投一个医疗包架」 |
+| **93** | `PRESIDENT REWARDS. HEALTH PACK RACK` | Medical Supplies | 同上 | 与 80 **`name_id` 完全相同**（2673704303），只差前缀族 |
+| **20** | `PRESIDENT REWARDS. MEDIC BACKPACK` | `B/MED-18` MEDIC BACKPACK | 同上 | 背包类；只有 `name_upper`（2927578997）没有 `name_cased`（3085348034 空）；背包实体 `0x0A55E504092B981D` |
+
+一条链即可测完：`python tools/stratagem_extra.py --chain 34:80,93,20 --out out/stratagem-extra/medical.plain --seal`
+
+旁证（`✓ 离线`）：本 build 字符串表里有 `<i=1> Free Medical Supplies</i> stratagem on all missions.`（1483406869）
+—— Medical Supplies 是**任务修饰符赠予**的免费战备，所以它「不常驻商店」而不是「不存在」。
 
 ## 4 T3 · 已发布（85 行，仅作对照）
 
