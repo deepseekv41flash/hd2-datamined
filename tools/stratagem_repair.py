@@ -162,10 +162,12 @@ def main() -> int:
         if not (0 <= off <= 400 - 4) or off % 4:
             raise SystemExit(f"✗ 偏移 {off:#x} 必须是 4 的倍数且在行内")
         base = by_id[sid]["abs"] + off
-        old = struct.unpack_from("<I", edited, base)[0]
-        struct.pack_into("<I", edited, base, val & 0xFFFFFFFF)
-        allowed |= set(range(base, base + 4))
-        plan_sets.append((sid, off, old, val))
+        wide = val > 0xFFFFFFFF                       # >32 位 → 当 u64 写（如 +0xA8 package）
+        n = 8 if wide else 4
+        old = struct.unpack_from("<Q" if wide else "<I", edited, base)[0]
+        struct.pack_into("<Q" if wide else "<I", edited, base, val & (0xFFFFFFFFFFFFFFFF if wide else 0xFFFFFFFF))
+        allowed |= set(range(base, base + n))
+        plan_sets.append((sid, off, old, val, wide))
 
     word_at = len(data) + pad8
     h0 = murmur64(data)
@@ -181,8 +183,8 @@ def main() -> int:
         print(f"  {'PASS' if cond else 'FAIL'}  {tag}{('  ' + detail) if detail else ''}")
 
     print(f"明文 {len(data):,} B → {len(edited):,} B  hash=0x{h0:016X}")
-    for sid, off, old, val in plan_sets:
-        print(f"  id {sid} +0x{off:02X}: {old} → {val}")
+    for sid, off, old, val, wide in plan_sets:
+        print(f"  id {sid} +0x{off:02X}: {old} → {val}" + ("  (u64)" if wide else ""))
     for dh, th, dhs, tbase, tcnt, dpkg in plan:
         print(f"  {dh} ({label(next(k for k,r in enumerate(rows) if u32(r['row'],0)==dh), nm)})"
               f" → {th} ({label(next(k for k,r in enumerate(rows) if u32(r['row'],0)==th), nm)})")
@@ -192,8 +194,9 @@ def main() -> int:
     chk("G2 差异集合", diff <= allowed, f"diff={len(diff)}")
     got = murmur64(bytes(edited))
     chk("G3 哈希复原", got == h0, f"0x{got:016X}")
-    rb = all(struct.unpack_from("<I", edited, by_id[sid]["abs"] + off)[0] == (val & 0xFFFFFFFF)
-             for sid, off, _o, val in plan_sets)
+    rb = all(struct.unpack_from("<Q" if wide else "<I", edited, by_id[sid]["abs"] + off)[0]
+             == (val & (0xFFFFFFFFFFFFFFFF if wide else 0xFFFFFFFF))
+             for sid, off, _o, val, wide in plan_sets)
     for dh, th, dhs, tbase, tcnt, dpkg in plan:
         t = by_id[th]
         back = [struct.unpack_from("<Q", edited, tbase + i * 8)[0] for i in range(tcnt)]

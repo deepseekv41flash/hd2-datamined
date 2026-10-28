@@ -431,6 +431,21 @@ python tools/whole_package_patch.py build --package 8e9247646ccea917 --host 9ba6
 已装盘，**盘上回读解封后与源明文逐字节相同**。同时已删掉那 30.6 MiB 的无用驻留补丁。
 ⚠ 实体表在**游戏启动时**读 → 必须重启游戏才生效。
 
+**第二轮（2026-10-28 晚，已装盘待重启）**：按用户提示「SEAF 资源不是固定加载」（护卫犬换 SEAF 武器曾出紫问号）重查资源归属：
+
+| 包 | 大小 / 条数 | 内容 | 119 的 `+0xA8` |
+|---|---|---|---|
+| `6eb59430a00a525c` | 42.4 MiB / 282 | **士兵本体**：bones / ragdoll_profile / ik_skeleton / physics 同为 `0x7A3637CD33A54E4C`「SEAF Solider」+ 262 animation + 1 mesh + 9 texture + 3 material | **原值就是它** |
+| `792b2a2ba11ae85d` | 79.7 MiB / 805 | **士兵的武器资产**：MG-43 / AR-23 / SMG-37 / EAT-17 / P-11 / G-6 / Iron Sights 的 bones+mesh | 本轮改指向它 |
+| `5f8a1420c40203a2` | 743 条（含 1 个 level） | 运输机的 `tle_transport_personnel` physics | 未声明 |
+
+做法（避开「换掉 `+0xA8` 会连本体包一起丢」的混淆）：
+**整包驻留本体包 `6eb59430a00a525c` → boot 包 `9ba626afa44a3aa3.patch_10`（282 条 / 42.4 MiB，G1–G8 全过，toc sha `163486f1`）**，
+再把 `+0xA8` 腾出来声明武器包 `0x792B2A2BA11AE85D`。两者互不挤占，`+0xF8` 保持 0。
+
+⚠ 自我更正：`UnitComponentData +0x00` **不是**单位资源指针 —— 能正常工作的 `Automaton Dropship` 该字段为 0。
+先前据此推的「士兵单位资源缺包」作废；真实依据是上面三个包的归属。
+
 ---
 
 ## 8 判据边界
