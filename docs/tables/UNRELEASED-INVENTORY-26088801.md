@@ -293,27 +293,39 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 
 工具：`python tools/stratagem_payload_check.py`（默认只列悬空行，`--all` 全表）。
 
-#### 7.2.2 修复尝试：把载荷借给坏行（2026-10-28，待实机）
+#### 7.2.2 载荷修复实验：**106 成功，135 仍失败**（2026-10-28 实机）
 
 社区案例 `MrChengl11/hd2-lua-mod-skill` 的 `hd2-carpet-bomb` 独立复现了同一件事：
 `0x6CCB976676EF6CC6` 在 2024-06 快照里是 `unit=shuttle_transport.bones / payload=EaglePayload_CarpetBombing`，
-**当前构建整块 LDLD 里出现 0 次 —— 实体是被删的**，不是我们读错。该案例的结论是：
+**当前构建整块 LDLD 里出现 0 次 —— 实体是被删的**。该案例的可复用结论：
 **别用「没人引用」的实体，要用「现役战备正在用的载荷」** —— 没人引用 ≠ 能用，
 实体必须处在已加载的包里才会被生成。
 
-于是做了一次修复实验（`tools/stratagem_repair.py`，从一条现役行抄 `payload` 到坏行）：
+`tools/stratagem_repair.py` 从现役行把 `payload` 数组抄到坏行，其余字段不动：
 
-| 目标 | 供体 | 换上的载荷 |
-|---|---|---|
-| 106 Carpet Bomb | 18 Eagle Airstrike | `0x2EA01CB1676ACA29`（现役，18 次引用） |
-| 135 Nuke | 121 Orbital Precision Strike | `0xC897C0D84448AB2C`（现役，5 次引用） |
+| 目标 | 供体 | 换上的载荷 | 实机结果 |
+|---|---|---|---|
+| **106** Carpet Bomb | 18 Eagle Airstrike | `0x2EA01CB1676ACA29` | **`✓✓` 不再崩溃，真的会扔出东西** |
+| 135 Nuke | 121 Orbital Precision Strike | `0xC897C0D84448AB2C` | `✗` 仍失败，HUD 明确弹 **「Stratagem Failed」** |
 
-行的其余字段（category / origin / cooldown_type / icon / selectable / uses / cooldown）全部不动；
-`+0xA8 package` 也不抄（本 build 里 `package=0` 的行大多正常工作，见 §7.2.1 的更正）。
+> **这一条是本页最有价值的结果**：一条载荷实体**已被官方删除**的战备行，
+> 只要把它的 `payload` 换成现役祖的载荷，就能从「投出即崩」变成「正常工作」。
+> 这是首次证明「半删行」可修 —— 但**修出来的是供体的行为**，
+> 原版 `EaglePayload_CarpetBombing`（三机编队 / 6Z 弹道 / 200kg 炸弹 ×30）已被删，不可恢复。
 
-结果预期：106 变成「一架现役飞鹰按 Carpet Bomb 的冷却/次数投弹」，135 变成「一次现役轨道精准打击」。
-**这不是恢复原版两件内容，而是让这两行从「崩溃/静默」变成「有东西下来」** —— 原版载荷实体已被删，
-不可恢复。⚠ 待实机。
+**135 的病灶够不着（`✗ 否证` 若干假设）**：
+
+| 假设 | 否证方式 |
+|---|---|
+| `package = 0` 导致 | 106 也是 `package = 0` 却能用；且 `id 5`（轨道照明弹）、`id 85`（机枪）等正常行 `package` 也是 0 |
+| `origin_type = ClanStation`(2) 导致 | 106 也是 2 |
+| `cooldown_type = SharedClan`(2) 导致 | 106 也是 2（飞鹰类不读冷却，真正冷却在 `EagleRearm`） |
+| `selectable = 1` 导致 | **无法测**：该字段在明文表里不存在 —— 102 行逐字节 + u32 四个 lane 全扫，零命中（见 [`STRATAGEM-FIELDS`](STRATAGEM-FIELDS-26088801.md) §4.2c） |
+
+135 与 11 条 `OrbitalFireSupport` 同族逐字段对比，它独一份的字段只剩 `+0x048`(7)、
+`+0x078`(248)、`+0x0E4`、`+0x0BC cost`(3) 这几个语义未知的，以及**解码表里 `selectable = 1`**
+（44 条隐藏行里**只有它一条是 1**）。下一步要么把 121 的整组标量移植过来做范围收缩，
+要么承认这条依赖「已解锁状态」而放弃。
 
 ---
 

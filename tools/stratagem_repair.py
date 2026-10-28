@@ -36,6 +36,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import pathlib
 import struct
 import subprocess
@@ -87,6 +88,8 @@ def main() -> int:
     ap.add_argument("--plain", default=VANILLA)
     ap.add_argument("--repair", action="append", default=[], metavar="DONOR:TARGET")
     ap.add_argument("--show", action="store_true")
+    ap.add_argument("--set", action="append", default=[], metavar="ID:OFF=VALUE",
+                    help="顺手改一个 u32 字段，如 --set 135:0x94=0（cooldown_type 2->0）")
     ap.add_argument("--copy-package", action="store_true",
                     help="连 +0xA8 package 一起抄（默认不抄：本 build 里 package=0 的行大多正常工作）")
     ap.add_argument("--seal", action="store_true")
@@ -103,7 +106,7 @@ def main() -> int:
                   f"{rec['name'][:32]:32}{miss}")
         return 0
 
-    if not a.repair:
+    if not a.repair and not a.set:
         raise SystemExit("✗ 要修就用 --repair DONOR:TARGET；只想看用 --show")
 
     data, gs, rows = load(a.plain)
@@ -118,6 +121,7 @@ def main() -> int:
     edited = bytearray(rebuild(data, gs, tail_len))
     allowed = set()
     plan = []
+    plan_sets = []
 
     for spec in a.repair:
         if ":" not in spec:
@@ -148,6 +152,21 @@ def main() -> int:
             allowed |= set(range(pbase, pbase + 8))
         plan.append((dh, th, dhs, tbase, tcnt, dpkg))
 
+    for spec in a.set:
+        m = re.match(r"^(\d+):(0x[0-9A-Fa-f]+|\d+)=(-?\d+|0x[0-9A-Fa-f]+)$", spec.strip())
+        if not m:
+            raise SystemExit(f"✗ --set 形如 ID:OFF=VALUE（off 可写 0x94），收到 {spec!r}")
+        sid, off, val = int(m.group(1)), int(m.group(2), 0), int(m.group(3), 0)
+        if sid not in by_id:
+            raise SystemExit(f"✗ id {sid} 不在表里")
+        if not (0 <= off <= 400 - 4) or off % 4:
+            raise SystemExit(f"✗ 偏移 {off:#x} 必须是 4 的倍数且在行内")
+        base = by_id[sid]["abs"] + off
+        old = struct.unpack_from("<I", edited, base)[0]
+        struct.pack_into("<I", edited, base, val & 0xFFFFFFFF)
+        allowed |= set(range(base, base + 4))
+        plan_sets.append((sid, off, old, val))
+
     word_at = len(data) + pad8
     h0 = murmur64(data)
     edited[word_at:word_at + TAIL] = padding_word_for_hash(bytes(edited), word_at, h0)
@@ -162,6 +181,8 @@ def main() -> int:
         print(f"  {'PASS' if cond else 'FAIL'}  {tag}{('  ' + detail) if detail else ''}")
 
     print(f"明文 {len(data):,} B → {len(edited):,} B  hash=0x{h0:016X}")
+    for sid, off, old, val in plan_sets:
+        print(f"  id {sid} +0x{off:02X}: {old} → {val}")
     for dh, th, dhs, tbase, tcnt, dpkg in plan:
         print(f"  {dh} ({label(next(k for k,r in enumerate(rows) if u32(r['row'],0)==dh), nm)})"
               f" → {th} ({label(next(k for k,r in enumerate(rows) if u32(r['row'],0)==th), nm)})")
@@ -171,7 +192,8 @@ def main() -> int:
     chk("G2 差异集合", diff <= allowed, f"diff={len(diff)}")
     got = murmur64(bytes(edited))
     chk("G3 哈希复原", got == h0, f"0x{got:016X}")
-    rb = True
+    rb = all(struct.unpack_from("<I", edited, by_id[sid]["abs"] + off)[0] == (val & 0xFFFFFFFF)
+             for sid, off, _o, val in plan_sets)
     for dh, th, dhs, tbase, tcnt, dpkg in plan:
         t = by_id[th]
         back = [struct.unpack_from("<Q", edited, tbase + i * 8)[0] for i in range(tcnt)]
