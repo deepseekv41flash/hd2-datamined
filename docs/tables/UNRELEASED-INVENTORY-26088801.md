@@ -505,6 +505,19 @@ G1/G2/G3/G4/G6 全过；82,400 → 82,504 B，封包 t10（sha `3a40dd89`）。
 这也正是已经实机通过的那一版（t13，sha `52dbe070`，已装回盘上）。
 想要多个 NPC，只能靠**多次呼叫**（每次一发），或在任务脚本层面刷人。
 
+**换载具（GATER）**：`slot0` 换成 GATER 的车辆实体，同时把 `+0xA8` 换成它的 toc 包 ——
+
+| 项 | 值 |
+|---|---|
+| GATER 变体 A | `0x0801B6B3C5D12EBC`（vehicle，32 组件，含 `DepositComponentData` 采集逻辑） |
+| GATER 变体 B | `0x423FF97D57AB04F5`（同上，同包） |
+| 它的 toc 包 | `0x0DFF5200594E867F`（`LoadoutPackageComponentData +8`，两个变体同一个包） |
+
+`+0xA8` 的命名空间与 `LoadoutPackageComponentData +8` **逐值一致**（M-104 车辆 = `0x2CEE40DFBD0B174D`，
+正好等于 138 原本的 `+0xA8`），所以换载具必须**同时**改 `slot0` 与 `+0xA8` 两个字段 —— 只改前者会紫问号。
+
+GATER 没有 `LoadoutEntry` 行（`LOE id=None`），所以 `+0xF8` 用不上，只能走 `+0xA8`。
+
 **换兵种**（同一套机制，只改 `slot0` 一个 u64）：把 `0x75F7E96AF7DCD303`（士兵 V1）换成别的变体键即可。
 当前盘上是 **SEAF Specialist V1 = `0xBFB5C88D557595D8`**（t14，sha `ed8a7b72`），
 专家 V2 = `0xA6DCC225E1263606`，队长 V1 = `BCFC57848F206106`，医疗 V1 = `14453B8FCB040099`。
