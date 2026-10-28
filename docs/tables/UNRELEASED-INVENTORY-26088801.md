@@ -293,6 +293,30 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 
 工具：`python tools/stratagem_payload_check.py`（默认只列悬空行，`--all` 全表）。
 
+#### 7.2.1b **资源驻留必须做**（2026-10-28 实机教训）
+
+载荷修好之后还会撞第二道墙：**紫问号**。实机对比很干净 ——
+
+| 条件 | 现象 |
+|---|---|
+| 修好载荷、配装里**没有** Supply Pack | 掉出来的是**紫色问号**（模型/资源缺失） |
+| 同一份补丁，配装里**带** Supply Pack | 正常渲染成 Supply Pack |
+
+⇒ 引擎只加载「它认为要加载的包」。载荷实体所在的 toc 包没被声明，就只画占位符。
+本 build 的**两个声明口**（`pod_loadout.py` 已实测）：
+
+| 字段 | 含义 | 全表使用情况 |
+|---|---|---|
+| `+0xA8` u64 | **物品的 toc 包**（u64 包 id） | 106 / 111 原值是 **0**；现役行都有值：18 `0x1E33CC1600FF38F3`、104 `0x519980A75EBD50AD`、121 `0xDBAE525060F06D70` |
+| `+0xF8` u32 | 授予武器的 LoadoutEntry id → 该武器的包 | 37 行非零，几乎都是支援武器（Machine Gun / Autocannon / Railgun …） |
+
+⚠ **修正我 2026-10-28 早些时候的一个错误结论**：我说过「`package = 0` 不是故障标志，因为 `id 5`、`id 85` 也是 0」。
+那是**从能用的行反推**得到的假结论 —— 那些行的载荷本来就在基础包 / 配装包里，所以不需要额外声明。
+**借来的载荷必须显式声明包**，否则必紫问号。106 第一次「成功」也是因为测试配装里带了飞鹰，
+把 Eagle Airstrike 的包加载了 —— 不是 `package` 无所谓。
+
+⇒ `tools/stratagem_repair.py --copy-package` 是**必需**而非可选。
+
 #### 7.2.2 载荷修复实验：**106 成功，135 仍失败**（2026-10-28 实机）
 
 社区案例 `MrChengl11/hd2-lua-mod-skill` 的 `hd2-carpet-bomb` 独立复现了同一件事：
@@ -301,12 +325,12 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 **别用「没人引用」的实体，要用「现役战备正在用的载荷」** —— 没人引用 ≠ 能用，
 实体必须处在已加载的包里才会被生成。
 
-`tools/stratagem_repair.py` 从现役行把 `payload` 数组抄到坏行，其余字段不动：
+`tools/stratagem_repair.py` 从现役行把 `payload` 数组 **+ `+0xA8 package`（资源驻留）** 抄到坏行，其余字段不动：
 
 | 目标 | 供体 | 换上的载荷 | 实机结果 |
 |---|---|---|---|
-| **106** Carpet Bomb | 18 Eagle Airstrike | `0x2EA01CB1676ACA29` | **`✓✓` 不再崩溃，真的会扔出东西** |
-| 135 Nuke | 121 Orbital Precision Strike | `0xC897C0D84448AB2C` | `✗` 仍失败，HUD 明确弹 **「Stratagem Failed」** |
+| **106** Carpet Bomb | 18 Eagle Airstrike | `0x2EA01CB1676ACA29` + 包 `0x1E33CC1600FF38F3` | **`✓✓` 不再崩溃，真的会扔出东西** |
+| 135 Nuke | 121 Orbital Precision Strike | `0xC897C0D84448AB2C`（该轮**未**抄包） | `✗` 仍失败，HUD 明确弹 **「Stratagem Failed」** |
 
 > **这一条是本页最有价值的结果**：一条载荷实体**已被官方删除**的战备行，
 > 只要把它的 `payload` 换成现役祖的载荷，就能从「投出即崩」变成「正常工作」。
