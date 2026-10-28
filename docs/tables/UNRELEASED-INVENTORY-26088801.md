@@ -518,6 +518,19 @@ G1/G2/G3/G4/G6 全过；82,400 → 82,504 B，封包 t10（sha `3a40dd89`）。
 
 GATER 没有 `LoadoutEntry` 行（`LOE id=None`），所以 `+0xF8` 用不上，只能走 `+0xA8`。
 
+**实机：GATER 被投下来之前就被摧毁了。** 离线排查：
+
+| 检查 | 结果 |
+|---|---|
+| 血量 | **不是问题** —— GATER `HealthComponentData +0x00 = 12000`，而能正常存活的 M-104 只有 **2900** |
+| 组件差异 | GATER 32 个 / M-104 37 个；GATER 独有 **`ObjectiveDynamicLinkComponentData`** + `DepositComponentData`；缺 `WoundableComponentData` / `Animation` / `UnitCustomization` 等 7 个 |
+| 目标链接字段 | `ObjectiveDynamicLinkComponentData` = `{+0x00=0（无目标 id）, +0x04=1, +0x08=1}` ⇒ 两个 `1` 疑似「缺目标就自毁」 |
+
+据此做了实验（entities 表，已装盘 sha `18dec4e3`）：把 GATER A `0x0801B6B3C5D12EBC` 的
+`ObjectiveDynamicLinkComponentData +0x04` 与 `+0x08` 都清 0（`G1–G8` 全过，内容哈希 `0x8E49771B181FFAA1` 保持，
+盘上回读逐字节相同）。若仍被摧毁，下一候选是「运输机吊挂尺寸不匹配」或 `HealthComponentData +0x1C`
+（GATER `-200.0` vs M-104 `-40.0`）这个未解字段。
+
 **换兵种**（同一套机制，只改 `slot0` 一个 u64）：把 `0x75F7E96AF7DCD303`（士兵 V1）换成别的变体键即可。
 当前盘上是 **SEAF Specialist V1 = `0xBFB5C88D557595D8`**（t14，sha `ed8a7b72`），
 专家 V2 = `0xA6DCC225E1263606`，队长 V1 = `BCFC57848F206106`，医疗 V1 = `14453B8FCB040099`。
