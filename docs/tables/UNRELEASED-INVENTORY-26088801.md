@@ -645,3 +645,28 @@ python tools/unreleased_inventory.py --json-out out/unreleased/inventory-2608880
 
 依赖：本 build 的明文缓存（`refs/dlbin/plaintext-26088801/`）、本地化表、wiki 镜像、
 SHODAN 4.1.0 目录。全是本地文件，不联网、不启游戏。
+
+#### 7.2.4 C 路线（改 unit/bones 资源）进行中的侦察结果
+
+崩溃证明 `TransportComponentData +0x08` 会被引擎数学消费（`-25.0` → `0xc0000005`），
+所以几何只能从资源侧改。目前查到的：
+
+| 事实 | 值 |
+|---|---|
+| 共享运输机实体 | `0x75BE82ED8592A6B3` |
+| 它的 `LoadoutPackageComponentData +8`（toc 包） | `131fe264b7380717` |
+| 该包里的 shuttle 资源 | **`0xEF3A4136B21592CB`** —— 同时有 `bones` / `mesh` / `physics`，名字都是 `content/fac_helldivers/vehicles/shuttle_*` |
+| 同包另一份 | `0x3F70E3503A3293F9`（`physics` + `mesh`，另一台载具运输机，正是 `TransportComponentData` row 11） |
+| 同包还有 | `bones/physics/mesh 0x18F11A4E18192CFE = tle_transport_personnel`、`0x8365609B35EF6672 = ttle_gunship_turret_hmg` |
+
+关键观察：**这些哈希既是实体键、也是资源 id**（同一 id 命名空间下 bones/mesh/physics 各有一条），
+所以 `0xEF3A4136B21592CB` 就是这台 shuttle 的**单位资源 id**。
+
+⚠ 该包里**没有 `unit` 类型的资源条目**（`srkit list` 只列到 bones/mesh/physics/animation/…），
+unit 资源在**别的包**里 —— 这是下一步要定位的。
+
+剩余步骤（下一步直接接着做）：
+1. 定位 shuttle 的 `unit` 资源所在包（按 `srkit list --package <实体自己的包>` 逐包找 `unit` 类型）；
+2. 解 `bones` 资源，找吊挂/载货节点名（`cargo` / `hook` / `attach` / `tow` 之类）；
+3. 在 `unit` 的 transform_info 里改该节点的 position；
+4. 用 `tools/whole_package_patch.py` 把改好的资源打成 `<宿主>.patch_N` 驻留（**不碰实体表**，改坏最多模型位置不对，不会访问违例）。
