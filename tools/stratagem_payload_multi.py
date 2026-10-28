@@ -87,8 +87,12 @@ def main() -> int:
     old_off = struct.unpack_from("<Q", row_rec["row"], PAYLOAD_OFF)[0]
     old_cnt = struct.unpack_from("<I", row_rec["row"], PAYLOAD_OFF + 8)[0]
 
-    extra = b"".join(struct.pack("<Q", h) for h in hashes)
-    new_off = gs[gi]["size"]                      # 追加点 = 旧 payload 末尾（payload 相对）
+    # ★ 载荷数组的偏移必须是 8 的倍数 —— vanilla 全表 145 行无一例外。
+    #   直接追加在旧 payload 末尾常常是 4 mod 8，会导致整行失效（运输机根本不生成，已实机踩过）。
+    body_len = gs[gi]["size"]
+    lead = (8 - body_len % 8) % 8
+    new_off = body_len + lead                     # 追加点（payload 相对，8 对齐）
+    extra = bytes(lead) + b"".join(struct.pack("<Q", h) for h in hashes)
     pad8 = (8 - (len(data) + len(extra)) % 8) % 8
     tail_len = pad8 + TAIL
     edited = bytearray(rebuild_grow(data, gs, gi, extra, tail_len))
@@ -139,6 +143,7 @@ def main() -> int:
         gs2 = []
         print("     ", exc)
     chk("G6 容器自洽", okp, f"{len(gs2) if okp else '?'} 组")
+    chk("G7 数组偏移 8 对齐", new_off % 8 == 0, f"off={new_off} mod8={new_off % 8}")
     if not ok:
         return 1
     open(a.out, "wb").write(bytes(edited))
