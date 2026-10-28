@@ -228,7 +228,11 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 **一律能叫、且真的掉东西**；唯一失败的是 `投放方式 = 6` 的 `SEAF Squad`(119)（有呼叫流程、投下空的）。
 ⇒ 以后判断「这条未发布行值不值得试」，先看 `+0x3C`，命中 `2` 就基本稳。
 
-#### 7.1.1 `+0x3C 投放方式` 全表普查（153 行按投放方式分组）
+#### 7.1.1 `+0x3C` 全表普查（153 行分组）
+
+> ⚠ **2026-10-28 更正**：`+0x3C` 的字段名是 **`StratagemCategoryType` 枚举**，不是「投放方式」
+> （与解码 JSON 102 行严格双射，见 [`STRATAGEM-FIELDS`](STRATAGEM-FIELDS-26088801.md) §4.2b）。
+> 下表的「含义」一列是按行为起的俗称，保留因为它是玩家视角的说法。
 
 把 153 行全按 `+0x3C` 分组，再叠上「这一组里有多少条已经实机通过」，判据就变成一句话
 ——**只有 `6` 是坏的，`0/1/2/3/4/5` 每一组都有实机通过的成员**：
@@ -288,6 +292,28 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 载荷都在，都正常工作 —— 所以「投放 0/1 本身不能叫」是错的，坏的是**那两行的载荷引用**。
 
 工具：`python tools/stratagem_payload_check.py`（默认只列悬空行，`--all` 全表）。
+
+#### 7.2.2 修复尝试：把载荷借给坏行（2026-10-28，待实机）
+
+社区案例 `MrChengl11/hd2-lua-mod-skill` 的 `hd2-carpet-bomb` 独立复现了同一件事：
+`0x6CCB976676EF6CC6` 在 2024-06 快照里是 `unit=shuttle_transport.bones / payload=EaglePayload_CarpetBombing`，
+**当前构建整块 LDLD 里出现 0 次 —— 实体是被删的**，不是我们读错。该案例的结论是：
+**别用「没人引用」的实体，要用「现役战备正在用的载荷」** —— 没人引用 ≠ 能用，
+实体必须处在已加载的包里才会被生成。
+
+于是做了一次修复实验（`tools/stratagem_repair.py`，从一条现役行抄 `payload` 到坏行）：
+
+| 目标 | 供体 | 换上的载荷 |
+|---|---|---|
+| 106 Carpet Bomb | 18 Eagle Airstrike | `0x2EA01CB1676ACA29`（现役，18 次引用） |
+| 135 Nuke | 121 Orbital Precision Strike | `0xC897C0D84448AB2C`（现役，5 次引用） |
+
+行的其余字段（category / origin / cooldown_type / icon / selectable / uses / cooldown）全部不动；
+`+0xA8 package` 也不抄（本 build 里 `package=0` 的行大多正常工作，见 §7.2.1 的更正）。
+
+结果预期：106 变成「一架现役飞鹰按 Carpet Bomb 的冷却/次数投弹」，135 变成「一次现役轨道精准打击」。
+**这不是恢复原版两件内容，而是让这两行从「崩溃/静默」变成「有东西下来」** —— 原版载荷实体已被删，
+不可恢复。⚠ 待实机。
 
 ---
 
