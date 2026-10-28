@@ -388,8 +388,36 @@ python tools/whole_package_patch.py build --package 8e9247646ccea917 --host 9ba6
 # → data/9ba626afa44a3aa3.patch_10(.gpu_resources/.stream)，81 条 / 30.6 MiB，G1–G8 全过
 ```
 
-验证链：补给(34) → 106 → 111 → **119 SEAF Squad**。判读：
-**开始掉东西（哪怕掉出坦克）⇒ 就是缺资源**；仍空 ⇒ `+0x20` 不是投送内容，得换字段。
+验证链：补给(34) → 106 → 111 → **119 SEAF Squad**。
+
+**实机结果（2026-10-28）：仍然空无一物** ⇒ 两条解释同时被否证：
+
+| 假设 | 结论 |
+|---|---|
+| 缺 Cyborg 资产包（驻留就能修） | **`✗` 否证** —— 整包驻留 81 条 / 30.6 MiB 进 boot 包后，行为一字未变 |
+| `+0x20[0]` 是「投送内容」 | **`✗` 否证**（同上：把它的包强行塞进内存也没东西掉出来） |
+
+### 已排除项（都查过、都不是病灶）
+
+| 项 | 实测值 | 结论 |
+|---|---|---|
+| 阵营 | `FactionComponentData +0x00`：SEAF 运输机与士兵都是 **1 = 超级地球**；Automaton Dropship 是 8 | 阵营正确 |
+| 士兵实体完整性 | `0x75F7E96AF7DCD303` 46 个组件（`AiSquadMember` / `FriendlyNpc` / `Inventory` / `Unit` …） | 不是空壳 |
+| 运输机实体完整性 | `0x3EC790806D0B0540` 18 个组件 | 不是空壳 |
+| `VehicleShuttleComponentData` | 11 个运输单位**逐字段几乎相同**（`+0x08` 都是 180.0） | 不是病灶 |
+| 小队编队 | `SquadTransportFormationComponentData +0x00` 48 B **有内容**（`2E07E43D 01000000 …`，与 `SquadTransportComponentData +0x08` 同值 `0x3DE4072E`） | 编队非空 |
+
+### 唯一还没解释的差异
+
+`SquadTransportComponentData` 6 行里，SEAF 那行有**三个全表独有的值**：
+
+| 字段 | SEAF（row 2） | 能正常投兵的 `cyborg_dropship`（row 0/4） |
+|---|---:|---:|
+| `+0x14` | **6** | 0 |
+| `+0x80` | **1** | 0 |
+| `+0x81` | **1** | 0 |
+
+⇒ 最后一次实验：把这三个归零对齐 working dropship。**仍空 ⇒ 判定 SEAF Squad 是任务脚本专用行，数据层不可修，收工。**
 
 ---
 
