@@ -228,6 +228,26 @@ python tools/pod_rack_slots.py --table \
 | 4 件 | **rack 67 / 68 / 69** | 任意 `authored≥4` 的舱改成 4 —— **✓✓ 实机（R12/G 轮 物品、2026-10-29 NPC）** |
 | 6 件 | **rack 70** | 任意舱 `+556=6` + 填 6 槽（⚠ 未证：原版 6 档存在但没被我们改写过） |
 
+### 4.1 未发布舱：把「医疗补给」叫出来（额外战备链）
+
+rack 69 的消费方是 **id 80 / 93 `HEALTH PACK RACK`（显示名 Medical Supplies）**，属未发布战备：
+商店不卖、配装里没有 ⇒ 必须走 `StratagemInfo +0xC8 additional_stratagem`（带上宿主战备时**附赠**
+另一条，不占配装位；**成环会崩**，见 `tools/stratagem_extra.py`）。
+
+```bash
+# 在现有车辆链(34→106→111→138)的链首插入 80，两件事同局可测
+python tools/stratagem_extra.py --plain D:\mod\out\gater2625\lav-strat.plain \
+    --chain 34:80,106,111,138 --out strat.plain
+# 结果：34(Resupply) → 80(Medical Supplies) → 106(Carpet Bomb) → 111(Scrambler) → 138(Incinerator FRV)
+```
+
+| 事实 | 值 |
+|---|---|
+| 宿主 | **id 34 `CONSUMABLES. RESUPPLY`**（配装里带补给即可，不额外占位） |
+| 目标 | **id 80**（93 是同舱的 President Rewards 变体，`+0xA8` 相同 `0xC6D14774E5C77651`） |
+| 链长 | 4 跳（原 3 跳 + 链首插 1）——已验证原 3 跳可跑，本次多 1 跳待实机 |
+| 门的逻辑 | 只改 3 个 `+0xC8`（34/80 两处 + 尺寸字段），其余字节不动，Murmur 复原 |
+
 写 `+556` 的配方（rack 行内 `+0x22C`，**行基址 = 行数组起点 + rack 号 × 568**）。
 用 `rack_edit.py`（任意槽 + `--spawn` 一次写完，G1–G7）：
 
@@ -299,9 +319,16 @@ python tools/pod_rack_slots.py --compare "D:\mod\refs\dlbin\plaintext-26088801"
 spawn / random / 8 个槽的实体键全部逐字节相同）⇒ **本表跨 build 稳定，不必每次更新重做**；
 `+0x22C` 与 `+0x228` 的偏移在换 build 时仍应由 `pod_rack_swap.py` 现算复核。
 
-已备但**未装盘**的下一发：`D:\mod\out\pod-seaf8\generated_entities.dl_bin`
-（rack 67 的 8 个槽写 8 种 SEAF + `spawn=8`，用于探 `+556` 的 5–8 档；sealed round-trip 逐字节相等，
-锚点仍是 `0x8E49771B181FFAA1`）。
+**探 `+556` 5–8 档的已装盘件（2026-10-29 20:5x）**：`D:\mod\out\pod-seaf8-rack69\`
+
+| 文件 | sha256 前 16 | 内容 |
+|---|---|---|
+| `generated_entities.dl_bin` | `f4902f6e32a2aac4` | **rack 69（医疗补给舱）8 槽 = 8 种 SEAF + `spawn=8`**；rack 67 回原版（补给恢复 4 个补给箱） |
+| `generated_stratagem_settings.dl_bin` | `cf65b3b368693109` | 链 **34→80→106→111→138**（链首插入医疗补给，车辆线 138 保留） |
+
+两份都做过 sealed round-trip（`open-key` 解回逐字节相等）与盘上回读（rack 69 `spawn=8` / 8 个 SEAF 实体键、
+链四跳齐全）。回滚：`dlbin_deploy.py restore --file <文件名>`。
+（早前备的 rack 67 八槽件仍在 `D:\mod\out\pod-seaf8\`，未装。）
 
 机器可读产物：[`refs/pod-rack-slots-26251122.json`](../../refs/pod-rack-slots-26251122.json)
 （73 行 × `spawn/random/authored/effective/pod/slots`）。
