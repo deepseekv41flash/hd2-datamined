@@ -801,3 +801,26 @@ wiki 脚注 5 说明了 `constitution` 的真实语义：**它是主血量（或
 |---|---|---|
 | GATER 活下来 | 确认是**主血量被打空**（挤压/碰撞伤害）⇒ 油罐、任务逻辑都排除 | 把血量定到合理值（如 6 万）即为可用修法；或回头降低挤压（几何已崩过一次，优先级降低） |
 | 仍被摧毁 | 是 **destroy 调用**（脚本自毁/despawn），血量无效 | 转 `DepositComponentData` 清零、换 hellpod 投放器、查 tag 位（GATER 独有 bit 81/167/211，M-104 是 103） |
+
+#### 7.2.8 GATER 两个变体的唯一差异：一个粒子特效引用（2026-10-29，`✓ 离线`）
+
+对两个变体做**逐组件、逐 4 字节**的全量比对（`generated_entities.dl_bin`，275 块 × 各自 stride）：
+
+| 结果 | 内容 |
+|---|---|
+| 32 个组件里 **31 个逐字节相同** | `Unit` / `Health` / `Tag` / `SeatCollection` / `Mount` / `Deposit` / `ObjectiveDynamicLink` / `Vehicle*` / `Gore` / `Interactable` … 全部一致 |
+| **唯一差异** | `EffectReferenceComponentData +0x328`（u64）= **一条 `particles` 资源引用** |
+
+| 变体 | 实体键 | 粒子资源 | 大小 |
+|---|---|---|---:|
+| A | `0x0801B6B3C5D12EBC` | `particles 0x26A84AFE49908B13` | 17,804 B |
+| B | `0x423FF97D57AB04F5` | `particles 0x409854FB8ADDA577` | 19,688 B |
+
+两条粒子在全表各只被**一个**实体引用（各归属自己的变体），所以它们是**变体私有的视觉效果**，不是共享特效。
+粒子资源本身没有可读字符串（`particles` 只有 raw fallback），看不出具体是什么效果。
+
+⇒ **两个变体的玩法数据完全等价**：同一套 `unit`（都是 `0x423FF97D57AB04F5` —— A 的 `UnitComponentData +0x00` 指向 B 的键）、
+同样的血量/护甲/轮胎区/座位/挂载/任务组件。差别只在**外观表现**。
+
+**实验价值**：把战备行 `slot0` 从 A 换成 B 是**零成本的单变量 A/B**（除那一处粒子外其余完全一致）。
+若 B 能活下来，就直接得到一个可用投送；若 B 也炸，则彻底排除"变体差异"这条线。
