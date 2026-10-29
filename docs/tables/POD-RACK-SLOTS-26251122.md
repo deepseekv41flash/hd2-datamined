@@ -3,7 +3,10 @@
 > **一句话**：每行**物理上 8 个槽**（8 × `RackAttach` 64 B）；**能吐几件不由槽位数决定**，
 > 由行内 `+556`（`spawn_payload_size`）决定，而且它数的是**前 N 个非空槽**。
 > 本 build 原版只有 **1 / 2 / 4 / 6** 四档（50 / 18 / 4 / 1 条）。
-> 想吐 N 件 = 把 `+556` 写成 N 并把前 N 个槽填上东西。
+> 想吐 N 件 = 把 `+556` 写成 N 并把前 N 个槽填上东西 —— **槽还必须挂在真挂点上**（挂点不够要叠层，§1.2.1）。
+>
+> **本线已收尾（2026-10-29）**：一舱最多 **8 件**（= 槽数），4 挂点舱靠「槽 5–8 复用真挂点 + 沿 z 叠一层」达到 8 件，
+> 实机读数：4 挂点 × 1 层 = **4 个**（占位节点版）→ 4 挂点 × 2 层 = **8 个**（叠层版）。配方见 §4.2，边界见 §5。
 >
 > 相关：[POD-RACK](POD-RACK-26088801.md)（换载荷配方 + 双包声明）· [ENTITY-TABLE](ENTITY-TABLE-25988413.md)（实体库几何）·
 > [WEAPON-AMMO-RESERVE](WEAPON-AMMO-RESERVE-26088801.md)（同一个 `+556` 的另一种用法）
@@ -24,7 +27,10 @@
 | 73 行在 26251122 与 26088801 之间 **spawn/random/载荷逐字节相同**（0/73 漂移） | **✓ 离线** | `--compare` 结果（§7） |
 | `+556` 写到 **3 / 4** 可行（三件 / 四件全出） | **✓✓ 实机** | R10（rack 29 `+556`=3，三件）· R12/G 轮（rack 29 `+556`=4，Nova + Warp + GL-28 + GL-28 背包）；均在 [LIMITED-CROSS-PACKAGE](../engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) 台账 |
 | **4 槽舱吐 4 件 = 实机；而且载荷可以是 NPC（不是物品）** | **✓✓ 实机（2026-10-29）** | rack 67（`spawn=4`）4 个槽写 4 种 SEAF 实体 → 实机**掉出 4 个**；同一次源数据配 rack 47（`spawn=1`）只掉 1 个（§6） |
-| `+556` 写到 **5–8**（超出原版 4 档） | **⚠ 未证** | SDK 声明可写区间 `[1,4]`（需 `allow_unverified_effect`）；原版只有 rack 70 的 6 档 |
+| **`+556` 写到 8 可行：一舱吐 8 件（NPC）** | **✓✓ 实机（2026-10-29）** | rack 69 八槽八种 SEAF、`spawn=8`、槽 5–8 叠层 → 实机**掉出 8 个** |
+| **超过挂点数必须叠层**：真挂点 4 个 × 2 层 = 8 | **✓✓ 实机（2026-10-29）** | 同一构建：槽 5–8 仍在占位节点 `0xE89D1227` 时只掉 **4 个**；改成「真挂点 + z=−0.275」后掉 **8 个**（§1.2.1） |
+| `+556` 的 5 / 6 / 7 档单独写 | **⚠ 未证** | 机制与 8 档相同（8 已 ✓✓），只是这三个值没单独跑过；原版 6 档只在 rack 70 |
+| 未发布舱（医疗补给 id 80）走额外战备链 | **✓✓ 实机（2026-10-29）** | 链 `34→80→106→111→138`（4 跳）实机：战备栏出现 Medical Supplies，呼叫后舱里真的吐 SEAF |
 
 ---
 
@@ -80,8 +86,15 @@ HellpodRackComponentData 0xA98BB156  @0x5E8E78, payload 43,768
 ⇒ **「8 槽」只是结构容量；能吐几件还受「挂点数 × 每点叠层数」限制。**
 原版超过挂点数的唯一先例是 rack 70：**同挂点叠 3 层、z 步长 0.275 m** —— 想要 5–8 件就得照这个叠。
 
-> 实机对照（2026-10-29）：rack 69 八槽全填、`spawn=8`，但槽 5–8 仍挂在占位节点上 ⇒ 只掉 **4 个**；
-> 把槽 5–8 改成「真挂点 + z=−0.275 叠层」的版本已装盘待验。
+> 实机对照（2026-10-29，同一发医疗补给、同一份实体库，只差 8 个槽的 `Node`/`Offset`）：
+>
+> | 版本 | 槽 5–8 的挂点 | 实机 |
+> |---|---|---|
+> | A（`f4902f6e`） | 占位节点 `0xE89D1227`、z=0 | **4 个** |
+> | B（`8ab7e6d7`） | 真挂点（复用槽 1–4 的 4 个）、z=−0.275 | **8 个** |
+>
+> ⇒ 「8 槽」能不能用满，取决于**挂点 × 层数 ≥ 8**；补给/弹药/医疗舱壳只有 4 个挂点，
+> 必须叠一层（z 步长 0.275 m，与 rack 70 的原版写法一致）。结构上限就是 8（槽数组只有 8 个）。
 
 ### 1.3 原版四档分布
 
@@ -247,7 +260,8 @@ python tools/pod_rack_slots.py --table \
 | 2 件 | §3.3 的 16 条两件舱 | 任意舱 `+556=2` + 填两槽（原版就有 2 档，改档无实机） |
 | 3 件 | 原版无 3 档 | 任意 `authored≥3` 的舱改成 3 —— **✓✓ 实机（R10，2026-10-23：rack 29 三件全出）** |
 | 4 件 | **rack 67 / 68 / 69** | 任意 `authored≥4` 的舱改成 4 —— **✓✓ 实机（R12/G 轮 物品、2026-10-29 NPC）** |
-| 6 件 | **rack 70** | 任意舱 `+556=6` + 填 6 槽（⚠ 未证：原版 6 档存在但没被我们改写过） |
+| 5 / 6 / 7 件 | **rack 70**（原生 6 档，2 挂点 × 3 层） | 写对应槽数 + `spawn=N`（**⚠ 未单独跑**，机制与 8 档同源） |
+| **8 件（上限）** | — | **4 挂点舱：8 槽全填 + 槽 5–8 复用真挂点、z=−0.275 叠层 + `spawn=8`** —— **✓✓ 实机（2026-10-29，掉 8 个）** |
 
 ### 4.1 未发布舱：把「医疗补给」叫出来（额外战备链）
 
@@ -257,7 +271,7 @@ rack 69 的消费方是 **id 80 / 93 `HEALTH PACK RACK`（显示名 Medical Supp
 
 ```bash
 # 在现有车辆链(34→106→111→138)的链首插入 80，两件事同局可测
-python tools/stratagem_extra.py --plain D:\mod\out\gater2625\lav-strat.plain \
+python tools/stratagem_extra.py --plain D:/mod/out/gater2625/lav-strat.plain \
     --chain 34:80,106,111,138 --out strat.plain
 # 结果：34(Resupply) → 80(Medical Supplies) → 106(Carpet Bomb) → 111(Scrambler) → 138(Incinerator FRV)
 ```
@@ -266,49 +280,66 @@ python tools/stratagem_extra.py --plain D:\mod\out\gater2625\lav-strat.plain \
 |---|---|
 | 宿主 | **id 34 `CONSUMABLES. RESUPPLY`**（配装里带补给即可，不额外占位） |
 | 目标 | **id 80**（93 是同舱的 President Rewards 变体，`+0xA8` 相同 `0xC6D14774E5C77651`） |
-| 链长 | 4 跳（原 3 跳 + 链首插 1）——已验证原 3 跳可跑，本次多 1 跳待实机 |
+| 链长 | **4 跳已实机**（2026-10-29：战备栏出现 Medical Supplies，呼叫后真的吐 SEAF） |
 | 门的逻辑 | 只改 3 个 `+0xC8`（34/80 两处 + 尺寸字段），其余字节不动，Murmur 复原 |
 
-写 `+556` 的配方（rack 行内 `+0x22C`，**行基址 = 行数组起点 + rack 号 × 568**）。
-用 `rack_edit.py`（任意槽 + `--spawn` 一次写完，G1–G7）：
+### 4.2 标准配方：让一个舱吐 N 件（N ≤ 8，含 N > 挂点数）
+
+这是 2026-10-29 实机跑通 8 件的完整写法（4 挂点舱为例；换舱只替换 rack 号与真挂点）：
 
 ```bash
-# ① 只改 spawn（把 MG-43 舱抬到 4 件；`--expect-slot spawn=1` 就是 G7 校验旧值）
-python tools/rack_edit.py --rack 47 --spawn 4 --expect-slot spawn=1 --out entities.plain
-
-# ② 改槽 + 改 spawn（一次成型：补给舱 4 槽塞 4 个 SEAF）
-python tools/rack_edit.py --rack 67 \
+# ① 8 个槽填 8 个载荷 + spawn=8；槽 5–8 复用槽 1–4 的真挂点并沿 z 叠一层（-0.275 m）
+python tools/rack_edit.py --rack 69 \
     --slot 0=0x75F7E96AF7DCD303 --slot 1=0xBFB5C88D557595D8 \
     --slot 2=0x78DABC7344E50234 --slot 3=0xA00331F24DEEF2EE \
-    --spawn 4 --expect-slot spawn=4 --out entities.plain
+    --slot 4=0xA6DCC225E1263606 --slot 5=0x6B22AE8E5F669D4F \
+    --slot 6=0x6FB1E73E00A84329 --slot 7=0x14453B8FCB040099 \
+    --slot-node 4=0x934650B2 --slot-node 5=0xCADAD001 \
+    --slot-node 6=0x0A2895AB --slot-node 7=0x7D974B27 \
+    --slot-offset 4=0,0,-0.275 --slot-offset 5=0,0,-0.275 \
+    --slot-offset 6=0,0,-0.275 --slot-offset 7=0,0,-0.275 \
+    --spawn 8 --expect-slot spawn=4 \
+    --expect-node 4=0xE89D1227 --expect-node 5=0xE89D1227 \
+    --expect-node 6=0xE89D1227 --expect-node 7=0xE89D1227 \
+    --out entities.plain
 
-# ③ 封装 + 部署
-python tools/dlbin_seal.py seal-key entities.plain --key <recipient.pk> --out generated_entities.dl_bin
+# ② 封装 + 装盘（战备表不动）
+python tools/dlbin_seal.py seal-key entities.plain \
+    --key D:/mod/refs/dlbin/keys/recipient.pk --out generated_entities.dl_bin
 python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed generated_entities.dl_bin
 ```
 
-> ⚠ **不要用 `plain_edit.py` 改这个字段**：它只认设置表的 24 B 块头；实体库是 28 B 头块链，
-> 会被直接拒绝。实体库的内容哈希校正必须走 `rack_edit.py` / `pod_rack_swap.py` 的 tail 宿主。
->
-> 本轮实测：只改 spawn 时文件里只有 **2 个字节**变化（spawn 本身 + 末块 payload 尺寸字段），
-> 哈希锚点仍是 `0x8E49771B181FFAA1`；把 `--expect-slot` 写成 `spawn=9` 会被 G7 咬住并且**不写输出**。
+取真挂点别写死：读该 rack **authored 槽**的 `Node`（或看 §1.2.1 表）；
+**空槽的 `Node` 一定是 `0xE89D1227`，别照抄**。
+
+| N | 怎么写 |
+|---:|---|
+| ≤ 真挂点数（补给/弹药/医疗 = 4，武器/背包舱 = 2，六舱 = 2） | 只用原生真挂点，`spawn=N` |
+| > 真挂点数（5–8） | 复用真挂点 + z 阶梯（本次 2 层 = 每层 −0.275 m），`spawn=N` |
+| 8（上限） | 8 槽全填 + 叠层；结构上没有第 9 槽 |
 
 ⚠ 三条硬约束：
 
 1. **别靠"清空槽"减件数** —— 空槽会被后面的 authored 槽顶上来（§1.2）。
 2. **别动 `+552`** —— 它是"随机抽"，不是数量；原版 71 条为 0、2 条为 1。
-3. **`spawn` 与 authored 要成对改**：`spawn` 大于非空槽数时不会补出空槽物件，只会少吐。
+3. **`spawn` 与挂点要一起看** —— `spawn` 只数「前 N 个非空槽」，但**挂点不够时多出来的载荷不生成**（§1.2.1）。
 
----
+> ⚠ **不要用 `plain_edit.py` 改实体库**：它只认设置表的 24 B 块头；实体库是 28 B 头块链，会被直接拒绝。
+> 哈希校正必须走 `rack_edit.py` / `pod_rack_swap.py` 的 tail 宿主。
 
 ## 5. 边界与未解
 
-- **上限就是 8**：每行只有 8 个 `RackAttach`；`spawn > 8` 无意义（未测，结构上无第 9 槽）。
-- **5–8 档未实机**：SDK 把可写区间声明为 `[1,4]` 并要求 `allow_unverified_effect`；本仓库只证到 4。
-- **6 槽舱的写法是特例**：rack 70 槽 4/5 的 `side=0`，与 4 槽舱"1/2/1/2"不同；照抄它抬 `spawn=6` 是否稳，未测。
-- **悬空载荷**：rack 13 / 48 / 62 / 65 的槽指向**实体库里不存在的键**，改这些槽之前先换成真载荷（否则 `spawn` 抬高也不吐）。
-- **一舱多战备（shared rack）**：SDK 记 6 条；改这些舱要逐个确认消费方（`--no-strat` 可跳过反查，反查只在命中唯一时才给名字）。
-- **槽内 `+56`、行内 `+560` 之后**等未知字段仍未解；本表只覆盖 `Item` / `RackSide` / `+552` / `+556`。
+| 边界 | 现状 |
+|---|---|
+| **结构上限 = 8 件** | 每行只有 8 个 `RackAttach`，没有第 9 槽；8 已是顶（✓✓ 实机 2026-10-29） |
+| **挂点不够要叠层** | 4 挂点舱想吐 8 件，槽 5–8 必须复用真挂点并给 z 阶梯（✓✓ 实机：z=−0.275，2 层） |
+| **叠层能多深** | 原版先例只有 3 层（rack 70：2 点 × 3 层 = 6）。3 层是否也稳，**⚠ 未测**（本次只做了 2 层） |
+| **`+556` 的 5 / 6 / 7 档** | **⚠ 未单独跑**；8 档已 ✓✓，机制同源，但引擎是否对每个值都照办没有差分证据 |
+| **6 槽舱的写法是特例** | rack 70 槽 5/6 的 `side=0` 而 `spawn=6`；`side=0` 不阻断生成（本次 8 件里槽 5–8 原 `side` 也是 0） |
+| **悬空载荷** | rack 13 / 48 / 62 / 65 的槽指向实体库里不存在的键，改这些槽前先换成真载荷 |
+| **一舱多战备（shared rack）** | SDK 记 6 条；改这些舱要逐个确认消费方 |
+| **叠层对 NPC 的副作用** | 同点上下 0.275 m 会先重叠再落地分开；本次 8 个**全部正常出现**，未见卡在舱内或半埋 |
+| **未解字段** | 槽内 `+56`、行内 `+560` 之后仍未知；本表只覆盖 `Item` / `Node` / `Offset` / `RackSide` / `+552` / `+556` |
 
 ---
 
@@ -319,10 +350,12 @@ python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed g
 | "槽内 `+0x34` 是**数量**（补给舱 = 数量 1/2/1/2）" | `+0x34` = **`RackSide`**（0/1/2），不是数量 | 曾据此以为"补给舱吐 6 个箱子"。实际补给舱 = `spawn=4` × 每槽 1 件 = **4 个** |
 | "MG-43 舱塞 4 个 SEAF 只出 1 个，原因不明" | **rack 47 `spawn=1`**（本次普查的直接读数） | 4 个槽 authored 也没用：第 1 个非空槽之后不生成。要让舱吐 4 个 NPC，得换 rack 67/68/69（`spawn=4`）或把 `+556` 抬到 4 |
 | "多槽舱会不会只吐 1 个 NPC / 舱载荷有没有 NPC 单发限制" | **没有**：rack 67（`spawn=4`）4 槽写 4 种 SEAF → **✓✓ 实机掉 4 个**（2026-10-29） | 约束只在 `+556`；同一份数据放 rack 47（`spawn=1`）只掉 1 个 —— 两个读数互为对照 |
+| "`spawn=8` 就该吐 8 个（把 `+556` 当成唯一变量）" | **不全对**：`spawn` 只决定「取前几个非空槽」，**挂点不够时多出来的载荷不生成** —— 8 槽全填 + `spawn=8` 但槽 5–8 挂占位节点 ⇒ 只出 4 个 | 第一版 `f4902f6e` 实机 4 个；把槽 5–8 改成真挂点 + 叠层后 `8ab7e6d7` 实机 **8 个** |
+| "一个舱最多 4 个（`+556` 4 档是硬顶）" | **不是**：4 只是「4 挂点 × 1 层」的结果；叠层后可到 8（= 槽数上限） | 同上两版对照 |
 
 > 盘上字节证据（工作区 `D:\mod\out\gater2625\`）：`pod-seaf4.plain`（4 个 SEAF 塞 rack 47）读回仍是 `spawn=1`；
 > `pod-seaf4-resupply.plain`（4 个 SEAF 塞 rack 67）读回 `spawn=4`。同一份实体库里只差这一行。
-> 实机读数：前者 1 个、后者 **4 个** ⇒「能吐几件」这一格就是唯一变量。
+> 实机读数：前者 1 个、后者 **4 个** ⇒「能吐几件」这一格是唯一变量（后来补上第二条：**挂点数**，见上面两版对照）。
 
 ---
 
@@ -340,25 +373,29 @@ python tools/pod_rack_slots.py --compare "D:\mod\refs\dlbin\plaintext-26088801"
 spawn / random / 8 个槽的实体键全部逐字节相同）⇒ **本表跨 build 稳定，不必每次更新重做**；
 `+0x22C` 与 `+0x228` 的偏移在换 build 时仍应由 `pod_rack_swap.py` 现算复核。
 
-**探 `+556` 5–8 档的已装盘件（2026-10-29 20:5x）**：`D:\mod\out\pod-seaf8-rack69\`
+**本次三版对照（2026-10-29，全程同一发「医疗补给」呼叫）**
+
+| 版本 | 文件 | entities sha256 | 槽 5–8 的挂点 | 实机 |
+|---|---|---|---|---|
+| A | `D:\mod\out\pod-seaf8-rack69\` | `f4902f6e32a2aac4` | 占位节点 `0xE89D1227`、z=0 | **4 个** |
+| B | `D:\mod\out\pod-seaf8-stack\` | `8ab7e6d73e85bfc2` | 真挂点（复用槽 1–4）+ z=−0.275 | **8 个** ✅ |
+| 早期 | `D:\mod\out\pod-seaf4-resupply\` | `f8f5225ae64a46e9` | —（rack 67 原生 4 槽） | 4 个 |
+| 更早 | `D:\mod\out\gater2625\pod-seaf4.dl_bin` | `e0223269…` | —（rack 47 `spawn=1`） | 1 个 |
+
+**当前盘面（收尾保留）**
 
 | 文件 | sha256 前 16 | 内容 |
 |---|---|---|
-| `generated_entities.dl_bin` | `f4902f6e32a2aac4` | **rack 69（医疗补给舱）8 槽 = 8 种 SEAF + `spawn=8`**；rack 67 回原版（补给恢复 4 个补给箱） |
-| `generated_stratagem_settings.dl_bin` | `cf65b3b368693109` | 链 **34→80→106→111→138**（链首插入医疗补给，车辆线 138 保留） |
+| `generated_entities.dl_bin` | **`8ab7e6d73e85bfc2`** | rack 69（医疗补给舱）8 槽 = 8 种 SEAF、`spawn=8`、槽 5–8 叠层 |
+| `generated_stratagem_settings.dl_bin` | **`cf65b3b368693109`** | 额外战备链 `34(Resupply) → 80(Medical Supplies) → 106 → 111 → 138` |
 
-之后又换了一次 entities（**叠层版**，同一发医疗补给）：
+两份都过 sealed round-trip（`open-key` 解回逐字节相等）+ 盘上回读（8 个槽的 item/node/z、链四跳）。
 
-| 文件 | sha256 前 16 | 内容 |
-|---|---|---|
-| `D:\mod\out\pod-seaf8-stack\generated_entities.dl_bin` | `8ab7e6d73e85bfc2` | rack 69 八槽八种 SEAF、`spawn=8`，**槽 5–8 改挂真挂点 + z=−0.275 叠层**（槽 1–4 保持原挂点 z=0） |
-
-对上一版（`f4902f6e`，槽 5–8 仍在占位节点 `0xE89D1227`）的实机读数：**只掉 4 个**。
-
-
-两份都做过 sealed round-trip（`open-key` 解回逐字节相等）与盘上回读（rack 69 `spawn=8` / 8 个 SEAF 实体键、
-链四跳齐全）。回滚：`dlbin_deploy.py restore --file <文件名>`。
-（早前备的 rack 67 八槽件仍在 `D:\mod\out\pod-seaf8\`，未装。）
+回滚：
+```bash
+python tools/dlbin_deploy.py restore --file generated_entities.dl_bin          # 回原版舱（补给恢复 4 箱）
+python tools/dlbin_deploy.py restore --file generated_stratagem_settings.dl_bin # 回原版战备表（无额外链）
+```
 
 机器可读产物：[`refs/pod-rack-slots-26251122.json`](../../refs/pod-rack-slots-26251122.json)
 （73 行 × `spawn/random/authored/effective/pod/slots`）。
