@@ -36,6 +36,8 @@ from pod_rack_swap import (MURMUR_ANCHOR, RackTable, TypeLib, parse_blocks,  # n
                            TAIL, DEFAULT_PLAIN, DEFAULT_TYPELIB)
 
 SPAWN_OFF = 0x22C          # spawn_payload_size（rack 行内）
+NODE_OFF = 8               # RackAttach.Node（u32，挂点哈希）
+OFFSET_OFF = 12            # RackAttach.Offset（vec3，槽内位移）
 
 
 def main() -> int:
@@ -47,6 +49,12 @@ def main() -> int:
     ap.add_argument("--spawn", type=int, default=None, help="新的 spawn_payload_size（+0x22C）")
     ap.add_argument("--expect-slot", action="append", default=[],
                     help="N=旧值，可重复（G7）；写 `spawn=N` 可校验 +0x22C 的旧值")
+    ap.add_argument("--slot-node", action="append", default=[],
+                    help="N=0x挂点哈希，可重复（写槽内 +8 的 Node）")
+    ap.add_argument("--slot-offset", action="append", default=[],
+                    help="N=x,y,z，可重复（写槽内 +12 的 vec3 位移，单位米）")
+    ap.add_argument("--expect-node", action="append", default=[],
+                    help="N=0x旧挂点，可重复（G7 校验 Node 旧值）")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
 
@@ -77,6 +85,25 @@ def main() -> int:
         old = original[off:off + 8]
         edited[off:off + 8] = blob
         declared[off] = (f"slot{slot}", old, blob)
+    for spec in a.slot_node:
+        k, v = spec.split("=", 1)
+        slot = int(k, 0)
+        off = t.slot_offset(a.rack, slot) + NODE_OFF
+        blob = struct.pack("<I", int(v, 0) & 0xFFFFFFFF)
+        old = original[off:off + 4]
+        edited[off:off + 4] = blob
+        declared[off] = (f"node{slot}", old, blob)
+    for spec in a.slot_offset:
+        k, v = spec.split("=", 1)
+        slot = int(k, 0)
+        xyz = [float(x) for x in v.split(",")]
+        if len(xyz) != 3:
+            raise SystemExit(f"✗ --slot-offset 需要 x,y,z，收到 {spec!r}")
+        off = t.slot_offset(a.rack, slot) + OFFSET_OFF
+        blob = struct.pack("<3f", *xyz)
+        old = original[off:off + 12]
+        edited[off:off + 12] = blob
+        declared[off] = (f"offset{slot}", old, blob)
     if a.spawn is not None:
         off = t.base + a.rack * t.stride + SPAWN_OFF
         blob = struct.pack("<I", a.spawn & 0xFFFFFFFF)
@@ -92,11 +119,17 @@ def main() -> int:
         k, v = spec.split("=", 1)
         key = "spawn" if k.strip().lower() == "spawn" else f"slot{int(k, 0)}"
         want[key] = int(v, 0)
+    for spec in a.expect_node:
+        k, v = spec.split("=", 1)
+        want[f"node{int(k, 0)}"] = int(v, 0)
     if want:
         bad = []
         for off, (label, old, _new) in declared.items():
             if label in want:
-                got = struct.unpack("<Q", old)[0] if len(old) == 8 else struct.unpack("<I", old)[0]
+                fmt = {8: "<Q", 4: "<I"}.get(len(old))
+                if fmt is None:            # vec3 之类的期望先不支持（避免误判）
+                    continue
+                got = struct.unpack(fmt, old)[0]
                 if got != want[label]:
                     bad.append((label, hex(got), hex(want[label])))
         print(f"  {'PASS' if not bad else 'FAIL'}  G7 旧值 == 期望{'  ' + str(bad) if bad else ''}")
@@ -120,8 +153,13 @@ def main() -> int:
 
     print(f"rack {a.rack}  base 0x{t.base + a.rack * t.stride:X}  行跨度 {t.stride}")
     for off, (label, old, new) in sorted(declared.items()):
-        fmt = "<Q" if len(new) == 8 else "<I"
-        print(f"  {label:6s} @0x{off:X}  {struct.unpack(fmt, old)[0]:#x} -> {struct.unpack(fmt, new)[0]:#x}")
+        if len(new) == 8:
+            shown = f"{struct.unpack('<Q', old)[0]:#x} -> {struct.unpack('<Q', new)[0]:#x}"
+        elif len(new) == 4:
+            shown = f"{struct.unpack('<I', old)[0]:#x} -> {struct.unpack('<I', new)[0]:#x}"
+        else:
+            shown = f"{struct.unpack('<3f', old)} -> {struct.unpack('<3f', new)}"
+        print(f"  {label:9s} @0x{off:X}  {shown}")
 
     diff = {i for i in range(len(original)) if original[i] != edited[i]}
     got = murmur64(edited)
