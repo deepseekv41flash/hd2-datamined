@@ -49,6 +49,7 @@
 | **只给某一件甲加效果** | [ARMOR-PASSIVE-STATS](docs/tables/ARMOR-PASSIVE-STATS-26088801.md) | **§2 单件级（改 kit 的 `+0x1C`）· §6 配方 · §2 末尾「没有空被动」的否证** | `26088801` |
 | **投送舱送什么（战备空投舱换载荷）** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§1 槽位结构 · §2 前 N 个槽才生成 · §3 换物品配方** | `26088801` |
 | **换进来的物品只有紫问号 / 网格材质不加载** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§4 两个包槽（`+0xA8` + `+0xF8`）· §5 item→包解析表** | `26088801` |
+| **`SquadTransportComponentData` 谁在用、字段是什么** | [SQUAD-TRANSPORT](docs/tables/SQUAD-TRANSPORT-26251122.md) | **§1 六宿主（2 Dropship / 1 Warp Ship / 1 SEAF 穿梭机 / 2 Factory Strider ⇒ 不是独有表）· §2 字段表（`+0x08` = 节点名 murmur32：`Dropship`/`Spawner`；`+0x20` = 6×16 B 条目，u64 是资源 file_id）· §3 与 Formation / Transport 两张表的边界** | `26251122` |
 | **每条舱能吐几件 / 哪个舱是补给、弹药、针剂舱**（**✓ 收尾**） | [POD-RACK-SLOTS](docs/tables/POD-RACK-SLOTS-26251122.md) | **§1 三个数字（8 物理槽 / authored / `+556`）· §1.2.1 真天花板 = 挂点数（空槽 Node 是占位值 `0xE89D1227`）· §2 全表 73 行 · §4.1 未发布舱走额外战备链 · §4.2 要 N 件（含 N>4 的叠层）标准配方 · §6 `+0x34`=`RackSide` 校正** —— 实机：一舱 **8 件 NPC**（4 挂点 × 2 层） | `26251122` |
 | **改了弹丸/爆炸，怎么知道漏了哪些粒子/实体/声音资源** | [RESDEP](docs/tools/RESDEP.md) | **`chain` 扫引用 · `plan` 分「同包/跨包/缺失」· `--apply` 一键装盘+整体回滚 · `VERIFY.md` 实机清单 · HIRC 事件目录** | `26088801` |
 | **某个 id 在整个数据里被谁引用 / 原版武器的弹丸从哪来 / 某个弹丸 id 叫什么** | [REFSCAN](docs/tools/REFSCAN.md) | **`exact` 全档 u32 账本 · `columns` 引用面普查 · `delta-info/-show/-ammo` 解配件 delta 链（弹种槽 6 → `ProjectileWeapon+0`）· §6 wiki 镜像交叉验证（61 武器 / 59 个 id→枚举名）· 本 build 组件索引表** | `26088801` |
