@@ -23,7 +23,7 @@ import sys
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-ROOT = r"D:\mod\refs\dlbin\plaintext-26088801"
+ROOT = r"D:\mod\refs\dlbin\plaintext-26251122"
 EXPL = os.path.join(ROOT, "generated_explosion_settings.dl_bin")
 PROJ = os.path.join(ROOT, "generated_projectile_settings.dl_bin")
 DMG = os.path.join(ROOT, "generated_damage_settings.dl_bin")

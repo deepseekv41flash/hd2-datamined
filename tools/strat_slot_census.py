@@ -14,7 +14,7 @@
     结果只有 `+0xA8` 一个字段出现过包 id（114 行），其余 u64 字段 0 命中 ⇒ 装包口只有两个。
 
 三个输入
-    plaintext            D:\\mod\\refs\\dlbin\\plaintext-26088801\\generated_stratagem_settings.dl_bin
+    plaintext            D:\\mod\\refs\\dlbin\\plaintext-26251122\\generated_stratagem_settings.dl_bin
     typelib              同目录 dl_library.dl_typelib（判行类型 / 行大小）
     行名                 refs/stratagem-display-names.json（153 条，**按行序**对齐）
 

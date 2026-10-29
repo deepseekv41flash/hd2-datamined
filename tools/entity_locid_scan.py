@@ -40,8 +40,8 @@
 
 用法
     python tools/entity_locid_scan.py \
-        --plaintext refs/dlbin/plaintext-26088801 \
-        --typelib   refs/dlbin/plaintext-26088801/dl_library.dl_typelib \
+        --plaintext refs/dlbin/plaintext-26251122 \
+        --typelib   refs/dlbin/plaintext-26251122/dl_library.dl_typelib \
         --strings   refs/strings-probe/all \
         --out       refs/entity-locid-names.json
 
@@ -67,7 +67,7 @@ from table_dictionary import Dictionary, load_names                     # noqa: 
 from table_locid_scan import load_strings                              # noqa: E402
 
 BUILD = "26088801"
-DEFAULT_PLAIN = "refs/dlbin/plaintext-26088801"
+DEFAULT_PLAIN = "refs/dlbin/plaintext-26251122"
 DEFAULT_NAMES = "dl-type-names.json"
 DEFAULT_RESNAMES = "refs/srkit-names.json"
 INDEX_TYPE = "ComponentIndexData"        # 块内哈希图的类型名（typelib 自带）

@@ -51,7 +51,7 @@ for _s in (sys.stdout, sys.stderr):
     except Exception:                                          # noqa: BLE001
         pass
 
-PLAIN_DIR = pathlib.Path(r"D:\mod\refs\dlbin\plaintext-26088801")
+PLAIN_DIR = pathlib.Path(r"D:\mod\refs\dlbin\plaintext-26251122")
 ENT_PLAIN = PLAIN_DIR / "generated_entities.dl_bin"
 STRAT_PLAIN = PLAIN_DIR / "generated_stratagem_settings.dl_bin"
 TYPELIB = PLAIN_DIR / "dl_library.dl_typelib"

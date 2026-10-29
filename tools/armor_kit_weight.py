@@ -67,7 +67,7 @@ for _stream in (sys.stdout, sys.stderr):
     except Exception:                                                    # noqa: BLE001
         pass
 
-DEFAULT = r"D:\mod\refs\dlbin\plaintext-26088801\generated_customization_armor_sets.dl_bin"
+DEFAULT = r"D:\mod\refs\dlbin\plaintext-26251122\generated_customization_armor_sets.dl_bin"
 SDK = r"D:\mod\c11-recon\sdk-0.30.3\ArmorStatsCapabilities.json"
 
 REC = 64          # HelldiverCustomizationKit (size64)

@@ -64,8 +64,8 @@ LIFT_RE = re.compile(r"elevator|elevation|slider|lift", re.I)
 FIVE = ["TurretComponentData", "WieldableComponentData", "WeaponWielderComponentData",
         "UnitComponentData", "WeaponDataComponentData"]
 
-DEFAULT_PLAIN = r"D:\mod\refs\dlbin\plaintext-26088801\generated_entities.dl_bin"
-DEFAULT_TYPELIB = r"D:\mod\refs\dlbin\plaintext-26088801\dl_library.dl_typelib"
+DEFAULT_PLAIN = r"D:\mod\refs\dlbin\plaintext-26251122\generated_entities.dl_bin"
+DEFAULT_TYPELIB = r"D:\mod\refs\dlbin\plaintext-26251122\dl_library.dl_typelib"
 DEFAULT_SMINDEX = r"D:\mod\out\sm-all.json"
 DEFAULT_GAME = r"D:\SteamLibrary\steamapps\common\Helldivers 2\data"
 

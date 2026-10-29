@@ -65,8 +65,8 @@ for _s in (sys.stdout, sys.stderr):
         pass
 
 # ---- 默认路径（本工作区约定：明文缓存与参考数据在 D:\\mod\\refs 下）
-PLAIN = r"D:\mod\refs\dlbin\plaintext-26088801\generated_entities.dl_bin"
-TYPELIB = r"D:\mod\refs\dlbin\plaintext-26088801\dl_library.dl_typelib"
+PLAIN = r"D:\mod\refs\dlbin\plaintext-26251122\generated_entities.dl_bin"
+TYPELIB = r"D:\mod\refs\dlbin\plaintext-26251122\dl_library.dl_typelib"
 ENTITY_NAMES = r"D:\mod\refs\entity-locid-names.json"
 COMPONENTS = r"D:\mod\refs\entity-components.json"
 CATALOG = r"D:\mod\refs\srkit-names.json"

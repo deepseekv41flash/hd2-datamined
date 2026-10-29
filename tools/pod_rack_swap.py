@@ -59,8 +59,8 @@ for _stream in (sys.stdout, sys.stderr):
     except Exception:                                              # noqa: BLE001
         pass
 
-DEFAULT_PLAIN = r"D:\mod\refs\dlbin\plaintext-26088801\generated_entities.dl_bin"
-DEFAULT_TYPELIB = r"D:\mod\refs\dlbin\plaintext-26088801\dl_library.dl_typelib"
+DEFAULT_PLAIN = r"D:\mod\refs\dlbin\plaintext-26251122\generated_entities.dl_bin"
+DEFAULT_TYPELIB = r"D:\mod\refs\dlbin\plaintext-26251122\dl_library.dl_typelib"
 DEFAULT_ITEMS = r"D:\mod\carrier-probe\_item_packages.json"
 MURMUR_ANCHOR = 0x8E49771B181FFAA1        # 本 build 明文锚点
 TAIL = 8

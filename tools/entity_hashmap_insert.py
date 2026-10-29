@@ -48,8 +48,8 @@ for _s in (sys.stdout, sys.stderr):
     except Exception:                                      # noqa: BLE001
         pass
 
-DEFAULT_PLAIN = r"D:\mod\refs\dlbin\plaintext-26088801\generated_entities.dl_bin"
-DEFAULT_LIB = r"D:\mod\refs\dlbin\plaintext-26088801\dl_library.dl_typelib"
+DEFAULT_PLAIN = r"D:\mod\refs\dlbin\plaintext-26251122\generated_entities.dl_bin"
+DEFAULT_LIB = r"D:\mod\refs\dlbin\plaintext-26251122\dl_library.dl_typelib"
 TAIL = 8
 
 

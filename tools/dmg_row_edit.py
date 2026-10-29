@@ -368,7 +368,7 @@ def cmd_set(args) -> int:
 def main() -> int:
     ap = argparse.ArgumentParser(description='伤害行任意字段编辑（保内容哈希）')
     ap.add_argument('--plain', type=pathlib.Path,
-                    default=pathlib.Path('D:/mod/refs/dlbin/plaintext-26088801/'
+                    default=pathlib.Path('D:/mod/refs/dlbin/plaintext-26251122/'
                                          'generated_damage_settings.dl_bin'))
     sub = ap.add_subparsers(dest='cmd', required=True)
 

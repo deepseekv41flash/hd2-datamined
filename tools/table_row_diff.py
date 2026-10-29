@@ -14,7 +14,7 @@
 
 用法
     python tools/table_row_diff.py \
-        --old refs/dlbin/plaintext-26088801/generated_projectile_settings.dl_bin \
+        --old refs/dlbin/plaintext-26251122/generated_projectile_settings.dl_bin \
         --new refs/dlbin/plaintext-26251122/generated_projectile_settings.dl_bin \
         [--stride 92] [--match 60,20,405,486] [--max 40] [--json-out x.json]
 

@@ -38,7 +38,7 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import typelib  # noqa: E402
 
-PLAIN = pathlib.Path(r"D:/mod/refs/dlbin/plaintext-26088801")
+PLAIN = pathlib.Path(r"D:/mod/refs/dlbin/plaintext-26251122")
 NAMES_TXT = pathlib.Path(__file__).resolve().parent.parent / "refs" / "dl-type-names.txt"
 
 PLANET_TABLES = [

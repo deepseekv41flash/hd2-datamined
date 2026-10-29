@@ -49,7 +49,7 @@ from murmur64 import murmur64, padding_word_for_hash                 # noqa: E40
 from stratagem_extra import load, u32, names_map, label, rebuild, groups, TAIL   # noqa: E402
 
 MOD = pathlib.Path(HERE).resolve().parents[2]      # tools -> repo -> work -> D:/mod
-BASE = MOD / "refs/dlbin/plaintext-26088801"
+BASE = MOD / "refs/dlbin/plaintext-26251122"
 VANILLA = str(BASE / "generated_stratagem_settings.dl_bin")
 ENTITIES = BASE / "generated_entities.dl_bin"
 PKG_OFF = 0xA8

@@ -13,7 +13,7 @@
 
 用法
     python tools/stratagem_package.py \\
-        --plain refs/dlbin/plaintext-26088801/generated_stratagem_settings.dl_bin \\
+        --plain refs/dlbin/plaintext-26251122/generated_stratagem_settings.dl_bin \\
         --row "REINFORCEMENT BEACON" --set-a8 0xB779A2F9D0928E03 \\
         --out out/stratagem_reinforce_gp20.plain
 

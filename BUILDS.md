@@ -2,7 +2,7 @@
 
 > **本文件只讲「换 build 怎么做」**：新 build 到手跑哪几步、哪些结论能直接沿用、锚点怎么复验、基线放哪。**各 build 的验证记录不在本文件** —— 逐层记录与跨 build 对照表在 [INDEX §2 的 `builds/` 小节](INDEX.md#builds)。
 >
-> 当前验证 build **`26088801`** ｜ 历史基线 `25480438` → `25988413`。仓库不绑定某个 build（热点更新一两周一次）：**工具与方法论**文档不带 build 号，**事实类**文档文件名带 build 号（见 §2 末）。
+> 当前验证 build **`26251122`** ｜ 历史基线 `25480438` → `25988413` → `26088801`。仓库不绑定某个 build（热点更新一两周一次）：**工具与方法论**文档不带 build 号，**事实类**文档文件名带 build 号（见 §2 末）。
 
 ## 1. 这份文件管什么
 
@@ -46,9 +46,11 @@ python tools/build_geometry_diff.py --sk <recipient.sk>   # -> refs/build-geomet
 
 | 文件 | 是什么 | 属于哪个 build |
 |---|---|---|
-| `refs/table-geometry.json` | 55 张表的几何（明文大小 / 组数 / 行数 / 步长 / 类型） | 25988413（26088801 实测结构全同，故仍是有效基线） |
+| `refs/table-geometry.json` | 55 张表的几何（明文大小 / 组数 / 行数 / 步长 / 类型） | 25988413（26088801 与 26251122 实测结构仅 2 张变，仍是有效基线） |
 | `refs/build-diff.json` | 某一次「旧 → 新」的逐表 diff | 25988413 → 26088801 |
 | `refs/build-geometry-diff.json` | 55 张表对旧几何的对照结果 | 26088801 |
+| `refs/build-diff-26251122.json` | 26251122 的逐表 diff（文件/封装/结构三层） | 26088801 → 26251122 |
+| `refs/build-geometry-diff-26251122.json` | 26251122 对旧几何：53 张结构同 / 2 张变 | 26251122 |
 | `refs/dlbin/plaintext-<buildid>/` | 该 build 的解封明文（本地，不入库） | 按目录名 |
 
 build 再多起来时，按 `refs/builds/<buildid>/` 分目录，把上述产物各存一份。
@@ -59,6 +61,8 @@ build 再多起来时，按 `refs/builds/<buildid>/` 分目录，把上述产物
 2. 在 [INDEX §2 `builds/`](INDEX.md#builds) 的**跨 build 对照表**加一行，再在紧跟其后的逐篇表加一行；
 3. 本文件只在**操作流程**变了时才改（多一步、判读规则变了）—— 记录一律不进这里，这正是它不必每次更新都改的原因；
 4. 同步「当前验证 build」：本文件顶部、[README](README.md)、[INDEX](INDEX.md) 顶部、[WORKFLOW §1.2](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md) 的判据。
+5. 把**工具默认路径**切到新明文：`grep -rl plaintext-<旧build> tools/*.py | xargs sed -i 's/plaintext-<旧build>/plaintext-<新build>/g'`（26251122 这次动了 29 个文件）；再用 `entity_dump.py` / `block_rows.py` 各跑一次冒烟。
+6. 若 4 张以上表尺寸/内容变了，重跑 `build_geometry_diff.py` 与 `build_diff.py` 刷新 `refs/` 下的缓存，别让下个 build 拿旧缓存当基线。
 
 ## 6. ⚠ 踩过的坑：明文缓存会被我们自己的 mod 污染
 

@@ -34,7 +34,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from table_dictionary import Dictionary, load_names                 # noqa: E402
 import entity_locid_scan as scan                                     # noqa: E402
 
-PLAIN = pathlib.Path(r"D:\mod\refs\dlbin\plaintext-26088801")
+PLAIN = pathlib.Path(r"D:\mod\refs\dlbin\plaintext-26251122")
 NAMES = pathlib.Path(r"D:\mod\dl-type-names.json")
 
 

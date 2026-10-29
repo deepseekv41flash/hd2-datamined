@@ -30,7 +30,7 @@
 
 spec.json
     {
-      "src": "D:/mod/refs/dlbin/plaintext-26088801/generated_entities.dl_bin",
+      "src": "D:/mod/refs/dlbin/plaintext-26251122/generated_entities.dl_bin",
       "dst": "D:/mod/out/apc-recon/assets/entities-template.bin",
       "shell_old": "<旧壳单位 id>", "shell_new": "<新壳单位 id>",
       "shell_new_pkg": "<从哪个包读新壳节点表>",
@@ -59,7 +59,7 @@ for _s in (sys.stdout, sys.stderr):
     except Exception:                                       # noqa: BLE001
         pass
 
-TYPELIB = r"D:\mod\refs\dlbin\plaintext-26088801\dl_library.dl_typelib"
+TYPELIB = r"D:\mod\refs\dlbin\plaintext-26251122\dl_library.dl_typelib"
 SDK = r"C:\Users\Admin\HD2SDK-CommunityEdition"
 GAME = r"D:\SteamLibrary\steamapps\common\Helldivers 2\data"
 TYPE_UNIT = 0xE0A48D0BE9A7453F

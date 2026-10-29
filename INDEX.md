@@ -2,7 +2,7 @@
 
 > **本仓库唯一索引入口。** [README](README.md) 只讲「这是什么、怎么上手」；所有文档都从这里进。
 >
-> 当前验证 build **`26088801`** ｜ 历史基线 `25480438` → `25988413`
+> 当前验证 build **`26251122`** ｜ 历史基线 `25480438` → `25988413` → `26088801`
 > **事实类**文档文件名带 build 号，结论只对那个 build 成立；**方法类**不带 build 号，跨 build 有效。
 > 每个 build 到底改了什么 → [§2 的 `builds/` 小节（跨 build 对照表）](#builds)；新 build 到手先跑哪三步 → **[BUILDS.md](BUILDS.md)**。
 > 链接自检：`python tools/check_links.py`（0 断链才算过）。
@@ -100,7 +100,7 @@
 |---|---|
 | 新 build 到手先跑哪三步 + 锚点怎么复验 | [BUILDS.md §3](BUILDS.md) |
 | **每个 build 到底改了什么 / 哪些结论还成立** | [§2 `builds/` 跨 build 对照表](#builds) |
-| 这次更新到底把 55 张表改了没 | [BUILD-26088801-DIFF](docs/builds/BUILD-26088801-DIFF.md) |
+| 这次更新到底把 55 张表改了没 | [BUILD-26251122-DIFF](docs/builds/BUILD-26251122-DIFF.md)（51/55 逐字节未变，4 张值级见文） |
 | 工具清单与各自验证状态（依赖 / 三态） | [§3 工具清单](#3-工具清单tools) |
 | 游戏内探针怎么写（旧探针为什么"能加载但静默失效"） | [PROBE-AUTHORING](docs/engine/PROBE-AUTHORING-25988413.md) |
 | Lua 运行时 / API 面 / `Gui.*` 绘制 | [LUA-API](docs/engine/LUA-API-25988413.md) · [STINGRAY-API](docs/engine/STINGRAY-API-25988413.md) · [GUI-HUD](docs/engine/GUI-HUD-25988413.md) |
@@ -119,7 +119,7 @@
 
 | 类别 | 放什么 | 篇数 |
 |---|---|---:|
-| [`builds/`](docs/builds/) | 每个 build 的总体变化、差异、路线取舍 | 4 |
+| [`builds/`](docs/builds/) | 每个 build 的总体变化、差异、路线取舍 | 5 |
 | [`engine/`](docs/engine/) | 引擎侧：格式封装、API 面、Lua 运行时、探针、加载器、**有限数量的跨包加载** | 10 |
 | [`tables/`](docs/tables/) | 数据表与实体库的解码 / 改写 | 24 |
 | [`explosions/`](docs/explosions/) | 爆炸与弹头（玩法层 + 外观层） | 2 |
@@ -132,7 +132,8 @@
 
 | build | 日期 | 状态 | 这一版是什么 / 在它上面立起了什么 | 逐层记录 |
 |---|---|---|---|---|
-| **26088801** | 2026-10-22 | **当前** | 7.2.1 hotfix：密钥与类型库不变、55 张表 0 变化；变的是 `exe` / `game.dll` 与 bundle 打包（5 个 ±64 KB） | [BUILD-26088801-DIFF](docs/builds/BUILD-26088801-DIFF.md) |
+| **26251122** | 2026-10-29 | **当前** | 7.2.2：密钥未变、类型库逐字节相同、55 张表 **51 张逐字节不变**；4 张变化 = APEX 口径 60→20 / 拆除 15→30、战备名字表去掉 `$`、删两条音乐；**实体库未变** | [BUILD-26251122-DIFF](docs/builds/BUILD-26251122-DIFF.md) |
+| 26088801 | 2026-10-22 | 历史 | 7.2.1 hotfix：密钥与类型库不变、55 张表 0 变化；变的是 `exe` / `game.dll` 与 bundle 打包（5 个 ±64 KB） | [BUILD-26088801-DIFF](docs/builds/BUILD-26088801-DIFF.md) |
 | 25988413 | 2026-10-20 | 历史基线 | `*-25988413.md` 的实测版本：结构层（密封盒 / 内容哈希 / 块布局 / 行命名 / locid）在此立起，玩法层（实体改写 / 可选弹种 / 独立弹药池 / 爆炸弹头线）在此实机 | [BUILD-25988413](docs/builds/BUILD-25988413.md) |
 | 25480438 | 2026-10-15 | **不收录** | 只有本地备份；结论已过时会误导 | — |
 
@@ -310,7 +311,8 @@
 | `explosion_names_from_chain.py` | 爆炸行没有名字字段，改从引用链命名：投掷物 `+144/+156` → 爆炸 `+0`，输出每个爆炸行的消费方 | PyNaCl（无）+ `typelib.py` | ✓ 210 条边 / 0 悬空；103 个爆炸行有名字（97 唯一 + 6 共用） |
 | `strings_inventory.py` | 清点 `.strings` 语料：语言分布（`ThinHash` 反查 15 种语言）、每个 bundle 的 distinct 英文 blob 数、ID 并集。**只读文件头 16 字节** | 标准库 | ✓ 证明英文语料是全局唯一那 18 个 blob |
 | `table_dictionary.py` | **全表字典**：解封 55 张表 → 组/行数/步长/尾块 + 每个类型的字段偏移树（需自备 `recipient.sk`） | PyNaCl + `typelib.py` | ✓ 55/55 表解析（18 张几何完全闭合） |
-| `build_diff.py` | 更新后逐表回答「改了什么」：文件层（size/sha256）→ 封装层（比**明文**哈希）→ 结构层。只读 | PyNaCl | ✓ 25988413→26088801：55 张表 0 变化，exe/dll 哈希变 |
+| `build_diff.py` | 更新后逐表回答「改了什么」：文件层（size/sha256）→ 封装层（比**明文**哈希）→ 结构层。只读 | PyNaCl | ✓ 26088801→26251122：55 张 51 张逐字节相同、4 张变（`build-diff-26251122.json`） |
+| `table_row_diff.py` | `build_diff` 的下一层：**组 / 字节 / 值级** diff。`--style groups`（`generated_*` 表）或 `chain`（实体库）；`--stride` 把偏移换算成行号；`--match` 按数字标 ★ | 标准库 | ✓ 26251122：projectile `+0x10F18` 60→20、damage `+0x3FB4` 15→30、名字表去 `$`、music −120 B |
 | `build_geometry_diff.py` | 用旧 build 的字典几何对照当前 55 张表：多大/多组/多少行，哪张被动过一目了然 | PyNaCl | ✓ 同一次更新：identical 21 / structure-same 33 / changed 0 |
 | `build_cache.py` | 把当前 build 的 55 张表 + 类型库解封成明文缓存，**按 buildid 另存**。更新后第一件事就是跑它 | PyNaCl | ✓ 26088801：56/56 解封 |
 | `plaintext_cache_audit.py` | **查明文缓存有没有被我们自己的 mod 污染**：一次 dump 若发生在我们把负载写进 `data/game/` 之后，那份缓存里就混进了改过的表，之后所有「这张表变了没」的判断全错。两条独立判据（对部署前原版备份逐字节比 / 对锚点哈希）| 标准库 | ✓ 已实机（正是它抓出 2026-10-22 那次把自家 med-kit 实验负载误报成「唯一变化的表」） |

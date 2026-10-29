@@ -9,8 +9,8 @@
        所以"实体→组件"不用它，改用**每个组件块自己的哈希图**（一份隶属表）反查。
 
 用法
-    python tools/entity_components.py --plaintext refs/dlbin/plaintext-26088801 \\
-        --typelib refs/dlbin/plaintext-26088801/dl_library.dl_typelib \\
+    python tools/entity_components.py --plaintext refs/dlbin/plaintext-26251122 \\
+        --typelib refs/dlbin/plaintext-26251122/dl_library.dl_typelib \\
         --out refs/entity-components.json [--scan-refs VALUE ...]
 """
 from __future__ import annotations
@@ -33,12 +33,12 @@ NAMES_JSON = pathlib.Path("dl-type-names.json")
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--plaintext", default="refs/dlbin/plaintext-26088801")
-    ap.add_argument("--typelib", default="refs/dlbin/plaintext-26088801/dl_library.dl_typelib")
+    ap.add_argument("--plaintext", default="refs/dlbin/plaintext-26251122")
+    ap.add_argument("--typelib", default="refs/dlbin/plaintext-26251122/dl_library.dl_typelib")
     ap.add_argument("--out", default="refs/entity-components.json")
     ap.add_argument("--scan-refs", action="append", default=[],
                     help="在这些值里找'谁引用了它'（例如爆炸类型 68）")
-    ap.add_argument("--targets", default="refs/dlbin/plaintext-26088801/generated_explosion_settings.dl_bin",
+    ap.add_argument("--targets", default="refs/dlbin/plaintext-26251122/generated_explosion_settings.dl_bin",
                     help="被引用值的候选集合来源（默认 explosion 表的 +0 类型 id）")
     a = ap.parse_args()
 

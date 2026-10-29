@@ -39,7 +39,7 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, "..", "work", "devkit", "tools"))
 from murmur64 import murmur64, padding_word_for_hash            # noqa: E402
 
-VANILLA = r"D:\mod\refs\dlbin\plaintext-26088801\generated_stratagem_settings.dl_bin"
+VANILLA = r"D:\mod\refs\dlbin\plaintext-26251122\generated_stratagem_settings.dl_bin"
 NAMES = r"D:\mod\refs\stratagem-display-names.json"
 STRIDE = 400
 EXTRA_OFF = 0xC8          # +200 additional_stratagem（SHODAN v4.1.0 源码 MOD.extra.row）

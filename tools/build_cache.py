@@ -11,7 +11,7 @@
 
 用法
     python tools/build_cache.py --sk refs/dlbin/keys/recipient.sk
-    python tools/build_cache.py --sk <sk> --out refs/dlbin/plaintext-26088801
+    python tools/build_cache.py --sk <sk> --out refs/dlbin/plaintext-26251122
 """
 from __future__ import annotations
 

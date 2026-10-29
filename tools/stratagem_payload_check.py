@@ -33,7 +33,7 @@ import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 MOD = REPO.parent.parent
-BASE = MOD / "refs/dlbin/plaintext-26088801"
+BASE = MOD / "refs/dlbin/plaintext-26251122"
 STRAT = BASE / "generated_stratagem_settings.dl_bin"
 ENT = BASE / "generated_entities.dl_bin"
 

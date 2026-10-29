@@ -46,7 +46,7 @@ import sys
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
-BASE = pathlib.Path(r"D:/mod/refs/dlbin/plaintext-26088801")
+BASE = pathlib.Path(r"D:/mod/refs/dlbin/plaintext-26251122")
 INDEX_DEFAULT = pathlib.Path(r"D:/mod/refs/resdep/resdep-index-26088801.json")
 SOUND_DEFAULT = INDEX_DEFAULT.with_name("resdep-sound-26088801.json")
 BANKS_DEFAULT = pathlib.Path(r"D:/mod/refs/resdep/banks")

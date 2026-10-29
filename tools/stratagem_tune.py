@@ -25,7 +25,7 @@
     G7 目标行身份字段（+0 type、+40/+44/+48 本地化 ID）未变
 
 用法
-    python tools/stratagem_tune.py --plain refs/dlbin/plaintext-26088801/generated_stratagem_settings.dl_bin \
+    python tools/stratagem_tune.py --plain refs/dlbin/plaintext-26251122/generated_stratagem_settings.dl_bin \
         --name "380mm HE Barrage" --set cooldown=60 --out out/stratagem_380mm_cd60.plain.dl_bin
 """
 from __future__ import annotations

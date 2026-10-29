@@ -18,7 +18,7 @@ WHAT IT FOUND (build 26088801, 2026-10-27)
 USAGE
     python tools/xcheck_projectile_names.py \
         --wiki D:/mod/refs/wiki/wiki.sqlite \
-        --plaintext D:/mod/refs/dlbin/plaintext-26088801 \
+        --plaintext D:/mod/refs/dlbin/plaintext-26251122 \
         --csv D:/mod/refs/exports/weapon_customization_settings.csv \
         --out D:/mod/out/wiki-proj-names.json
 """
@@ -125,7 +125,7 @@ def load_delta_projectiles(plaintext: pathlib.Path) -> dict[int, int]:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="弹丸 id ↔ wiki 枚举名 + 批量数值交叉验证")
-    ap.add_argument("--plaintext", default=r"D:\mod\refs\dlbin\plaintext-26088801")
+    ap.add_argument("--plaintext", default=r"D:\mod\refs\dlbin\plaintext-26251122")
     ap.add_argument("--wiki", default=r"D:\mod\refs\wiki\wiki.sqlite")
     ap.add_argument("--csv", default=r"D:\mod\refs\exports\weapon_customization_settings.csv")
     ap.add_argument("--names", default=r"D:\mod\dl-type-names.json",

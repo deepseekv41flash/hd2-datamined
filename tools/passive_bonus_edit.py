@@ -52,7 +52,7 @@ for _s in (sys.stdout, sys.stderr):
     except Exception:                                       # noqa: BLE001
         pass
 
-DEFAULT = r"D:\mod\refs\dlbin\plaintext-26088801\generated_customization_passive_bonuses.dl_bin"
+DEFAULT = r"D:\mod\refs\dlbin\plaintext-26251122\generated_customization_passive_bonuses.dl_bin"
 PASSIVE_TYPE = 0x63CE0FEB
 HEADER = 24
 TAIL = 8

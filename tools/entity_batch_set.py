@@ -45,8 +45,8 @@ for _s in (sys.stdout, sys.stderr):
     except Exception:                                          # noqa: BLE001
         pass
 
-PLAIN = r"D:\mod\refs\dlbin\plaintext-26088801\generated_entities.dl_bin"
-TYPELIB = r"D:\mod\refs\dlbin\plaintext-26088801\dl_library.dl_typelib"
+PLAIN = r"D:\mod\refs\dlbin\plaintext-26251122\generated_entities.dl_bin"
+TYPELIB = r"D:\mod\refs\dlbin\plaintext-26251122\dl_library.dl_typelib"
 ANCHOR = 0x8E49771B181FFAA1
 TAIL = 8
 
