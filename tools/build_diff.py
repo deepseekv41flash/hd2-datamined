@@ -7,7 +7,7 @@
     大小变了不等于内容变了，内容变了不等于行数变了。逐层分开看，后面的工作才有依据。
 
 做法（三层，由便宜到贵）
-    1. 文件层：size / mtime / sha256。用 `refs/dlbin/plaintext-all` 里缓存的旧明文做对照。
+    1. 文件层：size / mtime / sha256。用 `refs/dlbin/plaintext-<上一个build>` 里缓存的旧明文做对照。
     2. 封装层：用 recipient.sk 解封，比较**明文**的 sha256 —— 这一层能区分
        "密封盒换了" 和 "表内容换了"，也能证明密钥是否还有效。
     3. 结构层：对变了的表解出 LDLD 组/行数/步长，和旧明文逐组对比，指出哪几组的行数或步长变了。
@@ -16,7 +16,7 @@
 
 用法
     python tools/build_diff.py --sk refs/dlbin/keys/recipient.sk \\
-        --old refs/dlbin/plaintext-all --out refs/build-diff.json
+        --old refs/dlbin/plaintext-26088801 --out refs/build-diff-<新build>.json
 """
 from __future__ import annotations
 
@@ -63,7 +63,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--sk", required=True, help="recipient.sk（解封用，仓库不含密钥材料）")
     ap.add_argument("--game", default=r"D:\SteamLibrary\steamapps\common\Helldivers 2")
-    ap.add_argument("--old", default="refs/dlbin/plaintext-all",
+    ap.add_argument("--old", default="refs/dlbin/plaintext-26088801",
                     help="旧 build 的明文缓存目录（文件名与 generated_*.dl_bin 对应）")
     ap.add_argument("--fingerprint", default="build-snapshot-25988413-post-update/fingerprint.json",
                     help="旧 build 的 fingerprint.json（可选，用来对 exe/dll）")
