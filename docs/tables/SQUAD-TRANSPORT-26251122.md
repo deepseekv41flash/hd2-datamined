@@ -160,6 +160,38 @@ Hulk 8 行 `+0x10=3`；Scout Strider 2 行 `+0x10=2`。
 两个都属**数据层可写**（`entity_field_set.py` 支持按组件类型 + 行键写字段），门禁与之前一致。
 ⚠ 但 2026-10-28 的三值归零已实机否证过「只靠载体参数」这条路，所以 **M1 的优先级高于 M2**。
 
+### 7.4 M1 已装盘（2026-10-29 21:3x，待实机）
+
+| 文件 | sha256 前 16 | 内容 |
+|---|---|---|
+| `generated_entities.dl_bin` | `db4fef3572cb4afa` | 从**原版**明文起，11 名 SEAF 成员的编队 `+0x18`：`0 → 0xC170DF27`（"Spawner"）。载体行**一个字没动**（保持原版 5 处 SEAF 独有值） |
+| `generated_stratagem_settings.dl_bin` | `6a9f46d8e860e774` | 额外战备链 **34(Resupply) → 106(Carpet Bomb) → 111(Scrambler) → 119(SEAF Squad)** |
+
+构建方式与门禁：
+
+- entities：`entity_field_set.py set --block 0x498CE7C7 --key <11 个 SEAF 键> --field 0x18 --type u32 --value 0xC170DF27 --expect-old 0`，
+  逐个键**链式**写了 11 次（每次输出当下一次的输入）。每次 G1/G2/G3/G4/G6/G7/G8/G9 全过；
+  最终文件 `47,259,488 B`（原版 + 92 B = 11 次 tail），原长范围内只有 **11 处 4 字节 + 1 个 payload 尺寸字节**变动。
+- strat：`stratagem_extra.py --chain 34:106,111,119`（只改 3 个 `+0xC8` + 尺寸字段，Murmur 复原 `0x04BBE33EF809862A`）。
+- 两份都过 sealed round-trip（`open-key` 解回逐字节相等）+ **盘上回读**（11 行 `+0x18` 全 `0xC170DF27`、链四跳齐全）。
+
+叫法与判读（重启后）：
+
+| 步骤 | 说明 |
+|---|---|
+| 配装 | 带上 **Resupply（补给）**——它是链的宿主 |
+| 战备栏 | 会多出 3 条：`Carpet Bomb`（**别按**，掷出会崩）、`Scrambler`、**`SEAF Squad`**（显示名缺失，图标/名字可能显示为未知） |
+| 按 SEAF Squad | 看掉什么 |
+
+| 现象 | 判读 |
+|---|---|
+| 掉出 SEAF 士兵 | **M1 成立**：成员侧挂点哈希是真病灶，119 可修 |
+| 仍然投空 | 成员挂点不是病灶 ⇒ 换 M2（载体 `+0x00`/`+0x0C` 对齐 Dropship），或资源驻留（运输机 physics 包 `5f8a1420c40203a2`、武器包 `792b2a2ba11ae85d` 未声明） |
+| 紫问号 / 半透明 | 资源没驻留 ⇒ 下一发补 `+0xA8` 声明 |
+| 崩溃 | 立刻回滚，把 dump 给我（这是新现象） |
+
+回滚：`dlbin_deploy.py restore --file generated_entities.dl_bin` / `restore --file generated_stratagem_settings.dl_bin`。
+
 ## 5. 复现
 
 ```bash
