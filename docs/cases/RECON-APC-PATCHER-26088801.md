@@ -202,3 +202,16 @@ HD2 里座位、挂点、炮塔位置这些几何全在**车辆的 `unit`（= St
 
 **若要真正回答授权问题**，唯一干净的做法是**反向单变量**：把 APC 完整装上（210 MB 资源 + 备份 `9ba626afa44a3aa3.patch_0`），
 再把它的 `Interactable` 换回 TD-220 版，看乘客位是否失去武器；成本明显更高。
+
+### 10 完整部署（2026-10-29，手工安装其载荷，未运行其 exe）
+
+| 项 | 值 |
+|---|---|
+| 备份 | `D:\mod\backups\apc-mod-20261029\9ba626afa44a3aa3.patch_0*`（原 23,120 B 的 loader/旧 mod 槽） |
+| 载荷 | 7 组 `patch_0` 三件套（24 文件）已拷入 `data/`；`9ba626…patch_0`=`416e2519`、`68ebdce3…patch_0`=`cfa6c53e` 与 manifest 一致 |
+| 实体表 | `b2efae2a`（= `entities-template.bin` 重新封包，APC 版） |
+| 战备表 | `5f96a6da`（t17：id138 `slot0`=TD-220、`+0xA8`=`68ebdce3f7498179`，用于召唤） |
+| 未做 | 未跑 `apc patcher.exe`；未启用"自定义物理" |
+
+**注意**：模组覆盖了 `9ba626afa44a3aa3.patch_0`（本机原有 23,120 B）。若发现其它旧 mod 失效，
+从上面的备份目录把三件拷回即可。
