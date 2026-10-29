@@ -488,3 +488,42 @@ python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin 
 **这次同时证明的两件事**：
 1. **换壳机制在新 build（26251122）上完好**，且**旧 build 的第三方资源补丁仍可用**（7 组 `patch_0` 直接生效）；
 2. "换壳"是**模块化**的：宿主行可成套移植，子实体（炮塔/武器）的改动可以按需单独补。
+
+### 13.9 「LAV 壳」标准配方（结项，2026-10-29；读数时刻 20:12）
+
+**当前盘面（保留可用状态，不回滚）**
+
+| 项 | 值 |
+|---|---|
+| `data/` 补丁 | 模组 **7 组 `patch_0` 三件套（21 文件）**，无其它 `.patch_*` |
+| `generated_entities.dl_bin` | **`b7cd66e45d5b5b28`** |
+| `generated_stratagem_settings.dl_bin` | **`7bed7c4ae91ce268`**（行 52 / 138 → 宿主，`+0xA8`=LAV 包；链 `34→106→111→138`） |
+| 实机 | APC 外观、能上车、能开、炮塔 + 两挺 Stalwart 可用；**炮塔弹容 75（vanilla；模组是 500，未补）** |
+
+**复跑步骤**
+
+1. **资源**：把 `D:\mod\backups\pre-update-26251122-20261029\patches\` 里这 7 个包 id 的 `patch_0` 三件套拷回 `data/`：
+   `007e093ca718ca1a`、`495cd5b6043a104d`、`4b7bd0cbf5b59fcf`、`68ebdce3f7498179`、`6a3eecfddce28fe8`、`9ba626afa44a3aa3`、`c766ddd8a6875c02`
+2. **实体移植**：`tools/entity_transplant.py --spec out/gater2625/lav-host.spec.json --out out/gater2625/lav-host.plain`
+   （供体 = 模组模板 `0x16474112801385B6`，宿主 = `0xB0C9FAF4AF8903F9`，壳 = LAV `0x8C33C20637D2A687`，14 行 + 悬空改写 → `0x4A182741`）
+3. **战备**：`stratagem_extra.py --chain 34:106,111,138` → 再 `stratagem_repair.py --payload 52:0=0xB0C9FAF4AF8903F9 --set 52:0xA8=0x68EBDCE3F7498179`（138 行同改）
+4. **封/装**：`dlbin_seal.py seal-key` → `dlbin_deploy.py install`（换 build 后首次要 `--accept-current`，它会把新 build 原版另存 `.replaced`）
+5. **回读**：`Unit=0x8C33C20637D2A687` / `SeatTID=31` / `Mount=[炮塔 0xD336BA1CAD16769F@0xE9DC426A, Stalwart×2]` / 行 52·138 的 `+0xA8=0x68EBDCE3F7498179`
+
+**四条硬约束（本轮踩出来的）**
+
+1. **召唤行的 `+0xA8` 必须声明"壳所在的包"**——漏了不会报错，会在生成时 AV（`game.dll+0x7045B1`，2026-10-29 两次 dump 实证）；
+2. **`SeatCollectionComponentData +0x00`（`TransitionId`）必须与壳一致**：LAV=31、坦克=43/44、GATER=33；不一致会无法上车（§11.4 实证）；
+3. **子实体的改动不在宿主移植范围**：模组把弹容写在炮塔实体上（`0xD336BA1CAD16769F.WM +0x88` 75→500），要单独补；
+4. **旧 build 的第三方 `patch_0` 在新 build 仍生效**（本轮 26251122 实测）——但**旧封包 `.dl_bin` 不可复用**，必须按新明文重做。
+
+**回滚**
+
+```bash
+python tools/dlbin_deploy.py restore --file generated_entities.dl_bin
+python tools/dlbin_deploy.py restore --file generated_stratagem_settings.dl_bin
+rm "/d/SteamLibrary/steamapps/common/Helldivers 2/data/"*.patch_*
+```
+
+**结项状态**：GATER 壳换壳线 **数据层封存**（自毁既不在挂载物、也不在壳 SM，两嫌疑均排除）；
+"换壳"作为**机制**已验证可用并沉淀为本配方。
