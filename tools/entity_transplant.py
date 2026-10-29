@@ -93,8 +93,13 @@ def shell_nodes(unit_id: int, package: str | None) -> set[int]:
     from srkit.resources.base import get_codec                      # noqa: E402
     from srkit.util.ids import NameTable                            # noqa: E402
 
-    repo = Repository.open(GAME)
-    names = repo.package_names() if package is None else [package]
+    # package 可以给「包 id」，也可以给「一个 .patch_N 文件路径」（mod 自带的壳资源只在补丁里）
+    if package and pathlib.Path(package).is_file():
+        repo = Repository.open(package)
+        names = repo.package_names()
+    else:
+        repo = Repository.open(GAME)
+        names = repo.package_names() if package is None else [package]
     for name in names:
         try:
             pkg = repo.load_package(name, load_blobs=False)
