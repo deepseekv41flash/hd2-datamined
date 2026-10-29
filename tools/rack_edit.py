@@ -14,6 +14,7 @@
     G1 长度 = 原长 + pad + 8          G2 差异 ⊆ 声明字段 ∪ 最后一块尺寸字段 ∪ 校正字
     G3 重算 Murmur64A == 锚点         G4 每个声明字段读回一致
     G5 校正字 8 对齐                  G6 容器重解析自洽
+    G7 旧值 == 期望（`--expect-slot 0=0x…` / `spawn=1`）
 
 用法
     python tools/rack_edit.py --plain r3.plain --rack 29 \
@@ -44,7 +45,8 @@ def main() -> int:
     ap.add_argument("--rack", type=int, required=True)
     ap.add_argument("--slot", action="append", default=[], help="N=item十六进制，可重复")
     ap.add_argument("--spawn", type=int, default=None, help="新的 spawn_payload_size（+0x22C）")
-    ap.add_argument("--expect-slot", action="append", default=[], help="N=旧值，可重复（G7）")
+    ap.add_argument("--expect-slot", action="append", default=[],
+                    help="N=旧值，可重复（G7）；写 `spawn=N` 可校验 +0x22C 的旧值")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
 
@@ -88,7 +90,8 @@ def main() -> int:
     want = {}
     for spec in a.expect_slot:
         k, v = spec.split("=", 1)
-        want[f"slot{int(k, 0)}"] = int(v, 0)
+        key = "spawn" if k.strip().lower() == "spawn" else f"slot{int(k, 0)}"
+        want[key] = int(v, 0)
     if want:
         bad = []
         for off, (label, old, _new) in declared.items():

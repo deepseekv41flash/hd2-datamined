@@ -1,0 +1,2043 @@
+{
+ "build": "plaintext-26251122",
+ "table": "HellpodRackComponentData",
+ "type": "0xA98BB156",
+ "rows": 73,
+ "slots_per_row": 8,
+ "spawn_distribution": {
+  "1": 50,
+  "2": 18,
+  "4": 4,
+  "6": 1
+ },
+ "racks": [
+  {
+   "row": 0,
+   "key": "0xB52BEAAE4F85C391",
+   "spawn": 1,
+   "random": 0,
+   "authored": 0,
+   "effective": 0,
+   "capacity": "单件",
+   "pod": "（空 rack，未配置）",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": []
+  },
+  {
+   "row": 1,
+   "key": "0xCA6E81E2B3E22B18",
+   "spawn": 2,
+   "random": 0,
+   "authored": 4,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "TEAM WEAPONS. AIR BURST ROCKET LAUNCHER",
+   "stratagem": "TEAM WEAPONS. AIR BURST ROCKET LAUNCHER",
+   "stratagem_id": 56,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x26E40437EA275296",
+     "label": "Airburst Rocket Launcher [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xE75CD68E858A12AC",
+     "label": "Airburst Rocket Backpack [backpack]",
+     "side": 1
+    },
+    {
+     "slot": 2,
+     "item": "0x26E40437EA275296",
+     "label": "Airburst Rocket Launcher [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 3,
+     "item": "0xE75CD68E858A12AC",
+     "label": "Airburst Rocket Backpack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 2,
+   "key": "0x31400A6A3003E29C",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "B-1 Supply Pack pod",
+   "stratagem": "BACKPACK. SUPPLY BACKPACK",
+   "stratagem_id": 104,
+   "sdk": "B-1 Supply Pack pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x4EF9A47109239A58",
+     "label": "Supply Pack [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x4EF9A47109239A58",
+     "label": "Supply Pack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 3,
+   "key": "0x4CF9D9B3F6813F52",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "ARC-3 Arc Thrower pod",
+   "stratagem": "TEAM WEAPONS. ARC THROWER ",
+   "stratagem_id": 71,
+   "sdk": "ARC-3 Arc Thrower pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x96DE9CD50F7306E6",
+     "label": "Arc Thrower [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x96DE9CD50F7306E6",
+     "label": "Arc Thrower [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 4,
+   "key": "0x5F41C4DCABE95421",
+   "spawn": 2,
+   "random": 0,
+   "authored": 4,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "TEAM WEAPONS. AUTOMATIC CANNON",
+   "stratagem": "TEAM WEAPONS. AUTOMATIC CANNON",
+   "stratagem_id": 25,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xA8CFFB316F0B5C5F",
+     "label": "Autocannon [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xE60AE045E0090F4C",
+     "label": "Autocannon Backpack [backpack]",
+     "side": 1
+    },
+    {
+     "slot": 2,
+     "item": "0xA8CFFB316F0B5C5F",
+     "label": "Autocannon [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 3,
+     "item": "0xE60AE045E0090F4C",
+     "label": "Autocannon Backpack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 5,
+   "key": "0x3A50B58B0553056A",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "SH-20 Ballistic Shield Backpack pod",
+   "stratagem": "BACKPACK. BALLISTIC SHIELD BACKPACK",
+   "stratagem_id": 99,
+   "sdk": "SH-20 Ballistic Shield Backpack pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x967ED15E0BAE363B",
+     "label": "Ballistic Shield Backpack [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x967ED15E0BAE363B",
+     "label": "Ballistic Shield Backpack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 6,
+   "key": "0x2ADE442313B5B7B3",
+   "spawn": 2,
+   "random": 0,
+   "authored": 2,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "BACKPACK. BALLISTIC SHIELD BACKPACK",
+   "stratagem": "BACKPACK. BALLISTIC SHIELD BACKPACK",
+   "stratagem_id": 99,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x967ED15E0BAE363B",
+     "label": "Ballistic Shield Backpack [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x967ED15E0BAE363B",
+     "label": "Ballistic Shield Backpack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 7,
+   "key": "0x2AB2507588D54B8B",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "SH-20 Ballistic Shield Backpack pod",
+   "stratagem": "BACKPACK. BALLISTIC SHIELD BACKPACK",
+   "stratagem_id": 99,
+   "sdk": "SH-20 Ballistic Shield Backpack pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x5F9AEAC72B738298",
+     "label": "Ballistic Shield Backpack [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x5F9AEAC72B738298",
+     "label": "Ballistic Shield Backpack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 8,
+   "key": "0xB7791DA91F13488C",
+   "spawn": 2,
+   "random": 0,
+   "authored": 2,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "GL-28 Belt-Fed Grenade Launcher pod",
+   "stratagem": "TEAM WEAPONS. BELT FED GRENADE LAUNCHER",
+   "stratagem_id": 130,
+   "sdk": "GL-28 Belt-Fed Grenade Launcher pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x88C2D09AD85A7C9F",
+     "label": "Belt-Fed Grenade Launcher [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xBB4B15B588F974FD",
+     "label": "Belt-Fed Grenade Launcher Backpack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 9,
+   "key": "0x0AC9CDDBE8C64851",
+   "spawn": 2,
+   "random": 0,
+   "authored": 2,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "TEAM WEAPONS. C4",
+   "stratagem": "TEAM WEAPONS. C4",
+   "stratagem_id": 14,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x51F50D6321F52F3D",
+     "label": "C4 Pack [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x2A18F81C44A26771",
+     "label": "C4 Pack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 10,
+   "key": "0xD00A26BA08786344",
+   "spawn": 1,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "SSSD Hard Drive 舱",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x33F2BCDAE3A12592",
+     "label": "SSSD Hard Drive [interactable]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 11,
+   "key": "0xBBD57DF3E5B15ED8",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "TEAM WEAPONS. CHEM GUN",
+   "stratagem": "TEAM WEAPONS. CHEM GUN",
+   "stratagem_id": 63,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x88F61AFFF48AC8A4",
+     "label": "Sterilizer [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x88F61AFFF48AC8A4",
+     "label": "Sterilizer [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 12,
+   "key": "0x0800B8C12FF96A8E",
+   "spawn": 1,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "未命名工事/载具舱",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x29AE906EA485A7FA",
+     "label": "未知 [interactable]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 13,
+   "key": "0x89CFD784797A7621",
+   "spawn": 4,
+   "random": 0,
+   "authored": 4,
+   "effective": 4,
+   "capacity": "多件",
+   "pod": "悬空载荷 ×4 舱",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x200DC4955BD13C54",
+     "label": "0x200DC4955BD13C54",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x2DA2D250E59E37AD",
+     "label": "0x2DA2D250E59E37AD",
+     "side": 1
+    },
+    {
+     "slot": 2,
+     "item": "0xB4424B37E87A68BE",
+     "label": "0xB4424B37E87A68BE",
+     "side": 2
+    },
+    {
+     "slot": 3,
+     "item": "0x4DE030AA465BB790",
+     "label": "0x4DE030AA465BB790",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 14,
+   "key": "0x6B6E7FE1B931393C",
+   "spawn": 1,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "MISSIONS. DARK FLUID BACKPACK",
+   "stratagem": "MISSIONS. DARK FLUID BACKPACK",
+   "stratagem_id": 30,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x073270650F859DD0",
+     "label": "Chemical Backpack [backpack]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 15,
+   "key": "0x09183066C4EBCE28",
+   "spawn": 1,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "SH-51 Directional Shield pod",
+   "stratagem": "BACKPACK. DIRECTIONAL ENERGY SHIELD",
+   "stratagem_id": 70,
+   "sdk": "SH-51 Directional Shield pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xA4E796F84801B40A",
+     "label": "Directional Shield [backpack]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 16,
+   "key": "0x4C7E4680FF843A1B",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "LIFT-182 Warp Pack pod",
+   "stratagem": "BACKPACK. DISPLACEMENT BACKPACK",
+   "stratagem_id": 24,
+   "sdk": "LIFT-182 Warp Pack pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xB49756795D9B0E68",
+     "label": "Warp Pack [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xB49756795D9B0E68",
+     "label": "Warp Pack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 17,
+   "key": "0xE86BAA795FA4E457",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "AX/AR-23 Guard Dog pod",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "AX/AR-23 Guard Dog pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xE88A5AA58ABB9D81",
+     "label": "Guard Dog [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xE88A5AA58ABB9D81",
+     "label": "Guard Dog [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 18,
+   "key": "0x41436D438139F786",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "AX/FLAM-75 Hot Dog pod",
+   "stratagem": "BACKPACK. GUARD DOG FLAMETHROWER (Drone)",
+   "stratagem_id": 59,
+   "sdk": "AX/FLAM-75 Hot Dog pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x3015626AA69F8D4D",
+     "label": "Hot Dog [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x3015626AA69F8D4D",
+     "label": "Hot Dog [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 19,
+   "key": "0xD8E278355CF29EF4",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "AX/TX-13 Dog Breath pod",
+   "stratagem": "BACKPACK. GUARD DOG GAS PROJECTOR (Drone)",
+   "stratagem_id": 146,
+   "sdk": "AX/TX-13 Dog Breath pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xBFFCB4CD971A8EDA",
+     "label": "Dog Breath [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xBFFCB4CD971A8EDA",
+     "label": "Dog Breath [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 20,
+   "key": "0xDE6F09BC8EAEBE27",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "AX/LAS-5 Rover pod",
+   "stratagem": "BACKPACK. Laser Rifle (Drone)",
+   "stratagem_id": 118,
+   "sdk": "AX/LAS-5 Rover pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xAF9B683CCB6DDC02",
+     "label": "Rover [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xAF9B683CCB6DDC02",
+     "label": "Rover [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 21,
+   "key": "0x0807D288AD22601B",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "AX/AR-23 Guard Dog pod",
+   "stratagem": "BACKPACK. GUARD DOG (Drone)",
+   "stratagem_id": 76,
+   "sdk": "AX/AR-23 Guard Dog pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x255EBC5767D7CEEC",
+     "label": "Guard Dog [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x255EBC5767D7CEEC",
+     "label": "Guard Dog [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 22,
+   "key": "0x72DB04413D4AB0F0",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "AX/ARC-3 K-9 pod",
+   "stratagem": "BACKPACK. GUARD DOG (Drone) Stun",
+   "stratagem_id": 2,
+   "sdk": "AX/ARC-3 K-9 pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xC28DA712B12E3DFA",
+     "label": "K-9 [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xC28DA712B12E3DFA",
+     "label": "K-9 [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 23,
+   "key": "0xF88D61A8FE1E0766",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "SH-32 Shield Generator Pack pod",
+   "stratagem": "BACKPACK.  GENERATOR PACK",
+   "stratagem_id": 44,
+   "sdk": "SH-32 Shield Generator Pack pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x12C8D71AC3897A5C",
+     "label": "Shield Generator Pack [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x12C8D71AC3897A5C",
+     "label": "Shield Generator Pack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 24,
+   "key": "0x4E52F730432CDB1E",
+   "spawn": 1,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "40-K Meltagun pod",
+   "stratagem": "TEAM WEAPONS. SHARK ENERGY WEAPON",
+   "stratagem_id": 84,
+   "sdk": "40-K Meltagun pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x6CFCC7F8801A0266",
+     "label": "Meltagun [support_weapon]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 25,
+   "key": "0xC87555EED1E9F092",
+   "spawn": 2,
+   "random": 0,
+   "authored": 2,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "MGX-42 Bullet Storm pod",
+   "stratagem": "TEAM WEAPONS. EXPENDABLE MACHINEGUN",
+   "stratagem_id": 102,
+   "sdk": "MGX-42 Bullet Storm pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xB16C9D490AA59B77",
+     "label": "Bullet Storm [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xB16C9D490AA59B77",
+     "label": "Bullet Storm [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 26,
+   "key": "0x8A9E543022C18092",
+   "spawn": 2,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "成对",
+   "pod": "EAT-411 Leveller pod",
+   "stratagem": "TEAM WEAPONS. EXPENDABLE MASSIVE ROCKET LAUNCHER",
+   "stratagem_id": 16,
+   "sdk": "EAT-411 Leveller pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x7617642765AC38C7",
+     "label": "Leveller [support_weapon]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 27,
+   "key": "0x20AAFC3A504D2E5F",
+   "spawn": 2,
+   "random": 0,
+   "authored": 2,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "EAT-700 Expendable Napalm pod",
+   "stratagem": "TEAM WEAPONS. EXPENDABLE NAPALM LAUNCHER",
+   "stratagem_id": 40,
+   "sdk": "EAT-700 Expendable Napalm pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xB2B5E0D185605F9E",
+     "label": "Expendable Napalm [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xB2B5E0D185605F9E",
+     "label": "Expendable Napalm [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 28,
+   "key": "0xC57F85252B7D853B",
+   "spawn": 2,
+   "random": 0,
+   "authored": 4,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "TEAM WEAPONS. SPEAR",
+   "stratagem": "TEAM WEAPONS. SPEAR",
+   "stratagem_id": 78,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x25AA2FD4643CF4EE",
+     "label": "Spear [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x8EC3026B5F2E579A",
+     "label": "Spear Backpack [backpack]",
+     "side": 1
+    },
+    {
+     "slot": 2,
+     "item": "0x25AA2FD4643CF4EE",
+     "label": "Spear [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 3,
+     "item": "0x8EC3026B5F2E579A",
+     "label": "Spear Backpack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 29,
+   "key": "0x0A60397B7409995E",
+   "spawn": 2,
+   "random": 0,
+   "authored": 4,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "TEAM WEAPONS. WASP",
+   "stratagem": "TEAM WEAPONS. WASP",
+   "stratagem_id": 100,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xCC786F6491FE7E65",
+     "label": "W.A.S.P. Launcher [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xB8FEB0CC191C1EF3",
+     "label": "W.A.S.P. Launcher Backpack [backpack]",
+     "side": 1
+    },
+    {
+     "slot": 2,
+     "item": "0xCC786F6491FE7E65",
+     "label": "W.A.S.P. Launcher [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 3,
+     "item": "0xB8FEB0CC191C1EF3",
+     "label": "W.A.S.P. Launcher Backpack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 30,
+   "key": "0xE90F771A36FB441E",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "FLAM-40 Flamethrower pod",
+   "stratagem": "TEAM WEAPONS. FLAMETHROWER",
+   "stratagem_id": 115,
+   "sdk": "FLAM-40 Flamethrower pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x39AB99895147A3BF",
+     "label": "Flamethrower [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x39AB99895147A3BF",
+     "label": "Flamethrower [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 31,
+   "key": "0x20225DEE487C9F5F",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "GL-21 Grenade Launcher pod",
+   "stratagem": "TEAM WEAPONS. GRENADE LAUNCHER",
+   "stratagem_id": 83,
+   "sdk": "GL-21 Grenade Launcher pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x02EECD0B1FA49630",
+     "label": "Grenade Launcher [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x02EECD0B1FA49630",
+     "label": "Grenade Launcher [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 32,
+   "key": "0x2F67BF9C4F560C02",
+   "spawn": 1,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "GL-52 De-Escalator pod",
+   "stratagem": "TEAM WEAPONS. GRENADE LAUNCHER TACTICAL",
+   "stratagem_id": 134,
+   "sdk": "GL-52 De-Escalator pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xFE3B29B2CFA63F9B",
+     "label": "De-Escalator [support_weapon]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 33,
+   "key": "0x5CAF553BA7EA1429",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "S-11 Speargun pod",
+   "stratagem": "TEAM WEAPONS. HARPOON GUN ",
+   "stratagem_id": 116,
+   "sdk": "S-11 Speargun pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x3828E2051AA9E897",
+     "label": "Speargun [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x3828E2051AA9E897",
+     "label": "Speargun [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 34,
+   "key": "0xCA4F3FC268F449D5",
+   "spawn": 2,
+   "random": 0,
+   "authored": 2,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "B/FLAM-80 Cremator pod",
+   "stratagem": "TEAM WEAPONS. HEAVY FLAMETHROWER",
+   "stratagem_id": 90,
+   "sdk": "B/FLAM-80 Cremator pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x78A8185F63A70795",
+     "label": "Cremator [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x43EB1C3C1A1860E0",
+     "label": "Cremator Backpack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 35,
+   "key": "0x0FD8B759412815DD",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "MG-206 Heavy Machine Gun pod",
+   "stratagem": "TEAM WEAPONS. HEAVY MACHINEGUN",
+   "stratagem_id": 33,
+   "sdk": "MG-206 Heavy Machine Gun pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x2152D5147B0AC418",
+     "label": "Heavy Machine Gun [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x2152D5147B0AC418",
+     "label": "Heavy Machine Gun [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 36,
+   "key": "0x77C52E494527AA8A",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "B-100 Portable Hellbomb pod",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "B-100 Portable Hellbomb pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x9ACE8638421ABC8E",
+     "label": "Portable Hellbomb [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x9ACE8638421ABC8E",
+     "label": "Portable Hellbomb [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 37,
+   "key": "0x52DCE8A110418742",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "LIFT-860 Hover Pack pod",
+   "stratagem": "BACKPACK. HOVERPACK BACKPACK",
+   "stratagem_id": 57,
+   "sdk": "LIFT-860 Hover Pack pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x5EC80F4F1CDB66CF",
+     "label": "HOVER PACK [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x5EC80F4F1CDB66CF",
+     "label": "HOVER PACK [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 38,
+   "key": "0x0E9D35CD5C0217C2",
+   "spawn": 1,
+   "random": 0,
+   "authored": 0,
+   "effective": 0,
+   "capacity": "单件",
+   "pod": "（空 rack，未配置）",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": []
+  },
+  {
+   "row": 39,
+   "key": "0xA6A8273F408D0309",
+   "spawn": 1,
+   "random": 1,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "随机",
+   "pod": "Guard Dog 舱（随机变体）",
+   "stratagem": "BACKPACK. GUARD DOG (Drone)",
+   "stratagem_id": 76,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x255EBC5767D7CEEC",
+     "label": "Guard Dog [backpack]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 40,
+   "key": "0x61353DF120F27732",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "LIFT-850 Jump Pack pod",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "LIFT-850 Jump Pack pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x59C5CA839449B379",
+     "label": "Jump Pack [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x59C5CA839449B379",
+     "label": "Jump Pack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 41,
+   "key": "0xFDE262593307CA2F",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "LAS-98 Laser Cannon pod",
+   "stratagem": "TEAM WEAPONS. LASER CANNON",
+   "stratagem_id": 65,
+   "sdk": "LAS-98 Laser Cannon pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xD54B9505C0F72873",
+     "label": "Laser Cannon [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xD54B9505C0F72873",
+     "label": "Laser Cannon [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 42,
+   "key": "0xA0E691598F32932F",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "MLS-4X Commando pod",
+   "stratagem": "TEAM WEAPONS. COMMANDO",
+   "stratagem_id": 6,
+   "sdk": "MLS-4X Commando pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x5990123D142B16CB",
+     "label": "Commando [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x5990123D142B16CB",
+     "label": "Commando [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 43,
+   "key": "0x67AC082FF6D142F3",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "LAS-99 Quasar Cannon pod",
+   "stratagem": "TEAM WEAPONS. LASER PULSE CANNON",
+   "stratagem_id": 153,
+   "sdk": "LAS-99 Quasar Cannon pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x35A61296619CC47E",
+     "label": "Quasar Cannon [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x35A61296619CC47E",
+     "label": "Quasar Cannon [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 44,
+   "key": "0x2BECC6299FA6BD20",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "TEAM WEAPONS. LASER RIFLE ION",
+   "stratagem": "TEAM WEAPONS. LASER RIFLE ION",
+   "stratagem_id": 66,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x73D84EAAE8C75342",
+     "label": "Nova [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x73D84EAAE8C75342",
+     "label": "Nova [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 45,
+   "key": "0x0DC7A18342B62BEC",
+   "spawn": 2,
+   "random": 0,
+   "authored": 2,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "EAT-17 Expendable Anti-Tank pod",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "EAT-17 Expendable Anti-Tank pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x80932FA0ED6901D3",
+     "label": "Expendable Anti-Tank [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x80932FA0ED6901D3",
+     "label": "Expendable Anti-Tank [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 46,
+   "key": "0x31C4DD88C1450282",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "M-105 Stalwart pod",
+   "stratagem": "TEAM WEAPONS. LIGHT MACHINE GUN",
+   "stratagem_id": 13,
+   "sdk": "M-105 Stalwart pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xA6A735ACCB4A327F",
+     "label": "Stalwart [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xA6A735ACCB4A327F",
+     "label": "Stalwart [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 47,
+   "key": "0x94C5114EBA59AA21",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "MG-43 Machine Gun pod",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x11C27D3BABB38956",
+     "label": "Machine Gun [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x11C27D3BABB38956",
+     "label": "Machine Gun [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 48,
+   "key": "0x5429EE4183CC2C2F",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "悬空载荷 ×2 舱",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xD961F2F803F61692",
+     "label": "0xD961F2F803F61692",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xD961F2F803F61692",
+     "label": "0xD961F2F803F61692",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 49,
+   "key": "0xB3F6EC87073AAFEC",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "Medic Backpack (reward variant) pod",
+   "stratagem": "PRESIDENT REWARDS. MEDIC BACKPACK",
+   "stratagem_id": 20,
+   "sdk": "Medic Backpack (reward variant) pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x0A55E504092B981D",
+     "label": "MEDIC BACKPACK [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x0A55E504092B981D",
+     "label": "MEDIC BACKPACK [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 50,
+   "key": "0x7FA006885812A756",
+   "spawn": 1,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "CQC-9 Defoliation Tool pod",
+   "stratagem": "TEAM WEAPONS. CHAINSAW GREATSWORD",
+   "stratagem_id": 53,
+   "sdk": "CQC-9 Defoliation Tool pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xBF4CFD2AEABFB5A4",
+     "label": "Defoliation Tool [support_weapon]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 51,
+   "key": "0xEB95609DCBAD53FE",
+   "spawn": 1,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "CQC-1 One True Flag pod",
+   "stratagem": "TEAM WEAPONS. MELEE FLAG",
+   "stratagem_id": 117,
+   "sdk": "CQC-1 One True Flag pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xB0F1B354BA1D38D8",
+     "label": "One True Flag [support_weapon]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 52,
+   "key": "0x8DB8B823889324F9",
+   "spawn": 1,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "CQC-20 Breaching Hammer pod",
+   "stratagem": "TEAM WEAPONS. SLEDGE HAMMER",
+   "stratagem_id": 103,
+   "sdk": "CQC-20 Breaching Hammer pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x5F3EC9BDA2BD8553",
+     "label": "Breaching Hammer [support_weapon]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 53,
+   "key": "0x73B63D637973C7A4",
+   "spawn": 2,
+   "random": 0,
+   "authored": 2,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "M-1000 Maxigun pod",
+   "stratagem": "TEAM WEAPONS. MINIGUN",
+   "stratagem_id": 113,
+   "sdk": "M-1000 Maxigun pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x43A58CB89CFA197C",
+     "label": "Maxigun [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x056DE1C5E21E723E",
+     "label": "Maxigun Backpack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 54,
+   "key": "0xDE18775FA447A9BF",
+   "spawn": 2,
+   "random": 0,
+   "authored": 2,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "MS-11 Solo Silo pod",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xDDDB2910FF2B24E9",
+     "label": "Solo Silo [unit]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xFC13460592CA79AA",
+     "label": "Solo Silo Targeting Remote [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 55,
+   "key": "0x46B9E3BE0AE9972E",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "PLAS-45 Epoch pod",
+   "stratagem": "TEAM WEAPONS. PLASMA BLASTER",
+   "stratagem_id": 46,
+   "sdk": "PLAS-45 Epoch pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xE8D5F49AD7780E54",
+     "label": "Epoch [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xE8D5F49AD7780E54",
+     "label": "Epoch [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 56,
+   "key": "0xB62620AE2CD89F49",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "RS-422 Railgun pod",
+   "stratagem": "TEAM WEAPONS. RAILGUN ",
+   "stratagem_id": 58,
+   "sdk": "RS-422 Railgun pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x2E9D0BDC48B09E60",
+     "label": "Railgun [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x2E9D0BDC48B09E60",
+     "label": "Railgun [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 57,
+   "key": "0xDDEE9646723E09D3",
+   "spawn": 2,
+   "random": 0,
+   "authored": 4,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "GR-8 Recoilless Rifle pod",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "GR-8 Recoilless Rifle pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x9F80D67A12A7E40F",
+     "label": "Recoilless Rifle [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x96DFC6542AA22980",
+     "label": "Recoilless Rifle Backpack [backpack]",
+     "side": 1
+    },
+    {
+     "slot": 2,
+     "item": "0x9F80D67A12A7E40F",
+     "label": "Recoilless Rifle [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 3,
+     "item": "0x96DFC6542AA22980",
+     "label": "Recoilless Rifle Backpack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 58,
+   "key": "0x44FD108C1BA32019",
+   "spawn": 2,
+   "random": 0,
+   "authored": 4,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "MISSIONS. REMOTE EXPLOSIVES",
+   "stratagem": "MISSIONS. REMOTE EXPLOSIVES",
+   "stratagem_id": 89,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x38CB9C758E07BC58",
+     "label": "未知 [interactable]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x8E7968D7E7AA4EAB",
+     "label": "未知 [other_item]",
+     "side": 1
+    },
+    {
+     "slot": 2,
+     "item": "0x38CB9C758E07BC58",
+     "label": "未知 [interactable]",
+     "side": 2
+    },
+    {
+     "slot": 3,
+     "item": "0x8E7968D7E7AA4EAB",
+     "label": "未知 [other_item]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 59,
+   "key": "0x9DE2C3A3C9A6353E",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "MISSIONS. SHOULDER MOUNTED CAMERA",
+   "stratagem": "MISSIONS. SHOULDER MOUNTED CAMERA",
+   "stratagem_id": 81,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x372481E910C05A76",
+     "label": "TACTICAL VIDEO CAMERA [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x372481E910C05A76",
+     "label": "TACTICAL VIDEO CAMERA [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 60,
+   "key": "0x891ADA7D553B69DB",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "APW-1 Anti-Materiel Rifle pod",
+   "stratagem": "TEAM WEAPONS. SNIPER",
+   "stratagem_id": 144,
+   "sdk": "APW-1 Anti-Materiel Rifle pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x89C5493E08CA4207",
+     "label": "Anti-Materiel Rifle [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x89C5493E08CA4207",
+     "label": "Anti-Materiel Rifle [support_weapon]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 61,
+   "key": "0x77BB9410010B0F6E",
+   "spawn": 2,
+   "random": 0,
+   "authored": 4,
+   "effective": 2,
+   "capacity": "成对",
+   "pod": "TEAM WEAPONS. SNIPER RIFLE DUO (APEX)",
+   "stratagem": "TEAM WEAPONS. SNIPER RIFLE DUO (APEX)",
+   "stratagem_id": 28,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xB814EECE17533BC4",
+     "label": "Apex [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x0949EEB3DC920324",
+     "label": "Apex Backpack [backpack]",
+     "side": 1
+    },
+    {
+     "slot": 2,
+     "item": "0xB814EECE17533BC4",
+     "label": "Apex [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 3,
+     "item": "0x0949EEB3DC920324",
+     "label": "Apex Backpack [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 62,
+   "key": "0xC18C1301580FA0C4",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "悬空载荷 ×2 舱",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xB95BD5148316F8DD",
+     "label": "0xB95BD5148316F8DD",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0xB95BD5148316F8DD",
+     "label": "0xB95BD5148316F8DD",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 63,
+   "key": "0x96615499993B1E16",
+   "spawn": 1,
+   "random": 0,
+   "authored": 2,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "Resupply 物件舱（任务）",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x35F50DEC0EC647C6",
+     "label": "Resupply [backpack]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x35F50DEC0EC647C6",
+     "label": "Resupply [backpack]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 64,
+   "key": "0xD23393AF036CC727",
+   "spawn": 1,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "任务物件舱（ObjectiveCarry）",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xC8F9A2233048B836",
+     "label": "未知 [interactable]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 65,
+   "key": "0xBB3AFFFB572C3488",
+   "spawn": 2,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "成对",
+   "pod": "悬空载荷 ×1 舱",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xF8A8B17708C06606",
+     "label": "0xF8A8B17708C06606",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 66,
+   "key": "0xE310DABABD5E36AF",
+   "spawn": 1,
+   "random": 0,
+   "authored": 1,
+   "effective": 1,
+   "capacity": "单件",
+   "pod": "SSSD Hard Drive 舱",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x3E993C23A25E6B88",
+     "label": "SSSD Hard Drive [interactable]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 67,
+   "key": "0x5052EC6A928CCF1A",
+   "spawn": 4,
+   "random": 0,
+   "authored": 4,
+   "effective": 4,
+   "capacity": "多件",
+   "pod": "Resupply pod（补给舱）",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0xA94913CA014F7579",
+     "label": "SUPPLIES [interactable]",
+     "side": 1
+    },
+    {
+     "slot": 1,
+     "item": "0xA94913CA014F7579",
+     "label": "SUPPLIES [interactable]",
+     "side": 2
+    },
+    {
+     "slot": 2,
+     "item": "0xA94913CA014F7579",
+     "label": "SUPPLIES [interactable]",
+     "side": 1
+    },
+    {
+     "slot": 3,
+     "item": "0xA94913CA014F7579",
+     "label": "SUPPLIES [interactable]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 68,
+   "key": "0xD7F32C2DF7934784",
+   "spawn": 4,
+   "random": 0,
+   "authored": 4,
+   "effective": 4,
+   "capacity": "多件",
+   "pod": "AMMO 舱（弹药 ×4）",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x49119612EB284A48",
+     "label": "AMMO [interactable]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x49119612EB284A48",
+     "label": "AMMO [interactable]",
+     "side": 1
+    },
+    {
+     "slot": 2,
+     "item": "0x49119612EB284A48",
+     "label": "AMMO [interactable]",
+     "side": 2
+    },
+    {
+     "slot": 3,
+     "item": "0x49119612EB284A48",
+     "label": "AMMO [interactable]",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "row": 69,
+   "key": "0xAF04113302F5621D",
+   "spawn": 4,
+   "random": 0,
+   "authored": 4,
+   "effective": 4,
+   "capacity": "多件",
+   "pod": "Health Pack Rack pod（针剂 ×4）",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x3B8D16C646A729A8",
+     "label": "STIMS [interactable]",
+     "side": 1
+    },
+    {
+     "slot": 1,
+     "item": "0x3B8D16C646A729A8",
+     "label": "STIMS [interactable]",
+     "side": 2
+    },
+    {
+     "slot": 2,
+     "item": "0x3B8D16C646A729A8",
+     "label": "STIMS [interactable]",
+     "side": 1
+    },
+    {
+     "slot": 3,
+     "item": "0x3B8D16C646A729A8",
+     "label": "STIMS [interactable]",
+     "side": 2
+    }
+   ]
+  },
+  {
+   "row": 70,
+   "key": "0x34DA42A01BDC971A",
+   "spawn": 6,
+   "random": 0,
+   "authored": 6,
+   "effective": 6,
+   "capacity": "多件",
+   "pod": "Health Pack ×6 舱",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x3B8D16C646A729A8",
+     "label": "STIMS [interactable]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x3B8D16C646A729A8",
+     "label": "STIMS [interactable]",
+     "side": 1
+    },
+    {
+     "slot": 2,
+     "item": "0x3B8D16C646A729A8",
+     "label": "STIMS [interactable]",
+     "side": 2
+    },
+    {
+     "slot": 3,
+     "item": "0x3B8D16C646A729A8",
+     "label": "STIMS [interactable]",
+     "side": 1
+    },
+    {
+     "slot": 4,
+     "item": "0x3B8D16C646A729A8",
+     "label": "STIMS [interactable]",
+     "side": 0
+    },
+    {
+     "slot": 5,
+     "item": "0x3B8D16C646A729A8",
+     "label": "STIMS [interactable]",
+     "side": 0
+    }
+   ]
+  },
+  {
+   "row": 71,
+   "key": "0xEA534432474985A0",
+   "spawn": 1,
+   "random": 1,
+   "authored": 6,
+   "effective": 1,
+   "capacity": "随机",
+   "pod": "Jammed Pod pod（随机 1 件）",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "Jammed Pod pod",
+   "slots": [
+    {
+     "slot": 0,
+     "item": "0x11C27D3BABB38956",
+     "label": "Machine Gun [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 1,
+     "item": "0x39AB99895147A3BF",
+     "label": "Flamethrower [support_weapon]",
+     "side": 1
+    },
+    {
+     "slot": 2,
+     "item": "0x89C5493E08CA4207",
+     "label": "Anti-Materiel Rifle [support_weapon]",
+     "side": 2
+    },
+    {
+     "slot": 3,
+     "item": "0x255EBC5767D7CEEC",
+     "label": "Guard Dog [backpack]",
+     "side": 1
+    },
+    {
+     "slot": 4,
+     "item": "0x59C5CA839449B379",
+     "label": "Jump Pack [backpack]",
+     "side": 0
+    },
+    {
+     "slot": 5,
+     "item": "0x4EF9A47109239A58",
+     "label": "Supply Pack [backpack]",
+     "side": 0
+    }
+   ]
+  },
+  {
+   "row": 72,
+   "key": "0x0000000000000000",
+   "spawn": 1,
+   "random": 0,
+   "authored": 0,
+   "effective": 0,
+   "capacity": "单件",
+   "pod": "（末行，无 key 无载荷）",
+   "stratagem": "",
+   "stratagem_id": null,
+   "sdk": "",
+   "slots": []
+  }
+ ]
+}

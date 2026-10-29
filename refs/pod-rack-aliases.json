@@ -1,0 +1,97 @@
+{
+ "build": "26251122",
+ "table": "HellpodRackComponentData 0xA98BB156",
+ "note": "人工判定的舱名。工具 pod_rack_slots.py 的自动命名顺序是：本文件 → SDK 56 条唯一同构 → 战备行内部名 → 载荷实体名。只收「自动命名会错/会含糊」的行，其余留空走自动。status 用三态口径：✓ 离线 = 本 build 数据直证；✓ 外部 = SDK/文档对齐；⚠ 推断 = 有证据但不唯一。",
+ "aliases": {
+  "0": {
+   "name": "（空 rack，未配置）",
+   "status": "✓ 离线",
+   "note": "spawn=1 但 8 个槽全 0，行没有被任何舱使用"
+  },
+  "12": {
+   "name": "未命名工事/载具舱",
+   "status": "⚠ 推断",
+   "note": "载荷 0x29AE906EA485A7FA 有 Mount+SeatCollection+ExpandableCover（可展开掩体/座位），实体名缺失"
+  },
+  "13": {
+   "name": "悬空载荷 ×4 舱",
+   "status": "✓ 离线",
+   "note": "4 个槽全指向实体库里不存在的键（0x200DC4955BD13C54 等），spawn=4 但它一个也生成不出来"
+  },
+  "38": {
+   "name": "（空 rack，未配置）",
+   "status": "✓ 离线",
+   "note": "8 个槽全 0"
+  },
+  "39": {
+   "name": "Guard Dog 舱（随机变体）",
+   "status": "⚠ 推断",
+   "note": "random_payload_size=1 + 只有 1 个 authored 槽：结构上是随机舱，但可抽集合只有 1 件"
+  },
+  "47": {
+   "name": "MG-43 Machine Gun pod",
+   "status": "✓ 外部 + ✓✓ 实机",
+   "note": "SDK 与内部名 TEAM WEAPONS. MACHINEGUN 对齐；2026-10-29 实机：改这里只吐出 1 个 SEAF（spawn=1）"
+  },
+  "48": {
+   "name": "悬空载荷 ×2 舱",
+   "status": "✓ 离线",
+   "note": "两个槽都指向不存在的实体 0xD961F2F803F61692"
+  },
+  "54": {
+   "name": "MS-11 Solo Silo pod",
+   "status": "✓ 外部",
+   "note": "载荷 = Solo Silo(unit) + Solo Silo Targeting Remote；SDK 同名 rack spawn=2"
+  },
+  "62": {
+   "name": "悬空载荷 ×2 舱",
+   "status": "✓ 离线",
+   "note": "两槽同指不存在的实体 0xB95BD5148316F8DD；旧文档记的「没有 LoadoutPackage 行」就是这行"
+  },
+  "63": {
+   "name": "Resupply 物件舱（任务）",
+   "status": "⚠ 推断",
+   "note": "载荷 0x35F50DEC0EC647C6 是带 Deposit 的可携带物（kind=backpack、名字 Resupply），spawn=1"
+  },
+  "64": {
+   "name": "任务物件舱（ObjectiveCarry）",
+   "status": "⚠ 推断",
+   "note": "载荷 0xC8F9A2233048B836 有 ObjectiveCarry + ObjectiveShell（任务搬运物），名字缺失"
+  },
+  "65": {
+   "name": "悬空载荷 ×1 舱",
+   "status": "✓ 离线",
+   "note": "0xF8A8B17708C06606 不是实体键；spawn 却写着 2，authored 只有 1"
+  },
+  "67": {
+   "name": "Resupply pod（补给舱）",
+   "status": "✓ 外部 + ✓✓ 实机",
+   "note": "4×SUPPLIES、spawn=4、rack_side 1/2/1/2 —— 与 SDK「Resupply pod」逐项同构（4×Supply Box / spawn 4 / 同 side 序列）；原版实机就是掉 4 个补给箱"
+  },
+  "68": {
+   "name": "AMMO 舱（弹药 ×4）",
+   "status": "✓ 离线",
+   "note": "4×AMMO、spawn=4；SDK 56 条里没有同构项（不在战备池里，任务/脚本用）"
+  },
+  "69": {
+   "name": "Health Pack Rack pod（针剂 ×4）",
+   "status": "✓ 外部",
+   "note": "4×STIMS、spawn=4、side 1/2/1/2 —— 与 SDK「Health Pack Rack pod」同构（4×Health Pack (pod)）"
+  },
+  "70": {
+   "name": "Health Pack ×6 舱",
+   "status": "⚠ 推断",
+   "note": "6×STIMS、spawn=6 —— 全表唯一 6 槽舱；槽 4/5 的 rack_side=0，说明「6 槽」是特例写法，SDK 目录里没有"
+  },
+  "71": {
+   "name": "Jammed Pod pod（随机 1 件）",
+   "status": "✓ 外部",
+   "note": "6 个 authored 槽（MG/FLAM/AMR/狗/跳包/补给包）各不同 + random=1 + spawn=1 —— 与 SDK「Jammed Pod」逐槽对齐：每次从中随机掉 1 件"
+  },
+  "72": {
+   "name": "（末行，无 key 无载荷）",
+   "status": "✓ 离线",
+   "note": "哈希图 72 键 → 73 行，最后一行没有键"
+  }
+ }
+}

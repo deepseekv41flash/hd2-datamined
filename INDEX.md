@@ -49,6 +49,7 @@
 | **只给某一件甲加效果** | [ARMOR-PASSIVE-STATS](docs/tables/ARMOR-PASSIVE-STATS-26088801.md) | **§2 单件级（改 kit 的 `+0x1C`）· §6 配方 · §2 末尾「没有空被动」的否证** | `26088801` |
 | **投送舱送什么（战备空投舱换载荷）** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§1 槽位结构 · §2 前 N 个槽才生成 · §3 换物品配方** | `26088801` |
 | **换进来的物品只有紫问号 / 网格材质不加载** | [POD-RACK](docs/tables/POD-RACK-26088801.md) | **§4 两个包槽（`+0xA8` + `+0xF8`）· §5 item→包解析表** | `26088801` |
+| **每条舱能吐几件 / 哪个舱是补给、弹药、针剂舱** | [POD-RACK-SLOTS](docs/tables/POD-RACK-SLOTS-26251122.md) | **§1 三个数字（8 物理槽 / authored / `+556`）· §2 全表 73 行（原版 1/2/4/6 四档）· §3 按件数分组 · §4 要 N 件的配方（`rack_edit.py --spawn`）· §6 `+0x34`=`RackSide` 校正** | `26251122` |
 | **改了弹丸/爆炸，怎么知道漏了哪些粒子/实体/声音资源** | [RESDEP](docs/tools/RESDEP.md) | **`chain` 扫引用 · `plan` 分「同包/跨包/缺失」· `--apply` 一键装盘+整体回滚 · `VERIFY.md` 实机清单 · HIRC 事件目录** | `26088801` |
 | **某个 id 在整个数据里被谁引用 / 原版武器的弹丸从哪来 / 某个弹丸 id 叫什么** | [REFSCAN](docs/tools/REFSCAN.md) | **`exact` 全档 u32 账本 · `columns` 引用面普查 · `delta-info/-show/-ammo` 解配件 delta 链（弹种槽 6 → `ProjectileWeapon+0`）· §6 wiki 镜像交叉验证（61 武器 / 59 个 id→枚举名）· 本 build 组件索引表** | `26088801` |
 | **狗背包（AX 系）换枪**（**✓ 结项**） | [BACKPACK-DOGS](docs/tables/BACKPACK-DOGS-26088801.md) | **§17 收尾**：配方 = 改无人机 `Mount+0x00` 一个 u64 · 三条硬规则（资源驻留 / 载体装填 / 开火输入）· **§17.3 白名单账本** · **§27.1 副武器 P-19 实机通过 · §28 根因链（弹种 delta 写 `Proj+0=296`）· §30 载体装填机制修正：GD 装填 = 直接填弹匣、不扣备弹（墙版 GL-21 60 发/备弹 0 仍能装填；AC-8 两段装填）· §30.4.1 `WeaponRounds +92` = 单次装填量 ✓✓（改 10 后狗/玩家都一次装满）· §30.5 狗（不扣备弹）vs 玩家/工事座位（扣备弹）路径对照** | `26088801` |
@@ -320,6 +321,7 @@
 | `proj_copy_row.py` | 整行搬运 272 B 射弹行（换弹头），带 5 道门禁 | `murmur64.py` | ✓✓ 已实机（Eruptor 弹头 → 主宰） |
 | `pod_rack_swap.py` | 改 `HellpodRackComponentData` 槽位物品（投送舱换载荷），tail 宿主 + 9 道门禁 + 变异自检 | `murmur64.py`、`typelib.py` | ✓✓ 已实机（2026-10-23，六轮） |
 | `rack_edit.py` | **投送舱 rack 任意槽位 + `+0x22C spawn` 一次写完**（`--slot N=item` 可重复、`--spawn N`）；补 `pod_rack_swap.py` 只能改 slot0/slot1 的空白；G1–G7 门禁 + 保 Murmur 锚点 | `murmur64.py`、`pod_rack_swap.py`、`typelib.py` | ✓ 离线（G1–G7 全过；用于 §18 的三件 rig，✓✓ 实机） |
+| `pod_rack_slots.py` | **投送舱容量普查**：73 条 rack 的 `+556 spawn` / `+552 random` / authored 槽数 / 每槽 `RackSide` + 载荷名 + 战备名反查；`--table` 出 markdown、`--json` 出机器可读、`--compare` 跨 build 比是否漂移 | `typelib.py`、`pod_loadout.py`（名字反查） | ✓ 离线：73 行全表，26088801→26251122 **0/73 漂移** |
 | `mount_table.py` | **载具挂载 / 座位表**：`MountComponentData`（328 槽 + 165 × 120 B）与 `SeatCollectionComponentData`（112 槽 + 56 × 424 B）的读/查/换件；`swap` 只写 `MountInfo.item` 的 8 字节，tail 宿主保 Murmur64A，**10 道门禁**（含「全表只有目标槽变了」）；`show` 直接给出五件套 + 两条否决项的离线判据 | 标准库 + `murmur64.py`、`pod_rack_swap.py`、`typelib.py` | ✓ 离线（G1–G10 全过；sealed round-trip 逐字节相等；实机待验） |
 | `pod_loadout.py` | **投送舱换载荷 + 有限数量的跨包加载的通用产出**：名字→包/LOE id→自动判单包/双包→出可装文件（不部署） | `pod_rack_swap.py`、`plain_edit.py`、`dlbin_seal.py` | ✓ 产物与实机验证件逐字节一致 |
 | `strat_slot_census.py` | **战备表 153 行的装包口普查**：按 typelib 结构穷举（不是按值搜，空槽才看得见），分「两槽已满 / 仅 `+0xA8` 空 / 仅 `+0xF8` 空 / 两槽全空」四类并给出行基址 | `pod_loadout.py`、`typelib.py` | ✓ 离线：只有 `+0xA8` 命中包集合（114/114），空槽 155 个 |
