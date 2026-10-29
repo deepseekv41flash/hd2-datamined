@@ -185,3 +185,20 @@ HD2 里座位、挂点、炮塔位置这些几何全在**车辆的 `unit`（= St
 | 上不了车 / 交互点异常 | 交互条目按**壳节点名**寻址，跨壳搬不动 —— 这本身也是结论（`Interactable` 与壳强绑定） |
 
 回滚：`dlbin_deploy.py restore --file generated_entities.dl_bin` 与 `--file generated_stratagem_settings.dl_bin`。
+
+### 9.1 实机结果（2026-10-29）：**交互提示异常** ⇒ 命中的是判读表第 3 行
+
+**现象**：装 `daa74341` 后上车交互提示异常。
+**判读**：`InteractableComponentData` 的条目与**壳（节点）强绑定**，把 APC 的整行搬到 TD-220 上，
+提示/交互点无法在旧壳里解析 ⇒ **跨壳不可移植**。
+
+**这一发能下的结论**：
+* 交互点/上车提示**随壳走**，不是可以脱离壳单独搬运的"授权表"；
+* 因此它**不能**回答"别的座位为什么有武器"——测试条件本身不成立（连干净的基线都没有）。
+
+**不能下的结论**：`Interactable` 是否也参与座位武器授权 —— 仍未证。
+
+**已回滚**：`generated_entities.dl_bin` 与 `generated_stratagem_settings.dl_bin` 均 restore 到原版。
+
+**若要真正回答授权问题**，唯一干净的做法是**反向单变量**：把 APC 完整装上（210 MB 资源 + 备份 `9ba626afa44a3aa3.patch_0`），
+再把它的 `Interactable` 换回 TD-220 版，看乘客位是否失去武器；成本明显更高。
