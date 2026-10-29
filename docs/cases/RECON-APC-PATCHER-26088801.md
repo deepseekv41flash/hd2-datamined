@@ -346,3 +346,82 @@ APC unit（78,400 B）`customization` 段里带一段**明文内容路径**：
 —— 这正是模组能做出"4 人 3 挂载"的地基。
 
 `⚠ 未证`：两个"未用壳"只是**没有实体表引用**；由 Lua/任务脚本按 id 直接生成的通路未排除。
+
+## 13 反向应用：把 GATER 的壳移植到普通载具（2026-10-29，已装盘 ⚠ 待实机）
+
+> 目标：GATER 走任务/战备投送时**落地前自毁**，数据层已九条否证（见
+> [UNRELEASED-INVENTORY](../tables/UNRELEASED-INVENTORY-26088801.md) §7.2）。
+> 换个思路：**借 APC 案例的换壳手法**，把 GATER 的壳指给一台普通可召唤载具，
+> 让"外观是 GATER、行为是普通车"，从而绕开任务侧的自毁。
+
+### 13.1 与 APC 案例的差别：本例**一个资源都不用补**（`✓ 离线`）
+
+| | APC 案例 | 本例 |
+|---|---|---|
+| 目标壳 | `0x8C33C20637D2A687`（模组新 id，vanilla 没有） | `0x423FF97D57AB04F5`（vanilla 自带：mesh 92,816 / bones 3,280 / physics 188,280 / state_machine 13,780，6 个包里都有副本） |
+| 资源补丁 | 必须（10 个 package + 363 条目） | **不需要** |
+| 改动面 | 实体表 + 资源 | **实体表 + 战备表** |
+
+实体 `0x0801B6B3C5D12EBC`（GATER A）自己**没有任何 unit/bones/physics 资源** ⇒ HD2 按**壳 id** 寻址资源，
+把宿主的 `UnitComponentData +0x00` 指过去就等于整壳换掉。
+
+### 13.2 宿主选择（`✓ 离线`，全库 15 个车辆壳里挑）
+
+| 宿主 | 缺 GATER 的组件 | 多余组件 | 悬空引用 | 召唤行 | 结论 |
+|---|---|---|---|---|---|
+| **Maelstrom `0xB0C9FAF4AF8903F9`** | 仅 `ObjectiveDynamicLink`（**要绕开的正是它**） | 5 | 28（已改写） | 149(id 52) 未验 | ★ **选中**：唯一"除自毁链外与 GATER 组件完全对齐"，且自带 Deposit/Buoyancy/VehicleCollisionDamage |
+| frv_supply `0x9B2140378640432E` | 同上 | 6（含 Animation/Woundable/Weathering） | 8 | 141(id 26) 未验 | 备选 |
+| frv_flamer `0x2D85BFE3D8717FE5` | 缺 **Deposit** + Objective | 7 | 9 | **142(id 138) 已验可用** | 备选（会丢油罐装卸） |
+| frv(Gunner) / Bastion / 机甲 | — | — | — | — | 排除（测试车 / 现役 APC / 缺 5 个组件） |
+
+### 13.3 移植清单（`✓ 离线`，一条命令可复跑）
+
+`tools/entity_transplant.py --spec out/apc-recon/gater-host.spec.json`
+（新工具：跨实体 14 行整行搬运 + 悬空节点改写 + 保内容哈希；G1/G2/G3/G4/G6/G8 全过）
+
+| 行 | 块 | GATER A 行 → Maelstrom 行 |
+|---|---|---|
+| Unit | `0x4437574D` | 1535 → 1197 |
+| SeatCollection | `0x4AEAFC86` | 53 → 50 |
+| Mount | `0x3845B1E0` | 159 → 125 |
+| Interactable | `0xFCCA29DB` | 437 → 290 |
+| Attachable | `0xBCF41716` | 674 → 585 |
+| Vehicle | `0xEAEB2B0D` | 19 → 18 |
+| VehicleMotion | `0x83B65443` | 13 → 12 |
+| VehicleElectrics | `0x2C7ACD8B` | 12 → 11 |
+| Health | `0xB3915DE3` | 489 → 432 |
+| EffectReference | `0x604434C9` | 638 → 534 |
+| Faction | `0x5653EA91` | 502 → 419 |
+| Gore | `0x8D419C7A` | 202 → 172 |
+| Drownable | `0x726A4F6B` | 57 → 56 |
+| VisibilityMask | `0x8EC31141` | 266 → 226 |
+
+宿主独有、GATER 没有的三个组件里，指向**旧壳节点**的引用被改写成新壳里存在的根节点 `0x4A182741`：
+`0x8FAA4635` 20 处、`FoleySound`（`0xB6F66BB5`）8 处（`OverlapDamage` 实测 0 处 —— 它的 8 个值在两套壳里都有）。
+
+### 13.4 已装盘（`⚠ 待实机`）
+
+| 项 | 值 |
+|---|---|
+| 实体表 | `generated_entities.dl_bin` = **`192a42263a6de393`**（← `out/apc-recon/gater-host.dl_bin`） |
+| 战备表 | `generated_stratagem_settings.dl_bin` = **`e515fea8d9f7aac2`**（← `out/apc-recon/gater-host-strat.dl_bin`） |
+| 召唤 | 行 138 `payload[0]` = Maelstrom `0xB0C9FAF4AF8903F9`；`+0xA8` = **`0x0DFF5200594E867F`**（GATER 包，90 条目，含壳+油罐+音效） |
+| 磁盘回读 | Maelstrom：Unit=`0x423FF97D57AB04F5`、TID=33、Health=12000、Mount[0]=炮塔`0x9872EEB31A5F88FD`@`0xE9DC426A`；APC 行仍在（`0x8C33C20637D2A687`/31）⇒ 可随时换回 |
+
+### 13.5 判读表（待实机）
+
+| 现象 | 判读 |
+|---|---|
+| 落地**不自毁**、外观 GATER、能上车开动 | 自毁来自**实体/任务侧**（`ObjectiveDynamicLink` 链）⇒ 换壳路线成立 |
+| 仍然自毁 | 自毁是按**壳/关卡**触发的 ⇒ 本路线否证（干净结论） |
+| 落地是紫问号/不出现 | 壳包没被 `+0xA8` 带起来 ⇒ 换包（`efb0636c8594f558`）或整包驻留 |
+| 有车没炮塔 | 炮塔在 `f6fb08cc02d24255`，需另做驻留（旧实验补丁还在盘上） |
+| 能上不能开 / 相机乱飞 | 宿主侧残留（`0x8FAA4635` 等）⇒ 下一发清悬空或换 frv_flamer 宿主 |
+
+### 13.6 回滚
+
+```bash
+# 回到 APC（TD-220 + LAV 壳）
+python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed out/apc-recon/apc-entities-baseline.dl_bin
+python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin --sealed out/c-route/t17.dl_bin
+```
