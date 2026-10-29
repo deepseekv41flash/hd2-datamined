@@ -425,3 +425,32 @@ APC unit（78,400 B）`customization` 段里带一段**明文内容路径**：
 python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed out/apc-recon/apc-entities-baseline.dl_bin
 python tools/dlbin_deploy.py install --file generated_stratagem_settings.dl_bin --sealed out/c-route/t17.dl_bin
 ```
+
+### 13.7 在 26251122 上复验换壳线：一条**更正** + 现行实验状态（2026-10-29 19:4x）
+
+**复验**：`generated_entities.dl_bin` 在新 build 逐字节未变、typelib 也相同 ⇒ §13.3 的 14 行移植 spec、
+宿主选择、`TransitionId 33`、`boss` 挂点分析**全部沿用**；只需把基线换成 `refs/dlbin/plaintext-26251122/` 重跑
+`entity_transplant.py`（G1/G2/G3/G6/G8 全过，哈希锚点仍 `0x8E49771B181FFAA1`）。
+
+**更正（重要）**：召唤行的 **`+0xA8` 必须声明"壳所在的包"**，否则引擎按实体去找壳资源时包没被加载 ⇒ 空指针。
+我们曾只改 **行 138** 的 `+0xA8`，而用户实际叫的是 **id 52（Maelstrom 本体，靠自己存档里的战备位）** ⇒
+行 52 的 `+0xA8` 一直是 Maelstrom 自己的 `65EE777B72347CB4` ⇒ 两次实验都在 **`game.dll+0x7045B1`**
+崩成同一个 `0xC0000005`（dump 时间 19:29:17 / 19:35:29，偏移完全一致）。
+⇒ 那两发**没有检验到任何嫌疑**，此前"状态机/挂载物排除"的临时结论**作废**。
+
+修复后的召唤配置（`strat-final` = `340cee246055ccb5`）：
+* 额外战备链恢复：`34 Resupply +0xC8 → 106 → 111 → 138`（供 138 路径使用）
+* **行 52 `+0xA8` = `0x0DFF5200594E867F`（GATER 包）**（用户实际路径）
+* 行 138 `payload[0]` = 宿主 Maelstrom、`+0xA8` = GATER 包（备用路径）
+* 实测：叫 Maelstrom → **车出现、投放动作时爆炸** ⇒ 与旧 build 行为一致，**实验基线恢复**
+
+**现行实验状态**
+
+| 项 | 值 |
+|---|---|
+| 实体基线（满尺寸、原 SM、炮塔在位） | `6e58c3767668ff09`（`out/gater2625/gater-host.dl_bin`） |
+| 嫌疑①「挂载物」版（槽 0 清零） | `e4b86b06e3d4b865`（`gater-host-nomount.dl_bin`）**← 已装，待判读** |
+| 嫌疑②「壳状态机」版 | `out/gater2625/sm/patch/0dff5200594e867f.patch_0*`（`+0x20` → 坦克 SM `0x16474112801385B6`）**未装** |
+| 战备表 | `340cee246055ccb5`（链 + 52/138 双路径，勿动，保持单变量） |
+
+判读：叫 Maelstrom（id 52）后 —— 仍"投放动作时爆炸" ⇒ 挂载物排除；不再爆炸/能落地 ⇒ 挂载物是触发器。
