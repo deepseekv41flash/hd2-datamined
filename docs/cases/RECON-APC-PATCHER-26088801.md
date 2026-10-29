@@ -23,7 +23,7 @@
 
 | 组件 | 改动 |
 |---|---|
-| `UnitComponentData +0x00` | `0x16474112801385B6`（自指占位）→ **`0x8C33C20637D2A687`**（APC 的 unit 资源） |
+| `UnitComponentData +0x00` | `0x16474112801385B6`（自指；vanilla 里确有该 unit）→ **`0x8C33C20637D2A687`**（APC 的 unit 资源） |
 | `MountComponentData` | 原 2 槽 → 重写 3 槽；slot0 = 炮塔 `0xD336BA1CAD16769F` @ 节点 **`0xE9DC426A`（`attach_turret`）**、f2 `0x372F0418` —— **与 GATER 机炮塔挂载完全同签名**（抄的是现成可用挂载） |
 | `SeatCollectionComponentData +0x00` | 43 → 31 |
 | `WeaponMagazineComponentData +0x88`（炮塔） | 75 → 500 |
@@ -60,7 +60,7 @@ HD2 里座位、挂点、炮塔位置这些几何全在**车辆的 `unit`（= St
 
 | 层 | 改动 |
 |---|---|
-| 实体表 `UnitComponentData +0x00` | 自指占位 → **`0x8C33C20637D2A687`**（模组自带的新壳） |
+| 实体表 `UnitComponentData +0x00` | 自指 → **`0x8C33C20637D2A687`**（模组自带的新壳；原 id `0x16474112801385B6` **在 vanilla 里就是这台车的 unit**，70,848 B / 218 节点，见 §11.1 —— 早先写的"占位"已作废） |
 | 实体表 `MountComponentData` 3 槽 | 节点哈希 `0xE9DC426A` / `0x6A46DA5E` / `0x83775726` |
 | 实体表 `SeatCollectionComponentData +0x00` | 43 → 31（**唯一一处座位相关改动**，语义 `⚠ 未证`） |
 | 资源 | 新壳 **78,400 B / 224 节点**：含 `attach_turret`、`attach_driver`、`attach_gunner`、`skeleton`、`boss`、`root`、`collision`、`game_mesh` |
@@ -215,3 +215,63 @@ HD2 里座位、挂点、炮塔位置这些几何全在**车辆的 `unit`（= St
 
 **注意**：模组覆盖了 `9ba626afa44a3aa3.patch_0`（本机原有 23,120 B）。若发现其它旧 mod 失效，
 从上面的备份目录把三件拷回即可。
+
+## 11 二轮：`TransitionId` 到底管不管"座位切换"（2026-10-29）
+
+### 11.1 先修正一处：vanilla 里**有**这台车的壳（`✓ 离线`）
+
+§5/§8.1 把 `UnitComponentData +0x00` 的自指写成"占位"，**错**。扫全库（3,522 包，`load_blobs=False`）：
+
+| 资源（id = `0x16474112801385B6`） | 所在 vanilla 包 | 大小 | sha256 前 16 |
+|---|---|---|---|
+| `unit` | `68ebdce3f7498179` / `17ec2d364664c3e9` | **70,848 B / 218 节点** | `bdd028f7bc54cf94` |
+| `bones` | 同上 | 2,737 B | `10a7725ef3bc6be8` |
+| `physics` | 同上 | 205,448 B | `6cfd17d78c13adcb` |
+| `state_machine` | 同上 | 19,924 B | `58fc657e2a2c5436` |
+
+⇒ 自指是**合法自引用**（unit / bones / state_machine 与实体同 id），不是占位。
+模组把整包换成它自己的：
+
+| 资源 | 模组版本 | 与 vanilla 的差别 |
+|---|---|---|
+| `unit 0x8C33C20637D2A687` | 78,400 B / **224 节点** | 多 6 个节点；多 2 个段（`customization`、`unk_header1`）；除 10 个语义节点外节点哈希**全不同** |
+| `state_machine 0x4D7C8CA9C52C7589` | 18,204 B | **vanilla 全库没有这个 id**（模组新建） |
+| `state_machine 0x16474112801385B6` | 19,924 B | 与 vanilla **逐字节相同**（只是重发，未改） |
+
+unit 头对照：vanilla `bones_ref = state_machine_ref = 0x16474112801385B6`；
+APC `bones_ref = 0x8C33C20637D2A687`、`state_machine_ref = 0x4D7C8CA9C52C7589`。
+
+新壳里已破译的语义节点（`unit_nodes` + 暴力名表）：`interact_gunner`(97)、`driver_hatch`(102)、
+`attach_driver`(103)、`attach_gunner`(104)、`attach_turret`(105)、`door`(137)、`interact_passenger`(140)。
+
+### 11.2 `TransitionId` 是**枚举 id**，不是座位清单（`✓ 离线`）
+
+* `refs/dl-type-names.txt` 里 `TransitionId` 只有 **36** 个名（旧版名表）；
+  typelib 实测 `djb2("TransitionId") = 0x2BB65418` = 第 **247** 号枚举，**46 个值（0…45）**。
+* 成员名含 `TransitionId_frv / lav / troop_transport / cargo_car / civilian_car / rover /
+  manned_turret / combat_walker / shuttle / ship_hellpod / generic_interact_switch / …`
+  ⇒ 语义 = **载具/工事家族的上车·下车·换位动画过渡集**。
+* 本 build 56 个座位行实际用到：`1 3 4 5 7 8 10 11 13 14 20 24 25 26 27 28 29 30 32 33 34 35 36 37 39 40 41 42 43 44`；
+  **31 没有任何 vanilla 实体在用**（模组挑的是空号）。
+
+⇒ 「把四个座位全部塞进过渡集」**没法靠改这个字段做到**：它指向**一套**过渡，不是一个可增删的列表。
+数据层能做的只有两件事：**换一套**（换 id），或去动壳/状态机那一层。
+
+### 11.3 单变量实验 E1：`31 → 43`（已装盘，⚠ 待实机）
+
+| 项 | 值 |
+|---|---|
+| 唯一改动 | `SeatCollectionComponentData +0x000`：`31 → 43`（回到 vanilla TD-220 的值） |
+| 明文 | `out/apc-recon/t-seat43.plain`（47,259,408 B；G1–G8 全过；哈希锚点仍 `0x8E49771B181FFAA1`） |
+| 封包 | `out/apc-recon/t-seat43.dl_bin` = `f9927e95` |
+| 装盘 | `data/game/generated_entities.dl_bin` = `f9927e95`；**回读** row10 `TransitionId = 43` ✓ |
+| 基线快照 | `out/apc-recon/apc-entities-baseline.dl_bin` = `b2efae2a`（用户已确认可用的 APC 版） |
+| 回滚 | `python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed out/apc-recon/apc-entities-baseline.dl_bin` |
+
+判读表：
+
+| 实机现象 | 结论 |
+|---|---|
+| 恢复"乘客↔炮手"三座依次切换 | `TransitionId` = 座位切换集合开关（✓）；下一步找含 4 座的集合，或试其它 id |
+| 仍只有乘客↔乘客 | 切换集合不在实体表（在壳 / 状态机 / 代码侧）⇒ 该字段只负责上下车动画 |
+| 上下车动画变怪或卡住 | 43 那套过渡与 APC 壳不匹配 ⇒ 过渡集与壳绑定 |
