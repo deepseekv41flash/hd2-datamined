@@ -16,7 +16,7 @@
 
 用法
     python tools/build_diff.py --sk refs/dlbin/keys/recipient.sk \\
-        --old refs/dlbin/plaintext-26088801 --out refs/build-diff-<新build>.json
+        --old D:/mod/refs/dlbin/plaintext-26088801 --out D:/mod/refs/build-diff-<新build>.json
 """
 from __future__ import annotations
 
@@ -63,7 +63,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--sk", required=True, help="recipient.sk（解封用，仓库不含密钥材料）")
     ap.add_argument("--game", default=r"D:\SteamLibrary\steamapps\common\Helldivers 2")
-    ap.add_argument("--old", default="refs/dlbin/plaintext-26088801",
+    ap.add_argument("--old", default=pathlib.Path(r"D:\mod\refs\dlbin\plaintext-26088801"),
                     help="旧 build 的明文缓存目录（文件名与 generated_*.dl_bin 对应）")
     ap.add_argument("--fingerprint", default="build-snapshot-25988413-post-update/fingerprint.json",
                     help="旧 build 的 fingerprint.json（可选，用来对 exe/dll）")
