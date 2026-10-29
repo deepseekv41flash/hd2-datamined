@@ -52,3 +52,30 @@
 
 **新情报**：`Bastion Mk XVI`（`0x16474112801385B6`）在 vanilla 实体表里存在、名字完整、
 `UnitComponentData` 指向自己（占位）⇒ 是一台**休眠/未启用载具**，可补进未发布清单。
+
+## 5 骨架/座位/挂点到底怎么解决的：**换 unit（壳）**，不是改骨骼
+
+用户的直觉是"坦克换 APC 要改很多骨骼" —— 实测相反：**实体表里一个骨骼节点都没改**。
+HD2 里座位、挂点、炮塔位置这些几何全在**车辆的 `unit`（= Stingray 的壳，含节点树）**里，不在实体表。
+
+| 层 | 改动 |
+|---|---|
+| 实体表 `UnitComponentData +0x00` | 自指占位 → **`0x8C33C20637D2A687`**（模组自带的新壳） |
+| 实体表 `MountComponentData` 3 槽 | 节点哈希 `0xE9DC426A` / `0x6A46DA5E` / `0x83775726` |
+| 实体表 `SeatCollectionComponentData +0x00` | 43 → 31（**唯一一处座位相关改动**，语义 `⚠ 未证`） |
+| 资源 | 新壳 **78,400 B / 224 节点**：含 `attach_turret`、`attach_driver`、`attach_gunner`、`skeleton`、`boss`、`root`、`collision`、`game_mesh` |
+
+**三个挂载节点哈希全部能在新壳的节点表里找到**（已验证）⇒ 挂点就是新壳自带的，实体只是"指向"它们。
+同 id 还带 `bones`（1,956 B）与 **`physics`（343,756 B = `physics-template.gz` 那一份）**。
+⇒ 坦克→APC 的座位/挂点差异**由新壳一次性承担**，所以实体侧只需要 590 字节。
+
+**资源侧规模**（大 patch 363 条）：`unit ×20`、`animation ×64`、`particles ×41`、`texture ×132`、`material ×66`、`wwise_stream ×10`；
+另两个小 patch 各带 1 个 `unit`（炮塔）。
+
+**顺带发现两个机制**：
+
+1. **`package` 资源 = 包依赖声明**。`9ba626afa44a3aa3.patch_0`（boot 包）里有 **10 条 `package`** + 4 条 `strings`
+   —— 用它把另外 6 个宿主包的加载关系写进 boot 包。这比我们一直用的 `+0xA8` 声明口更通用，
+   对"资源驻留/依赖"这条线值得单独验证。
+2. **`physics` 资源可整份替换**（343,756 B）+ 偏移调参（mass/engine/transmission/brakes/springs/aero），
+   车辆手感可以完全在资源侧做。
