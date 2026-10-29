@@ -100,3 +100,27 @@ HD2 里座位、挂点、炮塔位置这些几何全在**车辆的 `unit`（= St
 
 **边界（`⚠ 未证`）**：真要把一个实体扩到第 6 个挂载，必须把 stride 从 120 改成 144，
 那会改变该块行数组大小、并挪动其后所有块的偏移 —— 和我们在载荷数组上撞到的「长度不可变」是同一类约束。
+
+## 7 三个挂载物分别是什么
+
+| 槽 | `item` | 是什么 | 依据 |
+|---|---|---|---|
+| slot0 | `0xD336BA1CAD16769F` | **载具炮塔**（无名，无百科条目，16 组件） | 含 `TurretComponentData` + `ProjectileWeapon` + `WeaponData` / `Magazine` / `Reload` / `Wielder` + `Wieldable` + `WeaponCustomization`；模组把它的 `WeaponMagazine +0x88` 由 **75 → 500** |
+| slot1 | `0xB9606C5AAB32C3C2` | **“Stalwart”**（21 组件） | `WeaponData/Magazine/Reload/Wieldable/ProjectileWeapon` + `Equipment/Interactable/MeleeAttack/MultiTarget/EntityBind/NetworkPhysics` |
+| slot2 | `0xD53EE03481AE73FD` | **第二个“Stalwart”**（同模板相邻行号的另一实例） | 同 21 组件 |
+
+⇒ 改装后的 APC = **1 门炮塔 + 2 挺 Stalwart**（两次侧位；锚点哈希 `0x6A46DA5E`/`0x83775726` 均存在于新壳，名字猜不出 `⚠`）。
+
+**原版 Bastion 的两个挂载物都被换掉**：`0x1FA1F596769225C2`、`0x439F9E65C18567DA`（两者都无百科条目）。
+
+**可复用的结论**：slot1/slot2 挂的是**玩家版支援武器实体**（带 `EquipmentComponentData` / `WieldableComponentData`），
+不是专门的"车载武器变体" ⇒ `MountComponentData` 对 item 类型不挑，只要该 unit 能被解析就能挂。
+以后给载具加武器位可以直接用现成武器实体，不必等"车载版"。
+
+**三个槽的锚点**（n1 = 父车节点；n3 = 另一侧锚点，语义 `⚠ 未证`）：
+
+| 槽 | n1 | n3 |
+|---|---|---|
+| slot0 | `attach_turret` (`0xE9DC426A`) | `0x372F0418`（与 GATER 机炮塔同一对，直接抄用） |
+| slot1 | `0x6A46DA5E` | `0xD0B74FA2` |
+| slot2 | `0x83775726` | `0x65942499` |
