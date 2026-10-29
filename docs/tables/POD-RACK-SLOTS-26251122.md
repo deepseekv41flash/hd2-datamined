@@ -23,7 +23,8 @@
 | 4 槽舱 = **rack 67 补给 / 68 弹药 / 69 针剂**；6 槽舱 = **rack 70（唯一）** | **✓ 离线 + ✓ 外部** | 67/69 与 SDK「Resupply pod」「Health Pack Rack pod」在 spawn=4 + 4 件 + side 序列上逐项同构 |
 | 73 行在 26251122 与 26088801 之间 **spawn/random/载荷逐字节相同**（0/73 漂移） | **✓ 离线** | `--compare` 结果（§7） |
 | `+556` 写到 **4** 可行（四件全出） | **✓✓ 实机** | POD-RACK §6 G 轮（rack 29：Nova + Warp + GL-28 + GL-28 背包，四件全出） |
-| `+556` 写到 **5–8** | **⚠ 未证** | SDK 声明可写区间 `[1,4]`（需 `allow_unverified_effect`）；槽 5–8 在原版武器舱里 line 未被 authore |
+| **4 槽舱吐 4 件 = 实机；而且载荷可以是 NPC（不是物品）** | **✓✓ 实机（2026-10-29）** | rack 67（`spawn=4`）4 个槽写 4 种 SEAF 实体 → 实机**掉出 4 个**；同一次源数据配 rack 47（`spawn=1`）只掉 1 个（§6） |
+| `+556` 写到 **5–8**（超出原版 4 档） | **⚠ 未证** | SDK 声明可写区间 `[1,4]`（需 `allow_unverified_effect`）；原版只有 rack 70 的 6 档 |
 
 ---
 
@@ -184,7 +185,7 @@ python tools/pod_rack_slots.py --table \
 
 | rack | 舱 | 载荷 | 状态 |
 |---:|---|---|---|
-| **67** | **Resupply pod（补给舱）** | 4 × `SUPPLIES`(`interactable`) | ✓ 外部：与 SDK「Resupply pod」同构（4 × Supply Box / spawn 4 / side 1-2-1-2）；消费战备 = `Resupply` + `Resupply (reward variant)` |
+| **67** | **Resupply pod（补给舱）** | 4 × `SUPPLIES`(`interactable`) | ✓ 外部：与 SDK「Resupply pod」同构（4 × Supply Box / spawn 4 / side 1-2-1-2）；消费战备 = `Resupply` + `Resupply (reward variant)` · **✓✓ 实机（2026-10-29）：4 槽换成 4 种 SEAF → 掉出 4 个** |
 | **68** | **AMMO 舱（弹药 ×4）** | 4 × `AMMO`(`interactable`) | ✓ 离线；不在 SDK 56 条里（不在战备池，任务/脚本用） |
 | **69** | **Health Pack Rack pod（针剂 ×4）** | 4 × `STIMS`(`interactable`) | ✓ 外部：与 SDK「Health Pack Rack pod」同构 |
 | 13 | 悬空载荷 ×4 舱 | 4 个**实体库里不存在**的键 | 空转：`spawn=4` 也一件都生成不出来 |
@@ -270,15 +271,17 @@ python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed g
 
 ---
 
-## 6. 修正与教训（本线自己踩的两个坑）
+## 6. 修正与教训（本线自己踩的坑）
 
 | 之前的说法 | 实际 | 影响 |
 |---|---|---|
 | "槽内 `+0x34` 是**数量**（补给舱 = 数量 1/2/1/2）" | `+0x34` = **`RackSide`**（0/1/2），不是数量 | 曾据此以为"补给舱吐 6 个箱子"。实际补给舱 = `spawn=4` × 每槽 1 件 = **4 个** |
 | "MG-43 舱塞 4 个 SEAF 只出 1 个，原因不明" | **rack 47 `spawn=1`**（本次普查的直接读数） | 4 个槽 authored 也没用：第 1 个非空槽之后不生成。要让舱吐 4 个 NPC，得换 rack 67/68/69（`spawn=4`）或把 `+556` 抬到 4 |
+| "多槽舱会不会只吐 1 个 NPC / 舱载荷有没有 NPC 单发限制" | **没有**：rack 67（`spawn=4`）4 槽写 4 种 SEAF → **✓✓ 实机掉 4 个**（2026-10-29） | 约束只在 `+556`；同一份数据放 rack 47（`spawn=1`）只掉 1 个 —— 两个读数互为对照 |
 
-> 盘上字节证据：`out/gater2625/pod-seaf4.plain`（4 个 SEAF 塞 rack 47）读回仍是 `spawn=1`；
+> 盘上字节证据（工作区 `D:\mod\out\gater2625\`）：`pod-seaf4.plain`（4 个 SEAF 塞 rack 47）读回仍是 `spawn=1`；
 > `pod-seaf4-resupply.plain`（4 个 SEAF 塞 rack 67）读回 `spawn=4`。同一份实体库里只差这一行。
+> 实机读数：前者 1 个、后者 **4 个** ⇒「能吐几件」这一格就是唯一变量。
 
 ---
 
@@ -295,6 +298,10 @@ python tools/pod_rack_slots.py --compare "D:\mod\refs\dlbin\plaintext-26088801"
 `--compare` 实测输出：`⇒ 73 行里 0 行有差异`（build `26088801` → `26251122`，
 spawn / random / 8 个槽的实体键全部逐字节相同）⇒ **本表跨 build 稳定，不必每次更新重做**；
 `+0x22C` 与 `+0x228` 的偏移在换 build 时仍应由 `pod_rack_swap.py` 现算复核。
+
+已备但**未装盘**的下一发：`D:\mod\out\pod-seaf8\generated_entities.dl_bin`
+（rack 67 的 8 个槽写 8 种 SEAF + `spawn=8`，用于探 `+556` 的 5–8 档；sealed round-trip 逐字节相等，
+锚点仍是 `0x8E49771B181FFAA1`）。
 
 机器可读产物：[`refs/pod-rack-slots-26251122.json`](../../refs/pod-rack-slots-26251122.json)
 （73 行 × `spawn/random/authored/effective/pod/slots`）。
