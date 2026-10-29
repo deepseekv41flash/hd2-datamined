@@ -313,3 +313,36 @@ APC unit（78,400 B）`customization` 段里带一段**明文内容路径**：
 | 在座位表里加座位 / 改切换顺序 | **✗ 无落点**：整行 424 B 只有 4 个非零 u32，没有座位清单（§8.2） |
 | 改壳（unit）里的座位 / 过渡数据 | **⚠ 唯一未否证**：候选段 `unk_header1`(48 B)、`bone_info`(34,768 B)、`customization`(80 B)；壳是资源，可用 `resource_patch.py build` 重发（模组已示范这条路） |
 | 代码侧（memmod） | 与本轮目标不匹配，代价最大 |
+
+## 12 全库车辆壳普查：**只有 2 个壳没被任何实体用**（2026-10-29，✓ 离线）
+
+扫法（可复跑）：3,522 个包的元数据 → 8,019 个不同 `unit`（48,020 条目）→ 只解 `toc≥15 KB`
++ 名字哈希命中车辆语义节点族（`attach_driver` / `interact_driver` / `interact_enter` /
+`interact_passenger` / `right|left|front_hatch` / `attach_gunner` / `attach_turret` / `cargo_attach` /
+`driver_hatch`）→ 23 个候选 → 再与实体表 `UnitComponentData +0x00` 的 735 个引用做交集。
+
+**结论：全 build 共 15 个车辆壳，13 个有实体在用，2 个没有。**
+
+| 壳（unit id） | 大小 | 节点 | 语义节点 | 用途 / 引用 |
+|---|---|---|---|---|
+| `0x79E4B3D2DA5E45E3` | 61,680 B | 198 | attach_driver, interact_enter | `combat_walker`（4 台机甲共用） |
+| `0xCC21C7FFD3EBEFB9` | 73,584 B | 193 | attach_driver, interact_driver | `vehicles/frv/frv`（2 个实体） |
+| `0x2D85BFE3D8717FE5` | 58,752 B | 194 | 同上 | `vehicles/frv_heavy/frv_flamer` |
+| `0x9B2140378640432E` | 62,624 B | 201 | 同上 | `vehicles/frv_supply/frv_supply` |
+| `0x423FF97D57AB04F5` | 92,816 B | 258 | attach_driver/​gunner/​turret, driver_hatch | `vehicles/oilrig/oil_rig`（= GATER 系，2 实体） |
+| `0xEF3A4136B21592CB` | 66,960 B | 223 | interact_passenger, cargo_attach | `vehicles/shuttle_gunship/…`（5 实体） |
+| `0x18F11A4E18192CFE` | 39,040 B | — | interact_passenger, cargo_attach | 2 实体（无 content 路径） |
+| `0x75BE82ED8592A6B3` | 41,664 B | 131 | interact_passenger, cargo_attach | **GATER 功能壳**（零网格，1 实体） |
+| `0x3F70E3503A3293F9` | 48,272 B | — | interact_passenger, cargo_attach | 1 实体（无路径） |
+| `0x00BCF8247A544CDC` | 41,520 B | 97 | attach_driver, attach_turret | 4 实体（无路径） |
+| `0xF8131632AA867107` | 34,768 B | 87 | attach_driver, interact_driver | 2 实体，TID 20、2 挂载 |
+| `0x16474112801385B6` | 70,848 B | 218 | right/left/front_hatch, interact, attach | **TD-220 Bastion 原壳**（TID 43） |
+| `0xB0C9FAF4AF8903F9` | 78,784 B | — | right/left/front_hatch | **TD-110 Storm 原壳**（TID 44） |
+| **`0xE37434E0B34DB81F`** | 46,400 B | 165 | attach_driver, interact_driver | ★ **`vehicles/frv/frv_superearth` —— 没有任何实体引用** |
+| **`0x16BC189B4D7CB3FE`** | 21,664 B | 76 | attach_driver, door_left/right | ★ **`vehicles/colony_rover/colony_rover` —— 没有任何实体引用** |
+
+另有模组自带的 **LAV 壳 `0x8C33C20637D2A687`**（78,400 B / 224 节点）：**vanilla 全库没有这个 id**，
+它是本 build 里唯一同时具备 `interact_gunner` + `interact_passenger` + `attach_driver/​gunner/​turret` 的壳
+—— 这正是模组能做出"4 人 3 挂载"的地基。
+
+`⚠ 未证`：两个"未用壳"只是**没有实体表引用**；由 Lua/任务脚本按 id 直接生成的通路未排除。
