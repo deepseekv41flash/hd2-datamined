@@ -162,3 +162,26 @@ HD2 里座位、挂点、炮塔位置这些几何全在**车辆的 `unit`（= St
 
 要坐实第 3 条，最干净的是**单变量移植**：只把 APC 版的 `InteractableComponentData` 搬到 TD-220 上，
 看乘客位有没有出现武器/能否开火。
+
+## 9 单变量移植实验：只搬 `InteractableComponentData`（2026-10-29 已装盘）
+
+**目的**：验证「座位能操作什么」是不是由 `InteractableComponentData` 决定。
+
+**改动（严格单变量）**
+
+| 表 | 改动 | sha |
+|---|---|---|
+| `generated_entities.dl_bin` | TD-220 `0x16474112801385B6` 的 `InteractableComponentData` 行（1104 B）**整行替换为 APC 版**，其余 0 改动 | `daa74341` |
+| `generated_stratagem_settings.dl_bin` | 仅作为**投送脚手架**：id 138 `slot0` = TD-220、`+0xA8` = 其包 `68ebdce3f7498179`、链 34→106→111→138 不变、category 3 | `5f96a6da` |
+
+新工具：`tools/entity_copy_row.py`（整行拷贝 + G1/G2/G3/G4/G6 门禁），本次 G 全 PASS，盘上回读该行与模板逐字节相同。
+
+**观察项与判读**
+
+| 现象 | 判读 |
+|---|---|
+| 乘客位出现武器/准星、能开火 | `Interactable` 就是座位授权所在，继续缩小到具体字节（`+0x0C` 半径、`+0x80` 标志位等） |
+| 行为与坦克原版一致（只有炮手能打） | `Interactable` 不是座位授权 ⇒ 回到 MOUNT-SEATS §4.7.1「座位侧能力（相机 + wielder）」的定案 |
+| 上不了车 / 交互点异常 | 交互条目按**壳节点名**寻址，跨壳搬不动 —— 这本身也是结论（`Interactable` 与壳强绑定） |
+
+回滚：`dlbin_deploy.py restore --file generated_entities.dl_bin` 与 `--file generated_stratagem_settings.dl_bin`。
