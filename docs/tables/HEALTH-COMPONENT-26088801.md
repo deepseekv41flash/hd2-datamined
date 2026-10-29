@@ -71,7 +71,9 @@
 ⇒ 要把 GATER 弄成「落地前被摧毁」，靠这几项是解释不了的，得往**非血量机制**找：
 `ObjectiveDynamicLinkComponentData`（已试：把 `+0x04`/`+0x08` 清 0，见
 [UNRELEASED-INVENTORY](UNRELEASED-INVENTORY-26088801.md) §7.2.3）、吊挂尺寸、或区结构差异
-（GATER 只有 10 个活跃区 vs M-104 的 29 个）。
+（GATER 只有 10 个活跃区 vs M-104 的 29 个）。
+
+> **2026-10-29 更正**：上面「往非血量机制找」的结论被 wiki 解剖表推翻了一半 —— 「太脆」确实不成立，但致死路径**仍是血量**：主血量被打空后还有 **10 秒 constitution 倒计时**（见 §8）。
 
 ## 6 证据来源
 
@@ -89,3 +91,35 @@
 * 区 `+236 constitution` 的类型（按 f32 读恒 0，可能是 u8/u16）
 * `+0x120 max_armor` 只在运输机上非 0，含义待验证
 * `+0x55E0 death` 全部为 0，说明这批实体没用到「按破坏等级判定死亡」这条路径
+
+## 8 外部对照：wiki 解剖表 × 本 build 实测（2026-10-29，`✓`）
+
+[wiki.gg 的 GATER 页面](https://helldivers.wiki.gg/wiki/Ground_All-Terrain_Extraction_Rig_(GATER)) 给了**逐部件解剖表**
+（Health / AV / Durable / % To Main / Constitution / Fatal / ExDR），与本 build 的 `HealthComponentData` 三方对上：
+
+| 部件（wiki） | wiki 数值 | 本 build 对应位置 | 本 build 读值 | 一致 |
+|---|---|---|---|---|
+| Truck（主） | 12,000 / AV6 / Durable 75% / Constitution 2,000 [−200/s] / Fatal | `0x0801B6B3C5D12EBC` **主块** | hp **12000** / armor **6** / durable **0.75** / const **2000** / rate **−200** | `✓✓` |
+| Autocannon | 1,000 / AV4 / Durable 100% | **独立实体** `0x9872EEB31A5F88FD` —— GATER `MountComponentData` **唯一**一条挂载，挂节点 `attach_turret` | hp **1000** / armor **4** / durable **1.0** | `✓✓` |
+| Tires (10) | 1,500 / AV2 / Durable 70% / %ToMain **0%** / ExDR **65%** | GATER 主行的 **10 个活跃区** | 10× hp **1500** / armor **2** / durable **0.7** / `affects_main` **0** / 爆炸份额 **0.35** | `✓✓` |
+| Oil Tanks | 300 / AV1 / Durable 70% / %ToMain **0%** / Fatal **No** / ExDR 65% | **全表找不到** | hp=300 的 14 行里没有一行是 AV1 + 0.7 | `✗` 不是实体 |
+
+**三条独立结论**
+
+1. 主块 `+0x10C (268) durable` / `+0x118 (280) armor` 现在有**外部独立对照**：
+   AV6 与 75% 这组值只有从这两个偏移才读得出来（`HealthComponentData` 本身没有名字表）。
+2. 区 `+0x144 (324)` = **1 − ExDR**：wiki 说轮胎 ExDR 65%，本 build 读 **0.35**，精确互补。
+   （§3 表里写的「爆炸伤害份额」就是"吃多少"，不是"抗多少"。）
+3. **油罐不是实体**：GATER 的 `MountComponentData` 只有一条挂载（机炮塔），
+   `GoreComponentData`(33,488 B) / `HitReactComponentData`(4,836 B) 里也搜不到 300。
+   ⇒ 油罐是**外观/可破坏部件**（wiki 提过「油罐会同时显示损坏与未损坏两种外观」的修复），
+   **不是带 `HealthComponentData` 的独立对象**。
+
+**constitution 的真实语义**（wiki 脚注 5）：它是「主血量或肢体血量打空之后才可能衰减」的**二级血池**，
+不是"开局就按 −200/s 掉"。所以 GATER `2000 @ −200/s` 的含义是
+**主血量归零后还能撑 10 秒**；M-104 `400 @ −40/s` 同样是 10 秒。
+
+⇒ 这与「投下来之前才被摧毁」完全吻合：挤压/撞击在主血量上结算 → 主血归零 →
+**10 秒体质倒计时** → 车在吊运途中（落地之前）爆炸。
+`⚠ 未证`：这是"数据 + wiki 语义"的解释，还没有实机读数（判据见
+[UNRELEASED-INVENTORY §7.2.7](UNRELEASED-INVENTORY-26088801.md)）。
