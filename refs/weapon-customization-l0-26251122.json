@@ -1,0 +1,4528 @@
+{
+ "build": "26251122",
+ "block": "0xEBA8F3D0",
+ "rows": {
+  "0": {
+   "keys": [
+    "0xA98F8B559C7993D8"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "1": {
+   "keys": [
+    "0x2C1A7790C435FD67"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "2": {
+   "keys": [
+    "0xCCFAE6D4A601C741"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "3": {
+   "keys": [
+    "0xDB922A7AFC42894B"
+   ],
+   "entries": [],
+   "name": "Arc",
+   "kind": "throwable",
+   "code": "G-31"
+  },
+  "4": {
+   "keys": [
+    "0x46333FC9E3D4BD34"
+   ],
+   "entries": [],
+   "name": "Giga Grenade",
+   "kind": "throwable",
+   "code": "G-48"
+  },
+  "5": {
+   "keys": [
+    "0x7686544F539BB9B7"
+   ],
+   "entries": [],
+   "name": "Impact",
+   "kind": "throwable",
+   "code": "G-16"
+  },
+  "6": {
+   "keys": [
+    "0xDAB81B0D80B511C7"
+   ],
+   "entries": [],
+   "name": "Smokescreen",
+   "kind": "throwable",
+   "code": "G-89"
+  },
+  "7": {
+   "keys": [
+    "0xEB725C39FC38B87C"
+   ],
+   "entries": [],
+   "name": "Incendiary Impact",
+   "kind": "throwable",
+   "code": "G-13"
+  },
+  "8": {
+   "keys": [
+    "0x5C14F27759DD3BE0"
+   ],
+   "entries": [],
+   "name": "Immolation",
+   "kind": "throwable",
+   "code": "G-8"
+  },
+  "9": {
+   "keys": [
+    "0xF6F7C7D65537A580"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "10": {
+   "keys": [
+    "0x9872EEB31A5F88FD"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "11": {
+   "keys": [
+    "0x17C5D12D8D5DEE2C"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "12": {
+   "keys": [
+    "0xDF51FE8D62F294BE"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "13": {
+   "keys": [
+    "0xD336BA1CAD16769F"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "14": {
+   "keys": [
+    "0xC25DC40EDE0E2D16"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "15": {
+   "keys": [
+    "0x0D382AE7FFEA9D45"
+   ],
+   "entries": [],
+   "name": "Lightning Spire",
+   "kind": "unit",
+   "code": ""
+  },
+  "16": {
+   "keys": [
+    "0x3357EEBB0184FDEE"
+   ],
+   "entries": [],
+   "name": "Liberator",
+   "kind": "unit",
+   "code": "AR-23"
+  },
+  "17": {
+   "keys": [
+    "0x6DB0CACE51C8A0ED"
+   ],
+   "entries": [],
+   "name": "Liberator",
+   "kind": "unit",
+   "code": "AR-23"
+  },
+  "18": {
+   "keys": [
+    "0x587878FB76F4B9B1"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x661DF57B",
+     "name": "TUBE REDDOT 1,5x",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Liberator",
+   "kind": "unit",
+   "code": "AR-23"
+  },
+  "19": {
+   "keys": [
+    "0xCA4BBEF63C869C18"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0x01B37BEC",
+     "name": "SMG 12x25mm. Extended",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x2B1CE4A2",
+     "name": "PISTOL-SMG 12x25mm. FULL METAL JACKET",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xB7303DA1",
+     "name": "REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Liberator",
+   "kind": "unit",
+   "code": "AR-23"
+  },
+  "20": {
+   "keys": [
+    "0xED12FA4BDA0BB76D"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "21": {
+   "keys": [
+    "0xC6D5AF4610B26661"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "22": {
+   "keys": [
+    "0xA7F1620602B19808"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "23": {
+   "keys": [
+    "0x5F3EC9BDA2BD8553"
+   ],
+   "entries": [],
+   "name": "Breaching Hammer",
+   "kind": "support_weapon",
+   "code": "CQC-20"
+  },
+  "24": {
+   "keys": [
+    "0xE3B6AEDD07FCB464"
+   ],
+   "entries": [],
+   "name": "Stun Lance",
+   "kind": "sidearm",
+   "code": "CQC-19"
+  },
+  "25": {
+   "keys": [
+    "0xE85E623F93F96FB3"
+   ],
+   "entries": [],
+   "name": "Entrenchment Tool",
+   "kind": "support_weapon",
+   "code": "CQC-72"
+  },
+  "26": {
+   "keys": [
+    "0x7E1F76163C667E4B"
+   ],
+   "entries": [],
+   "name": "Entrenchment Tool",
+   "kind": "sidearm",
+   "code": "CQC-72"
+  },
+  "27": {
+   "keys": [
+    "0x6BCC9BECD1716045"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "28": {
+   "keys": [
+    "0x006E44327BB953FE"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xB7303DA1",
+     "name": "REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Evictor",
+   "kind": "primary_weapon",
+   "code": "GL-15"
+  },
+  "29": {
+   "keys": [
+    "0x41EAC4A03987FAA0"
+   ],
+   "entries": [
+    {
+     "slot": 6,
+     "option": "0x48D33811",
+     "name": "SHOTGUN 10g. BUCKSHOT",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 7,
+     "option": "0x48D33811",
+     "name": "SHOTGUN 10g. BUCKSHOT",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xB7303DA1",
+     "name": "REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Punisher",
+   "kind": "primary_weapon",
+   "code": "SG-8"
+  },
+  "30": {
+   "keys": [
+    "0xBCC2177439D231BE"
+   ],
+   "entries": [
+    {
+     "slot": 6,
+     "option": "0x399C4694",
+     "name": "SHOTGUN 10g. LIBERTY FIRE",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 7,
+     "option": "0x399C4694",
+     "name": "SHOTGUN 10g. LIBERTY FIRE",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xB7303DA1",
+     "name": "REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Punisher fire of liberty",
+   "kind": "primary_weapon",
+   "code": "SG-8F"
+  },
+  "31": {
+   "keys": [
+    "0x4F749E2EE26F532D"
+   ],
+   "entries": [
+    {
+     "slot": 6,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 7,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0x661DF57B",
+     "name": "TUBE REDDOT 1,5x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Slugger",
+   "kind": "primary_weapon",
+   "code": "SG-8S"
+  },
+  "32": {
+   "keys": [
+    "0x4E310B1FE4C52B52"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x661DF57B",
+     "name": "TUBE REDDOT 1,5x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0xCB80E025",
+     "name": "SHOTGUN 10g. FLECHETTES",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 7,
+     "option": "0xA5CF75C8",
+     "name": "SHOTGUN 10g. Stun ALTERNATE",
+     "allowed": [
+      "AmmoTypeAlternate"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Halt",
+   "kind": "primary_weapon",
+   "code": "SG-20"
+  },
+  "33": {
+   "keys": [
+    "0xD323DE60855898AC"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xB7303DA1",
+     "name": "REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Cookout",
+   "kind": "primary_weapon",
+   "code": "SG-451"
+  },
+  "34": {
+   "keys": [
+    "0x05D8D8C073B9D502"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x4672A011",
+     "name": "HOLOGRAPHIC SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Punisher Plasma",
+   "kind": "primary_weapon",
+   "code": "SG-8P"
+  },
+  "35": {
+   "keys": [
+    "0xDCD1C835407EF7BA"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0xF592F7E5",
+     "name": "Trenchgun Bayonet",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x7766DA38",
+     "name": "No Optics",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Sweeper",
+   "kind": "primary_weapon",
+   "code": "SG-97"
+  },
+  "36": {
+   "keys": [
+    "0x72170A55A1F37FF1"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0xACC1561C",
+     "name": "No Underbarrel",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Double Freedom",
+   "kind": "primary_weapon",
+   "code": "DBS-2"
+  },
+  "37": {
+   "keys": [
+    "0x90DDC374F4E3D756"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0x19AF4444",
+     "name": "Empty Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Shotgun",
+   "kind": "primary_weapon",
+   "code": "M90A"
+  },
+  "38": {
+   "keys": [
+    "0x9571CA51F0DAF35B"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0x47E45B79",
+     "name": "SMG 9x20mm. Top Mounted Standard",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xB7303DA1",
+     "name": "REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Knight",
+   "kind": "primary_weapon",
+   "code": "MP-98"
+  },
+  "39": {
+   "keys": [
+    "0x8A307BD1811A5FE9"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0xEB75D04E",
+     "name": "SMG Flamer Extended Magazine",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x7766DA38",
+     "name": "No Optics",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0x3E186F1F",
+     "name": "Flamerthrower SMG Flamer",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Stoker",
+   "kind": "primary_weapon",
+   "code": "SMG/FLAM-34"
+  },
+  "40": {
+   "keys": [
+    "0x4BA41B6F9F405CC2"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 5,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    }
+   ],
+   "name": "SMG",
+   "kind": "primary_weapon",
+   "code": "StA-11"
+  },
+  "41": {
+   "keys": [
+    "0xBE70EE0D8D44028E"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0x19AF4444",
+     "name": "Empty Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "SMG",
+   "kind": "primary_weapon",
+   "code": "M7S"
+  },
+  "42": {
+   "keys": [
+    "0x94BD931B5FB4EE95"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x4672A011",
+     "name": "HOLOGRAPHIC SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Reprimand",
+   "kind": "primary_weapon",
+   "code": "SMG-32"
+  },
+  "43": {
+   "keys": [
+    "0x186EA95DE7306B1A"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0xCD85679E",
+     "name": "SMG 9x20mm. Top Mounted Standard Solvent",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xB7303DA1",
+     "name": "REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Gallant",
+   "kind": "primary_weapon",
+   "code": "SMG-203"
+  },
+  "44": {
+   "keys": [
+    "0x30061F91AF477F5E"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x0437A4A6",
+     "name": "SNIPER SCOPE 10x HELGHAST",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 8,
+     "option": "0x6EEAFF66",
+     "name": "Default Internal",
+     "allowed": [
+      "Internals"
+     ]
+    },
+    {
+     "slot": 9,
+     "option": "0x7E7D4EEE",
+     "name": "Default Trigger",
+     "allowed": [
+      "Triggers"
+     ]
+    }
+   ],
+   "name": "Accelerator Rifle",
+   "kind": "primary_weapon",
+   "code": "PLAS-39"
+  },
+  "45": {
+   "keys": [
+    "0xF992CE97577C8A7F"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x322A9233",
+     "name": "TUBE REDDOT 2x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 8,
+     "option": "0x6EEAFF66",
+     "name": "Default Internal",
+     "allowed": [
+      "Internals"
+     ]
+    },
+    {
+     "slot": 9,
+     "option": "0x7E7D4EEE",
+     "name": "Default Trigger",
+     "allowed": [
+      "Triggers"
+     ]
+    }
+   ],
+   "name": "Variable",
+   "kind": "primary_weapon",
+   "code": "VG-70"
+  },
+  "46": {
+   "keys": [
+    "0xEAACABBFEC7BC08D"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "47": {
+   "keys": [
+    "0xCF8934FF6567A42D"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0x7766DA38",
+     "name": "No Optics",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xACC1561C",
+     "name": "No Underbarrel",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Warrant",
+   "kind": "sidearm",
+   "code": "P-92"
+  },
+  "48": {
+   "keys": [
+    "0x14D5D4506056C7A4"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0x7766DA38",
+     "name": "No Optics",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xACC1561C",
+     "name": "No Underbarrel",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Missile Pistol",
+   "kind": "sidearm",
+   "code": "P-33"
+  },
+  "49": {
+   "keys": [
+    "0x05E4E5C2DB6E44A2"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0xABEA8C15",
+     "name": "PISTOL-SMG 9x20mm. HOLLOW POINT",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 5,
+     "option": "0x116E8A0F",
+     "name": "Pistol 12x20mm. Standard",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x7766DA38",
+     "name": "No Optics",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Peacemaker",
+   "kind": "sidearm",
+   "code": "P-2"
+  },
+  "50": {
+   "keys": [
+    "0xD6B1FB05B9109353"
+   ],
+   "entries": [],
+   "name": "Stim Pistol",
+   "kind": "sidearm",
+   "code": "P-11"
+  },
+  "51": {
+   "keys": [
+    "0x9F27E0579375B865"
+   ],
+   "entries": [],
+   "name": "未知",
+   "kind": "interactable",
+   "code": null
+  },
+  "52": {
+   "keys": [
+    "0x2B11C9E4980EC479"
+   ],
+   "entries": [],
+   "name": "Anti-Tank Emplacement",
+   "kind": "interactable",
+   "code": "E/AT-12"
+  },
+  "53": {
+   "keys": [
+    "0x68A34D32A1025F04"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "54": {
+   "keys": [
+    "0x820CC3BAFE962858"
+   ],
+   "entries": [],
+   "name": "Flame Sentry",
+   "kind": "unit",
+   "code": "A/FLAM-40"
+  },
+  "55": {
+   "keys": [
+    "0x56070F36CFFFA8A8"
+   ],
+   "entries": [],
+   "name": "Laser Sentry",
+   "kind": "unit",
+   "code": "A/LAS-98"
+  },
+  "56": {
+   "keys": [
+    "0xAA4564F90CDBF5F1"
+   ],
+   "entries": [],
+   "name": "Gatling Sentry",
+   "kind": "unit",
+   "code": ""
+  },
+  "57": {
+   "keys": [
+    "0x0E977C49DB7604F9"
+   ],
+   "entries": [],
+   "name": "HMG Emplacement",
+   "kind": "interactable",
+   "code": "E/MG-101"
+  },
+  "58": {
+   "keys": [
+    "0xA970CBA66FBEAA11"
+   ],
+   "entries": [],
+   "name": "HMG Emplacement",
+   "kind": "interactable",
+   "code": "E/MG-101"
+  },
+  "59": {
+   "keys": [
+    "0x51A0812E3BCE2D74"
+   ],
+   "entries": [],
+   "name": "Mortar Sentry",
+   "kind": "unit",
+   "code": "A/M-12"
+  },
+  "60": {
+   "keys": [
+    "0x299C0D3DFD2F0994"
+   ],
+   "entries": [],
+   "name": "Gas Mortar Sentry",
+   "kind": "unit",
+   "code": "A/GM-17"
+  },
+  "61": {
+   "keys": [
+    "0xB2053A1838092F8B"
+   ],
+   "entries": [],
+   "name": "EMS Mortar Sentry",
+   "kind": "unit",
+   "code": "A/M-23"
+  },
+  "62": {
+   "keys": [
+    "0x8633FF89EF4F6788"
+   ],
+   "entries": [],
+   "name": "未知",
+   "kind": "unit",
+   "code": null
+  },
+  "63": {
+   "keys": [
+    "0x37079568DC86E9C6"
+   ],
+   "entries": [],
+   "name": "Rocket Sentry",
+   "kind": "unit",
+   "code": "A/MLS-4X"
+  },
+  "64": {
+   "keys": [
+    "0x74599E56F72F9D7E"
+   ],
+   "entries": [],
+   "name": "Tesla Tower",
+   "kind": "unit",
+   "code": "A/ARC-3"
+  },
+  "65": {
+   "keys": [
+    "0xEF85D6CF58E31D70"
+   ],
+   "entries": [],
+   "name": "Gatling Sentry",
+   "kind": "unit",
+   "code": "A/G-16"
+  },
+  "66": {
+   "keys": [
+    "0x7FF0FD4572F5996F"
+   ],
+   "entries": [],
+   "name": "Gatling Sentry",
+   "kind": "unit",
+   "code": "A/G-16"
+  },
+  "67": {
+   "keys": [
+    "0x57F27CBD5B71B0CB"
+   ],
+   "entries": [],
+   "name": "Gatling Sentry",
+   "kind": "unit",
+   "code": "A/G-16"
+  },
+  "68": {
+   "keys": [
+    "0x37CDE43876BA26BB"
+   ],
+   "entries": [],
+   "name": "Machine Gun Sentry",
+   "kind": "unit",
+   "code": "A/MG-43"
+  },
+  "69": {
+   "keys": [
+    "0xDE6CD49631940A14"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "70": {
+   "keys": [
+    "0x03271411D3D0BAB9"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "71": {
+   "keys": [
+    "0x52071F49263415E4"
+   ],
+   "entries": [],
+   "name": "Break-Action Shotgun",
+   "kind": "support_weapon",
+   "code": "SG-88"
+  },
+  "72": {
+   "keys": [
+    "0x04C99523A808EF90"
+   ],
+   "entries": [],
+   "name": "Gatling Sentry",
+   "kind": "unit",
+   "code": "A/G-16"
+  },
+  "73": {
+   "keys": [
+    "0x87F46B6D12BB016A"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "74": {
+   "keys": [
+    "0x372481E910C05A76"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0x19AF4444",
+     "name": "Empty Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "TACTICAL VIDEO CAMERA",
+   "kind": "support_weapon",
+   "code": ""
+  },
+  "75": {
+   "keys": [
+    "0x992B6F65A5BAB53D"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "76": {
+   "keys": [
+    "0x02CD7321CD8445F5"
+   ],
+   "entries": [
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "77": {
+   "keys": [
+    "0xB9C209B4F99B5335"
+   ],
+   "entries": [
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "78": {
+   "keys": [
+    "0x51F50D6321F52F3D"
+   ],
+   "entries": [],
+   "name": "C4 Pack",
+   "kind": "support_weapon",
+   "code": "B/MD"
+  },
+  "79": {
+   "keys": [
+    "0x6BF1164EA3829A23"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0xFDADA093",
+     "name": null,
+     "allowed": null
+    }
+   ],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "80": {
+   "keys": [
+    "0xA32621E3BDE13379"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    }
+   ],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "81": {
+   "keys": [
+    "0x263817187B7CE092"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    }
+   ],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "82": {
+   "keys": [
+    "0x3D4970D1C4E640EE"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    }
+   ],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "83": {
+   "keys": [
+    "0xA1379C8C41A10E22"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    }
+   ],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "84": {
+   "keys": [
+    "0x65CD4325BA23F3C6"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    }
+   ],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "85": {
+   "keys": [
+    "0xB729A2BA153BCAED"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    }
+   ],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "86": {
+   "keys": [
+    "0x2C66C201B2543D2C"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0xE917F79B",
+     "name": "Laser. Standard Prism",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x322A9233",
+     "name": "TUBE REDDOT 2x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Scythe",
+   "kind": "interactable",
+   "code": "LAS-5"
+  },
+  "87": {
+   "keys": [
+    "0xA0532C3616528CBF"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x1763D3A5",
+     "name": null,
+     "allowed": null
+    }
+   ],
+   "name": "K-9",
+   "kind": "interactable",
+   "code": "AX/ARC-3"
+  },
+  "88": {
+   "keys": [
+    "0xFCD8A6E67EAC635A"
+   ],
+   "entries": [],
+   "name": "SABER",
+   "kind": "sidearm",
+   "code": "CQC-2"
+  },
+  "89": {
+   "keys": [
+    "0xBF4CFD2AEABFB5A4"
+   ],
+   "entries": [],
+   "name": "Defoliation Tool",
+   "kind": "support_weapon",
+   "code": "CQC-9"
+  },
+  "90": {
+   "keys": [
+    "0x52CDBFBACA3CB397"
+   ],
+   "entries": [],
+   "name": "STUN BATON",
+   "kind": "sidearm",
+   "code": "CQC-30"
+  },
+  "91": {
+   "keys": [
+    "0xB0F1B354BA1D38D8"
+   ],
+   "entries": [],
+   "name": "One True Flag",
+   "kind": "support_weapon",
+   "code": "CQC-1"
+  },
+  "92": {
+   "keys": [
+    "0x75816077C139C850"
+   ],
+   "entries": [],
+   "name": "COMBAT HATCHET",
+   "kind": "sidearm",
+   "code": "CQC-5"
+  },
+  "93": {
+   "keys": [
+    "0x792D5D2A340FD6E6"
+   ],
+   "entries": [],
+   "name": "MACHETE",
+   "kind": "sidearm",
+   "code": "CQC-42"
+  },
+  "94": {
+   "keys": [
+    "0x2EC9CD598E31930F"
+   ],
+   "entries": [],
+   "name": "未知",
+   "kind": "sidearm",
+   "code": null
+  },
+  "95": {
+   "keys": [
+    "0x076DD5D4F4360204"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xB7303DA1",
+     "name": "REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Blitzer",
+   "kind": "primary_weapon",
+   "code": "ARC-12"
+  },
+  "96": {
+   "keys": [
+    "0x968211C0033DCE64"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0x73CA1B5E",
+     "name": "Rifle 5,5x50mm. Extended",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x322A9233",
+     "name": "TUBE REDDOT 2x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x5F6938E0",
+     "name": "RIFLE 5,5x50mm. FULL METAL JACKET",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 8,
+     "option": "0x6EEAFF66",
+     "name": "Default Internal",
+     "allowed": [
+      "Internals"
+     ]
+    },
+    {
+     "slot": 9,
+     "option": "0x7E7D4EEE",
+     "name": "Default Trigger",
+     "allowed": [
+      "Triggers"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Liberator",
+   "kind": "primary_weapon",
+   "code": "AR-23"
+  },
+  "97": {
+   "keys": [
+    "0x43CB1033961A2276"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0x73CA1B5E",
+     "name": "Rifle 5,5x50mm. Extended",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x50954956",
+     "name": "5,5mm. Muzzle brake Custom Penetrator",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xE8C28B34",
+     "name": "COMBAT SCOPE 4x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 8,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 9,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Liberator Penetrator",
+   "kind": "primary_weapon",
+   "code": "AR-23P"
+  },
+  "98": {
+   "keys": [
+    "0xCF5F176E0E322BE1"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0xDF4F1322",
+     "name": "Rifle 5,5x50mm. Drum",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0x661DF57B",
+     "name": "TUBE REDDOT 1,5x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 8,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 9,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Liberator Concussive",
+   "kind": "primary_weapon",
+   "code": "AR-23C"
+  },
+  "99": {
+   "keys": [
+    "0xA955C4EA6F6D4203"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0xF5575366",
+     "name": "8mm. Naked",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x322A9233",
+     "name": "TUBE REDDOT 2x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xA051BF6B",
+     "name": "Grenade Launcher Grenadier",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "One-Two",
+   "kind": "primary_weapon",
+   "code": "AR/GL-21"
+  },
+  "100": {
+   "keys": [
+    "0xCDF28BE026BB7D84"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0x2F7B4497",
+     "name": "Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Assault Rifle",
+   "kind": "primary_weapon",
+   "code": "StA-52"
+  },
+  "101": {
+   "keys": [
+    "0xBC29613666DF696B"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0x45A1B03E",
+     "name": "Karbin Rifle Standard",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x30A96727",
+     "name": "5mm. Muzzle brake Custom Karbin",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xB7303DA1",
+     "name": "REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0xD089330E",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 8,
+     "option": "0x6EEAFF66",
+     "name": "Default Internal",
+     "allowed": [
+      "Internals"
+     ]
+    },
+    {
+     "slot": 9,
+     "option": "0x7E7D4EEE",
+     "name": "Default Trigger",
+     "allowed": [
+      "Triggers"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Pacifier",
+   "kind": "primary_weapon",
+   "code": "AR-32"
+  },
+  "102": {
+   "keys": [
+    "0x84354339522C932D"
+   ],
+   "entries": [
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0xA7486400",
+     "name": "8mm. Muzzle brake Custom Assault Rifle Large Calibre",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x7766DA38",
+     "name": "No Optics",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xACC1561C",
+     "name": "No Underbarrel",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Coyote",
+   "kind": "primary_weapon",
+   "code": "AR-2"
+  },
+  "103": {
+   "keys": [
+    "0xB80951732A5F58F4"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0x50B096F2",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x5DE7486E",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 6,
+     "option": "0x5F6938E0",
+     "name": "RIFLE 5,5x50mm. FULL METAL JACKET",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0x5E7B4249",
+     "name": null,
+     "allowed": null
+    }
+   ],
+   "name": "Liberator Legacy",
+   "kind": "primary_weapon",
+   "code": "AR-23L"
+  },
+  "104": {
+   "keys": [
+    "0x4DBD74F49C8FFC13"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0x19AF4444",
+     "name": "Empty Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Assault Rifle",
+   "kind": "primary_weapon",
+   "code": "MA5C"
+  },
+  "105": {
+   "keys": [
+    "0xA7EE1EBF58FCDF1F"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0x71FBEF8C",
+     "name": "Rifle 5,5x50mm. Extended Fastreload",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xE790FA4F",
+     "name": "REFLEX SIGHT MKII",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Liberator Carbine",
+   "kind": "primary_weapon",
+   "code": "AR-23A"
+  },
+  "106": {
+   "keys": [
+    "0xCE063AA33D95A812"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x322A9233",
+     "name": "TUBE REDDOT 2x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0xEDEFC811",
+     "name": "8mm. Muzzle brake Custom Tenderdizer",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 8,
+     "option": "0x6EEAFF66",
+     "name": "Default Internal",
+     "allowed": [
+      "Internals"
+     ]
+    },
+    {
+     "slot": 9,
+     "option": "0x7E7D4EEE",
+     "name": "Default Trigger",
+     "allowed": [
+      "Triggers"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Tenderizer",
+   "kind": "primary_weapon",
+   "code": "AR-61"
+  },
+  "107": {
+   "keys": [
+    "0xA8A91EB54892B6B2"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x7CC6EE5A",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0x322A9233",
+     "name": "TUBE REDDOT 2x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xFC0659C0",
+     "name": "shotgun risk",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Arbitrator",
+   "kind": "primary_weapon",
+   "code": "AR-11"
+  },
+  "108": {
+   "keys": [
+    "0x708EA298C82093D0"
+   ],
+   "entries": [
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    },
+    {
+     "slot": 5,
+     "option": "0x73CA1B5E",
+     "name": "Rifle 5,5x50mm. Extended",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xE790FA4F",
+     "name": "REFLEX SIGHT MKII",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xCD55C088",
+     "name": "Laser Sight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Suppressor",
+   "kind": "primary_weapon",
+   "code": "AR-59"
+  },
+  "109": {
+   "keys": [
+    "0x46183B50961D1328"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0xCA77DC98",
+     "name": "SHOTGUN 12g. Magazine Extended",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x12688350",
+     "name": "SHOTGUN 12g. BIRDSHOT",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xB7303DA1",
+     "name": "REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Breaker",
+   "kind": "primary_weapon",
+   "code": "SG-225"
+  },
+  "110": {
+   "keys": [
+    "0x5EBAEA70C0D060B9"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0x562192C1",
+     "name": "SHOTGUN 12g. Drum Light",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x5573F605",
+     "name": "12g. Duckbill",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0xE790FA4F",
+     "name": "REFLEX SIGHT MKII",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Breaker Spray&Pray",
+   "kind": "primary_weapon",
+   "code": "SG-225SP"
+  },
+  "111": {
+   "keys": [
+    "0xC12A34F375BD5A87"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0x2B798DFB",
+     "name": "SHOTGUN 12g. Drum",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 6,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0x4672A011",
+     "name": "HOLOGRAPHIC SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Breaker Incendiary",
+   "kind": "primary_weapon",
+   "code": "SG-225IE"
+  },
+  "112": {
+   "keys": [
+    "0x5FECAB819F96A3E8"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x322A9233",
+     "name": "TUBE REDDOT 2x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x5C890DD5",
+     "name": "8mm. Muzzle brake Custom Adjudicator",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 8,
+     "option": "0x6EEAFF66",
+     "name": "Default Internal",
+     "allowed": [
+      "Internals"
+     ]
+    },
+    {
+     "slot": 9,
+     "option": "0x7E7D4EEE",
+     "name": "Default Trigger",
+     "allowed": [
+      "Triggers"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xACC1561C",
+     "name": "No Underbarrel",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Adjudicator",
+   "kind": "primary_weapon",
+   "code": "BR-14"
+  },
+  "113": {
+   "keys": [
+    "0x0F83639AB8C86165"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0x71052F45",
+     "name": "Bayonet",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xE8C28B34",
+     "name": "COMBAT SCOPE 4x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Amendment",
+   "kind": "primary_weapon",
+   "code": "R-2"
+  },
+  "114": {
+   "keys": [
+    "0x7B75E5132FFD4CA6"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0x71052F45",
+     "name": "Bayonet",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Constitution",
+   "kind": "primary_weapon",
+   "code": "R-2124"
+  },
+  "115": {
+   "keys": [
+    "0x41F2DEF484634B59"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x67E0A480",
+     "name": "SNIPER SCOPE 10x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    },
+    {
+     "slot": 5,
+     "option": "0x5335D215",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 4,
+     "option": "0x2CD6454D",
+     "name": "Muzzle brake Custom Drake",
+     "allowed": [
+      "Muzzle"
+     ]
+    }
+   ],
+   "name": "Sightliner",
+   "kind": "primary_weapon",
+   "code": "R-40"
+  },
+  "116": {
+   "keys": [
+    "0xF49227A0630A3F7F"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x661DF57B",
+     "name": "TUBE REDDOT 1,5x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Exploding Crossbow",
+   "kind": "primary_weapon",
+   "code": "CB-9"
+  },
+  "117": {
+   "keys": [
+    "0x4FB0F8C02F55C82B"
+   ],
+   "entries": [
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Torcher",
+   "kind": "primary_weapon",
+   "code": "FLAM-66"
+  },
+  "118": {
+   "keys": [
+    "0x80F1A156D9FA1E36"
+   ],
+   "entries": [
+    {
+     "slot": 6,
+     "option": "0x16162DDB",
+     "name": "ROCKET 15x100mm. STANDARD ROCKET",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x661DF57B",
+     "name": "TUBE REDDOT 1,5x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Dominator",
+   "kind": "primary_weapon",
+   "code": "JAR-5"
+  },
+  "119": {
+   "keys": [
+    "0xB6AFF2195568767F"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x67E0A480",
+     "name": "SNIPER SCOPE 10x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xACC1561C",
+     "name": "No Underbarrel",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Eruptor",
+   "kind": "primary_weapon",
+   "code": "R-36"
+  },
+  "120": {
+   "keys": [
+    "0x27EE1ED8F6FB6356"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0xF3D0DF39",
+     "name": "Laser Heatsink. Medium Standard",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0xE917F79B",
+     "name": "Laser. Standard Prism",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x322A9233",
+     "name": "TUBE REDDOT 2x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Scythe",
+   "kind": "primary_weapon",
+   "code": "LAS-5"
+  },
+  "121": {
+   "keys": [
+    "0x7E3145A5BAA4B948"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0xD65DC159",
+     "name": "Laser. Charge Standard",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x322A9233",
+     "name": "TUBE REDDOT 2x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 5,
+     "option": "0x5672E4B7",
+     "name": "Laser Heatsink (Charge). Standard Heatsink",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Shear",
+   "kind": "primary_weapon",
+   "code": "LAS-22"
+  },
+  "122": {
+   "keys": [
+    "0x8645F167B3C813A2"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x322A9233",
+     "name": "TUBE REDDOT 2x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Sickle",
+   "kind": "primary_weapon",
+   "code": "LAS-16"
+  },
+  "123": {
+   "keys": [
+    "0x295BEB26DC4F8FF1"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x322A9233",
+     "name": "TUBE REDDOT 2x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Double-Edge Sickle",
+   "kind": "primary_weapon",
+   "code": "LAS-17"
+  },
+  "124": {
+   "keys": [
+    "0x3C86E871923F3970"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x661DF57B",
+     "name": "TUBE REDDOT 1,5x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "LAS-13 Trident",
+   "kind": "primary_weapon",
+   "code": ""
+  },
+  "125": {
+   "keys": [
+    "0xC85F576D5E086147"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x4E8B903C",
+     "name": "Laser. Blaster Standard",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x322A9233",
+     "name": "TUBE REDDOT 2x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 5,
+     "option": "0x39BBF52C",
+     "name": "Laser Heatsink (Blaster). Standard",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Sai",
+   "kind": "primary_weapon",
+   "code": "LAS-12"
+  },
+  "126": {
+   "keys": [
+    "0xE6D932BE83729076"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xE8C28B34",
+     "name": "COMBAT SCOPE 4x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Deadeye",
+   "kind": "primary_weapon",
+   "code": "R-6"
+  },
+  "127": {
+   "keys": [
+    "0xA6A735ACCB4A327F"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xE790FA4F",
+     "name": "REFLEX SIGHT MKII",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Stalwart",
+   "kind": "support_weapon",
+   "code": "M-105"
+  },
+  "128": {
+   "keys": [
+    "0xE5796355A8FD67E0"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x2CD6454D",
+     "name": "Muzzle brake Custom Drake",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x67E0A480",
+     "name": "SNIPER SCOPE 10x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xACC1561C",
+     "name": "No Underbarrel",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 5,
+     "option": "0xB7FA90FD",
+     "name": "RIFLE Drake. Standard",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Hyena",
+   "kind": "primary_weapon",
+   "code": "R-4"
+  },
+  "129": {
+   "keys": [
+    "0xF0338468DCDB6A6C"
+   ],
+   "entries": [
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    },
+    {
+     "slot": 5,
+     "option": "0x9FE412AD",
+     "name": "RIFLE Justice. Standard",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xE8C28B34",
+     "name": "COMBAT SCOPE 4x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xCD55C088",
+     "name": "Laser Sight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 8,
+     "option": "0x6EEAFF66",
+     "name": "Default Internal",
+     "allowed": [
+      "Internals"
+     ]
+    },
+    {
+     "slot": 9,
+     "option": "0x7E7D4EEE",
+     "name": "Default Trigger",
+     "allowed": [
+      "Triggers"
+     ]
+    }
+   ],
+   "name": "Censor",
+   "kind": "primary_weapon",
+   "code": "R-72"
+  },
+  "130": {
+   "keys": [
+    "0x1ABBFF60D26BA391"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xA10F7D9D",
+     "name": "SNIPER SCOPE 10x SHARK",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Hot-shot Marksman Rifle",
+   "kind": "primary_weapon",
+   "code": "R/40-K"
+  },
+  "131": {
+   "keys": [
+    "0x03E67A19B07C6523"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xE8C28B34",
+     "name": "COMBAT SCOPE 4x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xACC1561C",
+     "name": "No Underbarrel",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x53532116",
+     "name": "RIFLE 9x70mm. Full Metal Jacket",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 8,
+     "option": "0x6EEAFF66",
+     "name": "Default Internal",
+     "allowed": [
+      "Internals"
+     ]
+    },
+    {
+     "slot": 9,
+     "option": "0x7E7D4EEE",
+     "name": "Default Trigger",
+     "allowed": [
+      "Triggers"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Diligence",
+   "kind": "primary_weapon",
+   "code": "R-63"
+  },
+  "132": {
+   "keys": [
+    "0x4C786785C79D44E7"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x8D4A9C4C",
+     "name": "9mm. Muzzle brake Custom Diligence Counter Sniper",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x67E0A480",
+     "name": "SNIPER SCOPE 10x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xACC1561C",
+     "name": "No Underbarrel",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 8,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 9,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Diligence Counter Sniper",
+   "kind": "primary_weapon",
+   "code": "R-63CS"
+  },
+  "133": {
+   "keys": [
+    "0x4E4A613EB9BF5C24"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0x01B37BEC",
+     "name": "SMG 12x25mm. Extended",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x2B1CE4A2",
+     "name": "PISTOL-SMG 12x25mm. FULL METAL JACKET",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xB7303DA1",
+     "name": "REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Defender",
+   "kind": "primary_weapon",
+   "code": "SMG-37"
+  },
+  "134": {
+   "keys": [
+    "0x0807AEA5217E4767"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0xDC2ADA1D",
+     "name": "SMG 12x25mm. Extended Pummeler",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0xB7303DA1",
+     "name": "REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Pummeler",
+   "kind": "primary_weapon",
+   "code": "SMG-72"
+  },
+  "135": {
+   "keys": [
+    "0x4F8A477E577AABA9"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0xDF9CEBAE",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0x18E82F12",
+     "name": null,
+     "allowed": null
+    }
+   ],
+   "name": "未知",
+   "kind": "support_weapon",
+   "code": null
+  },
+  "136": {
+   "keys": [
+    "0xEEA5E3CEF1E12C14"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x661DF57B",
+     "name": "TUBE REDDOT 1,5x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Scorcher",
+   "kind": "primary_weapon",
+   "code": "PLAS-1"
+  },
+  "137": {
+   "keys": [
+    "0xFB3A19078694708A"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x661DF57B",
+     "name": "TUBE REDDOT 1,5x",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 3,
+     "option": "0x80FBE63D",
+     "name": "Default",
+     "allowed": [
+      "PaintScheme"
+     ]
+    }
+   ],
+   "name": "Purifier",
+   "kind": "primary_weapon",
+   "code": "PLAS-101"
+  },
+  "138": {
+   "keys": [
+    "0x2B28E17FFED05F7C"
+   ],
+   "entries": [],
+   "name": "Bushwhacker",
+   "kind": "sidearm",
+   "code": "SG-22"
+  },
+  "139": {
+   "keys": [
+    "0x3575AABC5F1F9326"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0xB269A0B3",
+     "name": "Pistol 9x20mm. Extended",
+     "allowed": [
+      "Magazine"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0x2F7B4497",
+     "name": "Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x4B7F0B70",
+     "name": "PISTOL-SMG 9x20mm. FULL METAL JACKET",
+     "allowed": [
+      "AmmoType"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x469F34D9",
+     "name": "PISTOL REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Redeemer",
+   "kind": "sidearm",
+   "code": "P-19"
+  },
+  "140": {
+   "keys": [
+    "0x0B882808C6F498E8"
+   ],
+   "entries": [],
+   "name": "Re-educator",
+   "kind": "sidearm",
+   "code": "P-35"
+  },
+  "141": {
+   "keys": [
+    "0x416D053372C4E433"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x469F34D9",
+     "name": "PISTOL REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "TALON",
+   "kind": "sidearm",
+   "code": "LAS-58"
+  },
+  "142": {
+   "keys": [
+    "0x3F92BA65EF65CCA9"
+   ],
+   "entries": [],
+   "name": "Crisper",
+   "kind": "sidearm",
+   "code": "P-72"
+  },
+  "143": {
+   "keys": [
+    "0x52E4334E6A128CAF"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0x9B8A552E",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 5,
+     "option": "0x4C3D3D31",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0x469F34D9",
+     "name": "PISTOL REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Grenade Pistol",
+   "kind": "sidearm",
+   "code": "GP-31"
+  },
+  "144": {
+   "keys": [
+    "0xE91F569C2AD8AF01"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0x7766DA38",
+     "name": "No Optics",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xACC1561C",
+     "name": "No Underbarrel",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Breacher",
+   "kind": "sidearm",
+   "code": "P-34"
+  },
+  "145": {
+   "keys": [
+    "0x7B06196E90154C88"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0x2F7B4497",
+     "name": "Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x469F34D9",
+     "name": "PISTOL REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Dagger",
+   "kind": "sidearm",
+   "code": "LAS-7"
+  },
+  "146": {
+   "keys": [
+    "0x027DEC442CC26A90"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0x469F34D9",
+     "name": "PISTOL REFLEX SIGHT",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Mist",
+   "kind": "sidearm",
+   "code": "P-44"
+  },
+  "147": {
+   "keys": [
+    "0x1A437158E1B8D2A1"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0x7766DA38",
+     "name": "No Optics",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Verdict",
+   "kind": "sidearm",
+   "code": "P-113"
+  },
+  "148": {
+   "keys": [
+    "0xC780BCD79547DA0F"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 2,
+     "option": "0x7766DA38",
+     "name": "No Optics",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xCD55C088",
+     "name": "Laser Sight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Veto",
+   "kind": "sidearm",
+   "code": "P-69"
+  },
+  "149": {
+   "keys": [
+    "0x9EB160830321BFD6"
+   ],
+   "entries": [],
+   "name": "Ultimatum",
+   "kind": "sidearm",
+   "code": "GP-20"
+  },
+  "150": {
+   "keys": [
+    "0x4D58C77087B774C5"
+   ],
+   "entries": [
+    {
+     "slot": 1,
+     "option": "0x99223280",
+     "name": "Empty Laser Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Pistol",
+   "kind": "sidearm",
+   "code": "M6C/SOCOM"
+  },
+  "151": {
+   "keys": [
+    "0xDBB6C961C59FADC1"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 2,
+     "option": "0x7766DA38",
+     "name": "No Optics",
+     "allowed": [
+      "Optics"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0xACC1561C",
+     "name": "No Underbarrel",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Bolt Pistol",
+   "kind": "sidearm",
+   "code": "P/40-K"
+  },
+  "152": {
+   "keys": [
+    "0xAA69A60D74A3EC54"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0x6AF10FB5",
+     "name": "Plasma Pistol. Canister Pistol",
+     "allowed": [
+      "Magazine"
+     ]
+    }
+   ],
+   "name": "Loyalist",
+   "kind": "sidearm",
+   "code": "PLAS-15"
+  },
+  "153": {
+   "keys": [
+    "0x8D3D52A3B2F19402"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0xEED5C9C3",
+     "name": "Revolver. Medium Barrel",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0x2F7B4497",
+     "name": "Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x5CD42502",
+     "name": "REVOLVER 13x40mm. FULL METAL JACKET",
+     "allowed": [
+      "AmmoType"
+     ]
+    }
+   ],
+   "name": "Senator",
+   "kind": "sidearm",
+   "code": "P-4"
+  },
+  "154": {
+   "keys": [
+    "0xBDE1F2534280300D"
+   ],
+   "entries": [
+    {
+     "slot": 4,
+     "option": "0x0A702474",
+     "name": "No Muzzle",
+     "allowed": [
+      "Muzzle"
+     ]
+    },
+    {
+     "slot": 1,
+     "option": "0x2F7B4497",
+     "name": "Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    },
+    {
+     "slot": 6,
+     "option": "0x5CD42502",
+     "name": "REVOLVER 13x40mm. FULL METAL JACKET",
+     "allowed": [
+      "AmmoType"
+     ]
+    }
+   ],
+   "name": "Ombudsman",
+   "kind": "sidearm",
+   "code": "P-41"
+  },
+  "155": {
+   "keys": [
+    "0x26E40437EA275296"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xDD0F1240",
+     "name": "Support Scope",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Airburst Rocket Launcher",
+   "kind": "support_weapon",
+   "code": "RL-77"
+  },
+  "156": {
+   "keys": [
+    "0x96DE9CD50F7306E6"
+   ],
+   "entries": [],
+   "name": "Arc Thrower",
+   "kind": "support_weapon",
+   "code": "ARC-3"
+  },
+  "157": {
+   "keys": [
+    "0xA8CFFB316F0B5C5F"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xDD0F1240",
+     "name": "Support Scope",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Autocannon",
+   "kind": "support_weapon",
+   "code": "AC-8"
+  },
+  "158": {
+   "keys": [
+    "0x88C2D09AD85A7C9F"
+   ],
+   "entries": [],
+   "name": "Belt-Fed Grenade Launcher",
+   "kind": "support_weapon",
+   "code": "GL-28"
+  },
+  "159": {
+   "keys": [
+    "0x88F61AFFF48AC8A4"
+   ],
+   "entries": [],
+   "name": "Sterilizer",
+   "kind": "support_weapon",
+   "code": "TX-41"
+  },
+  "160": {
+   "keys": [
+    "0x6CFCC7F8801A0266"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xDD0F1240",
+     "name": "Support Scope",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Meltagun",
+   "kind": "support_weapon",
+   "code": "40-K"
+  },
+  "161": {
+   "keys": [
+    "0xB16C9D490AA59B77"
+   ],
+   "entries": [],
+   "name": "Bullet Storm",
+   "kind": "support_weapon",
+   "code": "MGX-42"
+  },
+  "162": {
+   "keys": [
+    "0x7617642765AC38C7"
+   ],
+   "entries": [],
+   "name": "Leveller",
+   "kind": "support_weapon",
+   "code": "EAT-411"
+  },
+  "163": {
+   "keys": [
+    "0xB2B5E0D185605F9E"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xDD0F1240",
+     "name": "Support Scope",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Expendable Napalm",
+   "kind": "support_weapon",
+   "code": "EAT-700"
+  },
+  "164": {
+   "keys": [
+    "0x25AA2FD4643CF4EE"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x73BB7CC0",
+     "name": "FAF SPEAR SCOPE",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Spear",
+   "kind": "support_weapon",
+   "code": "FAF-14"
+  },
+  "165": {
+   "keys": [
+    "0xCC786F6491FE7E65"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xA309B823",
+     "name": null,
+     "allowed": null
+    }
+   ],
+   "name": "W.A.S.P. Launcher",
+   "kind": "support_weapon",
+   "code": "StA-X3"
+  },
+  "166": {
+   "keys": [
+    "0x39AB99895147A3BF"
+   ],
+   "entries": [],
+   "name": "Flamethrower",
+   "kind": "support_weapon",
+   "code": "FLAM-40"
+  },
+  "167": {
+   "keys": [
+    "0x02EECD0B1FA49630"
+   ],
+   "entries": [],
+   "name": "Grenade Launcher",
+   "kind": "support_weapon",
+   "code": "GL-21"
+  },
+  "168": {
+   "keys": [
+    "0xFE3B29B2CFA63F9B"
+   ],
+   "entries": [],
+   "name": "De-Escalator",
+   "kind": "support_weapon",
+   "code": "GL-52"
+  },
+  "169": {
+   "keys": [
+    "0x3828E2051AA9E897"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x661DF57B",
+     "name": "TUBE REDDOT 1,5x",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Speargun",
+   "kind": "support_weapon",
+   "code": "S-11"
+  },
+  "170": {
+   "keys": [
+    "0x78A8185F63A70795"
+   ],
+   "entries": [],
+   "name": "Cremator",
+   "kind": "support_weapon",
+   "code": "B/FLAM-80"
+  },
+  "171": {
+   "keys": [
+    "0x2152D5147B0AC418"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xE790FA4F",
+     "name": "REFLEX SIGHT MKII",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Heavy Machine Gun",
+   "kind": "support_weapon",
+   "code": "MG-206"
+  },
+  "172": {
+   "keys": [
+    "0xD54B9505C0F72873"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xDD0F1240",
+     "name": "Support Scope",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Laser Cannon",
+   "kind": "support_weapon",
+   "code": "LAS-98"
+  },
+  "173": {
+   "keys": [
+    "0x5990123D142B16CB"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xDD0F1240",
+     "name": "Support Scope",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Commando",
+   "kind": "support_weapon",
+   "code": "MLS-4X"
+  },
+  "174": {
+   "keys": [
+    "0x35A61296619CC47E"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xDD0F1240",
+     "name": "Support Scope",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Quasar Cannon",
+   "kind": "support_weapon",
+   "code": "LAS-99"
+  },
+  "175": {
+   "keys": [
+    "0x73D84EAAE8C75342"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x5B4D98D3",
+     "name": null,
+     "allowed": null
+    }
+   ],
+   "name": "Nova",
+   "kind": "support_weapon",
+   "code": "LAS-44"
+  },
+  "176": {
+   "keys": [
+    "0x80932FA0ED6901D3"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xD9AA7E19",
+     "name": null,
+     "allowed": null
+    }
+   ],
+   "name": "Expendable Anti-Tank",
+   "kind": "support_weapon",
+   "code": "EAT-17"
+  },
+  "177": {
+   "keys": [
+    "0x11C27D3BABB38956"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x661DF57B",
+     "name": "TUBE REDDOT 1,5x",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Machine Gun",
+   "kind": "support_weapon",
+   "code": "MG-43"
+  },
+  "178": {
+   "keys": [
+    "0x43A58CB89CFA197C"
+   ],
+   "entries": [],
+   "name": "Maxigun",
+   "kind": "support_weapon",
+   "code": "M-1000"
+  },
+  "179": {
+   "keys": [
+    "0xFC13460592CA79AA"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xE8C28B34",
+     "name": "COMBAT SCOPE 4x",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Solo Silo Targeting Remote",
+   "kind": "support_weapon",
+   "code": ""
+  },
+  "180": {
+   "keys": [
+    "0xE8D5F49AD7780E54"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xDD0F1240",
+     "name": "Support Scope",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Epoch",
+   "kind": "support_weapon",
+   "code": "PLAS-45"
+  },
+  "181": {
+   "keys": [
+    "0x2E9D0BDC48B09E60"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x5A3E7EBC",
+     "name": "Railgun Scope",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Railgun",
+   "kind": "support_weapon",
+   "code": "RS-422"
+  },
+  "182": {
+   "keys": [
+    "0x9F80D67A12A7E40F"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xDD0F1240",
+     "name": "Support Scope",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Recoilless Rifle",
+   "kind": "support_weapon",
+   "code": "GR-8"
+  },
+  "183": {
+   "keys": [
+    "0x8E7968D7E7AA4EAB"
+   ],
+   "entries": [],
+   "name": "未知",
+   "kind": "other_item",
+   "code": null
+  },
+  "184": {
+   "keys": [
+    "0x89C5493E08CA4207"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x67E0A480",
+     "name": "SNIPER SCOPE 10x",
+     "allowed": [
+      "Optics"
+     ]
+    }
+   ],
+   "name": "Anti-Materiel Rifle",
+   "kind": "support_weapon",
+   "code": "APW-1"
+  },
+  "185": {
+   "keys": [
+    "0xB814EECE17533BC4"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0xF4B3B5AF",
+     "name": null,
+     "allowed": null
+    }
+   ],
+   "name": "Apex",
+   "kind": "support_weapon",
+   "code": "AMW-20"
+  },
+  "186": {
+   "keys": [
+    "0x73681FFD58FA1A90"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "187": {
+   "keys": [
+    "0x54D86057F5DACFB9"
+   ],
+   "entries": [],
+   "name": "Autocannon Sentry",
+   "kind": "unit",
+   "code": "A/AC-8"
+  },
+  "188": {
+   "keys": [
+    "0x1D5943301A29C940"
+   ],
+   "entries": [],
+   "name": "Grenadier Battlement",
+   "kind": "interactable",
+   "code": "E/GL-21"
+  },
+  "189": {
+   "keys": [
+    "0x085C1EDB038EC24E"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    }
+   ],
+   "name": "Heavy Machine Gun",
+   "kind": "support_weapon",
+   "code": "MG-206"
+  },
+  "190": {
+   "keys": [
+    "0xCD00BDC1149C2928"
+   ],
+   "entries": [
+    {
+     "slot": 2,
+     "option": "0x00000000",
+     "name": null,
+     "allowed": null
+    }
+   ],
+   "name": "Heavy Machine Gun",
+   "kind": "support_weapon",
+   "code": "MG-206"
+  },
+  "191": {
+   "keys": [
+    "0x444880F62CA7EAE8"
+   ],
+   "entries": [],
+   "name": "Cremator",
+   "kind": "support_weapon",
+   "code": "B/FLAM-80"
+  },
+  "192": {
+   "keys": [
+    "0x4DF41F84668D07FB"
+   ],
+   "entries": [],
+   "name": null,
+   "kind": null,
+   "code": null
+  },
+  "193": {
+   "keys": [
+    "0xB43235DBD493750C"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0xC3958D9E",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Stalwart",
+   "kind": "support_weapon",
+   "code": "M-105"
+  },
+  "194": {
+   "keys": [
+    "0xB9606C5AAB32C3C2"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0xC3958D9E",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Stalwart",
+   "kind": "support_weapon",
+   "code": "M-105"
+  },
+  "195": {
+   "keys": [
+    "0xD53EE03481AE73FD"
+   ],
+   "entries": [
+    {
+     "slot": 5,
+     "option": "0xC3958D9E",
+     "name": null,
+     "allowed": null
+    },
+    {
+     "slot": 1,
+     "option": "0xD9A3531E",
+     "name": "Laser Sight Flashlight",
+     "allowed": [
+      "Underbarrel"
+     ]
+    }
+   ],
+   "name": "Stalwart",
+   "kind": "support_weapon",
+   "code": "M-105"
+  }
+ }
+}
