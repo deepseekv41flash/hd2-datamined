@@ -309,3 +309,42 @@ Suzuka 当年也是这么写的（写 offset 16），引擎应按 slot 查表、
 | 增援本身出问题（增援舱灰方块等） | `+0xA8` 被别的系统占用 ⇒ 立刻回滚战备表 |
 
 回滚战备表：重新 seal `refs/dlbin/plaintext-26251122/generated_stratagem_settings.dl_bin` 并覆盖 `data/game/` 即可。
+
+### 9.9 实机确认（✓✓ 2026-10-30 21:2x）：Railgun **长出 10x 镜模型**
+
+玩家实机：换上 10x 后 Railgun **有模型了**。⇒ **支援武器配件「参数 + 模型」全链可改**：
+`L0 换 optionId`（参数/倍率/零位/准星/后坐力） + `资源驻留`（模型）。
+
+### 9.10 换成不依赖战备的驻留方式（✓ 已装盘）：补丁路线
+
+`docs/engine/RESOURCE-RESIDENCY-26088801.md` 的结论是「**声明口管包在不在，补丁管资源在不在**」。
+我们先用的是声明口（`+0xA8`），现在换成补丁路线，**战备表已回原版**：
+
+| 项 | 值 |
+|---|---|
+| 宿主包 | **`f6fb08cc02d24255`**（共享基础包，782 资源，必然常驻；该宿主此前没有补丁，用 `patch_0`） |
+| 条目 | **8 条**：`bones 0x6D54652EE217D712`、`mesh(unit) 0x6D54652EE217D712`（gpu 501 KiB）、`material 0x20CAB97A40D12B05`、`material 0xC9EF8AD9A2BBAE84`、`texture 0x11D16B39328ABF82`（gpu+stream 1.33 MiB）、`texture 0x9879FE7F28234491`、`texture 0xA77FE193C439C83F`、`texture 0xE703C134E7BADA38` |
+| 体积 | toc 8,032 B ＋ gpu 1,390,536 B ＋ stream 1,398,128 B |
+| 安装 | `data/f6fb08cc02d24255.patch_0{,.gpu_resources,.stream}` |
+| 门禁 | `resource_patch.py list` 回读 8 条类型/id 全对；战备表解封回读 = 原版明文逐字节一致 |
+
+⇒ 这条路线**不用叫增援**，也不需要任何战备行声明；资源按 `file_id` 进全局索引，任一已加载包里有就能解析。
+
+### 9.11 副武器（实验 M，✓ 已装盘）：P-2 Peacemaker 加反射镜
+
+副武器同样**没有独立的自定义入口**（用户判断），所以用与支援武器相同的办法试探：
+
+| 项 | 值 |
+|---|---|
+| 行 | 49（键 `0x05E4E5C2DB6E44A2`），`+0x18` |
+| 改动 | `(2, 0x7766DA38 No Optics)` → **`(2, 0x469F34D9 PISTOL REFLEX SIGHT)`** |
+| 门禁 | G1/G2/G3/G4/G6/G7/G8 全 PASS；链式写（在 Railgun 改动之上再跑一遍，哈希仍回到锚点） |
+| 装盘后实读 | Peacemaker L0 = `(4,No Muzzle) (6,AMMO) (5,Magazine) (2,PISTOL REFLEX SIGHT) (1,Laser Sight Flashlight)` |
+
+判读：
+
+| 现象 | 结论 |
+|---|---|
+| Peacemaker 上**出现反射镜** | ✅ 副武器与支援武器同机制 ⇒ 副武器配件全链可改 |
+| 只有参数层变（如准星/手感变）无模型 | 模型资源未驻留 ⇒ 给该附件包再加一份驻留补丁 |
+| **毫无变化** | 副武器有 L2（玩家选择）覆盖 L0 ⇒ 与主武器同类，只有支援武器这条路可走 |
