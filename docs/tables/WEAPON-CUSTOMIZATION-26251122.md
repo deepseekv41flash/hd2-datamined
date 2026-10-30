@@ -508,3 +508,89 @@ memmod 期文档 `docs/las22-unlock-analysis.md` §4.3 记的 7 条附件登记�
 | 出现但不可拾取 | 还缺 `LoadoutPackage`/字符串之类 ⇒ 继续补 |
 | 只出 MG-43 | 驻留不足以让它"可生成"（可能还需要 `unit` 或 `state_machine` 之外的实体资源）⇒ 查 `Unt`/实体依赖链 |
 | 卡顿/崩 | 17.6 MB 补丁的加载开销 ⇒ 回滚 patch_1 即可 |
+
+---
+
+## 11 成品配方：把未发布武器玩到手 + 任意改配件（LAS-22 Shear，✓✓ 全链实机 2026-10-30）
+
+### 11.1 一句话
+
+**舱送武器 → 整包资源驻留 → 捡起来 → L0 换配件 → 每条附件再补一份它的资产。**
+实机结果：LAS-22 可开火、**有光束特效**、光学镜有模型、专属散热器参数与模型齐全。
+
+### 11.2 核心机制：为什么"驻留"是必需的
+
+| 事实 | 证据 |
+|---|---|
+| 未发布武器的资源名就是哈希（`7E3145A5BAA4B948`），不在常规加载路径 ⇒ 舱直接生成会**静默失败** | 实验 O：Trident 只出 MG-43 |
+| 主武器**可以**当舱载荷、也**可以**被拾取 | 实验 Q：Constitution 出现且能捡 |
+| 配件**参数**（倍率/热容/后坐力/光束行…）由 delta 写入，**永远生效**，与资产无关 | 实验 K：只出现 50/100/200 零位档位、无模型 |
+| 配件的**模型/特效**必须资源已加载；memmod 时代靠"军械库装备路径按需流式加载"，走 L0 没有那条路径 | 实验 K/L/M/S；补丁驻留后模型立刻出现 |
+
+### 11.3 五件套（build 26251122，全部装 `data/`）
+
+| # | 文件 | 条目 | 解决什么 |
+|---|---|---|---|
+| 0 | `data/f6fb08cc02d24255.patch_0*` | 8 | 10x Sniper Scope 资产（给支援武器换镜用） |
+| 1 | `data/f6fb08cc02d24255.patch_1*` | **64** | **LAS-22 整包**（5 mesh / 20 material / 17 texture / 2 anim / 1 state_machine / 13 particles / 2 bones / 2 physics + audio）≈17.6 MB |
+| 2 | `data/f6fb08cc02d24255.patch_2*` | 8 | Reflex Sight MK.2（mesh + 2 material + 5 texture） |
+| 3 | `data/f6fb08cc02d24255.patch_3*` | 6 | Standard Heatsink（mesh+physics+material+3 texture） |
+| 4 | `data/f6fb08cc02d24255.patch_4*` | 32 | **激光武器共享特效包**（含炮塔光束粒子 `0x1EBE3CA801A89646` + mesh + 10 material + 7 texture） |
+
+宿主 `f6fb08cc02d24255` = 共享基础包（必然常驻）；补丁序号必须连续 `0..4`（缺号后面整体不生效）。
+
+### 11.4 LAS-22 的 L0 五槽（行 121，键 `0x7E3145A5BAA4B948`）与已验证取值
+
+| 槽 | 槽位 | 原版 | 已验证可换 | 模型 |
+|---|---|---|---|---|
+| 4 | Muzzle | `0xD65DC159 Laser. Charge Standard` | — | ✓ 在整包里 |
+| 2 | Optics | `0x322A9233 TUBE REDDOT 2x` | **`0xE790FA4F REFLEX SIGHT MKII`** ✓✓ | 需 `patch_2` |
+| 1 | Underbarrel | `0xD9A3531E Laser Sight Flashlight` | — | ✓ 在整包里 |
+| 5 | Magazine | `0x5672E4B7 Standard Heatsink` | **`0x53120A73 Rapid`** ✓✓（`0x3D0687C6 Extended` 同理） | 需 `patch_3`/`patch_4` |
+| 3 | PaintScheme | `0x80FBE63D Default` | 任意涂装 | — |
+
+### 11.5 ★ 关键知识：Rapid 走的是**哨戒炮那条 beam 行**
+
+`BeamSettings`（类型 `0xC5085606`，30 行 × 112 B，`+48/+52` = 粒子 fx u64）：
+
+| beam 行键 | 谁在用 | 粒子 fx | 该粒子在哪 |
+|---|---|---|---|
+| **8** | LAS-5 Scythe ＋ 切变配件 **Standard / Extended**（共用同一行，c4 §9.7d 实机） | `0x698B1C70167A03AE` | **LAS-22 自己包里**（patch_1 已覆盖） |
+| **24** | **哨戒炮 MK2** ＋ 切变配件 **Rapid** | **`0x1EBE3CA801A89646`** | 激光武器共享特效包 `0014a4ba255675bd` ⇒ **必须 patch_4** |
+
+⇒ 「Rapid 装上后没有激光特效」的根因就是这个：它把光束切到炮塔行、粒子换成炮塔的，而那份资产不在盘上。
+
+### 11.6 复现步骤（游戏关闭时执行）
+
+```bash
+# ① 舱槽写 LAS-22 实体键（rack 47 = MG-43 舱，槽1 保留 MG-43 作对照，spawn=2）
+python tools/rack_edit.py --plain refs/dlbin/plaintext-26251122/generated_entities.dl_bin   --rack 47 --slot 0=0x7E3145A5BAA4B948 --spawn 2 --out out/las22/step1.plain
+
+# ② 换配件（可链式，每次一个字段）
+python tools/entity_field_set.py set --plain out/las22/step1.plain --block 0xEBA8F3D0   --key 0x7E3145A5BAA4B948 --field 0x8  --type u64 --value 0xE790FA4F00000002 --out out/las22/step2.plain
+python tools/entity_field_set.py set --plain out/las22/step2.plain --block 0xEBA8F3D0   --key 0x7E3145A5BAA4B948 --field 0x18 --type u64 --value 0x53120A7300000005 --out out/las22/step3.plain
+
+# ③ 封包 + 装盘
+python tools/dlbin_seal.py seal-key out/las22/step3.plain --key refs/dlbin/keys/recipient.pk --out out/las22/entities.dl_bin
+cp out/las22/entities.dl_bin "…/data/game/generated_entities.dl_bin"
+cp out/…/f6fb08cc02d24255.patch_{0..4}* "…/data/"
+```
+
+### 11.7 回滚
+
+```bash
+rm "…/data/f6fb08cc02d24255.patch_"{0,1,2,3,4}*
+cp "D:/mod/backups/spray-capsule/generated_entities.vanilla.dl_bin" "…/data/game/generated_entities.dl_bin"
+```
+
+### 11.8 能力边界与坑（全部实机）
+
+| 项 | 结论 |
+|---|---|
+| 主武器 L0 改默认配件（已发布武器） | **✗**（被 L2 玩家选择覆盖，实验 J） |
+| 支援武器 / 副武器 / **未发布武器** L0 改配件 | **✓✓**（它们没有 L1/L2，L0 就是唯一入口） |
+| 附件"参数" | 永远生效（纯数值 delta） |
+| 附件"模型" | 必须**资产已驻留**；一套资产 = 一个 patch，用 `tools/res_index.py find <名字>` 按名字找包 |
+| 舱载荷 | 主武器 ✓✓、支援武器 ✓✓、NPC ✓✓；**副武器能生成但原版就不可拾取** |
+| 非 Standard 散热器 | 参数生效；外观取决于它的 magazine unit 指向哪套网格（Rapid 需 patch_3+patch_4 那两套） |
+| 新增配件（L1 解锁） | **✗** 数据表做不到（绑定/解锁图不在明文） |
