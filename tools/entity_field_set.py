@@ -58,9 +58,16 @@ def row_of(data, lib, block_tid, key):
         raise SystemExit(f"✗ 期望恰好 1 个块 0x{block_tid:08X}，实际 {len(bl)}")
     b = bl[0]
     ms = lib.members(block_tid)
-    if len(ms) != 2:
+    # 允许三成员形态（哈希图 + 行数组 + 尾部平行数组），例如 0x4F2CF417 LoadoutEntry：
+    # 成员2（796 B/199 槽）是行号平行的 u32 数组，不参与定位；只要求前两个成员是
+    # 「16 字节槽哈希图 + 行数组」，其余成员按原样保留。
+    if len(ms) < 2:
         raise SystemExit(f"✗ 块 0x{block_tid:08X} 不是「哈希图 + 行数组」形态（成员数 {len(ms)}）")
+    if ms[0]["size64"] % 16:
+        raise SystemExit(f"✗ 块 0x{block_tid:08X} 成员0 不是 16 字节槽哈希图（{ms[0]['size64']} B）")
     slots, stride = ms[0]["size64"], lib.desc(ms[1]["type_id"])[3]
+    if len(ms) > 2:
+        print(f"  注意：块 0x{block_tid:08X} 是三成员形态，尾部成员2 = {ms[2]['size64']} B（原样保留）")
     body = b["head"] + 28
     r = None
     for i in range(slots // 16):
