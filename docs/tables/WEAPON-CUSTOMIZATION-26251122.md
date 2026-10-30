@@ -181,3 +181,48 @@ Suzuka 当年也是这么写的（写 offset 16），引擎应按 slot 查表、
 | 查"某配件能装哪些槽 / 效果是什么" | ✓ 离线可查（本表 + 第三方 241 条目录） |
 
 **建议**：这条线在"改表"层面收口。若将来还想做配件解锁，唯一剩下的方向是**资源侧**（武器资源里的 customization 定义）——成本高、且当年 memmod 已经证明要用运行期定位。
+
+---
+
+## 9. 支援武器假设与实验 K（2026-10-30 21:1x 已装盘）
+
+### 9.1 观察：支援武器的 L0 里**本来就有瞄具**
+
+45 个 `support_weapon` 行里 **28 行 L0 非空**，而且几乎都是光学槽：
+
+| 武器（行） | L0 |
+|---|---|
+| **RS-422 Railgun（181，键 `0x2E9D0BDC48B09E60`）** | `2: Railgun Scope`（`0x5A3E7EBC`） |
+| Autocannon(157) / Commando(173) / Recoilless(182) / Airburst(155) / Meltagun(160) / Expendable Napalm(163) / Laser Cannon(172) | `2: Support Scope`（`0xDD0F1240`） |
+| Spear(164) | `2: FAF SPEAR SCOPE` |
+| Speargun(169) | `2: TUBE REDDOT 1,5x` |
+| Stalwart(127) / Heavy Machine Gun(171) | `2: REFLEX SIGHT MKII` |
+
+### 9.2 为什么值得单独测：支援武器**没有改装页**
+
+主武器/副武器有军械库改装 UI（⇒ 存在 L2「玩家当前选择」层，可能覆盖 L0）。
+**支援武器根本没有那个页面** ⇒ 没有 L2 可覆盖 ⇒ 若 L0 在任何地方生效，就该在支援武器上生效。
+这也给实验 J 的失败提供了另一种解释：**Constitution 的 L0 可能被它自己的 L2 覆盖了**。
+
+### 9.3 实验 K（单变量，已装盘）
+
+| 项 | 值 |
+|---|---|
+| 目标 | 块 `0xEBA8F3D0` 行 181（键 `0x2E9D0BDC48B09E60`），`+0x0` 的 8 B |
+| 改动 | `(slot 2, 0x5A3E7EBC Railgun Scope)` → **`(slot 2, 0x67E0A480 SNIPER SCOPE 10x)`** |
+| 门禁 | G1/G2/G3/G4/G6/G7/G8 全 PASS；与原版明文差异 **5 字节** |
+| 封包/装盘 | 合法 MAC 47,259,456 B；`recipient.sk` 解封回读 = 目标明文逐字节一致 |
+| 装盘后实读 | Railgun 行 `entry[0] = (2, 0x67E0A480)`、`entry[1] = 终止符` |
+
+判读：
+
+| 现象 | 结论 |
+|---|---|
+| Railgun 上变成 **10x 大镜子**（军械库预览/进游戏） | ✅ **L0 对支援武器生效** ⇒ 支援武器配件可改；且 J 的失败原因是主武器被 L2 覆盖 |
+| 还是原来的 Railgun Scope | L0 连支援武器都不用 ⇒ L0 彻底是"资源默认"死数据 ⇒ 数据表路线收口 |
+| 瞄具消失 / 枪变灰方块 | 10x 镜的资源不在这个包里 ⇒ 需要**供体包驻留**（同 §5.6.9 粒子那条 Reinforce 配方） |
+| 崩 / 枪不出现 | 写错行或 slot 冲突 ⇒ 回滚 |
+
+回滚：`cp "D:/mod/backups/spray-capsule/generated_entities.vanilla.dl_bin" "…/data/game/generated_entities.dl_bin"`
+
+> 注：粒子 F 档（65 m 远射喷火器）仍在装盘，与本次配件实验不相干。
