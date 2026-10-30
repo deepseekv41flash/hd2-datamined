@@ -444,3 +444,29 @@ memmod 期文档 `docs/las22-unlock-analysis.md` §4.3 记的 7 条附件登记�
 
 ⇒ 因为 LAS-22 没有 L1/L2（不在任何解锁清单），它的 L0 就是唯一入口：
 把行 121 的 `+0x18`（slot 5）从 `0x5672E4B7` 改成 `0x3D0687C6` 或 `0x53120A73`，即可用上**只有未发布武器才有的专属弹匣**。
+
+### 10.5 实验 O 结果（✗ 载荷没出）+ 组件级差异 + 实验 P
+
+**实验 O 实机**：舱里**只掉出 MG-43**，Trident 没出现。rack 47 的 "特殊" 只是 `spawn=1`（两槽同款左右镜像）；
+本次已把 `+556` 抬到 2，所以问题更像**载荷实体本身没生成**，而不是 `spawn` 机制。
+
+**组件级对比（离线，`refs/entity-components.json`）**：
+
+| 组件 | MG-43（✓可当载荷） | Railgun（✓） | Trident（✗） | Shear（LAS-22，未测） |
+|---|:-:|:-:|:-:|:-:|
+| `EntityBindComponentData` | ✓ | ✓ | **✗** | **✗** |
+| `SpottableComponentData` | ✓ | ✓ | **✗** | **✗** |
+| `ProjectileWeaponComponentData` / `WeaponMagazineComponentData` | ✓ | ✓ | ✗（换成 Beam/Heat） | ✗ |
+| `BeamWeaponComponentData` / `WeaponHeatComponentData` | ✗ | ✗ | ✓ | ✓ |
+
+⇒ 支持武器（可作为舱载荷的那一类）才带 `EntityBind` + `Spottable`；主/副武器都没有。
+另一种解释是「**未拥有 ⇒ 不授予**」（舱载荷可能走"给玩家一件装备"的路径）。
+
+**实验 P（✓ 已装盘）**：rack 47 槽 0 = **P-2 Peacemaker**（一定拥有）、槽 1 = MG-43、`spawn=2`。
+用来判别「所有权/授予」还是「实体类别」：
+
+| 现象 | 结论 |
+|---|---|
+| Peacemaker + MG-43 **都出来** | `spawn=2` 正常；Trident 是"未拥有/未授权"被拒 ⇒ LAS-22 需要授予路径（L1 不在明文） |
+| **只有 MG-43** | 主/副武器实体**根本不能当舱载荷**（与所有权无关）⇒ 只剩"给它 graft `EntityBind`+`Spottable`"或换载体两条路 |
+| 两件都不出 | rack 47 的 `spawn` 被别处钳制 ⇒ 换 rack 67/68/69（`spawn=4/8`）再试 |
