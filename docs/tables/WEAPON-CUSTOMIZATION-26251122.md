@@ -423,3 +423,24 @@ Suzuka 当年也是这么写的（写 offset 16），引擎应按 slot 查表、
 
 ⇒ 若实验 O 成立，下一步 = 把 `0x7E3145A5BAA4B948` 写进舱槽 + 给它做资源驻留补丁（模型/材质/贴图），
 即可在任务里捡到未发布的 LAS-22 Shear。
+
+### 10.4 LAS-22 的三个专属弹匣配件（散热器三条分支）—— 已定位 ✅
+
+memmod 期文档 `docs/las22-unlock-analysis.md` §4.3 记的 7 条附件登记里有**三条同槽（slot 5 = Magazine）**的散热器分支；
+在本 build 里全部找到，而且**定义都在明文表**里：
+
+| 名称 | optionId | addPath | 谁在用 |
+|---|---|---|---|
+| `Laser Heatsink (Charge). Standard Heatsink` | `0x5672E4B7` | `0xB889C472C393E06B` | **LAS-22 L0 当前装载**；`nativeDefaultOf=['LAS-5 Scythe']` |
+| `Laser Heatsink (Charge). Extended Heatsink` | **`0x3D0687C6`** | `0x7DCA2947CCDA8F56` | **0 把武器**（只有 LAS-22 该用，但未发布） |
+| `Laser Heatsink (Charge). Rapid Heatsink` | **`0x53120A73`** | `0xB4E981030087D094` | **0 把武器**（同上） |
+
+三条的 delta 都打 `WeaponCustomizationComponentData +0x80(magazine unit) / +0x88 / +0x8C` 与
+**40+ 处 `WeaponHeatComponentData`**（热容/散热/冷却）；**`Rapid` 还额外打 `BeamWeaponComponentData +0`**
+—— 说明它是给**光束武器**用的分支（LAS-22 就是光束）。
+
+模型侧：资源索引里只有 **Standard Heatsink** 的 mesh（`0xBFC3A108C853A738`、`0x50CD7E9F909FE5A1`），
+**没有** extended / rapid 的独立 mesh ⇒ 两个变体应共用标准散热器外观，**不需要额外驻留补丁**。
+
+⇒ 因为 LAS-22 没有 L1/L2（不在任何解锁清单），它的 L0 就是唯一入口：
+把行 121 的 `+0x18`（slot 5）从 `0x5672E4B7` 改成 `0x3D0687C6` 或 `0x53120A73`，即可用上**只有未发布武器才有的专属弹匣**。
