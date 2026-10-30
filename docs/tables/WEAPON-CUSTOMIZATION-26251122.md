@@ -265,3 +265,47 @@ Suzuka 当年也是这么写的（写 offset 16），引擎应按 slot 查表、
 | 支援武器的**瞄具模型外观** | **✗ 未成**（见 §9.5） |
 | 主武器/副武器的配件（含默认挂载） | **✗**（L0 被 L2 覆盖，实验 J 已否证） |
 | 主武器/副武器"可选择新配件" | **✗**（L1 绑定不在明文） |
+
+### 9.7 用资源索引直接找到 10x 镜的资源包（绕开 entity_deltas）✅ 比路线 A 更快
+
+放弃解 `entity_deltas`（5 列列存：A 列 1024×16 = `{addPath, 0..571 索引}` 哈希图，B/C/D/E 列语义未定），
+改用**资源索引按名字反查**（`tools/res_index.py`，322,711 条目 / 3,425 包）：
+
+| 附件 | mesh/bones 资源 id | 所在包 |
+|---|---|---|
+| **10x Sniper Scope** | **`0x6D54652EE217D712`** | `52ebdf76131c8f38`、`a37891d879cb3b1d`、`2404fa21fe49c32d`、`ea6967f8565a2d76`、`e0807831d6f456c8` |
+| 4x Combat Scope | `0x44A2A59CA08AC865` | 多个 |
+| 2x Support Scope | `0x2457B559AA341CC1` | 多个 |
+| 2x Tube Red Dot | `0x129E5FB1B13C2018` | 多个 |
+
+包 `52ebdf76131c8f38` 是 10x 镜的**完整自洽资产集**（8 条，无外部依赖）：
+
+| 类型 | id |
+|---|---|
+| bones + mesh | `0x6D54652EE217D712`（10x Sniper Scope） |
+| material | `0x20CAB97A40D12B05`、`0xC9EF8AD9A2BBAE84` |
+| texture | `0x11D16B39328ABF82`、`0x9879FE7F28234491`、`0xA77FE193C439C83F`、`0xE703C134E7BADA38` |
+
+⇒ **模型缺失的原因是"包没驻留"**，不是"模型不存在"：Railgun 自己的包里没有这份 scope 资产。
+
+### 9.8 实验 L（✓ 已装盘 2026-10-30 21:4x）：Reinforce 行声明供体包
+
+用已验证的跨包加载机制（`+0xA8` = toc 包 id，见 `docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md`）：
+
+| 项 | 值 |
+|---|---|
+| 表 | `generated_stratagem_settings.dl_bin` |
+| 目标行 | `MISSIONS. REINFORCEMENT BEACON`（组5 行20，type 0x7F） |
+| 改动 | `+0xA8`：`0x0` → **`0x52EBDF76131C8F38`**（原值为 0，空字段，不会破坏原有加载） |
+| 门禁 | G1–G7 全 PASS；与原版明文差 15 字节（目标行 + 校正字） |
+| 封包/装盘 | 合法 MAC，82,424 B；`recipient.sk` 解封回读 = 目标明文逐字节一致 |
+
+判读：
+
+| 现象 | 结论 |
+|---|---|
+| 叫一次增援后 Railgun **长出 10x 镜模型** | ✅ 打通：支援武器配件"参数 + 模型"全链可改；配方 = L0 换 optionId + Reinforce 声明供体包 |
+| 模型还是没有 | 跨包加载对"武器配件资源"无效（只对枪体/粒子这类生效）⇒ 改走"把 scope 资产打进 Railgun 自己的包"（路线 B'：`7f37db9b767844c2` 打 patch_0，8 条资源 + gpu） |
+| 增援本身出问题（增援舱灰方块等） | `+0xA8` 被别的系统占用 ⇒ 立刻回滚战备表 |
+
+回滚战备表：重新 seal `refs/dlbin/plaintext-26251122/generated_stratagem_settings.dl_bin` 并覆盖 `data/game/` 即可。
