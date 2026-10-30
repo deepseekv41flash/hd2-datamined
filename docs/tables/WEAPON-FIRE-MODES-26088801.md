@@ -1092,11 +1092,11 @@ python tools/dlbin_deploy.py restore --file generated_entities.dl_bin
 实测：**20 m → 65 m**（3.25×），**65 m 外仍点燃地面**，**判定明显变宽**。
 
 现成安装包（build 26251122，含 `install.ps1` / `rollback.ps1` / README）：
-`D:\mod\outlame-range-final\`
+`D:/mod/out/flame-range-final/`
 
 ```
 install : powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
-rollback: powershell -NoProfile -ExecutionPolicy Bypass -File .ollback.ps1
+rollback: powershell -NoProfile -ExecutionPolicy Bypass -File .\rollback.ps1
 ```
 
 ⚠ 粒子寿命 4 s ⇒ 读数必须**按住扳机 ≥4 s**。游戏更新后包失效，按本节两层重打。
