@@ -470,3 +470,41 @@ memmod 期文档 `docs/las22-unlock-analysis.md` §4.3 记的 7 条附件登记�
 | Peacemaker + MG-43 **都出来** | `spawn=2` 正常；Trident 是"未拥有/未授权"被拒 ⇒ LAS-22 需要授予路径（L1 不在明文） |
 | **只有 MG-43** | 主/副武器实体**根本不能当舱载荷**（与所有权无关）⇒ 只剩"给它 graft `EntityBind`+`Spottable`"或换载体两条路 |
 | 两件都不出 | rack 47 的 `spawn` 被别处钳制 ⇒ 换 rack 67/68/69（`spawn=4/8`）再试 |
+
+### 10.6 实验 P / Q 连续判别：舱能吐主武器，且主武器可拾取
+
+| 实验 | 槽0 载荷 | 结果 | 判读 |
+|---|---|---|---|
+| **P** | P-2 Peacemaker（拥有） | 与 MG-43 **都出现**，Peacemaker **不可拾取** | `spawn=2` 完全正常；舱无问题 |
+| **Q** | R-2124 Constitution（拥有） | **出现且能拾取** ✓✓ | **主武器可以当舱载荷并拾取** |
+
+⇒ 实验 O 里 Trident 没出现，不是舱机制、也不是所有权，而是**它自己的资源问题**：
+
+| 武器 | `bones/physics` 资源名 | 包 | 判 |
+|---|---|---|---|
+| Peacemaker（已发布） | `P-2 Peacemaker` | `e7ecee81b70d696f` | 有正经命名资产 |
+| MG-43（已发布） | `MG-43 Machine Gun` | `73cfbbf2e883af96` | 同上 |
+| **LAS-13 Trident** | `3C86E871923F3970`（哈希即名字） | `f79b65e482594bef` | **dev 占位资产** |
+| **LAS-22 Shear** | `7E3145A5BAA4B948`（同上） | `487bcf38276eb725` | **dev 占位资产** |
+
+⇒ 未发布武器的资产是**未命名占位**、不在常规加载路径 ⇒ 舱生成时取不到资源 → 静默不出。
+⇒ 反过来说：**只要把它的资源整包驻留，就能用舱把它送到手上**。
+
+### 10.7 实验 R（✓ 已装盘）：整包驻留 LAS-22 Shear +
+
+| 项 | 值 |
+|---|---|
+| 资源包 | `487bcf38276eb725`（LAS-22 的完整资产集：**5 mesh / 20 material / 17 texture / 2 animation / 1 state_machine / 13 particles / 2 bones / 2 physics / wwise bank+dep = 64 条**） |
+| 提取 | `srkit extract` 逐条，64/64 成功，94 个文件 / **16.76 MiB** |
+| 驻留补丁 | `f6fb08cc02d24255.patch_1`：toc **6,275,312 B** ＋ gpu **7,608,200 B** ＋ stream **3,694,816 B**（宿主 = 共享基础包，与 patch_0 的 10x 镜并存，序号连续） |
+| 舱 | rack 47 槽0 = **`0x7E3145A5BAA4B948 LAS-22 Shear`**、槽1 = MG-43（对照）、`spawn=2` |
+| 门禁 | 舱编辑 G1–G6 全 PASS；解封回读逐字节一致 |
+
+判读：
+
+| 现象 | 结论 |
+|---|---|
+| 舱里出现 **LAS-22 Shear 且可拾取**（打出光束） | 🎉 **未发布武器到手**；后续可换专属弹匣 `Extended/Rapid` 与 10x 镜 |
+| 出现但不可拾取 | 还缺 `LoadoutPackage`/字符串之类 ⇒ 继续补 |
+| 只出 MG-43 | 驻留不足以让它"可生成"（可能还需要 `unit` 或 `state_machine` 之外的实体资源）⇒ 查 `Unt`/实体依赖链 |
+| 卡顿/崩 | 17.6 MB 补丁的加载开销 ⇒ 回滚 patch_1 即可 |
