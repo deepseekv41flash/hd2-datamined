@@ -226,3 +226,42 @@ Suzuka 当年也是这么写的（写 offset 16），引擎应按 slot 查表、
 回滚：`cp "D:/mod/backups/spray-capsule/generated_entities.vanilla.dl_bin" "…/data/game/generated_entities.dl_bin"`
 
 > 注：粒子 F 档（65 m 远射喷火器）仍在装盘，与本次配件实验不相干。
+
+### 9.4 实验 K 实机结果（✓✓ 部分成功）：**参数层生效，模型层没有**
+
+玩家实机（截图 2026-10-30 21:0x）：**菜单里出现了 10x 瞄具才有的 50m / 100m / 200m 零位档位**，
+但枪身上**没有模型**。
+
+| 层 | 结果 |
+|---|---|
+| **参数/逻辑层**（倍率、零位档位、准星、`WeaponDataComponentData` 的 ergonomics/stat delta） | **✓✓ 生效** —— 零位档位实测出现 |
+| **视觉模型层**（optics unit 网格） | **✗ 没有** |
+
+⇒ **支援武器可以用 L0 换瞄具的全部"手感/参数"**，这是本轮最大收获；
+而支援武器**没有 L1（没有改装页）**，所以 L0 成了它的唯一入口 —— 这解释了为什么它生效而主武器（Constitution）不生效。
+
+### 9.5 模型为什么缺（离线排查，2026-10-30 21:1x）
+
+| 检查 | 结果 |
+|---|---|
+| 10x 的 `addPath` = `0x19FC5C5B031A4AF2` | 只出现在 `weapon_customization_settings`（定义）与 **`generated_entity_deltas.dl_bin`**（delta 体）各 1 次 |
+| `entity_deltas` 结构 | 1 块，类型 `0x683E604F`，payload 352,317 B，typelib stride **80**，实占 4,403 行（**复合结构，不是定长行**，按 80 B 硬切对不上 addPath 偏移） |
+| 武器行内是否直接引用 scope/optic 命名的资源 | **0 处**（用 322,711 条资源索引反查 8 把枪的整行 u64，名字含 scope/optic/sight 的命中 0） |
+| `WeaponCustomizationComponentData +0x78`（第三方称 "optics unit"） | **196 行全为 0** ⇒ 本 build 该偏移不是 optics unit |
+| `+0x80` 实际是什么 | 解析出 `gazine/railgun_magazine`、`on_clip/autocannon_clip`、`FAF-14 Spear Ammo` ⇒ **弹匣模型** |
+
+⇒ 两条解释，都指向"模型不该出现"：
+
+1. **模型焊在武器网格里**（最可能）：支援武器的瞄具是武器 unit 的一部分，换 optics 只换参数不换网格；
+2. 或者 optics unit 由 `entity_deltas` 在运行期下发、但该 unit 的**资源包没驻留**（需要 Reinforce `+0xA8` 供体包）。
+
+要区分这两条，得先解 `entity_deltas` 拿到 optics unit 的资源 id（工作量中等），再决定要不要包驻留。
+
+### 9.6 能力边界（支援武器配件）
+
+| 想改 | 能做吗 |
+|---|---|
+| 支援武器的**倍率 / 零位档位 / 准星参数 / ergonomics·后坐力 delta** | **✓✓ 文件可做**（L0 换 optionId，已实测） |
+| 支援武器的**瞄具模型外观** | **✗ 未成**（见 §9.5） |
+| 主武器/副武器的配件（含默认挂载） | **✗**（L0 被 L2 覆盖，实验 J 已否证） |
+| 主武器/副武器"可选择新配件" | **✗**（L1 绑定不在明文） |
