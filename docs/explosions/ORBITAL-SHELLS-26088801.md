@@ -141,7 +141,7 @@ EOF2
 
 | comp | 字段 | 内容 | 解读 |
 |---:|---|---|---|
-| **196 = `BombardmentComponentData`**（块 `0xCDBC43D8`，24 行 × 192 B） | `+0x40`，32 B | `76, 197, 139, 139, 197, 139, 139, 0`（u32） | 同时出现 **76 = `Orbital_Stunround`（EMS 眩晕弹丸 type）**、**197 = `Orbital_Cannon_120mm_HE`（HE 弹丸 type，见 §1）**、**139 = `ORBITAL. 120MM HE STRIKE` 战备 id** ⇒ 「把 120mm 弹幕改成打 EMS」的官方定义 |
+| **196 = `BombardmentComponentData`**（块 `0xCDBC43D8`，24 行 × 192 B） | `+0x40`，32 B | `76, 197, 139, 139, 197, 139, 139, 0`（u32） | **8 槽 `ProjectileType` 数组 = 每发弹种清单**（§8 已全解）：**76 = `Orbital_Stunround`（EMS 眩晕弹）**、**197 = `Orbital_Cannon_120mm_HE`（射弹行 135）**、**139 = 它的 `_Cheap` 克隆（射弹行 136，只换省粒子爆炸，见 §8.5）** ⇒ 官方定义是「**首发 EMS + 其余 6 发 HE**」的混合弹幕，不是整条变 EMS（§8.7 更正） |
 | 196 | `+0x04` | `7` | 类/弹种槽位相关（未定名） |
 | 196 | `+0x18` | `5` | 同上 |
 | 196 | `+0x24` | **f32 `10.0`** | 与 120mm 命中爆炸 outer_radius 10.0 相同（§6） |
@@ -190,10 +190,160 @@ delta 存储的「组件索引」与 **实体表块 0 尾部 u16 组件清单**�
 | **196** | **`BombardmentComponentData`** | **与社区图里的 type hash `0x0CDBC43D8` 完全一致**；块 `0xCDBC43D8`、24 行 × 192 B |
 | **28** | **`LoadoutPackageComponentData`** | 与包里写 `+0x08/+0x10` 两个包 id 的语义吻合 |
 
-**顺带锁定 120mm HE 弹幕行**：`BombardmentComponentData` 第 **19** 行 —— `+0x04=3`（每轮 3 发）、`+0x18=5`、
-`+0x24=25.0`，`+0x40`（32 B = 8×u32 的 payload 清单）当前 = **`(197, 139, 139, 0, …)`**。
-EMS 升级 delta 把这一格改成 **`(76, 197, 139, 139, 197, 139, 139, 0)`** —— 76/197 恰好是 EMS/HE 两种弹丸的
-type id，与社区「改 BombardmentComponentData 的 +0x40（3 个 u32）」完全对上。
+**顺带锁定 120mm HE 弹幕行**：`BombardmentComponentData` 第 **19** 行 —— `+0x04=3`（= `num_bombs`，每轮 3 发）、`+0x18=5`（= `num_salvos`，5 轮）、
+`+0x24=27.0`（= `area_size`），`+0x40`（32 B = 8×u32 的 `ProjectileType` 弹种清单）当前 = **`(197, 139, 139, 0, …)`**
+= **1 发正常 120mm HE（射弹行 135）+ 2 发 `_Cheap` 克隆（射弹行 136）**（§8.4/§8.5）。
+EMS 升级 delta 把这一格改成 **`(76, 197, 139, 139, 197, 139, 139, 0)`** —— 即 **7 发里只有第 1 发是 EMS，其余 6 发全是 HE 族**：
+官方写的是「**EMS 起手 + HE 收尾**」的混合弹幕，不是整条变 EMS（§8.7 有更正与实证）。
 
 ⇒ 至此这条升级的**完整作用链**清楚了：改 `BombardmentComponentData` 第 19 行（弹幕定义，`+0x40` 弹种清单）
 + 换 `LoadoutPackageComponentData`（`+0x08` 根包 / `+0x10` 第二个包）。缺的只是解锁接线与显示名。
+
+## 8 `BombardmentComponentData` 行字段全解：`+0x04` 发数 / `+0x18` 轮数 / `+0x24` 面积 / `+0x2C` 高度 / `+0x40` 弹种清单（✓✓ 实机 + ✓ 离线，2026-10-31）
+
+> **一句话**：`+0x40` 是 **8 槽 `ProjectileType` 枚举数组** —— 第 i 槽 = 每轮第 i 发弹的**弹种**；
+> 每个值 = `generated_projectile_settings.dl_bin`（射弹表 355 行 × 272 B）里某条射弹行的 `+0x00`。
+> `+0x04` = **每轮发数**（wiki 名 `num_bombs`，实机 3→7 已验证）、`+0x18` = **轮数**（`num_salvos`）。
+
+### 8.1 三层独立证据
+
+1. **typelib 结构**（`python tools/typelib.py show <typelib> 0x0CDBC43D8`）：块 = 哈希图 + 行数组；行类型
+   `0x0793349E`，192 B / 32 成员，其中 **`+64` 起 32 B** 是一个数组成员（成员类型 `0xA2B5F333`）
+   ⇒ `+0x40` 是 **8 个 u32 槽**（不是"3 个 u32"，也不是包 id / 战备 id）。
+2. **HD2Runtime 0.27.0 研究档**（`refs/hd2runtime-repo/research/offensive-stratagem-runtime-F5FEE03DCFDB.json`）：
+   每个 `BombardmentComponentData` 给出
+   `"typedReferences":[{"path":[64],"referenceClass":"ProjectileType","values":[…]}]`；
+   其写入门禁 `domains/stratagem_writes.lua:177-180` 逐槽核对
+   `b.u32(component.bytes, 64+(index-1)*4)==value` ⇒ 官方核对脚本也按"第 i 槽 = i 号弹种"读。
+3. **wiki 战备 JSON 四字段对齐**（本地 `refs/wiki/wiki.sqlite` 的 `stratagem` 表，`json` 列里
+   `num_bombs / num_salvos / area_size / fire_height`）：把 10 条轨道战备的四个数与块内 24 行的
+   `+0x04 / +0x18 / +0x24 / +0x2C` 对照，**10/10 精确相等**（§8.3 表）；另外 `+0x2C` 全表都是 3000
+   （= 轨道炮的投送高度）。
+
+### 8.2 字段表（`BombardmentComponentData` 行，192 B，24 行）
+
+| 偏移 | 类型 | 名字 | 120mm 行（row19）值 | 状态 |
+|---|---|---|---|---|
+| `+0x04` | u32 | **`num_bombs` = 每轮发数** | **3** | ✓✓ 实机（3→7 后每轮 7 发） |
+| `+0x18` | u32 | **`num_salvos` = 轮数** | **5** | ✓ 与 wiki 10/10 对齐 |
+| `+0x24` | f32 | **`area_size` = 散布半径（m）** | **27.0** | ✓ 同上 |
+| `+0x2C` | f32 | **`fire_height` = 投送高度** | **3000.0** | ✓ 同上 |
+| `+0x40` | u32×8 | **`ProjectileType[8]` = 弹种清单** | **`(197,139,139,0,0,0,0,0)`** | ✓✓ 实机（槽 0 改 76 → 首发变 EMS） |
+| `+0x08` / `+0x1C` | f32 | 未定名 | 0.75 / 2.0 | ⚠ 数值形态像"轮内发间隔 / 轮间隔"（380mm 1.5/3.0、加特林 0.045/1.275），未实机证 |
+| `+0x00` / `+0x0C` / `+0x10` / `+0x14` / `+0x20` / `+0x28` / `+0x30`… | u32/f32 | 未解 | 多数 0 | ⚠ |
+
+### 8.3 十条轨道战备的弹幕定义（本 build，逐行对照）
+
+| 战备 | row | 组件实体键 | nb | ns | area | fh | `+0x40` 弹种清单 |
+|---|---:|---|---:|---:|---:|---:|---|
+| Orbital Precision Strike | 16 | `0xC897C0D84448AB2C` | 1 | 1 | 1 | 3000 | `[102]` |
+| Orbital Gatling Barrage | 12 | `0x2F257B91037AC421` | 60 | 4 | 7 | 3000 | `[79,43,43,43]` |
+| Orbital Gas Strike | 11 | `0x05F3C83A91075766` | 1 | 1 | 1 | 3000 | `[200]` |
+| **Orbital 120mm HE Barrage** | **19** | `0x2D3BD00B1ED411B1` | **3** | **5** | **27** | 3000 | **`[197,139,139]`** |
+| Orbital Airburst Strike | 17 | `0x75B131DC1DDC02D5` | 1 | 4 | 2 | 3000 | `[160]` |
+| Orbital Smoke Strike | 18 | `0xDA76A06325E692C9` | 1 | 6 | 15 | 3000 | `[251]` |
+| Orbital EMS Strike | 20 | `0x55F3747B8C27AEF6` | 1 | 1 | 1 | 3000 | `[76]` |
+| Orbital 380mm HE Barrage | 9 | `0xEF66B417EDC3B1D6` | 3 | 5 | 36 | 3000 | `[82,270,270]` |
+| Orbital Walking Barrage | 21 | `0xCB7F154719F331EC` | 3 | 5 | 25 | 3000 | `[82,270,270]` |
+| Orbital Napalm Barrage | 14 | `0xA16AB4FF66AE6970` | 5 | 5 | 25 | 3000 | `[238,242,242]` |
+
+识别方法：`BombardmentComponentData` 的哈希图键 = 宿主实体键；拿实体键去对 HD2Runtime 研究档的
+`historicalIdentity.payloads`（120mm = `0x2D3BD00B1ED411B1`，与 row19 精确一致），再用
+`nativeGraph` 的 `recordType → row` 交叉把 SDK 弹种号换算成本 build 弹种号（见 §8.4）。
+
+### 8.4 弹种 id 解码表（本 build；值 → 射弹行 → 身份）
+
+| 值 | 射弹行 | 身份（社区名） | 命中爆炸（本 build） | 依据 |
+|---:|---:|---|---|---|
+| **76** | 148 | `Orbital_Stunround`（EMS 眩晕弹） | 188 = `OrbitalStun` | 粒子 `0x424630BFE2FF5E99` 精确对齐 |
+| **197** | 135 | `Orbital_Cannon_120mm_HE` | 213 = `OrbitalStrike` | 粒子 `0x36B23284931C9124` 精确对齐 |
+| **139** | 136 | `Orbital_Cannon_120mm_HE_Cheap` | 177 = `OrbitalStrike_Cheap` | 粒子 `0x31798A36AF6C43DE` 精确对齐 |
+| **82** | 138 | `Orbital_Cannon_380mm_HE`（主） | 301 = `OrbitalBarrage` 族 | 与 270 成对、爆炸族唯一主弹 |
+| **270** | 143 | `Orbital_Cannon_380mm_HE_Cheap` | 94 = `OrbitalBarrage_Cheap` | 唯一 Cheap 粒子 |
+| **238** | 140 | `Orbital_Cannon_Napalm`（主） | 63 = `Orbital_Napalm` 族 | 与 242 成对（主/Cheap 同名同粒子，按首发为主推定） |
+| **242** | 141 | `Orbital_Cannon_Napalm_Cheap` | 74 同上 | 同上 |
+| **79** | 37 | `Cannon_Eagle_23mm`（加特林弹，带爆炸） | 375 = `Cannon_23mm` 族 | — |
+| **43** | 43 | 同族 `no_explosion` 变体（命中爆炸 0） | 0 | — |
+| **200** | 151 | `Orbital_Gas` | 82 = `OrbitalGas` | 唯一 |
+| **160** | 172 | Airburst 弹丸（wiki `S_P15`） | 0（爆炸不挂在弹丸上） | ⚠ 名字推定 |
+| **251** | 152 | Smoke 弹丸 | 75 | ⚠ 名字推定 |
+| **102** | 213 | Precision Strike 弹丸 | 0 | — |
+
+解码方法（可复算）：① 用**爆炸行的粒子 file_id** 把本 build 爆炸 type ↔ 社区
+`generated_explosion_settings.json` 的名字对齐（如 213↔`OrbitalStrike`、177↔`OrbitalStrike_Cheap`）；
+② 射弹行 `+0x90`（命中爆炸）/`+0x9C`（到期爆炸）指向爆炸 type，于是射弹行 → 爆炸名 →
+社区 `generated_projectile_settings.json` 里 `explosion_type_on_impact` 反查射弹名。
+120mm 两行因此**唯一命中**：197=`..._120mm_HE`、139=`..._120mm_HE_Cheap`（无歧义）。
+
+### 8.5 `_Cheap` 到底是什么：只换粒子，不换伤害
+
+- 社区 JSON 里 `120mm_HE` 与 `120mm_HE_Cheap` 的全部字段只有一处不同：`explosion_type_on_impact`
+  （`OrbitalStrike` / `OrbitalStrike_Cheap`）。
+- 落到本 build 的两条爆炸行（type 213 / 177）逐 dword 对照：**伤害行（457）、半径 3.3/10/11、
+  震屏 60、`+0x40` 全部相同**；只有 **`+0x38` 粒子 file_id**（`0x36B23284931C9124` / `0x31798A36AF6C43DE`）
+  与粒子列表偏移（`+0x28/+0x48`）不同 ⇒ **Cheap = 换一套更省的粒子**，性能优化，不是削弱。
+- 因此 **120mm HE 弹幕每轮 3 发 = 1 发正常爆炸 + 2 发省粒子爆炸**（写死在行里，不是随机）。
+
+### 8.6 位置语义 / 循环规则
+
+- **第 i 槽 = 每轮第 i 发**（1 基）；`0` = 槽位空（清单结束）。实机：槽 0 由 197 改 76 后，**每轮首发**变 EMS。
+- 清单 ≤ 8 槽，而行里存在 `nb > 8` 的弹幕（加特林 nb=60 只有 4 个非零槽；row7 nb=64 只有 1 个）
+  ⇒ 多出来的发是**按清单循环**（或取末槽）⚠ **循环规则未实机证**。
+- 每轮是否重复同一清单 ⚠：按 `nb=7 / ns=5` 的官方 delta，如果每轮都套清单，应看到 **~5 次 EMS 首发**
+  （2026-10-31 实机未记录次数，待补）。
+
+### 8.7 官方未发布升级 `Orbital 120mm EMS Barrage` 的重新解读（**更正 §7.1**）
+
+delta 写的是 `+0x04=7` + `+0x40=(76,197,139,139,197,139,139,0)` ⇒ **7 发混合弹幕：首发 EMS 眩晕，
+其余 6 发全是 HE 族**（HE + 2×Cheap，重复两遍），并把 `+0x24` 27→10 收紧散布。
+即官方做的是「**EMS 起手 + HE 覆盖**」的混合弹幕，**不是**"整条弹幕变 EMS"。
+⇒ 要真正的全 EMS 弹幕：把 8 槽都填 76（`[76]*8`）即可，弹种层面没有别的门。
+
+### 8.8 2026-10-31 实机记录与"特效缺失"根因
+
+实机（装入 §7 的 6 处 delta 写入手工版）：**每轮 7 发 ✓**、**首发 EMS ✓**、**EMS 爆炸特效缺失 ✗**。
+
+根因（离线定位，✓ 可复算）：
+
+1. `LoadoutPackageComponentData` 行 32 B：`+0x08` = **资产包**、`+0x10` = **wwise bank**（音效库）。
+   120mm 实体 `0x2D3BD00B1ED411B1`（row249）：`+0x08 = 0x25B8CFF26C7C0112`（14 项：粒子
+   `0x0534FF36…`、`0x36B23284…`、`0x31798A36…`、`0x61A844A0…`、`0x68358A1C…` + texture/material + bank）；
+   `+0x10 = 0x218D61959F181C48`（wwise bank，Airburst 也在用）。
+2. EMS 打击实体 `0x55F3747B8C27AEF6`（row250）的资产包是 **`0x1E6C958B95568DD7`**：7 项，含
+   **粒子 `0x424630BFE2FF5E99`（= `OrbitalStun` 的爆炸粒子）** + bank `0x19F0EA7F8790BF4C` + 2 个 wwise_stream。
+   ⇒ **EMS 的爆炸粒子只在 EMS 打击自己的资产包里，120mm 的呼叫根本不会加载它** ⇒ 有伤害/无视觉。
+3. delta 想换的 `+0x10 = 0xA00E6327E3747A50` 在资源索引（`D:/mod/index/all_entries.json` 322,711 条 /
+   3,425 包）里 **查不到** —— 本 build 没有这个 bank ⇒ 即使照抄 delta 也没有 EMS 音效（悬空引用）。
+   真正存在的是 `0x19F0EA7F8790BF4C`。
+
+修法（下一步实验，纯数据/资源层，不碰实体行以外）：
+
+- **整包驻留**：`python tools/whole_package_patch.py build --package 1e6c958b95568dd7 --host f6fb08cc02d24255 --index <下一个空位> --out D:/mod/out/ems120-res-patch`
+  （与 89 万能槽 Nova+Warp 同一配方，见 [RESOURCE-RESIDENCY](../engine/RESOURCE-RESIDENCY-26088801.md)）；
+- 可选把 120mm LoadoutPackage `+0x10` 换成真实存在的 EMS bank `0x19F0EA7F8790BF4C`（补音效）。
+
+### 8.9 复算命令
+
+```bash
+# ① 整块 24 行（含 +0x40 清单）
+python tools/block_rows.py --block 0xCDBC43D8 --width 48
+
+# ② 行 → 赛博战备：HD2Runtime 研究档
+python - <<'EOF2'
+import json
+d=json.load(open(r"D:/mod/refs/hd2runtime-repo/research/offensive-stratagem-runtime-F5FEE03DCFDB.json",encoding="utf-8"))
+for s in d["stratagems"]:
+    print(s["name"], s["historicalIdentity"]["payloads"], s["rootProjectiles"])
+EOF2
+
+# ③ wiki 四字段（num_bombs / num_salvos / area_size / fire_height）
+python - <<'EOF2'
+import sqlite3,json
+con=sqlite3.connect(r"D:/mod/refs/wiki/wiki.sqlite")
+for k,j in con.execute("select key,json from stratagem"):
+    d=json.loads(j)
+    if d.get("num_bombs"): print(k,d["num_bombs"],d["num_salvos"],d["area_size"],d["fire_height"])
+EOF2
+
+# ④ 弹种号 → 射弹行：扫描 projectile 明文 +0x00（行基址 44，stride 272）
+```
