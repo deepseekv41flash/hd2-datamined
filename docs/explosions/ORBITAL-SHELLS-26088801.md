@@ -700,3 +700,52 @@ python /d/mod/tools/dlbin_deploy.py restore --file generated_entities.dl_bin
 # 或：cp "/d/mod/backups/spray-capsule/generated_entities.vanilla.dl_bin" \
 #        "/d/SteamLibrary/steamapps/common/Helldivers 2/data/game/generated_entities.dl_bin"
 ```
+
+**实机结果（2026-10-31 23:5x，用户回报）**：Orbital Gatling Barrage **有点燃效果** ⇒
+effect 1427（燃烧加特林）效果体 **`✓✓` 实机确认**（弹种 74 的 `FireTemplate=2` 在游戏内生效；
+不需要任何资源驻留）。三态：从 ⚠ 升为 **✓✓**。
+
+### 9.8 下一轮装盘：Napalm 毒气弹 + 380mm 迷你核弹（✓ 离线装盘，待实机）
+
+两个变体各改一条弹幕行，**互不影响、同一局可同测**：
+
+| 变体 | 行（键） | 改动 | 效果 |
+|---|---|---|---|
+| 纳帕姆+毒气（modifier #5，delta `0x8D49E41FDFCF6784`） | Napalm row14（`0xA16AB4FF66AE6970`） | `+0x04` 5→**8**、`+0x18` 5→**6**、`+0x4C` 0→**200** | 8 发/轮 × 6 轮，弹种 `(238,242,242,`**`200`**`)` = 纳帕姆主/Cheap/Cheap + **毒气弹**（`Orbital_Gas`）|
+| 迷你核弹（modifier #10，delta `0xFC165F5604FD3911`） | 380mm row9（`0xEF66B417EDC3B1D6`） | `+0x40/44/48` 82,270,270→**101,101,101** | 3 发/轮 × 5 轮，弹种 = **SEAF 迷你核弹**（proj 101，cal 360，命中爆炸 288：半径 17/25/45、震屏 250）|
+
+**资源驻留（必须，否则有伤害无特效）**：两条变体都用了原战备资产包里没有的粒子/音效，按 §8.8/§8.10 的
+整包驻留配方各打一份（宿主 `f6fb08cc02d24255`，序号接在盘上现有的 patch_0/1 之后）：
+
+| 补丁 | 源包 | 条目 | 尺寸（toc/gpu/stream） | 补的资源 |
+|---|---|---|---|---|
+| `f6fb08cc02d24255.patch_2` | `6369816737a36a40`（毒气打击包） | 8 | 939,072 / 512 / 276,926 B | 毒气爆炸粒子 `0xAF8AE08BBFF2BFFE` + bank |
+| `f6fb08cc02d24255.patch_3` | `184c510a7a3678f9`（核爆包） | 106 | 2,061,184 / 47,783,128 / 12,757,904 B | 核爆爆炸粒子 `0x4152B17F76EAE64F`（爆炸 288）+ 音效 |
+
+> 弹种 101 的飞行尾迹粒子在 `0296cbe5005ea13f`（+55 MB），**本轮不装**（只影响尾迹外观）；
+> 若实机看到"弹体有网格无尾迹"属正常。
+
+**产物与门禁**：
+
+| 项 | 值 |
+|---|---|
+| 编辑门禁 | G1/G2/G3（`0x8E49771B181FFAA1`）/G4（6 处）/G6/G7/G8/G9 全 PASS |
+| 明文 | 47,259,408 B，md5 `d69fcd381246ddcc2a7bac7d049e8f88` |
+| 封包 | 47,259,456 B，sha256 `3a6b4f10ef1db435` |
+| 装盘 | 回读明文与 step1.plain 逐字节一致；盘上补丁 4 组（patch_0/1 原存 + patch_2/3 本轮） |
+| 基线自检 | `game_baseline check`：仅 entities 1 个文件变动 |
+
+**实机观察清单**（完全退出游戏再启动；一局内依次叫两条战备）：
+
+1. **Napalm Barrage（轨道纳帕姆火力网）**：观察 8 发/轮 × 6 轮、其中是否出现**绿色毒气云**（每轮第 4 发）；
+2. **380mm HE Barrage（轨道380毫米高爆火力网）**：观察是否变成 **3 发迷你核弹**（大半径爆炸、强震屏）；
+3. 异常项：崩溃、灰块、无伤害、声音错乱；
+4. 判读：毒气云可见/有毒气伤害 → 变体生效；核爆视觉+大范围伤害 → 变体生效。
+
+**回滚**（本轮全部撤掉）：
+
+```bash
+python /d/mod/tools/dlbin_deploy.py restore --file generated_entities.dl_bin
+rm "/d/SteamLibrary/steamapps/common/Helldivers 2/data/f6fb08cc02d24255.patch_2"{,.gpu_resources,.stream}
+rm "/d/SteamLibrary/steamapps/common/Helldivers 2/data/f6fb08cc02d24255.patch_3"{,.gpu_resources,.stream}
+```
