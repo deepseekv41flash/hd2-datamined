@@ -78,3 +78,55 @@ HD2Runtime 的字段名里有 `orbital_120mm_he_barrage_attack_delivery_1/2/3_pr
 - 弹丸行字段与换爆炸配方：[EXPLOSION-PROJECTILE-25988413](EXPLOSION-PROJECTILE-25988413.md)
 - 爆炸表与粒子：[EXPLOSION-VISUAL-26088801](EXPLOSION-VISUAL-26088801.md)
 - 战备→弹丸不是数值外键：[STRATAGEM-REFERENCE-CHAIN-25988413](../tables/STRATAGEM-REFERENCE-CHAIN-25988413.md)
+
+## 6 「每轮三发是否一致」：逐 delivery 字段对照（✓ 离线，2026-10-31）
+
+HD2Runtime 0.27.0 的 `StratagemAuthoringCapabilities.json` 把每条战备的 `attack_delivery_N_projectile`
+**每个弹道/伤害/爆炸字段**都列成了可读值（本机缓存在 `D:/mod/hd2runtime-capabilities.json`，
+SDK 校验 build `F5FEE03DCFDB` / steamBuild **25480438**，与我们 build `26251122` 差一代 —— 下表数值是
+**该 SDK 版本读数**，是否随 build 变需再核；结构/字段名与我们的 `ProjectileInfo` 行 135 一致）。
+
+`orbital_120mm_he_barrage` 共 **3 个 delivery**（这就是“每轮三发”的数据形态），26 个字段**三份全部相同**：
+
+| 字段 | delivery 1 / 2 / 3 |
+|---|---|
+| `projectile.pellet_count` | 1 / 1 / 1 |
+| `projectile.velocity` | 400 / 400 / 400 |
+| `projectile.mass` | 5000 / 5000 / 5000 |
+| `projectile.drag` | 0 / 0 / 0 |
+| `projectile.gravity` | 1 / 1 / 1 |
+| 直击伤害（standard / durable） | 3500 / 3500（三份相同） |
+| 直击穿甲（direct / slight / large / extreme） | 7 / 7 / 6 / 6（三份相同） |
+| 直击 demolition / stagger / push | 50 / 20 / 20（三份相同） |
+| 命中爆炸半径（inner / outer / shockwave） | **3.3 / 10.0 / 11.0**（三份相同） |
+| 爆炸伤害（standard / durable） | 1200 / 1200（三份相同） |
+| 爆炸穿甲（direct / slight / large / extreme） | 5 / 0 / 0 / 0（三份相同） |
+| 爆炸 demolition / stagger / push | 50 / 70 / 40（三份相同） |
+
+⇒ **三发完全一致**：同一弹丸参数、同一命中爆炸、同一爆炸伤害。三发之间的差别只可能来自
+**delivery 的时序/落点**（这些不在 HD2Runtime 暴露的字段里），与 §3 的结论一致 ——
+`attack_delivery_*_projectile` 是资源层投送引用，不是 dl_bin 表里的三个弹丸外键。
+
+顺带（同一份 JSON 的 delivery 计数，作为“每轮几发”的旁证）：
+
+| 战备 | deliveries |
+|---|---|
+| `orbital_120mm_he_barrage` | **3** |
+| `orbital_380mm_he_barrage` | 3 |
+| `orbital_napalm_barrage` | 3 |
+| `orbital_walking_barrage` | 3 |
+| `orbital_gatling_barrage` | **4** |
+| 单发类（precision / railcannon / gas / smoke / EMS / airburst / 全部 Eagle） | 1 |
+
+复算命令：
+
+```bash
+python - <<'EOF2'
+import json,re
+d=json.load(open(r"D:/mod/hd2runtime-capabilities.json",encoding="utf-8"))
+rows=d["collections"]["StratagemAuthoringCapabilities.json"]["fieldInstances_kept"]
+sel=[r for r in rows if "orbital_120mm_he_barrage" in r.get("instanceKey","")]
+for r in sorted(sel,key=lambda x:x["instanceKey"]):
+    print(r["instanceKey"].split("orbital_120mm_he_barrage",1)[1], "=", r.get("currentDefault"))
+EOF2
+```
