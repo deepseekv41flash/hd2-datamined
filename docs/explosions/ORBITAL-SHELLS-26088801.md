@@ -659,3 +659,44 @@ python tools/ref_scan.py delta-show 0xDB465C00E23CDD50         # 燃烧加特林
 python tools/ref_scan.py delta-show 0xAE4D54F6CB8CC350         # 120mm EMS 变体（§7）
 python tools/ref_scan.py delta-show 0x00000000166D0C91         # ✗ 查不到：32 位是 locid，不是 delta 键
 ```
+
+### 9.7 装盘包：手工应用「燃烧加特林」变体（✓ 离线装盘 + 回读一致，待实机）
+
+**改动**（`out/gatling-fire/step1.plain`，保哈希编辑）：`BombardmentComponentData` 行 12（键
+`0x2F257B91037AC421` = Orbital Gatling Barrage 载荷实体）的弹种清单 4 个槽：
+
+| 字段 | 原版 | 变体 |
+|---|---|---|
+| `+0x40` | 79 | **74**（23mm，命中爆炸 108 = 带 `FireTemplate=2`） |
+| `+0x44` | 43 | **258**（同族无爆炸、带跳弹音） |
+| `+0x48` | 43 | **258** |
+| `+0x4C` | 43 | **258** |
+
+delta 里的 `+0x04=60` / `+0x24=7.0` 与原行**同值**（no-op），字节未动；发数、轮数、散布不变，只换弹种。
+⇒ 每轮 60 发按 4 槽循环 = **每 4 发里 1 发燃烧弹**（4 轮共 60 发燃烧弹），其余 3 发为无爆炸弹。
+
+**门禁与产物**：
+
+| 项 | 值 |
+|---|---|
+| 编辑门禁 | G1/G2/G3（`0x8E49771B181FFAA1` 不变）/G4/G6/G7/G8/G9 全 PASS；diff 仅 4 槽 + 末块尺寸字段 + 校正字 |
+| 明文 | 47,259,408 B，md5 `29c079e7522f51d204e877a5832d4700` |
+| 封包 | 47,259,456 B，md5 `1498b3c827e1e7875d28ffa11e9f2002`，sha256 `9f46d7fdfe9ffe28` |
+| 装盘 | `dlbin_deploy.py install`，回读明文 md5 与 step1.plain **逐字节一致**；账本原版备份 sha256 `4121f332a6d16307`（`D:\mod\backups\dlbin-deploy\game\generated_entities.dl_bin`）|
+| 资源 | **不需要额外驻留**：弹种 74/258 与 79/43 的行内资源字段完全相同（只差爆炸 / 音效 / 2 字节标志），爆炸 108 的粒子 file_id 与 375 **同值**（`0x4f069f48ce3cdb45`）⇒ 粒子资源原版就已驻留 |
+
+**实机观察清单**（单变量；进游戏前先完全退出重启）：
+
+1. 带 **Orbital Gatling Barrage（轨道加特林火力网）**，任意任务叫一发；
+2. 看落点：是否出现**小火苗/燃烧地面**（每 4 发 1 发），敌人是否被点燃；
+3. 异常项：崩溃、灰块、无伤害、声音错乱；
+4. 判读：有火焰+点燃 → effect 1427 效果体 `✓✓`；有伤害无火焰 → 火焰特效资源未驻留（FireTemplate）；
+   崩溃/无效 → ✗ 回滚。
+
+**回滚**：
+
+```bash
+python /d/mod/tools/dlbin_deploy.py restore --file generated_entities.dl_bin
+# 或：cp "/d/mod/backups/spray-capsule/generated_entities.vanilla.dl_bin" \
+#        "/d/SteamLibrary/steamapps/common/Helldivers 2/data/game/generated_entities.dl_bin"
+```
