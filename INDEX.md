@@ -18,7 +18,7 @@
 | 想亲手改一张表 | **[改盘上数据的完整工作流](docs/cases/FILE-ROUTE-WORKFLOW-26088801.md)** —— 主线文档，8 步链 + 锚点哈希 + 93 条坑 |
 | 想让**代理**去做 | **[skills/hd2-file-route-mod](skills/hd2-file-route-mod/SKILL.md)** —— Agent Skills，只给方法论（每步的目的 / 判据 / 停的条件）+ 指回本页 |
 | 想查某个字段 / 某个数 | [§1 按问题找](#1-按问题找) |
-| 想按类型看全部 68 篇 | [§2 按类型浏览](#2-按类型浏览68-篇) |
+| 想按类型看全部 69 篇 | [§2 按类型浏览](#2-按类型浏览69-篇) |
 | 想找某个工具 / 看它验证到哪一步 | [§3 工具清单](#3-工具清单tools) |
 | 刚更新完游戏 | [BUILDS.md §3](BUILDS.md)（三步 + §3.1 锚点复验） |
 | 什么都没有、只想先摸摸 | [§4 无密钥也能练](#4-无密钥也能练) |
@@ -116,8 +116,9 @@
 | wiki 里的原始解码数据能补哪些字段 | [WIKI-DATA-MODULES](docs/cases/WIKI-DATA-MODULES.md) · [WIKI-LOCAL-DB](docs/cases/WIKI-LOCAL-DB.md) |
 | **多个 mod 改同一份文件的不同字段，想同时用** | [MOD-MERGER](docs/cases/MOD-MERGER-26088801.md) | **§1 算法 · §2 用法 · §3 逐字节等价证明 · §4 前提与边界** | `26088801` |
 | 社区包怎么做 / 能不能共存 | [CASE-STUDY](docs/cases/CASE-STUDY-20261021.md) · [COMMUNITY-MODS-COMPAT](docs/cases/COMMUNITY-MODS-COMPAT-26088801.md) · [PATCH-SALVAGE](docs/builds/PATCH-SALVAGE-25988413.md) |
+| 一个**大型闭源护甲外观系统**怎么部署 / 自检 / 分发（我们能借什么、借不到什么） | [RECON-HD2-INTEGRATED-ARMOR-SYSTEM](docs/cases/RECON-HD2-INTEGRATED-ARMOR-SYSTEM.md)：`.patch_N` 用法旁证 · bundle 基线自检可借 · 一批掉坑结论 · 分发模板；**无数据字段可回收** |
 
-## 2. 按类型浏览（68 篇）
+## 2. 按类型浏览（69 篇）
 
 | 类别 | 放什么 | 篇数 |
 |---|---|---:|
@@ -126,7 +127,7 @@
 | [`tables/`](docs/tables/) | 数据表与实体库的解码 / 改写 | 24 |
 | [`explosions/`](docs/explosions/) | 爆炸与弹头（玩法层 + 外观层） | 2 |
 | [`boundaries/`](docs/boundaries/) | 被挡住的路：进程内存、虚拟机 | 2 |
-| [`cases/`](docs/cases/) | 案例与外部参照：社区包、贴图委托、wiki 数据、**完整工作流**、**老 mod→数据路线修复版 playbook（含两个 C 档样板）**、**第三方护甲多被动 / Sterilizer 改治疗 / P-11 Self-Heal / VanillaPlus 两件 / SHODAN 额外战备 侦察**、**网络复制层探针系列**、**实体表在线改写实机证明**、**EXO-45 换臂（memmod 复现）** | 26 |
+| [`cases/`](docs/cases/) | 案例与外部参照：社区包、贴图委托、wiki 数据、**完整工作流**、**老 mod→数据路线修复版 playbook（含两个 C 档样板）**、**第三方护甲多被动 / Sterilizer 改治疗 / P-11 Self-Heal / VanillaPlus 两件 / SHODAN 额外战备 侦察**、**网络复制层探针系列**、**实体表在线改写实机证明**、**EXO-45 换臂（memmod 复现）**、**HD2 Integrated Armor System（闭源护甲外观系统）侦察** | 27 |
 
 ### `builds/`
 
@@ -235,6 +236,7 @@
 | [WIKI-LOCAL-DB](docs/cases/WIKI-LOCAL-DB.md) | 不抓 HTML：页面源码 + JSON 模块落本地 SQLite，一条命令查战备/武器全貌 | 跨 build |
 | ★ [MOD-MERGER-26088801](docs/cases/MOD-MERGER-26088801.md) | **多个 mod 改同一文件不同字段怎么共存**：抽语义 / 剔哈希脚手架 / 逐字节判冲突 / 逐字节等价证明 | `26088801` |
 | ★ [RECON-ARMOR-MULTI-PASSIVE](docs/cases/RECON-ARMOR-MULTI-PASSIVE.md) | **第三方「护甲多被动」只读侦察**：`passive_bonuses` 的 payload 布局（pm/sm 双数组）、**效果在 sm 行**、全表只有 7 个 stat 槽、描述隐藏=末 4 B 清零、它的堆叠配方与安全设计 | `25988413`（结构在 `26088801` 已逐字段核对一致） |
+| [RECON-HD2-INTEGRATED-ARMOR-SYSTEM](docs/cases/RECON-HD2-INTEGRATED-ARMOR-SYSTEM.md) | **第三方大型闭源「护甲外观系统」只读侦察**：三路线（ReShade addon / Bingus Lua 宿主 `9ba626afa44a3aa3.patch_N` / `data/<16hex>.patch_N` 数据包）+ 自研 rig 资产格式；可借 = bundle 基线自检、分发 feed 模板、掉坑清单；**无数据字段/表可回收** | 2026-10-31 状态（跨 build） |
 | ★ [RECON-STERILIZER-HEAL](docs/cases/RECON-STERILIZER-HEAL-26088801.md) | **第三方「Sterilizer 改治疗」只读侦察**：改的是**伤害行**的 4 组字段（状态槽 0/1 的 type+value、`element`、damage）；附带**伤害行 76 B 完整字段图**与**状态效果表解码**（73×160 B + 名字 blob → id↔名字全表） | `26088801` |
 | ★★ [RECON-P11-SELF-HEAL](docs/cases/RECON-P11-SELF-HEAL-26088801.md) | **C 档样板（代码型）**：P-11 Self-Heal v1.0.4 = 运行时 `player_fired` 事件 + `Player:heal`（**一条数据都没改**，413 行源码）；「开火即回血」数据侧没有事件钩子 ⇒ **C · 不可实现**；替代 = 数据侧**治疗爆**（孤儿爆炸 254 + 治疗行 446，打脚下 2 m 内回血 ✓ 实机 / >2 m 不回血 ✓ 实机 / **顺带修部位 ✓ 实机**） | `26088801` |
 | ★★ [RECON-SHODAN-EXTRA-STRATAGEM](docs/cases/RECON-SHODAN-EXTRA-STRATAGEM-26088801.md) | **额外战备 = `StratagemInfo +0xC8`**（另一条战备的 `+0` id，不占 4 个配装位，引擎跟链、成环崩）：SHODAN v4.1.0 源码级定位 + 本 build 153 行核对（Eagle 全 = 51 `EAGLE. REARM`）；**M-104 Incinerator FRV = id 138 / 实体 `frv_flamer` 本 build 完整存在**；工具 `stratagem_extra.py`（G1–G7 含环检测）；**✓ 实机**：带 Resupply 链式送 `Precision Strike → M-104`，两件都出现在战备条且可呼叫 ⇒ 未发布战备走数据路线进任务 | `26088801` |
