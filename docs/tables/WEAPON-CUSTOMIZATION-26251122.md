@@ -613,7 +613,29 @@ cp "D:/mod/backups/spray-capsule/generated_entities.vanilla.dl_bin" "…/data/ga
 | **2** | 支援武器 SUPPORT | 45/45 | ✓✓ 原版全部；**改 1 无任何效果**（见下） |
 | **3** | 副武器 SECONDARY | 28/28 | ✓✓ 原版全部；Constitution 1→3 后进 SECONDARY |
 | 4 | 投掷 THROWABLE | 6/6 | **✓ 军械库进 PRIMARY、可装备；✗ 进任务崩**（G-16 4→1；投掷物无武器组件，见下） |
-| 5 | 其它物品 | 1/1 | ⚠ 未测 |
+| 5 | 其它物品 | 1/1 | ⚠ 未测（预计无可观察变化：值 5 没有对应军械库页签，见 12.2.1） |
+
+**表里不只武器**（2026-10-31 读数：LoadoutEntry 全表 199 个键）：值1=59、值2=46、值3=28、值4=27、值5=3、值6=36。
+
+| 值 | 键数 | 构成 |
+|---:|---:|---|
+| 1 | 59 | census 主武器 59 |
+| 2 | 46 | 支援武器 45 + 1 个投掷类杂项 `0x9B75217D8312DD67`（有 Throwable/Explosive/Spottable/Health，无武器组件） |
+| 3 | 28 | census 副武器 28 |
+| 4 | 27 | census 投掷 6 + 21 个非 census 交互物（Interactable+Spottable，部分带 Health） |
+| 5 | 3 | 见 12.2.1 |
+| 6 | 36 | 单位 / NPC / 载具等非装备条目 |
+
+### 12.2.1 值 5（other_item）的 3 个实体
+
+| 实体键 | 身份 | 证据 |
+|---|---|---|
+| `0x8E7968D7E7AA4EAB` | **Remote Explosives 战备（89，`MISSIONS. REMOTE EXPLOSIVES`）的遥控起爆器** | rack 58 槽 1/3 载荷（与两个 interactable 炸药实体配对）；unit = `nator/target_designator`；组件含 RemoteTrigger / Spottable / EntityBind / Interactable / WeaponData / WeaponCustomization |
+| `0x557EA199F0713919` | **`ne_shot/adrenaline_shot`**（兴奋剂 / 肾上腺素注射器类道具） | dev_name 直接给出且与 unit 资源同名；组件 Wieldable / WeaponData / Attachable / AbilityWeapon / Ability / MeleeAttack；**无任何其它表引用** |
+| `0x7548CBD5883F81A2` | **无名占位**（mesh 名就是哈希，仅 5 个组件） | 组件只有 Encyclopedia / Unit / Wieldable / Equipment / Attachable；**无任何引用** |
+
+⇒ 值 5 = **任务 / 杂项道具**（不是军械库装备槽武器）：一个任务战备的载荷 + 一个未使用道具 + 一个占位。
+所以“值 5 改 1 会不会进 PRIMARY”这类测试对它们没有意义 —— 值 5 本来就没有对应页签，改槽最多把它挪进某个列表，但缺武器组件的那两个（起爆器/针剂）大概率与投掷物同一下场。
 
 **实机双向验证**：
 
@@ -763,3 +785,4 @@ python tools/entity_row_append.py --plain Y.plain --block 0xFCCA29DB \
 | 投掷物当主武器进任务 | **✗ 崩**（缺 WeaponData/ProjectileWeapon ⇒ 槽可换、用不了；槽类型 ≠ 武器能力） |
 | 投掷物作舱载荷（原版值 4 / 交互 14） | **✗ 无提示**（出现但不可交互） |
 | 投掷物交互改 13（舱内取） | **⚠ 半通**：有提示、能取，但**投掷物栏无变化**；资产驻留 + 改带别的投掷物后**仍无变化** ⇒ 无授予路径 |
+| 值 5（other_item） | 3 个实体 = 任务遥控起爆器 + 未使用针剂道具 + 占位；**没有对应军械库页签**，改槽无实际意义（未实机） |
