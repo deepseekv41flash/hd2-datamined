@@ -117,6 +117,28 @@
 回滚：`cp /d/mod/backups/strat-89/generated_stratagem_settings.installed-before.dl_bin "<game>/data/game/generated_stratagem_settings.dl_bin"`
 （该备份已核对 = 原版明文）
 
+#### 3.2.1 载荷可换 ⇒ 89 是「万能自定义战备槽」（✓✓ 实机，2026-10-31 二测）
+
+既然战备行本身可用、失效只在载荷，那就**把载荷换掉**：rack 58 槽 0/1 = **LAS-44 Nova**（`0x73D84EAAE8C75342`）+ **LIFT-182 Warp Pack**（`0xB49756795D9B0E68`），`spawn=2` 不变。
+
+| 项 | 值 |
+|---|---|
+| 实体改动 | rack 58 槽0 Nova / 槽1 Warp Pack（槽2/3 原炸药/起爆器保留但不生成），只差 17 字节 |
+| 资产驻留 | `f6fb08cc02d24255.patch_5` = **Nova 整包 41 条**（toc 2,699,632＋gpu 10,451,488＋stream 3,058,480）；`patch_6` = **Warp 整包 50 条**（toc 3,521,040＋gpu 1,836,728＋stream 2,654,472）；宿主序号 0–6 连续 |
+| 战备表 | RESUPPLY(34) `+0xC8` = 89（同 §3.2） |
+| 实机 | **Nova 与 Warp Pack 都正常渲染、都能拾取** ✓✓ |
+
+⇒ **89 = ∞ 次、无名、可直接调用、载荷完全由 rack 58 决定的自定义战备槽**：把任意可拾取实体写进 rack 58（配合资产整包驻留）就变成“多一个战备位”。
+⇒ 代价：rack 58 原是任务脚本用的（REMOTE EXPLOSIVES 任务物件），改动后凡用到该任务目标的任务会受影响。
+
+复现：
+
+```bash
+python tools/rack_edit.py --plain refs/dlbin/plaintext-26251122/generated_entities.dl_bin --rack 58     --slot 0=0x73D84EAAE8C75342 --slot 1=0xB49756795D9B0E68 --spawn 2 --out out/nova-warp/step1.plain
+python tools/whole_package_patch.py build --package 601d726de9c3962f --host f6fb08cc02d24255 --index 5 --out D:/mod/out/nova-warp-res
+python tools/whole_package_patch.py build --package 68f670405a504f68 --host f6fb08cc02d24255 --index 6 --out D:/mod/out/nova-warp-res
+python tools/stratagem_extra.py --host 34 --extra 89 --out out/strat-89/step1.plain --seal
+
 ## 4 T3 · 已发布（85 行，仅作对照）
 
 支援武器 / 背包 / 哨戒 / 轨道 / 飞鹰 / 已发售载具（M-102 Gunner FRV、M-103 Supply FRV、EXO 四款、TD-220/TD-110）。
