@@ -93,6 +93,30 @@
 旁证（`✓ 离线`）：本 build 字符串表里有 `<i=1> Free Medical Supplies</i> stratagem on all missions.`（1483406869）
 —— Medical Supplies 是**任务修饰符赠予**的免费战备，所以它「不常驻商店」而不是「不存在」。
 
+### 3.2 T2 里第一条例外：89 `MISSIONS. REMOTE EXPLOSIVES`（✓✓ 投放链通，2026-10-31 实机）
+
+| 项 | 值 |
+|---|---|
+| 挂法 | `stratagem_extra.py --host 34 --extra 89`（挂在 RESUPPLY 上），只改战备表，保哈希 |
+| 表字段 | `+0x3C` = **2 `HellpodDeployment`**（不是任务物件的 `Special=4`）；`+0x50` uses = **∞**；`+0x70` origin_type=1；`+0x94` cooldown_type=1；`+0xB8` hud_type=1(Mission)；`+0xC8` extra=0 |
+| 资产声明 | `+0xA8` package = `0x28812689506A3E9C`（原版已声明 ⇒ **不需要驻留补丁**） |
+| 名字 | `name_id`/`upper_id` 都不在字符串表 ⇒ **无名**（战备栏空白，同 36/114/135 一类） |
+| 载荷（rack 58） | authored 4 槽、`spawn=2` ⇒ 每次掉 **2 件**：`0x38CB9C758E07BC58`（interactable **炸药**，交互类型 **31**）+ `0x8E7968D7E7AA4EAB`（other_item **遥控起爆器**，交互类型 13） |
+
+**实机现象（一局）**：能带（战备栏多一条无名项）、能按、**真掉东西**；但载荷**落地瞬间爆炸**，捡不了。
+
+判读：
+
+| 层 | 结论 |
+|---|---|
+| 战备行本身 | **✓✓ 可用** —— 投放链完整，是 T2 任务物件组里**唯一一条投放链完全打通**的 |
+| 失效点 | 载荷实体：炸药/起爆器是任务脚本物件，落地即引爆、没有可拾取形态 |
+| 判据补充 | 「`+0x3C=2` 一律能叫且真掉东西」样本 3 → **4 条** |
+| 附带 | **交互类型 31** 首次实机露头（炸药），但因其瞬间爆炸，拾取语义仍未证 |
+
+回滚：`cp /d/mod/backups/strat-89/generated_stratagem_settings.installed-before.dl_bin "<game>/data/game/generated_stratagem_settings.dl_bin"`
+（该备份已核对 = 原版明文）
+
 ## 4 T3 · 已发布（85 行，仅作对照）
 
 支援武器 / 背包 / 哨戒 / 轨道 / 飞鹰 / 已发售载具（M-102 Gunner FRV、M-103 Supply FRV、EXO 四款、TD-220/TD-110）。

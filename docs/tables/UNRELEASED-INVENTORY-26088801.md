@@ -202,6 +202,10 @@ settings.UNLOCKS = {
 > 不是「额外战备」路线；本页只做盘点，路线见
 > [`RECON-SHODAN-EXTRA-STRATAGEM`](../cases/RECON-SHODAN-EXTRA-STRATAGEM-26088801.md)。
 
+> **补充（2026-10-31，实机）**：T2 任务物件里的 **89 `MISSIONS. REMOTE EXPLOSIVES`** 也把投放链打通了
+> （挂在 RESUPPLY 34 上：能带、能按、真掉东西），但载荷落地瞬间爆炸、**不可拾取** ⇒ 仍按任务物件归类，**不列入本表**。
+> 细节见 [UNRELEASED-STRATAGEMS-26088801](UNRELEASED-STRATAGEMS-26088801.md) §3.2。
+
 ---
 
 ## 7 还没实机测过的（可上机清单）
