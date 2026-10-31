@@ -130,3 +130,46 @@ for r in sorted(sel,key=lambda x:x["instanceKey"]):
     print(r["instanceKey"].split("orbital_120mm_he_barrage",1)[1], "=", r.get("currentDefault"))
 EOF2
 ```
+
+## 7 未发布的舰船升级 `Orbital 120mm EMS Barrage`（hash `0xAE4D54F6CB8CC350`）——存在，效果体已写好，但未接线
+
+社区（Bingus 作者）指出 Hash.csv 里有一条「轨道火力网-升级」= `0xAE4D54F6CB8CC350`。**本 build 确认存在，且不是空名字占位。**
+
+### 7.1 它是什么：`ComponentEntityDeltaStorage` 里的一条完整 addPath delta
+
+`python tools/ref_scan.py delta-show 0xAE4D54F6CB8CC350` 直接解出 **6 处字段写入 / 2 个组件**：
+
+| comp | 字段 | 内容 | 解读 |
+|---:|---|---|---|
+| **196** | `+0x40`，32 B | `76, 197, 139, 139, 197, 139, 139, 0`（u32） | 同时出现 **76 = `Orbital_Stunround`（EMS 眩晕弹丸 type）**、**197 = `Orbital_Cannon_120mm_HE`（HE 弹丸 type，见 §1）**、**139 = `ORBITAL. 120MM HE STRIKE` 战备 id** ⇒ 「把 120mm 弹幕改成打 EMS」的官方定义 |
+| 196 | `+0x04` | `7` | 类/弹种槽位相关（未定名） |
+| 196 | `+0x18` | `5` | 同上 |
+| 196 | `+0x24` | **f32 `10.0`** | 与 120mm 命中爆炸 outer_radius 10.0 相同（§6） |
+| **28** | `+0x08` | `0x25B8CFF26C7C0112` | **= 120mm 弹幕战备行 139 的 `+0xA8` 根包**（同一值） |
+| 28 | `+0x10` | `0xA00E6327E3747A50` | 另一个包（疑似 EMS 弹幕载荷包） |
+
+⇒ 这不是"名字占位"，而是**已写好数值/引用的一套升级效果**：换弹丸 type（76/197 并存说明是"改掉 120mm 的弹种"而不是新弹丸）+ 换加载包。
+
+### 7.2 接线状态：`✗ 未接线`
+
+对全部 55 张明文表做 u32 级搜索（`lo32 0xCB8CC350` / `hi32 0xAE4D54F6`）：
+
+| 出现处 | 次数 | 说明 |
+|---|---:|---|
+| `generated_entity_deltas.dl_bin` | 1 | 就是上面那条 addPath delta 本体 |
+| `generated_modifier_settings.dl_bin` | 1 | 唯一一处"数据侧引用"（块 6 payload 尾部 8 字节；未解语义，疑似修饰符→升级的引用） |
+| 其余 53 张表 | 0 | **没有任何升级列表 / 解锁行引用它** |
+
+⇒ 它**没有接到"可购买/可解锁的舰船升级"行**上，这就是它未发布的直接原因（不是数值没写完）。
+
+### 7.3 三态判定
+
+| 项 | 结论 |
+|---|---|
+| 存在性 | **✓ 存在**（addPath delta + modifier 一处引用） |
+| 效果体完整度 | **✓ 完整**（弹丸 type、战备 id、半径、两个包 id 全部写实） |
+| 玩家可见名字 | **⚠ 只有内部名 hash**（Hash.csv 的「轨道火力网-升级」）；未在明文定位表/字符串语料里找到对应显示名（本仓库 strings 语料 grep "120mm/EMS BARRAGE" 0 命中） |
+| 可购买/可获得 | **✗**（无接线，见 7.2） |
+| comp 196 / 28 的真实组件名 | **⚠ 未定**（不在 `ref_scan.py` 现知的 6 个 delta 组件映射里：5/114/119/239/274/324） |
+
+**一句话**：它是**「写好效果、没接解锁」的半成品**，恰好证明官方确实做过"120mm 打 EMS"的方向；社区说的「SHODAN 不开放这一格」也成立 —— 它的效果不在战备行字段里，而在 `entity_deltas` 的 addPath 机制里（与武器附件同一套）。
