@@ -101,6 +101,7 @@
 | 想知道 | 读 |
 |---|---|
 | 新 build 到手先跑哪三步 + 锚点怎么复验 | [BUILDS.md §3](BUILDS.md) |
+| **游戏更新后哪些补丁过期 / 盘上现在是什么状态** | [GAME-BASELINE](docs/tools/GAME-BASELINE.md)（`snapshot`/`check` 分类 + `--artifact` 产物断言；基线示例 `baselines/`） |
 | **每个 build 到底改了什么 / 哪些结论还成立** | [§2 `builds/` 跨 build 对照表](#builds) |
 | 这次更新到底把 55 张表改了没 | [BUILD-26251122-DIFF](docs/builds/BUILD-26251122-DIFF.md)（51/55 逐字节未变，4 张值级见文） |
 | 工具清单与各自验证状态（依赖 / 三态） | [§3 工具清单](#3-工具清单tools) |
@@ -246,7 +247,7 @@
 
 ## 3. 工具清单（`tools/`）
 
-**83 个脚本（`tools/*.py` 实数），全部在库**（§3.5 另列「文档里提到但仓库故意没有」的，不计入这个数）。
+**114 个脚本（`tools/*.py` 实数），全部在库**（§3.5 另列「文档里提到但仓库故意没有」的，不计入这个数）。
 
 其中 `tools/_tmp_split.py` 是**一次性文档拆分脚本**（把 `CHARGE-WEAPONS` 的射击模式一节拆成独立的
 [WEAPON-FIRE-MODES](docs/tables/WEAPON-FIRE-MODES-26088801.md) 一篇，执行过一次）：留档用，
@@ -366,6 +367,7 @@
 | `resource_patch.py` | **任意** Stingray 资源类型的 `.patch_N` 构建/查看/解包/重打 | `srkit`（构建时） | ✓ |
 | `resdep.py` | **资源依赖自动追踪 + 驻留计划**：`index` 建全档 `资源 id → 宿主包` 索引（322,810 行 / 62,915 id，约 20 s）· `chain` 从武器/实体/爆炸走引用链并**全 u64 扫描**（不猜字段）· `plan` 按目标件声明包分「同包/跨包/缺失」并出 `whole_package_patch` 命令 · `sound-catalog`/`sound` 解 wwise **HIRC** 建事件目录（实测 **9,627 事件 / 420 bank**；⚠ 但表里哪个字段放事件 id 仍未定位，爆炸行 0/424 命中）。G1–G5，**缺失资源默认拒绝出计划**；`--apply` 一键装盘 + 失败整体回滚 + 自动生成 **VERIFY.md 实机验证清单** | `srkit`（`python -m srkit`） | ✓ 爆炸 213 → 粒子+震屏 9 包 0 缺失；MG-43 → 同包 7 / 跨包 11（5 包）/ 0 缺失；全量声音目录 9,627 事件 |
 | `whole_package_patch.py` | **整包资源 → `<宿主包>.patch_N`**（资源层驻留）：`list` 列包内资源；`build` 解包→`--edit` 换资源（自动同步 `resource.json` 的 size/sha）→打包→复核；`check` 核对成品。G1–G8 门禁；序号默认自动取下一个连续值；`--install` 可选部署 | `srkit`（`python -m srkit`）+ `resource_patch.py` | ✓ 复现证明：重跑 P4 补丁，三件产物与盘上**逐字节相同**（toc `a3f71af78d333f02`）|
+| `game_baseline.py` | **盘面基线自检**（借 HD2IAS 思路）：`snapshot` 记录 `data/game/*`（57 文件全量 sha）+ `bundle_database`/`bundles.nxa` + 全部 `*.patch_*` 分组；`check` 分「构建指纹 / 表改动·缺失·新增 / 补丁多出·缺失·改动 / 大归档尺寸」；`--artifact REL=FILE` 断言盘上文件 == 部署产物；`selftest` 15 项变异自检。首份基线 `baselines/game-baseline-26251122-vanilla.json` | 标准库 | ✓ 自检 15 PASS；实盘核对（1 个表改动 / 21 补丁组 / 产物断言 ✓） |
 | `swap_texture.py` | 把一张 PNG 换进 `.patch_N` 里的某个贴图并重打 | Pillow | ✓ 已实机 |
 | `export_textures.py` | 把 `.patch_N` 里每个贴图导出成可编辑 DDS | Pillow | ✓ |
 

@@ -84,7 +84,7 @@
 
 | # | 事项 | 目的 | 优先级 |
 |---:|---|---|---|
-| 1 | 给 `dlbin_deploy` / `whole_package_patch` 增加「盘面基线清单」（`game-baseline.json`：build + 关键文件 sha） | 游戏更新后一键判断哪些补丁过期 | 中 |
+| 1 | 给 `dlbin_deploy` / `whole_package_patch` 增加「盘面基线清单」（`game-baseline.json`：build + 关键文件 sha） | 游戏更新后一键判断哪些补丁过期 | **✅ 已实现（2026-10-31）**：[`tools/game_baseline.py`](../../tools/game_baseline.py) + [GAME-BASELINE](../tools/GAME-BASELINE.md)（`snapshot`/`check`/`show`/`selftest`，带 15 项变异自检；首份基线 `baselines/game-baseline-26251122-vanilla.json`） |
 | 2 | 验证 `9ba626afa44a3aa3.patch_1` 与 patch_0 共存条件（我们盘上只有 patch_0） | 以后若要在 Lua 侧叠工具（HUD/调试） | 低 |
 | 3 | 若要研究外观方向：把 `.hd2irpack` / `rigbin` 当第三方「资产容器」样板（另立课题） | 外观路线可行性 | 低 |
 

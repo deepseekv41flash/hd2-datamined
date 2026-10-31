@@ -1,0 +1,323 @@
+{
+ "schema": "HD2GameBaseline/1",
+ "created_at": "2026-10-31T16:02:05+0800",
+ "label": "vanilla-26251122（原版盘面；entities 用备份→原版哈希）",
+ "build": "26251122",
+ "dir_basename": "data",
+ "expect_patches": false,
+ "files": {
+  "game/dl_library.dl_typelib": {
+   "size": 1080072,
+   "sha256": "4d4db6e7a057b9e5ad023894f1629f031520823be80ea6099cde8f3e27c0bee1"
+  },
+  "game/game.dll": {
+   "size": 49075800,
+   "sha256": "61dcfcd201dacbf3545c97beb8a5a6186e9850d2670bf60b0e058320b477f6df"
+  },
+  "game/generated_add_resource_dependencies.dl_bin": {
+   "size": 228,
+   "sha256": "4f227bd2d06fe7b3c43ce3f2de4c41ddf5ab2d4fd3b581146ae8ecea7296ac15"
+  },
+  "game/generated_animation_event_trigger_settings.dl_bin": {
+   "size": 165116,
+   "sha256": "dad3ff227ea48f26e3bf49314eac8f25384a1a16f4a5128c0f41db709c5d6286"
+  },
+  "game/generated_arc_settings.dl_bin": {
+   "size": 1756,
+   "sha256": "26955d86dffb95139e4afead713f4abf6825ec60d9c726d112956a0977f69bcc"
+  },
+  "game/generated_beam_settings.dl_bin": {
+   "size": 3452,
+   "sha256": "c42c46ec088dcef113ef35a0b5e99a04809244336600d9e7b56450d09a05b344"
+  },
+  "game/generated_body_settings.dl_bin": {
+   "size": 164,
+   "sha256": "f027415946f35fe9e695965befd1f0c4e4a7fd89fc95729c8e584f45c040da0b"
+  },
+  "game/generated_candidate_descs.dl_bin": {
+   "size": 860,
+   "sha256": "fa7b58b8abb9bce49e239616d1eeea872e9c92aad1a412834a3df2d2cb6f72c5"
+  },
+  "game/generated_collision_event_settings.dl_bin": {
+   "size": 14492,
+   "sha256": "3500fcbf35e8b425a3ea493ad07a54ac3351faebe025fc46eee2a1d346d2c2f7"
+  },
+  "game/generated_corporation_logos.dl_bin": {
+   "size": 412,
+   "sha256": "edd2b109353b4917d3370965f5d8c053e65738c6162f25cc09d76f21c606a7e7"
+  },
+  "game/generated_credits_settings.dl_bin": {
+   "size": 368276,
+   "sha256": "159da2a16f8d9902f19d3d80358a888e4f7e7f11ff684f6a19c174fff002a554"
+  },
+  "game/generated_customization_armor_sets.dl_bin": {
+   "size": 453252,
+   "sha256": "373bb4eb459fed0f26575f4b9192bc3c678b3ac989d5976a60db66a057c7e8ae"
+  },
+  "game/generated_customization_passive_bonuses.dl_bin": {
+   "size": 4064,
+   "sha256": "8d9897ac97e500c0d743fc7198939ea34fa08f45e6ccb848614ee95587bb1706"
+  },
+  "game/generated_damage_settings.dl_bin": {
+   "size": 50384,
+   "sha256": "81a5756a6da075a5407d2d8fde23c67ae013160739c45e9eefeae6ede18edd60"
+  },
+  "game/generated_destruction_settings.dl_bin": {
+   "size": 1643958,
+   "sha256": "0d605a9b97f3057fb9ae9fd42cf32cad4c96618c4439232ec481b3a8069c86b3"
+  },
+  "game/generated_distant_war_effect_settings.dl_bin": {
+   "size": 1516,
+   "sha256": "cf11ce856d8fcee72a68d109a2c08d50c5c286a74f3523effbcb1f0f5348552c"
+  },
+  "game/generated_entities.dl_bin": {
+   "size": 47259444,
+   "sha256": "4121f332a6d163074521073c250d49514d5b7d20593ba34a0d1f808521370683"
+  },
+  "game/generated_entity_deltas.dl_bin": {
+   "size": 352393,
+   "sha256": "b46267119c057de4e983731aa192b772a14417a720ad07a7c06f2f9ef696f037"
+  },
+  "game/generated_environment_settings.dl_bin": {
+   "size": 11010,
+   "sha256": "58d98084f07656ebe1ccbab53276848a28e291c418d18aac7e565f5d06e49a4e"
+  },
+  "game/generated_explosion_settings.dl_bin": {
+   "size": 68204,
+   "sha256": "f49b7f14bee5ca60ac3000a81427d215b70346b4b49644590c00c84bbfdfe906"
+  },
+  "game/generated_font_lookup.dl_bin": {
+   "size": 652,
+   "sha256": "907f094b43fd1c41c5ae22970132574a3fe8c45fe9847e2b21a678370f6a5635"
+  },
+  "game/generated_font_settings.dl_bin": {
+   "size": 6028,
+   "sha256": "cad0b4bbd793c02e2f536f2d2ca1696a811d6e0d5924575309cfe79fab3d3daf"
+  },
+  "game/generated_galactic_presence_settings.dl_bin": {
+   "size": 155901,
+   "sha256": "99a88c4d07c2d25c475bd54014d53ac2f845aadbd0911b7d87e4d0013197e0ea"
+  },
+  "game/generated_generation_settings.dl_bin": {
+   "size": 10444,
+   "sha256": "a8ff30d0d7cf57439a45371bf90d617fca78e6d5fcf1c63a593eaaef1effcb02"
+  },
+  "game/generated_hit_effect_settings.dl_bin": {
+   "size": 72668,
+   "sha256": "9cf33b3b1576b7ab7deaf6bc7b2d0d95c7e56a1680b8f5bc3d5ebdf435df9cf2"
+  },
+  "game/generated_language_settings.dl_bin": {
+   "size": 3996,
+   "sha256": "081b9a61d7aa1063024ef7ab0e081eecd4509537cc03882c3ec0bb31f205062f"
+  },
+  "game/generated_layer_package_indirection_settings.dl_bin": {
+   "size": 156,
+   "sha256": "5f0e02abfde479d0791bf74bc63b9b36d8e8cddc3b17d473b410ebd5a1ed78b0"
+  },
+  "game/generated_location_groups.dl_bin": {
+   "size": 397154,
+   "sha256": "bc6b754345401dbcb490b6ab3d996f9a7b5e5ee842a21e0e4826a0ce8ab7e01c"
+  },
+  "game/generated_modifier_settings.dl_bin": {
+   "size": 1812,
+   "sha256": "4e2bf8c3e9b7d55bd860f48f8662b0e1d41c642fa45578e746100f08cc59e0d5"
+  },
+  "game/generated_planet_color_set_settings.dl_bin": {
+   "size": 2012,
+   "sha256": "c545c30ded2b330c01a9f32c0c9eed15423beba8234b142dd6915b6dc7cd5575"
+  },
+  "game/generated_planet_data.dl_bin": {
+   "size": 369588,
+   "sha256": "ca16f9668da42fc2d15a932fdd17eb77b57c21d05f32babad4d304dd150f5177"
+  },
+  "game/generated_planet_override_settings.dl_bin": {
+   "size": 35522,
+   "sha256": "17c2dbc8fd17eeca8fa776326d714976fa1d91bff7cf91a3f39fd650f16bc008"
+  },
+  "game/generated_planet_region_settings.dl_bin": {
+   "size": 61533,
+   "sha256": "a5235e8cde3ae00f66b9b80c0ed6340ffa82a62119bfb18a333fa9304ed9a5ff"
+  },
+  "game/generated_planet_territory_graphs.dl_bin": {
+   "size": 1574676,
+   "sha256": "d4878a8aa22ec6be1e0e48ef2522f48e05c1cef3a8b4a430240f280e5badd37d"
+  },
+  "game/generated_planet_types_settings.dl_bin": {
+   "size": 16892,
+   "sha256": "1ed1c4c01edcdd573066be047241c91b750c1e2765f9c67a893b9f5d785088fd"
+  },
+  "game/generated_policy_settings.dl_bin": {
+   "size": 528,
+   "sha256": "18d7de306e476325b612c9c73c4a081b9e5209eed0ed09bbdcf053b5e2e64d0d"
+  },
+  "game/generated_projectile_settings.dl_bin": {
+   "size": 96652,
+   "sha256": "630dd11206fb893442f9518ae1f629843a118d7c6d6a9ac5dc8a30b8f8030fba"
+  },
+  "game/generated_region_settings.dl_bin": {
+   "size": 259675,
+   "sha256": "8952ae6c1c0038946037f42b175957f84ae2c56b676f626f34bf8d8ff4dcaa81"
+  },
+  "game/generated_resource_swap.dl_bin": {
+   "size": 72,
+   "sha256": "0fe71b3165bf1ca096831a6f452a86376bc3ad1da4d31599896f3fc1ebc922ff"
+  },
+  "game/generated_route_settings.dl_bin": {
+   "size": 484,
+   "sha256": "aa18e4019f4c3b9295411722e761f9c17f66b5427cb23ff126ed79aae921a6c1"
+  },
+  "game/generated_satellite_groups.dl_bin": {
+   "size": 83461,
+   "sha256": "33b0c25134a6cbe846e5c67d1400a9412088cc67d21a07e0bf1229238e73b1bd"
+  },
+  "game/generated_scenario_settings.dl_bin": {
+   "size": 8140,
+   "sha256": "a39c22d06bb2f238ad4463ca83a3816e6bbca48ab576b097140247b62fa2b8b7"
+  },
+  "game/generated_sky_settings.dl_bin": {
+   "size": 12532,
+   "sha256": "67aefc91b74093bcc6a01136b8f9450799a95fc8690405afd66fbaa3f53067d6"
+  },
+  "game/generated_solar_system_settings.dl_bin": {
+   "size": 91812,
+   "sha256": "f232c174d63be57257f9f1d86038ef075f7ee76a14fbcd267fba3b265ea4552d"
+  },
+  "game/generated_stamp_settings.dl_bin": {
+   "size": 678172,
+   "sha256": "dd4a0b0bbba659e7facfa60507ef54c21eade4f7277e2881babd53fbb53ae36d"
+  },
+  "game/generated_status_effect_settings.dl_bin": {
+   "size": 14068,
+   "sha256": "12f749fd33c605498d044e789de1820f8bb1a9c05b0815c425aae19457976ae1"
+  },
+  "game/generated_stratagem_settings.dl_bin": {
+   "size": 82424,
+   "sha256": "09977d88d26721361837da6f0f5e1ae1bb2a20148c358b95135cfee07b47f142"
+  },
+  "game/generated_stratagem_upgrade_settings.dl_bin": {
+   "size": 181,
+   "sha256": "78999059e796ae0f23edbf58afe0832c06e8dedf00bf2ddc6baa85c502ad48e7"
+  },
+  "game/generated_surface_effect_settings.dl_bin": {
+   "size": 305852,
+   "sha256": "de1e2c3cd5baa8c0dab19dd6c452c4d52b763c67313241d1a6473e1cf43dac18"
+  },
+  "game/generated_unit_customization_settings.dl_bin": {
+   "size": 27792,
+   "sha256": "1c8aaf8c4385580eb8e5744aa164720f865f839fdfd4f56f9c8efd33c527b43f"
+  },
+  "game/generated_unit_effect_settings.dl_bin": {
+   "size": 63052,
+   "sha256": "c639dac453c0c4322ef726d1fee0588e2ef7c951e2f65f687e7c3040cf4a2cb9"
+  },
+  "game/generated_video_flow_settings.dl_bin": {
+   "size": 1988,
+   "sha256": "5b6711ad845daacb550055ae9e6c1f5ae39f6de8b499a846664e1c89835a013d"
+  },
+  "game/generated_video_ui_settings.dl_bin": {
+   "size": 1172,
+   "sha256": "5e6b3e9969c852e9d20c9d5bf48d4d68d2f42733391685374eed44c661f047c0"
+  },
+  "game/generated_weapon_customization_settings.dl_bin": {
+   "size": 30872,
+   "sha256": "d51b918462754edd2249214d5ed8669d1285887008d24f63cd9c5a53cd2d0ffd"
+  },
+  "game/generated_weather_color_set_settings.dl_bin": {
+   "size": 25964,
+   "sha256": "3f0e4e954c416d112286b6217e9166e2c7bd0f0fec80e35ef9d798fa37fba0e2"
+  },
+  "game/generated_weather_settings.dl_bin": {
+   "size": 162956,
+   "sha256": "de51e359955abff6ac61048c706b3be2947964df187a58bdad231815944947bb"
+  },
+  "game/generated_zone_data.dl_bin": {
+   "size": 518526,
+   "sha256": "d583b62f0d2f49ad9c9fadc33176d83489301352ef2fe1261e34e96c52689401"
+  },
+  "bundle_database.data": {
+   "size": 186515,
+   "sha256": "38625a74a24cf324c01d66dbd73564ae28af1877e321a30a98fceaab4e47105b"
+  },
+  "bundles.nxa": {
+   "size": 6505157,
+   "sha256": "32f35221f1ece23aa7c90d21a5d47271e07ae936cf22a8615d58be26c94f8e8f"
+  },
+  "bundles.region_hints": {
+   "size": 4769597,
+   "sha256": "81617e01edd74fef20ed708c70ede7d9ed58499584f262e37f9e8f55694b7a90"
+  }
+ },
+ "inventory": {
+  "02582f3da1f8daf5": 270447,
+  "02582f3da1f8daf5.stream": 25356858,
+  "0cf14e223de06a26": 98,
+  "1d7ad1a3140db0d1": 98,
+  "2a1a474c9891e64f": 98,
+  "5ab4204a4e0ccbe8": 244913,
+  "5ab4204a4e0ccbe8.stream": 63308082,
+  "76b0a0e66d61aa15": 165480,
+  "76b0a0e66d61aa15.stream": 9532113,
+  "7c221cf5b12213ac": 149556,
+  "7c221cf5b12213ac.stream": 24215420,
+  "7cf43b5d4c63838b": 662591,
+  "7cf43b5d4c63838b.stream": 67279034,
+  "88509e81213dbf9c": 98,
+  "8a01bc23602246e8": 14421,
+  "8a01bc23602246e8.stream": 68753936,
+  "9b6d3eb4c698079b": 270447,
+  "9b6d3eb4c698079b.stream": 25356858,
+  "Credits-and-Details.txt": 2792,
+  "Names-Verification.json": 1105,
+  "a0a29953a5d45065": 17737,
+  "a0a29953a5d45065.stream": 4459818,
+  "b98c5b68db4cca84": 165814,
+  "b98c5b68db4cca84.stream": 9459603,
+  "bundles.00.nxa": 674795896,
+  "bundles.01.nxa": 578113796,
+  "bundles.02.nxa": 526361921,
+  "bundles.03.nxa": 778550954,
+  "bundles.04.nxa": 715953160,
+  "bundles.05.nxa": 577860112,
+  "bundles.06.nxa": 796468592,
+  "bundles.07.nxa": 604672494,
+  "bundles.08.nxa": 1436558255,
+  "bundles.09.nxa": 712189130,
+  "bundles.10.nxa": 712975660,
+  "bundles.11.nxa": 636904921,
+  "bundles.12.nxa": 914821364,
+  "bundles.13.nxa": 1618466457,
+  "bundles.14.nxa": 649293088,
+  "bundles.15.nxa": 725106947,
+  "bundles.16.nxa": 846596585,
+  "bundles.17.nxa": 535375744,
+  "bundles.18.nxa": 583873978,
+  "bundles.19.nxa": 582549922,
+  "bundles.20.nxa": 1017391367,
+  "bundles.21.nxa": 718668961,
+  "bundles.22.nxa": 735566032,
+  "bundles.23.nxa": 581960678,
+  "bundles.24.nxa": 464999957,
+  "bundles.25.nxa": 637127586,
+  "bundles.26.nxa": 2006476760,
+  "bundles.27.nxa": 796782386,
+  "bundles.28.nxa": 703334034,
+  "bundles.29.nxa": 522238650,
+  "ce6b3d08283efc3d": 166015,
+  "ce6b3d08283efc3d.stream": 9626090,
+  "e8e43494a3d38e6c": 165448,
+  "e8e43494a3d38e6c.stream": 10026348,
+  "manifest.json": 493,
+  "settings.ini": 5275
+ },
+ "patches": {},
+ "build_fingerprint": {
+  "game/dl_library.dl_typelib": "4d4db6e7a057b9e5ad023894f1629f031520823be80ea6099cde8f3e27c0bee1",
+  "game/game.dll": "61dcfcd201dacbf3545c97beb8a5a6186e9850d2670bf60b0e058320b477f6df"
+ },
+ "stats": {
+  "files": 60,
+  "inventory": 60,
+  "patches": 0,
+  "hashed_bytes": 117191531
+ }
+}
