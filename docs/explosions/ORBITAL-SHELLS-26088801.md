@@ -48,7 +48,7 @@
 **爆炸 213 在整张射弹表里只被 1 行引用（行 135）**；188 也只被 1 行（行 148）
 ⇒ 把行 135 的爆炸换成 188，只影响"120mm HE 这一发弹"，不会波及其它战备（`✓` 全表 355 行扫过）。
 
-## 3 "逐发交替（HE/EMS 混编）"在数据层做不到（`✗` 否证）
+## 3 "逐发交替（HE/EMS 混编）"在数据层做不到（~~`✗` 否证~~ → **2026-10-31 更正：做得到 `✓`，入口见 §8**）
 
 HD2Runtime 的字段名里有 `orbital_120mm_he_barrage_attack_delivery_1/2/3_projectile`，本以为能在数据里找到三条投送。
 
@@ -61,7 +61,14 @@ HD2Runtime 的字段名里有 `orbital_120mm_he_barrage_attack_delivery_1/2/3_pr
 
 ⇒ 那三条 `attack_delivery_*_projectile` **不在 dl_bin 表里**，是**资源层（unit / 投送资源的节点或事件）**里的名字 ——
 这与旧结论一致：**战备 → 弹丸的关联不是数值外键，是运行时按资源名解析**（见 [STRATAGEM-REFERENCE-CHAIN](../tables/STRATAGEM-REFERENCE-CHAIN-25988413.md)）。
-所以"同一条弹幕里逐发交替两种弹种"**纯数据做不到**。
+所以当时判"同一条弹幕里逐发交替两种弹种**纯数据做不到**"。
+
+> **2026-10-31 更正（推翻本节 ✗）**：入口不在武器/投送组件，而在 **`BombardmentComponentData +0x40` = 8 槽
+> `ProjectileType` 弹种清单**（第 i 槽 = 每轮第 i 发弹种）+ `+0x04` 每轮发数 —— 完整解码见 **§8**。
+> 两个反证：①本 build **原版** 120mm 弹幕自己就是逐发混编（第 1 发 `..._120mm_HE`、第 2/3 发 `..._120mm_HE_Cheap`）；
+> ②官方未发布 EMS 升级（§7）写的就是"首发 EMS + 其余 6 发 HE"的逐发混编。
+> 当年找不到的原因：只在**武器组件 / 投送组件**里找"多弹丸槽"，而弹种清单是**实体组件里的 typed reference 数组**；
+> 另 HD2Runtime 自己也没证明 shell/volley 语义，`delivery:N` 只是把 `+0x40` 的非零槽顺序编号。
 
 ## 4 纯数据能做的（`✓` 可执行）
 
@@ -69,7 +76,7 @@ HD2Runtime 的字段名里有 `orbital_120mm_he_barrage_attack_delivery_1/2/3_pr
 |---|---|---|
 | **A. 120mm EMS 弹幕** | 射弹行 **135** 的 `+0x90`（命中爆炸）**213 → 188**；`+0x9C` 可选 | 120mm 弹幕全部变成 EMS 眩晕弹；因 213 独占，其它战备**零影响** |
 | **B. 燃烧加特林（近似）** | 找 `ORBITAL. GATLING BARRAGE` 用的射弹行，把命中爆炸换成燃烧类（如 `EagleBomb_Napalm` 的爆炸行）| 与 A 同型：单弹种替换 |
-| ~~C. 同一条弹幕 HE/EMS 交替~~ | —— | **✗ 数据层无入口**（见 §3）|
+| **C. 同一条弹幕 HE/EMS 交替** | 改 `BombardmentComponentData` 第 19 行 `+0x40` 弹种清单（8 槽）+ `+0x04` 每轮发数 | **✓ 可行**（2026-10-31 实机：每轮 7 发、首发 EMS；§8）|
 
 > B 需要先定位加特林弹幕的射弹行（同一套 name-hash 对齐法，`Orbital` 家族里没有 gatling 项 ⇒ 它用的是另一族射弹，待查）。
 
@@ -103,11 +110,25 @@ SDK 校验 build `F5FEE03DCFDB` / steamBuild **25480438**，与我们 build `262
 | 爆炸穿甲（direct / slight / large / extreme） | 5 / 0 / 0 / 0（三份相同） |
 | 爆炸 demolition / stagger / push | 50 / 70 / 40（三份相同） |
 
-⇒ **三发完全一致**：同一弹丸参数、同一命中爆炸、同一爆炸伤害。三发之间的差别只可能来自
-**delivery 的时序/落点**（这些不在 HD2Runtime 暴露的字段里），与 §3 的结论一致 ——
+⇒ **当时的结论**：三发在"26 个暴露字段"上完全一致，差别只可能来自 **delivery 的时序/落点**（这些不在 HD2Runtime 暴露的字段里），与 §3 的结论一致 ——
 `attack_delivery_*_projectile` 是资源层投送引用，不是 dl_bin 表里的三个弹丸外键。
 
+> **2026-10-31 更正（§8 定因）：数值部分仍然成立，但"同一命中爆炸"是错的。**
+> - 26 个暴露字段（弹道/直击伤害/穿甲/爆炸半径/爆炸伤害）**确实三份相同** ✓；
+> - 但三发**不是同一条弹丸行**：第 1 发 = 射弹行 **135**（`Orbital_Cannon_120mm_HE`，命中爆炸 **213 = `OrbitalStrike`**）；
+>   第 2/3 发 = 射弹行 **136**（`Orbital_Cannon_120mm_HE_Cheap`，命中爆炸 **177 = `OrbitalStrike_Cheap`**）；
+> - 两条爆炸行的伤害行（457）、半径 3.3/10/11、震屏 60、音效事件**全部相同**，只有 `+0x38` **粒子资源**（与 surface impact）不同
+>   ⇒ 三发差别除了时序/落点，还有**爆炸粒子（视觉）**：第 1 发正常、第 2/3 发省粒子。
+> - 为什么 §6 没看出来：HD2Runtime 暴露的 26 个字段**不含粒子**；且其 `OrbitalBarrageProof/README.md` 自己写明
+>   *"Native delivery arrays remain unchanged because scalar shell/volley semantics are not proven"* ——
+>   它把 `+0x40` 的非零槽按顺序编成 `delivery:N`，`delivery:1` 与 `delivery:2/3` 指向的其实是**两条不同射弹行**，
+>   只是这两行在它暴露的字段上恰好等值。
+> ⇒ 正确表述：**三发"数值"完全一致；"弹种/爆炸行/视觉"不一致**；并且**每发弹种可以单独改**（`+0x40`，见 §8）。
+
 顺带（同一份 JSON 的 delivery 计数，作为“每轮几发”的旁证）：
+
+> ⚠ 更正：这里的 `deliveries` 数 = **`+0x40` 非零槽数**，**不等于每轮发数**。120mm 是 3 槽/每轮 3 发（巧合相等）；
+> 加特林是 **4 槽**但 `+0x04`（每轮发数）= **60**。见 §8。
 
 | 战备 | deliveries |
 |---|---|
