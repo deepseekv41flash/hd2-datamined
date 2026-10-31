@@ -594,3 +594,156 @@ cp "D:/mod/backups/spray-capsule/generated_entities.vanilla.dl_bin" "…/data/ga
 | 舱载荷 | 主武器 ✓✓、支援武器 ✓✓、NPC ✓✓；**副武器能生成但原版就不可拾取** |
 | 非 Standard 散热器 | 参数生效；外观取决于它的 magazine unit 指向哪套网格（Rapid 需 patch_3+patch_4 那两套） |
 | 新增配件（L1 解锁） | **✗** 数据表做不到（绑定/解锁图不在明文） |
+
+---
+
+## 12 装备槽类型、世界拾取门与实体蓝图（2026-10-31，全部实机）
+
+### 12.1 一句话
+
+副武器不能拾取**不是缺组件**：是 `LoadoutEntryComponentData +0x04`（装备槽）与 `InteractableComponentData +0x30`（交互形态）两个枚举都不在"可拾取"集合。
+槽类型**双向可换**（主↔副互换后都能正常装备、开火）；交互类型决定"以什么形态可交互"（掉落物 / 舱附着）。
+另外还查明了实体表的**第三层**：块 0 的「实体→组件」蓝图 —— 只改组件块哈希图无效，改蓝图又会让实体落地瞬间卡死（P-41 三连败，见 §12.7）。
+
+### 12.2 `LoadoutEntryComponentData +0x04` = 装备槽类型枚举
+
+| 值 | 槽 | 离线统计（census 139/139 把武器 1:1 命中） | 实机 |
+|---:|---|---|---|
+| **1** | 主武器 PRIMARY | 59/59 | ✓✓ 原版全部；Peacemaker 3→1 后进 PRIMARY |
+| **2** | 支援武器 SUPPORT | 45/45 | ✓✓ 原版全部；**改 1 无任何效果**（见下） |
+| **3** | 副武器 SECONDARY | 28/28 | ✓✓ 原版全部；Constitution 1→3 后进 SECONDARY |
+| 4 | 投掷 THROWABLE | 6/6 | ⚠ 未测 |
+| 5 | 其它物品 | 1/1 | ⚠ 未测 |
+
+**实机双向验证**：
+
+| 实验 | 改动 | 现象 |
+|---|---|---|
+| 副→主 | P-2 Peacemaker `+0x04` 3→1 | 军械库从 SECONDARY 移到 **PRIMARY，可装备成主武器**；舱里仍无拾取提示（说明该字段不负责提示） |
+| 主→副 | R-2124 Constitution `+0x04` 1→3 | 军械库进 **SECONDARY，能当副武器装备**；带进任务**能开火**；舱里失去拾取提示 |
+| 支援→主 | MG-43 `+0x04` 2→1 | **完全无效**：军械库仍 SUPPORT、仍占支援武器栏、舱里落槽仍支援槽 —— **支援武器不读这个字段**（槽位由战备路径决定） |
+
+### 12.3 `InteractableComponentData +0x30` = 交互形态枚举
+
+| 值 | 语义（实机推断） | 行为 |
+|---:|---|---|
+| **1** | 掉落物拾取 | **只有舱被破坏、武器变成掉落物后**才能拾取；舱完好时**不给提示**（主武器形态） |
+| **13** | 舱/容器附着取用 | **舱完好时直接取下来**；变成掉落物后**失效**（支援武器形态） |
+| 2 | 副武器默认 | 两种形态**都不**给提示（= 不可拾取） |
+| 3 | 近战？（4 把近战支援的取值） | 未测 |
+| 14 | 投掷物 | 未测 |
+| 19 | 炮台/阵地 | 未测 |
+
+> 注意：`InteractableComponentData` 并非全武器都有 —— 28 把副武器里只有 11 把带该组件（P-2 有、P-41 没有）。
+
+### 12.4 世界拾取门：完整实机矩阵（10 组）
+
+| # | 武器 | 槽 | 交互 | 舱完好 | 舱破坏（掉落物） | 落槽 |
+|---|---|---|---:|---|---|---|
+| 1 | Peacemaker 原版 | 3 | 2 | ✗ | ✗ | — |
+| 2 | Peacemaker（只改槽） | 1 | 2 | ✗ | 未测 | — |
+| 3 | Peacemaker（只改交互） | 3 | 1 | ✗ | ✗ | — |
+| 4 | Peacemaker（槽+交互） | 1 | 1 | ✗ | **✓** | **主武器槽** |
+| 5 | Peacemaker（槽1+交互13） | 1 | 13 | **✓** | 未测 | — |
+| 6 | Peacemaker（槽3+交互13） | 3 | 13 | **✓** | ✗ | 未报 |
+| 7 | Constitution 原版 | 1 | 1 | ✗ | **✓** | 主武器槽 |
+| 8 | Constitution（改副武器槽） | 3 | 1 | ✗ | 未测 | — |
+| 9 | MG-43 原版 | 2 | 13 | **✓** | 未测 | 支援槽 |
+| 10 | MG-43（改槽1） | 1 | 13 | ✓ | 未测 | 支援槽（惰性） |
+
+**两条规则**：
+
+1. **交互类型决定"能不能交互、以什么形态"**：1 = 掉落物形态、13 = 附着形态、2 = 无。
+2. **槽类型只影响"装备/落槽"**：对副/主武器，拾取后的落槽 = `LoadoutEntry +0x04`（#4 落主武器槽）；但对**掉落物形态**，槽=3 的物品不提供拾取（#3、#6）。
+   注意 #3/#6 的"舱完好无提示"是交互类型 1 的固有行为（主武器也一样），不是槽=3 造成的。
+
+### 12.5 回答：副武器为什么不能被拾取？
+
+1. **不缺组件**：P-2 与 R-63 Diligence 的组件集合逐一相同（19 = 19，离线）。
+2. 原版 P-2 同时踩两条：**交互类型 = 2**（没有任何拾取形态）+ **槽类型 = 3**（掉落物形态被拒）。
+3. 三条互不相同、可分别使用的配方：
+
+| 目标 | 改动 |
+|---|---|
+| 舱完好时直接取（不用改槽） | `InteractableComponentData +0x30` → **13** |
+| 变成掉落物后可捡 | `Interactable +0x30` → **1** 且 `LoadoutEntry +0x04` → **1 或 2** |
+| 当主武器装备（军械库） | 只改 `LoadoutEntry +0x04` **3→1**，不需要动交互 |
+
+### 12.6 实体表顶层蓝图（块 0 `EntitySettingsHashmap`）—— 补组件的第三层
+
+**结构**（type `0x80C1CA70`，payload 185,172 B）：
+
+```
+4096 槽 × 32 B  { u64 实体键 | u32 组件表偏移(payload 相对) | u32 0 | u64 组件数 | u32 misc | u32 0 }
++ 尾部 u16 数组 = 每个实体的组件类型清单（按槽序紧密排列，共 27,050 条）
+```
+
+**解码结果**：u16 清单与各组件块哈希图**逐实体精确同构**（272/272 个组件块都能找到一个 u16 值，其出现过的实体集合与块内键集合完全相同）。常用值：
+
+| 组件 | u16 | 组件 | u16 |
+|---|---:|---|---:|
+| InteractableComponentData | **247** | WeaponMagazineComponentData | 5 |
+| WeaponRoundsComponentData | 119 | LoadoutEntryComponentData | 29 |
+| WieldableComponentData | 112 | EquipmentComponentData | 236 |
+| TagComponentData | 3 | UnitComponentData | 88 |
+
+**教训**：只往组件块哈希图插一条 `(实体键 → 行)` **不生效** —— 引擎按块 0 的蓝图实例化组件。
+工具：`tools/entity_blueprint_edit.py`（同清单换组件值，保哈希，G1–G7）。
+
+**另一个不变量**：组件行是**实体私有存储** —— 全表实测 Interactable 562 行/562 键、Unit 1719/1719、Wieldable 515/515、Magazine 276/276，**零共享**。
+工具：`tools/entity_row_append.py`（组件块追加独立行 + 挂键，保哈希，G1–G7）。
+
+### 12.7 未发布副武器 P-41 投送实验（V1–V3，✗ 路线否证）
+
+目标：把未发布副武器 **P-41 Ombudsman**（`0xBDE1F2534280300D`，sidearm，18 个组件、**没有 Interactable**）用投送舱送到手上。
+
+| 项 | 值 |
+|---|---|
+| 资源包 | `8c3b838d05731044`（42 条：unit×4 含 P-41 unit `0xBDE1F2534280300D` 23,456 B / physics×3 / animation×11 / state_machine（P-4 Senator 骨架）/ texture×12 / material×6 / particles×2 / bones / wwise） |
+| 驻留补丁 | `data/f6fb08cc02d24255.patch_5`（toc 2,155,312 ＋ gpu 3,488,092 ＋ stream 3,233,216 B），**装盘后可正常启动** |
+| 舱 | rack 47 槽0 = P-41、槽1 = MG-43、spawn=2 |
+
+| 版本 | 改动 | 实机结果 |
+|---|---|---|
+| **V1** | 舱 + patch_5 + 哈希图把 P-41 挂到 Peacemaker 的 Interactable 行 259 + 该行 `+0x30`=13 | 舱里 **P-41 出现**，但**完全没有拾取提示** |
+| **V2** | V1 + 蓝图把 77（百科）换成 **247（Interactable）**，行仍是共享的 259 | **舱落地瞬间游戏未响应**（启动、进任务都正常） |
+| **V3** | V2 + 改为**独立行 562**（`entity_row_append.py` 追加），Peacemaker 行 259 保持原版 | **仍然卡死** |
+
+**结论**：数据层「给没有 Interactable 的实体补该组件」这条路线**两次卡死、否证**。
+V3 排除了"共享行"这个单一解释，说明卡因在**蓝图加组件的实例化路径本身**（或 Interactable 行内容与 P-41 骨架不兼容），不是可修复的配置问题。
+
+**未测替代**：实体套壳（把 P-41 的武器数据行搬到 Peacemaker 实体上，借用它的 Interactable/蓝图）——留作后续。
+
+**盘面**：实体表已回滚原版（`/d/mod/backups/spray-capsule/generated_entities.vanilla.dl_bin`）；`patch_5` 三个文件保留（无害，撤法见下）。
+
+### 12.8 复现命令
+
+```bash
+# 槽类型互换（Peacemaker 副→主 / Constitution 主→副）
+python tools/entity_field_set.py set --plain <in.plain> --block 0x4F2CF417 \
+    --key 0x05E4E5C2DB6E44A2 --field 0x4 --type u32 --value 1 --out X.plain
+# 交互类型 = 13（舱完好可取）
+python tools/entity_field_set.py set --plain X.plain --block 0xFCCA29DB \
+    --key 0x05E4E5C2DB6E44A2 --field 0x30 --type u32 --value 13 --out Y.plain
+# 蓝图换组件（P-41：百科 77 → Interactable 247）
+python tools/entity_blueprint_edit.py --plain Y.plain --key 0xBDE1F2534280300D \
+    --old 77 --new 247 --out Z.plain
+# 组件块追加独立行（不要共享行）
+python tools/entity_row_append.py --plain Y.plain --block 0xFCCA29DB \
+    --key 0xBDE1F2534280300D --copy-row-from 0x05E4E5C2DB6E44A2 --out Z.plain
+```
+
+舱与装盘命令同 §10.2 / §11.6；封包用 `tools/dlbin_seal.py seal-key`，装盘后必须解封回读逐字节一致。
+
+### 12.9 本轮能力边界
+
+| 项 | 结论 |
+|---|---|
+| 装备槽类型双向互换（主↔副） | **✓✓**（军械库页签 + 可装备 + 可开火） |
+| 槽类型的"落槽"作用 | **✓✓**（Peacemaker 拾取后落主武器槽） |
+| 支援武器读 `LoadoutEntry +0x04` | **✗**（惰性，槽位由战备路径决定） |
+| 交互类型改拾取形态（副武器可拾取） | **✓✓**（13 舱内取 / 1+槽∈{1,2} 掉落物捡） |
+| 掉落物形态对槽=3 的拒绝 | **✓✓**（槽=3 + 交互 1 仍不可捡） |
+| 组件行共享 | **✗ 禁止**（全表零共享；共享行 + 蓝图 = 舱落地卡死） |
+| 给无 Interactable 实体补组件 | **✗ 否证**（V2/V3 均舱落地卡死） |
+| 未发布副武器走投送舱 | **✗**（资源驻留后能生成，但补不了交互；实体套壳未测） |

@@ -193,8 +193,8 @@ settings.UNLOCKS = {
 | 8 | Medical Supplies（`PRESIDENT REWARDS. HEALTH PACK RACK`） | 战备 | id 93 | `✓✓` 实机可用（2026-10-28） |
 | 9 | `B/MED-18` MEDIC BACKPACK | 战备 + 背包实体 | id 20 / `0x0A55E504092B981D` | `✓✓` 实机可用（2026-10-28） |
 | 10 | M-104 Incinerator FRV | 战备（载具） | id 138 / 车辆 `0x2D85BFE3D8717FE5` | `✓✓` 实机可带能开；wiki `source = N/A` |
-| 11 | P-41 Ombudsman | 副武器 | `0xBDE1F2534280300D` | `⚠ 未证`（需要实体解锁路线，不是战备路线） |
-| 12 | LAS-22 Shear | 主武器 | `0x7E3145A5BAA4B948` | `⚠ 未证` |
+| 11 | P-41 Ombudsman | 副武器 | `0xBDE1F2534280300D` | **✗ 投送舱路线否证**（整包驻留 `patch_5` 后舱里能生成，但补 Interactable 组件两版都**舱落地卡死**；见 [WEAPON-CUSTOMIZATION-26251122](WEAPON-CUSTOMIZATION-26251122.md) §12.7） |
+| 12 | LAS-22 Shear | 主武器 | `0x7E3145A5BAA4B948` | **`✓✓` 实机**（投送舱 + 整包驻留 + L0 换配件，2026-10-30；见 [WEAPON-CUSTOMIZATION-26251122](WEAPON-CUSTOMIZATION-26251122.md) §11） |
 | 13 | AR-23L Liberator Legacy | 主武器 | `0xB80951732A5F58F4` | `⚠ 未证` |
 | 14 | SG-8F Punisher fire of liberty | 主武器 | `0xBCC2177439D231BE` | `⚠ 未证` |
 

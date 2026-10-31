@@ -189,6 +189,7 @@
 | [LOCID-NAMES-25988413](docs/tables/LOCID-NAMES-25988413.md) | 32 位本地化 ID：`.strings` 全局 ID→文本表怎么打通六张表的名字 | `25988413` |
 | [ROW-NAMING-25988413](docs/tables/ROW-NAMING-25988413.md) | 逐行名字的两条取法、判据、以及位置法取错过名的两张表 | `25988413` |
 | ★ [WEAPON-CUSTOMIZATION-DECODED](docs/tables/WEAPON-CUSTOMIZATION-DECODED.md) | 武器配件总表：88 B 行、九类槽位枚举、252 行可读导出；**§7 配件 → entity delta 落地链（build `26088801`：`AmmoType` 写 `ProjectileWeapon+0`、`Magazine` 写 `cust+0x80`，含组件索引表与坑）** | `25988413` · §7 `26088801` |
+| ★★ [WEAPON-CUSTOMIZATION-26251122](docs/tables/WEAPON-CUSTOMIZATION-26251122.md) | **武器配件 + 装备槽 + 世界拾取门 + 实体蓝图**：§9 L0 对支援/副武器生效、§10 投送舱送武器（rack 槽吃武器实体键）、§11 LAS-22 全功能配方（舱送 + 整包驻留 + L0 换配件 + 附件资源逐条驻留）；**§12 本轮新增：`LoadoutEntry +0x04` 槽类型枚举 1主/2支援/3副/4投掷（139/139 统计 + 主↔副双向实机互换可装备可开火；支援武器惰性）· `Interactable +0x30` 交互形态 1=掉落物拾取 / 13=舱附着取用 / 2=无 · 10 组实机拾取门矩阵 · 实体表块 0 顶层蓝图（4096×32B + 27,050 u16 组件清单，Interactable=247）· P-41 未发布副武器三连败否证（补组件 = 舱落地卡死）** | `26251122` |
 | ★ [STRATAGEM-SETTINGS-DECODED](docs/tables/STRATAGEM-SETTINGS-DECODED.md) | 战备表 400 B 行 / 12 组解码，含三处旧结论的自我否证 | `25988413` |
 | ★ [STRATAGEM-FIELDS-26088801](docs/tables/STRATAGEM-FIELDS-26088801.md) | 战备字段总表：面板公式（先预测后实测）、散布、**Eagle 回收（§5.4）**、条目 ID 重复=崩溃 | `26088801` |
 | ★ [DAMAGE-SETTINGS-26088801](docs/tables/DAMAGE-SETTINGS-26088801.md) | 伤害表 76 B 行字段图：5 张引用表 / 共享伤害行 / **行内零 padding 的宿主策略** / 完整改值链 | `26088801` |
@@ -327,7 +328,11 @@
 | `pod_loadout.py` | **投送舱换载荷 + 有限数量的跨包加载的通用产出**：名字→包/LOE id→自动判单包/双包→出可装文件（不部署） | `pod_rack_swap.py`、`plain_edit.py`、`dlbin_seal.py` | ✓ 产物与实机验证件逐字节一致 |
 | `strat_slot_census.py` | **战备表 153 行的装包口普查**：按 typelib 结构穷举（不是按值搜，空槽才看得见），分「两槽已满 / 仅 `+0xA8` 空 / 仅 `+0xF8` 空 / 两槽全空」四类并给出行基址 | `pod_loadout.py`、`typelib.py` | ✓ 离线：只有 `+0xA8` 命中包集合（114/114），空槽 155 个 |
 | `strat_slot_fill.py` | **把包填进战备行的空槽**：名字→行（同名全改）→拒绝覆盖已占用槽→一次 tail 宿主写完→读回校验→可选封装 | `strat_slot_census.py`、`plain_edit.py`、`dlbin_seal.py` | ✓ 离线门禁通过（6 处填空槽，整份只 +8 B） |
-| `entity_field_set.py` | **任意实体组件行任意字段**的通用写入（`--block`+`--key`+`--field`），tail 宿主 + 7 门禁，可链式 | `typelib.py`、`murmur64.py` | ✓✓ 已实机（AC-8 备弹 0→40/40）|
+| `entity_field_set.py` | **任意实体组件行任意字段**的通用写入（`--block`+`--key`+`--field`），tail 宿主 + 7 门禁，可链式；支持三成员块（LoadoutEntry）与追加过行的块（行数按 payload 现算） | `typelib.py`、`murmur64.py` | ✓✓ 已实机（AC-8 备弹 0→40/40；槽类型/交互类型/落槽共 10 组）|
+| `component_diff.py` | **多实体组件行逐字段 diff**：同名组件按 4 字节槽并排比较，给出 u32/i32/f32 三读法 + typelib 成员名，组件集合差集单列 | `entity_dump.py`、`typelib.py` | ✓ 离线：P-2 vs R-63 组件集合逐一相同（19=19）；P-41 缺 Interactable/WeaponMagazine |
+| `class_field_scan.py` | **按武器类别扫"类别决定字段"**：59 主 / 45 支援 / 28 副语料，对每个组件每个 4 字节槽统计类内取值集合，找类间互斥、类内基数小的槽 | `entity_dump` 同款哈希图定位、`typelib.py` | ✓ 离线：139/139 把武器 1:1 命中，抓出 `LoadoutEntry +0x04`、`Interactable +0x30`、`LoadoutPackage +0x00` |
+| `entity_blueprint_edit.py` | **实体表块 0 顶层蓝图改一个组件值**：定位实体的 u16 组件清单切片、把旧组件值换成新值并保持升序，tail 宿主保哈希，G1–G7（含"其余 1,938 个实体切片逐条未动"） | `pod_rack_swap.parse_blocks`、`murmur64.py` | ✓ 离线：P-41 蓝图 77（百科）→247（Interactable）门禁全过；**实机：加成后舱落地卡死（见主文档 §12.7）** |
+| `entity_row_append.py` | **组件块追加一条独立行并挂键**：行只能实体私有（全表零共享），从源实体复制整行追加到块尾、哈希图插键、目标块 payload +stride、后续块整体平移，G1–G7 | `pod_rack_swap.parse_blocks`、`typelib.py`、`murmur64.py` | ✓ 离线：Interactable 562→563 行，P-41 挂到新行 562；**实机仍卡（补组件路线否证）** |
 | `entity_batch_set.py` | **批量字段写入**：一次 tail 宿主写多个组件/多行/多字段（文件只 +12 B），9 道门禁 | `entity_field_set.py`、`pod_rack_swap.py` | ✓ 产物与实机验证件逐字节一致 |
 | `state_machine_edit.py` | **`state_machine` 资源（不是表）的读/改**：`--show` 列层/状态/默认态，`--decode` 解出事件表、每条过渡、以及 `EmitEndEvent → 部署完成态`，`--names` 用 hashlist 反查事件名，`--set 层=索引` 写 `layer.DefaultState`；改完走 `resource_patch.py` 打成补丁 | 标准库 | ✓✓ 已实机（AC-8 哨戒挂载不展开：`0x74: 3→2` 后出场即展开，触点/开火点全对；`--set 0=2` 复现的载荷与 patch_7 逐字节相同）|
 | `unit_offset.py` | **改 `unit`（壳）里某个节点的位移 → `.patch_N`**：`show` 列 64 个节点的名字/位置/父子（找"内容容器"节点），`shift --node N --dz 2.0` 做**等长二进制改写**（transform 段在 srkit 里是只读视图、编码时原样拷贝，所以不重编不碰 gpu），G1–G5 门禁 + `--install` | `srkit`、`resource_patch.py` | ✓ 离线（火箭壳节点 3 +2.0 m：只变 2 字节；`srkit extract --decoded` 复核节点 3=[0,0,2.0]）；⚠ 实机待验 |

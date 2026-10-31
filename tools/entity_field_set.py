@@ -77,7 +77,8 @@ def row_of(data, lib, block_tid, key):
             break
     if r is None:
         raise SystemExit(f"✗ 键 0x{key:016X} 不在块 0x{block_tid:08X} 的哈希图里")
-    rows = ms[1]["size64"] // stride
+    # 行数用 payload 现算：追加过行的块（entity_row_append）typelib 成员尺寸是旧的
+    rows = (b["payload"] - slots) // stride
     if r >= rows:
         raise SystemExit(f"✗ 行号 {r} 越界（共 {rows} 行）")
     return body + slots + r * stride, stride, r
