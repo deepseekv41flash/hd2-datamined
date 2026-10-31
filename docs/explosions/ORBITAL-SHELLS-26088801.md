@@ -749,3 +749,28 @@ python /d/mod/tools/dlbin_deploy.py restore --file generated_entities.dl_bin
 rm "/d/SteamLibrary/steamapps/common/Helldivers 2/data/f6fb08cc02d24255.patch_2"{,.gpu_resources,.stream}
 rm "/d/SteamLibrary/steamapps/common/Helldivers 2/data/f6fb08cc02d24255.patch_3"{,.gpu_resources,.stream}
 ```
+
+### 9.9 核弹（弹种 67 / 爆炸 92）是「数值爆炸、无表现」的空壳（✓ 离线）
+
+查 §9.4 第 11 行（核弹加特林）时顺手核实：
+
+| 项 | 值 | 判读 |
+|---|---|---|
+| 弹种 67 | `ProjectileType_Nuke`：cal **1000**、speed 300、mass **1e6**、命中爆炸 **92** | 弹道/伤害齐全 |
+| 弹种 67 的显示资源 | 复用通用炮弹 mesh `0x2F394D3F3119A005` + 通用推进粒子 `0x0534FF3653CC0CEE` | **弹体可见**（不是白模） |
+| **爆炸 92** | `ExplosionType_Nuke`（`DamageInfoType_Explosion_Hellbomb`）、半径 **40 / 75 / 125**、屏震 **1000**、`FireTemplate=0`、`StatusEffectTemplate=0` | 数值完整 |
+| 爆炸 92 的 **`+0x38` 粒子** | **0（无任何粒子引用）** | **没有视觉** |
+| 爆炸 92 的唯一使用者 | 射弹行 344（弹种 67）——全射弹表唯一 | 改动面很小 |
+
+⇒ 把这套弹种塞进任何可用弹幕（如 §9.4 第 11 行「核弹加特林」），实机预期是
+**有伤害、有 1000 屏震、有音效，但没有爆炸视觉**。这与之前记录的
+**135 CLAN STATION Nuke「投出后什么都不发生」** 是**两个不同层的坑**：
+135 是**载荷实体悬空**（`0x3FED8E4A3B242F02` 在实体表 0 引用；补 121 的载荷后仍 `Stratagem Failed`），
+而 92 是**爆炸表现层没做**（即便调用链修好，落地也只有无形爆炸）。
+
+> 注意：「粒子=0」本身不等于半成品——本 build 424 条爆炸里有 **78 条**粒子=0（很多是纯伤害的小爆炸）；
+> 但核弹这种 **40 m 半径 + 屏震 1000 却没有粒子**，属于明显未完成表现。
+
+**若要让核弹有视觉**（下一步可选）：把爆炸 92 的 `+0x38` 借一个现成粒子并配套驻留，候选：
+120mm `OrbitalStrike`（213）的 `0x36B23284931C9124`、380mm `OrbitalBarrage`（301）的 `0x5743ACE6015929E2`；
+92 只被射弹 67 引用 ⇒ 全局影响面为零。
