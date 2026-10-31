@@ -612,7 +612,7 @@ cp "D:/mod/backups/spray-capsule/generated_entities.vanilla.dl_bin" "…/data/ga
 | **1** | 主武器 PRIMARY | 59/59 | ✓✓ 原版全部；Peacemaker 3→1 后进 PRIMARY |
 | **2** | 支援武器 SUPPORT | 45/45 | ✓✓ 原版全部；**改 1 无任何效果**（见下） |
 | **3** | 副武器 SECONDARY | 28/28 | ✓✓ 原版全部；Constitution 1→3 后进 SECONDARY |
-| 4 | 投掷 THROWABLE | 6/6 | ⚠ 未测 |
+| 4 | 投掷 THROWABLE | 6/6 | **✓ 军械库进 PRIMARY、可装备；✗ 进任务崩**（G-16 4→1；投掷物无武器组件，见下） |
 | 5 | 其它物品 | 1/1 | ⚠ 未测 |
 
 **实机双向验证**：
@@ -622,6 +622,7 @@ cp "D:/mod/backups/spray-capsule/generated_entities.vanilla.dl_bin" "…/data/ga
 | 副→主 | P-2 Peacemaker `+0x04` 3→1 | 军械库从 SECONDARY 移到 **PRIMARY，可装备成主武器**；舱里仍无拾取提示（说明该字段不负责提示） |
 | 主→副 | R-2124 Constitution `+0x04` 1→3 | 军械库进 **SECONDARY，能当副武器装备**；带进任务**能开火**；舱里失去拾取提示 |
 | 支援→主 | MG-43 `+0x04` 2→1 | **完全无效**：军械库仍 SUPPORT、仍占支援武器栏、舱里落槽仍支援槽 —— **支援武器不读这个字段**（槽位由战备路径决定） |
+| 投掷→主 | G-16 Impact `+0x04` 4→1 | 军械库**进 PRIMARY、可装备**；**进任务即崩** —— 槽类型只管"归到哪个槽"，**不负责把实体变成可用武器**：G-16 只有 13 个组件（Equipment / Explosive / Throwable / Interactable / Unit / Wieldable / WeaponCustomization…），**没有 WeaponData / ProjectileWeapon**，主武器槽的运行时装配拿不到武器数据 ⇒ 边界 |
 
 ### 12.3 `InteractableComponentData +0x30` = 交互形态枚举
 
@@ -747,3 +748,5 @@ python tools/entity_row_append.py --plain Y.plain --block 0xFCCA29DB \
 | 组件行共享 | **✗ 禁止**（全表零共享；共享行 + 蓝图 = 舱落地卡死） |
 | 给无 Interactable 实体补组件 | **✗ 否证**（V2/V3 均舱落地卡死） |
 | 未发布副武器走投送舱 | **✗**（资源驻留后能生成，但补不了交互；实体套壳未测） |
+| 投掷物槽类型 4→1（军械库归类） | **✓**（G-16 进 PRIMARY、可装备） |
+| 投掷物当主武器进任务 | **✗ 崩**（缺 WeaponData/ProjectileWeapon ⇒ 槽可换、用不了；槽类型 ≠ 武器能力） |
