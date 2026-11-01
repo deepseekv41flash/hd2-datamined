@@ -1086,8 +1086,13 @@ rm "/d/SteamLibrary/steamapps/common/Helldivers 2/data/f6fb08cc02d24255.patch_0"
   描述模板 `The #V_ONE stratagem is available to all Helldivers.` —— 和 type94 的"改现有战备行为"是两条线。
 - 旁证：`refs/strings-en-26088801.json` 里 `763846539 = "Make Snowball"` 正好命中 §9.12 #9 雪球实体的
   `InteractableComponentData +0x3C`（交互提示文案）⇒ 雪球身份再确认。
-- 待实机（⚠）：走代理把 `{"index": 目标星球, "galacticEffectId": 1346}` 塞进 Status → 进图打
-  Orbital Gatling Barrage 应变成燃烧弹（同一 delta 离线改表已 ✓✓，2026-11-01）。
+- **✓✓ 实机（2026-11-01 20:03）**：走代理把 `{"index": 星球, "galacticEffectId": 1346}` 追加进 Status，
+  在 38 颗战役星球上生效；客户端「行动变量」面板出现
+  「**燃烧加特林火力网** / 轨道加特林火力网 经实验性调整，改用燃烧弹替代高爆弹」，
+  实弹 Orbital Gatling Barrage **确认变为燃烧弹**。
+  证据链：`audit.log` `2026-11-01T19:55:16 REWRITE +38 entries (… planet 100 -> [1346] …)`
+  → 客户端渲染卡面 → 局内弹种生效。⇒ **GWE 参数→本地 `generated_modifier_settings`→局内行为 全链打通**，
+  type94 由"抓包+本地表+字符串三方吻合"升级为实机证实。
 - **全量表已建**（2026-11-01，proxy 仓库）：`docs/GWE-EFFECTS-FULL-26088801.md` +
   `out/gwe/effects-full.csv` + `out/gwe/planet-active-effects.csv`，生成器 `tools/gwe_full_table.py`。
   覆盖 312 条目录 × 45 个 effectType（174 条有官方名称、176 条目标解到具名对象）+ 最新
