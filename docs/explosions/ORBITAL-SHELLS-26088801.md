@@ -804,12 +804,26 @@ f6fb08cc02d24255: 槽位 [0, 1, 2]  空洞 无
 若实机"扩散"回到接近原版落点分布 ⇒ 确认是弹道参数贡献；若不变 ⇒ 只剩爆炸半径的观感。
 （弹种 101 全表只有本变体用，改这一行全局影响面为零。）
 
+**「弹道归一版」装盘（2026-11-01，✓ 离线装盘已完成，待实机）**：
+
+| 文件 | 改动 | 门禁/哈希 | 产物 |
+|---|---|---|---|
+| `generated_entities.dl_bin` | 只留 380mm 一行：row9 `+0x40/44/48` = **(101,101,101)**；纳帕姆行**回原版**（5/5、`(238,242,242,0)`），本轮不测毒气 | G1–G9 全 PASS；锚点 `0x8E49771B181FFAA1` 保持 | 明文 md5 `a8644807…`，封包 sha256 `c9d95f1e…` |
+| `generated_projectile_settings.dl_bin` | 射弹 **101**（row 158）弹道归一到 82：`+0x20` 300→**400**、`+0x24` 70000→**30000**、`+0x28` 0.5→**0**、`+0x2C` 10→**1**、`+0x30` 3→**1**；口径 360 与爆炸 288 **不动** | `plain_edit` G1–G6 全 PASS；内容哈希 `0x113A5833529A71B5` 保持 | 明文 md5 `6af65513…`，封包 sha256 `6e947fea…` |
+
+- 两文件装盘后**回读明文与产物逐字节一致**；盘面自检 = 仅 entities + projectile 两个文件改动，补丁仍 5 组；
+- ⚠ 这是本轮第一次动**射弹表**（此前只动实体表），`dlbin_deploy` 已接管该文件并在覆盖前另存
+  `generated_projectile_settings.dl_bin.630dd11206fb8934.replaced`（当前 build 原版）；
+- **实机判读**：380mm 叫一发，看落点分布 —— 明显回收到接近原版 36 m 散布 ⇒ 弹道参数贡献确认；
+  仍很大 ⇒ 扩散观感主要来自爆炸 288（半径 45 m 冲击波）。
+
 若想要紧凑版：把 `+0x24` 调小（如 20）或换小爆炸行即可，但那就不再是官方 delta 了。
 
 **回滚**（本轮全部撤掉）：
 
 ```bash
 python /d/mod/tools/dlbin_deploy.py restore --file generated_entities.dl_bin
+python /d/mod/tools/dlbin_deploy.py restore --file generated_projectile_settings.dl_bin
 rm "/d/SteamLibrary/steamapps/common/Helldivers 2/data/f6fb08cc02d24255.patch_"{0,1,2}{,.gpu_resources,.stream}
 ```
 
