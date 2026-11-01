@@ -1088,3 +1088,10 @@ rm "/d/SteamLibrary/steamapps/common/Helldivers 2/data/f6fb08cc02d24255.patch_0"
   `InteractableComponentData +0x3C`（交互提示文案）⇒ 雪球身份再确认。
 - 待实机（⚠）：走代理把 `{"index": 目标星球, "galacticEffectId": 1346}` 塞进 Status → 进图打
   Orbital Gatling Barrage 应变成燃烧弹（同一 delta 离线改表已 ✓✓，2026-11-01）。
+- **全量表已建**（2026-11-01，proxy 仓库）：`docs/GWE-EFFECTS-FULL-26088801.md` +
+  `out/gwe/effects-full.csv` + `out/gwe/planet-active-effects.csv`，生成器 `tools/gwe_full_table.py`。
+  覆盖 312 条目录 × 45 个 effectType（174 条有官方名称、176 条目标解到具名对象）+ 最新
+  `planetActiveEffects`（139 条 / 65 个 id / 273 颗星球）。
+  顺带发现：**effect 1427（type32，`WEAPONS EXPERIMENTATION` → 战备 hash `0x166D0C91`）当前在线**，
+  挂在星球 158 `CHOEPESSA IV`（该星球同时有 1400 seaf / 1360+1361 bots_cyborgs / 1202 tag）——
+  即"未发布实验战备"的服务器配发已经在跑，但本地表没有该战备 ⇒ 客户端大概率解析不出（与"服务器清单领先客户端"一致）。
