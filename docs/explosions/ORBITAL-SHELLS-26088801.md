@@ -650,9 +650,10 @@ comp257 `+0x24` 爆炸类型 **73 `Snowball_Stun` → 176 `HighExplosive`**，�
 ### 9.5 状态与未定（诚实标注）
 
 - **✓** 表结构、目标实体映射（与战备 `+0x98` payload 精确重合）、delta 内容、火焰模板判定都可复算。
-- **⚠** 「GWE effect ↔ modifier 行」是**内容匹配**（目标 + 火种），不是哈希直连：1426/1427 的 locid 字符串本 build 没有。
-- **⚠** 11 条变体里哪些属于**已发布舰船升级**、哪些属于未发布：本表内它们的 delta AddPath **全都**只被本表引用
-  （和 EMS 一样的"未接线签名"），单凭数据分不出来；目前只有社区清单能标 1426/1427。
+- **✓✓** 激活通道已定证（§9.15）：这 15 行**不是舰船升级**，而是**行星级「实验性战备变体」修饰符**，
+  由 **GWE `effectType=94`** 激活（`values[0]` = modifier id）；抓包目录里只出现 **3 条**
+  （#6 120mm HE/EMS = effect 1345、#2 燃烧加特林 = 1346、#14 行走烟幕 = 1350），其余 12 条服务器未提供；
+  `[effect 1426/1427/1428]` 是另一回事（type32 临时配发**未发布新战备**，战备 hash 本地 0 命中）。
 - **✓** 非弹幕 4 行的组件 **227 `HealthComponentData` / 257 `ExplosiveComponentData` /
   311 `OrbitalAbilityComponentData`** 已定名（§9.12）；`Explosive +0x24` = 爆炸类型 id 已由
   HD2Runtime 链式证据 + 本 build owner 反查双重确认（§9.12 #9）。
@@ -1058,3 +1059,32 @@ rm "/d/SteamLibrary/steamapps/common/Helldivers 2/data/f6fb08cc02d24255.patch_0"
 跨 build 提醒：HD2Runtime 那份 schema 是旧一代 SDK build（stride 552 vs 本 build 568、蓝图 index 308 vs 311），
 但 **`+0x1E0 = 0.1` 的 offset 精确重合**，说明这段标量布局一致；另外三个按"四标量 + 数值量级"推定，若要铁证需实机测
 （持续 35 s / 扫射更快 / 索敌更远任一明显出现即坐实）。
+
+### 9.15 激活通道定证：这些是**行星级 GWE 修饰符**，不是舰船升级（✓✓ 抓包+本地表+字符串三方）
+
+此前只确认"delta 只被本表引用"（未接线签名），不知道谁触发。2026-11-01 把 GWE 抓包
+（`D:\mod\out\gwe\*GalacticWarEffects*.json`，310/312 条）与 `refs/strings-en-26088801.json` 对表：
+
+- **`effectType=94`**（目录里共 3 条）的 `values[0]` 就是**本表行首 u32（modifier id）**，3/3 逐字命中；
+- 3 条官方卡名/描述都能在本地字符串表解出（`nameHash → strings-en`），且描述与 delta 内容逐条吻合：
+
+| GWE effect | modifier id | 本表行 | 官方名（英文串解出） | 描述要点 | 与 delta 对照 |
+|---:|---|---|---|---|---|
+| **1345** | `0xCDD51BC6` | #6 | **ORBITAL 120MM HE/EMS BARRAGE** | additional HE rounds, EMS rounds, tighter radius | `+0x40=(76,197,139,139,197,139,139)`、`+0x04=7`、`+0x18=5`、`+0x24=10`（散布收紧）✓ |
+| **1346** | `0x4DD68526` | #2 | **INCENDIARY GATLING BARRAGE** | incendiary rounds instead of HE | `+0x40=(74,258,258,258)`、60 发/轮（74=燃烧）✓ |
+| **1350** | `0x2A83FD6B` | #14 | **SMOKE-ENHANCED WALKING BARRAGE** | smoke rounds mixed into salvos | `+0x40=(251,197,139,139)` + 换包 ✓ |
+
+- 机制 = 与 type71（presence）同一条路：`Status.planetActiveEffects[] += {"index": 星球, "galacticEffectId": 1345}`；
+  服务器只给"哪颗星球开哪个变体"，引擎按 id 到本地本表查行 → 套用 `delta AddPath`。
+  **激活源不在本地表**，所以"本地 54 表里 0 引用"是正常的、不是否证。
+- 三条**当前都不在线**：68 份 `801_Status` 抓包（最新 2026-11-01 17:25）均无 1345/1346/1350。
+- 其余 12 个 modifier id 在 310/312 条目录的 `values` 里 **0 命中** ⇒ 服务器尚未提供（未发布/未排期），
+  目前只能像我们这样离线改数据表来跑（`strings` 里 "experimentally modified" 也**只有这 3 条**，
+  全 build 24,834 条英文串里没有第 4 条 ⇒ 其余 12 条连文案都没写）。
+- 区分（常见混淆）：社区清单的 `[effect 1426/1427/1428]` 是 **type32 临时配发战备**（`values[0]` = 战备 hash
+  `0x8DFA4622 / 0x166D0C91 / 0x0C064A00`，本 build 表里 0 命中 ⇒ 新战备未发布），卡名 `WEAPONS EXPERIMENTATION`、
+  描述模板 `The #V_ONE stratagem is available to all Helldivers.` —— 和 type94 的"改现有战备行为"是两条线。
+- 旁证：`refs/strings-en-26088801.json` 里 `763846539 = "Make Snowball"` 正好命中 §9.12 #9 雪球实体的
+  `InteractableComponentData +0x3C`（交互提示文案）⇒ 雪球身份再确认。
+- 待实机（⚠）：走代理把 `{"index": 目标星球, "galacticEffectId": 1346}` 塞进 Status → 进图打
+  Orbital Gatling Barrage 应变成燃烧弹（同一 delta 离线改表已 ✓✓，2026-11-01）。
