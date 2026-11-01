@@ -1000,3 +1000,35 @@ rm "/d/SteamLibrary/steamapps/common/Helldivers 2/data/f6fb08cc02d24255.patch_0"
   而是**散布/节奏档位**；
 - 可能来源（⚠ 未证）：①未发布的"弹幕散布"升级/模块；②任务或星球事件用的修饰符（把两条件弹幕拉宽/收紧）。
   判定方法：实机装 #0（只写这两行两格）——若纳帕姆与加特林同时变成"超大范围 + 快速轮"，即确认档位语义。
+
+### 9.14 `OrbitalAbilityComponentData` 字段含义（2026-11-01，跨源核对 ✓/⚠）
+
+本地可用的三个来源里，`filediver`（`D:\mod\filediver-dl-type-names.txt`）只给**类型名哈希**、不给成员名；
+本地 `recon/shodan-stat-editor` / `repos/shodan-stat-editor` 里 grep `OrbitalAbility` **0 命中**（SHODAN 不暴露该组件）。
+真正能定名的是 **HD2Runtime 仓库**：
+
+| 来源 | 内容 |
+|---|---|
+| `refs/hd2runtime-repo/docs/releases/0.21.0.md` | 「Orbital Laser 的 **duration / movement speed / search radius / 0.1 s tick interval** 是四个独立 owned 的 `OrbitalAbility` 标量」 |
+| `refs/hd2runtime-repo/domains/catalog.lua`（由 `schemas/sdk.json` 生成） | `orbital_laser.interval` = `OrbitalAbilityComponentData` **offset 480 = 0x1E0**，f32，expected **0.1** |
+| `refs/hd2runtime-repo/docs/live-validation.md` | Orbital Laser 实体 `0xEC3575E7A93793BB` = `OrbitalAbilityComponentData index 308 / record 0`；关联 `DamageSettings type 513 / group 1 / row 504`（standard 60 / durable 60） |
+| `refs/hd2runtime-repo/schemas/current.lua` | 该 SDK build 的几何：`OrbitalAbilityComponentData` stride 552、index 308、records 3（与本 build 的 stride 568 / 蓝图索引 311 差一代 ⚠） |
+
+**本 build 实测（Orbital Laser row0）与名称推定**：
+
+| 行内偏移 | 本 build 值 | HD2Runtime 四个标量 | 推定字段名 | 依据 |
+|---|---:|---|---|---|
+| **`+0x1CC`** | **25.0** | duration | **持续时间（s）** | 25 s 量级合理；modifier #8 改 25→35（+40%）|
+| `+0x1D0` | 1.0 | （未列） | ⚠ 未定（可能是 tick 倍率/缩放）| — |
+| **`+0x1D4`** | **10.0** | movement speed | **移动/扫射速度（m/s）** | 10 m/s 的量级 |
+| **`+0x1D8`** | **50.0** | search radius | **搜索半径（m）** | 50 m 量级，光束寻敌范围 |
+| `+0x1DC` | 525（u32） | （未列） | ⚠ 未定 | — |
+| **`+0x1E0`** | **0.1** | tick interval | **脉冲间隔（s）** | **offset 480 与 HD2Runtime 完全对上** ⇒ 布局同源 ✓ |
+
+⇒ **modifier #8 的语义**（✓ 数值 / ⚠ 字段名按 HD2Runtime 四标量顺序推定）：
+**轨道激光强化——持续 25 → 35 s（+40%）、扫射速度 10 → 20（×2）、搜索半径 50 → 100 m（×2）**，
+而 0.1 s 的脉冲间隔（`+0x1E0`）**未动**。
+
+跨 build 提醒：HD2Runtime 那份 schema 是旧一代 SDK build（stride 552 vs 本 build 568、蓝图 index 308 vs 311），
+但 **`+0x1E0 = 0.1` 的 offset 精确重合**，说明这段标量布局一致；另外三个按"四标量 + 数值量级"推定，若要铁证需实机测
+（持续 35 s / 扫射更快 / 索敌更远任一明显出现即坐实）。
