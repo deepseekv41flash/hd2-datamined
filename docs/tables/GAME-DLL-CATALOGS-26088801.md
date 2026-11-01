@@ -115,3 +115,37 @@ python tools/gamedll_catalog_extract.py --json out/gamedll-catalogs.json
 
 证据等级：偏移/条目/文案 = ✓ 离线可复算；`+0x00/04/08`、hash 字段、`+0x24` 语义 = ⚠ 推断；
 “44 条 vs 游戏内菜单”的差集 = ⚠ 未做（需要菜单侧清单）。
+
+## 2.1 对表结果：**30 条已发布 / 14 条未发布**（✓ wiki 基准）
+
+基准：[Helldivers Wiki · Ship Modules](https://helldivers.wiki.gg/wiki/Ship_Modules)（页面最后编辑 2026-09-08，
+共 **30 条**已发布模块，6 个区各 5 条）。把 44 条硬编码名与 wiki 30 条逐条对表：
+
+- **30/30 已发布模块全部命中**（说明提取无遗漏、命名一致）；
+- 剩下 **14 条只存在于 game.dll、wiki/游戏内菜单没有** ⇒ **未发布/预留模块**：
+
+| # | 未发布模块 | 效果模板（`#VALUE` 为待定参数） | 疑似所属区 |
+|---:|---|---|---|
+| 0 | AUTOMATED HELLPOD LOADING | Reduces cooldown for Hellpod stratagems by 10%. | 爱国行政中心（哨戒/投放类）|
+| 1 | PRE-FILLED HELLPODS | …by an additional 10%. | 同上 |
+| 2 | EXPANDED ARMORY | Allows 1 additional use per mission for all Hellpod stratagems. | 同上 |
+| 3 | ENHANCED COOLING SYSTEM | Reduces cooldown for Strike stratagems by 10%. | 轨道炮 |
+| 4 | EXPANDED CREW | …by an additional 10%. | 轨道炮 |
+| 5 | IMPROVED GUIDANCE SENSORS | Reduces call-in time for Strike stratagems by 30%. | 轨道炮 |
+| 6 | AUTOMATED FORTIFICATION ASSEMBLY | Reduces cooldown for all Fortification stratagems by 10%. | 工程湾（工事）|
+| 7 | SPRING-LOADED HINGES | Reduces set-up time for all Fortification stratagems by 30%. | 同上 |
+| 8 | DOUBLE THICKNESS PANELS | Increases durability of all Fortification emplacements by 50%. | 同上 |
+| 9 | LIQUID HYDROGEN COOLANT | Reduce cooldown for Barrage Stratagems by 10%. | 轨道炮（弹幕）|
+| 10 | ADDITIONAL GUN CHAMBERS | Increase number of salvos fired per barrage stratagem by 1. | 轨道炮（弹幕，与已发布 MORE GUNS 同效果）|
+| 11 | SLIMLINE BOMB CASINGS | Barrage stratagems fire twice as many bombs in each salvo. | 同上 |
+| 15 | FULLY-AUTOMATED ASSEMBLY | Reduces cooldown for Sentry stratagems by 10%. | 机器人车间 |
+| 17 | EXPANDED SENTRY MAGAZINES | Increases ammunition for Sentry emplacements by 50%. | 同上 |
+
+> 规律：14 条恰好是 **6 个区里“第 0/1/2 级”的旧设计稿**（已发布的 30 条 = 2024-04 第 4 级 + 2024-07 第 5 级 + 首发 3 级里挑的 30 条），
+> 名称/描述/参数都完整、字符串也已本地化 ⇒ 属于**引擎里有实现、菜单未放出**的预留模块（和之前 Operation Modifiers 同类现象）。
+> 这些模块**不在 dl_bin 数据表**里，所以数据路线无法直接启用；要实现只能走引擎/内存路线（EAC 风险，未做）。
+
+## 2.2 结论修正
+
+`generated_stratagem_upgrade_settings.dl_bin` 恒为 133 B 空表并不能说明“模块表被删”——模块定义从来不在 dl_bin，
+而是 `game.dll` 这张 44 条表 + 引擎实现；wiki 30 条与 44 条的对表就是完整证据链（30/30 + 14 未发布）。
