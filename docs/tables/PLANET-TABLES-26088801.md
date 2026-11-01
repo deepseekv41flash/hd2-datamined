@@ -176,6 +176,12 @@ bugs_acid vs bugs_burrower：diff 出现在 +0x20..+0x2F（身份/类别键）�
 **所以 §3.2 里 `+0x20/+0x24` 那对不是服务器键**（它们是显示名 / 描述 locid，见 §3.2b），拿它去对 API 值会全对不上。按此口径，本地 137 条 presence 里有 **67 条不同的 presence** 能在 GWE 菜单里找到对应项 —— 75 条 `type71` effect 中，67 条 distinct、3 条重复引用、5 条指向本地不存在的 presence。核对命令：
 `python -m srkit hash <presence 名>` → 取 `murmur32=`。
 
+**2026-11-01 补记（✓✓ 实机）**：上面的口径被反向利用成功——本地 presence `bugs_acid`
+（`murmur32=0x80D76742`，显示名 `CAUSTIC STRAIN`）从未在线上出现过，靠代理把它的 tag+mechanic
+（effect 1430 + 1431）注入 100 `TRANDOR` 的 `planetActiveEffects` 后，客户端出现了「腐蚀变种」词条与描述、
+局内也刷出腐蚀变体终结族。过程记录见 proxy 仓库 `docs/CAUSTIC-STRAIN-2026-11-01.md`。
+⇒ GWE 目录里的 tag/mechanic 对 + 本地 presence 行 = 足以让「已发布但从未排期」的变种完整生效。
+
 ### 3.5 全局检索：presence 在本地只被两处引用，且都不是刷怪
 
 把 105 个身份键 + 32 个类别键打包成 8 字节，扫本 build **全部 53 张明文表**（`tools/probes/planet/presence_scan_all.py`，3.3 s；
