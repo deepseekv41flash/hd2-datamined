@@ -641,9 +641,11 @@ AddPath 0xDB465C00E23CDD50 的 delta 补丁：
 | 13 | `0x3F0B8BBC` | walking(21) | `0x308EB83C11A21F95` | `+0x04=6`、`+0x18=5`、`+0x60=1.0` | 6 发/轮慢走变体 |
 | 14 | `0x2A83FD6B` | walking(21) | `0x08D58CB1BF65F7A9` | `+0x40=(251,197,139,139)`、`+0x04=4`、`+0x18=5`、`+0x60=2.25`、换包 | 行走烟幕变体（delta 键 = 未发布战备 id 64 的载荷实体）|
 
-另 4 行非弹幕（⚠ 组件未定名）：#3 `0xD295BD78`（200 B，7 组引用，comp227 `+0=20`）、
+另 4 行非弹幕（组件已定名：**227** `HealthComponentData` / **257** `ExplosiveComponentData` /
+**311** `OrbitalAbilityComponentData`，见 §9.12）：#3 `0xD295BD78`（200 B，7 组引用，comp227 `+0=20`）、
 #4 `0x24CFC5BA`（7～8 个哨戒炮载荷，comp227 `+0=600`）、#8 `0x8C65F7AC`（轨道激光载荷，comp311
-`+0x1CC=35 / +0x1D4=20 / +0x1D8=100`）、#9 `0xC0C3FDB3`（目标 `0xCCFAE6D4A601C741` 是 Unit 实体，comp257 `+0x24=176`）。
+`+0x1CC=35 / +0x1D4=20 / +0x1D8=100`）、#9 `0xC0C3FDB3`（**雪球** `0xCCFAE6D4A601C741`，
+comp257 `+0x24` 爆炸类型 **73 `Snowball_Stun` → 176 `HighExplosive`**，见 §9.12）。
 
 ### 9.5 状态与未定（诚实标注）
 
@@ -651,7 +653,9 @@ AddPath 0xDB465C00E23CDD50 的 delta 补丁：
 - **⚠** 「GWE effect ↔ modifier 行」是**内容匹配**（目标 + 火种），不是哈希直连：1426/1427 的 locid 字符串本 build 没有。
 - **⚠** 11 条变体里哪些属于**已发布舰船升级**、哪些属于未发布：本表内它们的 delta AddPath **全都**只被本表引用
   （和 EMS 一样的"未接线签名"），单凭数据分不出来；目前只有社区清单能标 1426/1427。
-- **⚠** 非弹幕 4 行的组件 227 / 257 / 311 未定名（解法见 §7.4：拿实体块 0 尾部 u16 清单反查）。
+- **✓** 非弹幕 4 行的组件 **227 `HealthComponentData` / 257 `ExplosiveComponentData` /
+  311 `OrbitalAbilityComponentData`** 已定名（§9.12）；`Explosive +0x24` = 爆炸类型 id 已由
+  HD2Runtime 链式证据 + 本 build owner 反查双重确认（§9.12 #9）。
 
 ### 9.6 复现命令（✓ 只读）
 
@@ -978,12 +982,34 @@ rm "/d/SteamLibrary/steamapps/common/Helldivers 2/data/f6fb08cc02d24255.patch_0"
 - 语义候选（⚠ 未证）：`+0x1CC` ≈ 持续/时长相关（+40%），`+0x1D4/+0x1D8` 各 **×2**（次数/伤害类）。
   直观读法："轨道激光强化"。
 
-**#9 `0xC0C3FDB3`（72 B 行）：某个爆炸装置的爆炸类型 73 → 176**
+**#9 `0xC0C3FDB3`（72 B 行）：雪球（Snowball）的爆炸从 `Snowball_Stun` 换成 `HighExplosive`**
 
-- 目标 `0xCCFAE6D4A601C741`：kind=`interactable`，组件含 Explosive / Throwable / Sticky / Equipment /
-  Wieldable / Interactable；**不是任何战备的 payload**（资源包 `EA5F010E91849B6C`）——像"可掷/可粘的爆炸装置"；
-- delta：`ExplosiveComponentData +0x24` **73 → 176**；若该字段是 `ExplosionType`，
-  则爆炸 73（半径 1/1/1，哑炮级）换成爆炸 176（半径 2.5/7/9）⇒ **换大爆炸**（⚠ 字段语义待证）。
+- 目标 `0xCCFAE6D4A601C741`：**dev 资源路径 `wable/snowball/snowball`**，kind=`interactable`，
+  交互类型 `InteractType_PickupSnowball`、冲击类型 `SurfaceImpactType_projectile_snowball`；
+  组件 16 个 = Unit / **Interactable** / **Equipment** / **Wieldable** / **WeaponData** / **Throwable** /
+  **Sticky** / **Explosive** / LoadoutPackage / Attachable / Trample / Ability / CollisionEvent /
+  PhysicsImpactEffect / Tag / WeaponCustomization ⇒ **可拾取、可手持、可投掷、可粘附、会爆的雪球**
+  （节庆活动「Festival of Reckoning」里能捡起来互相砸的雪球，线上已发布内容）。
+  它没有本地化名/百科词条（`name_status=unknown-no-entry`），所以战备表查不到——**不是战备载荷**；
+- delta：`ExplosiveComponentData +0x24`（十进制 36）**73 → 176**。**该字段 = 爆炸类型 id**
+  （`generated_explosion_settings` 的 `+0x0` type；HD2Runtime 的链式证据：`ExplosiveComponentData +36
+  → explosion_settings recordType`，例：TED-63 是 80→360、TM-1 是 117→201）；
+  - **73 = `ExplosionType_Snowball_Stun`**：半径 **1/1/1 m**，伤害行 293 =
+    `DamageInfoType_Explosion_Projectile_Snowball` = **0/0 伤害、AP6、stagger 11、状态 38（StunSmall）**，
+    shake 1.1 ⇒ 现版本雪球**只晕不伤**；
+  - **176 = `ExplosionType_HighExplosive`**：本 build **唯一 owner 是 G-12 高爆手雷**
+    （实体 `0x6B11FC757618C57E`，dev `G-12 High Explosive`，同字段 +0x24=176）；半径 **2.5/7/9 m**，
+    伤害行 367 = `DamageInfoType_Explosion_HandGrenade_HighExplosive` = **800/800 伤害、AP4、
+    拆 30、stagger 30、push 40**，shake 70；
+- ⇒ **#9 的语义 =「雪球变高爆手雷」**：雪球砸出去按 G-12 的爆炸结算（会炸死人）。战场用法上属于
+  **活动/事件侧 modifier**，不是舰船升级；
+- **接线状态**：`0xC0C3FDB3` 在全部 54 张明文表里**只出现 1 次**（它自己这行）；把 15 条 modifier id
+  全扫一遍也是同样结果（u32/u64 均无外部引用）⇒ 数据侧没有购买/解锁/战备/事件表引用，属于
+  **预置但未接线的变体（未发布）**；雪球本体则是已发布内容；
+- 证据：`ExplosionType_Snowball_Stun` / `ExplosionType_HighExplosive` / `InteractType_PickupSnowball`
+  可在 `refs/dl-type-names.txt` 逐字检索；owner 关系由 `ExplosiveComponentData` 行反查（本 build
+  72 行里 +0x24=73 只有雪球、=176 只有 G-12）⇒ **✓ 离线**；实机验证建议做"反向题"：
+  把 G-12 的 `+0x24` 从 176 改成 73，手雷应只剩 1 m 眩晕、0 伤害（一轮即可证字段语义）。
 
 ### 9.13 「Napalm + Gatling」两条 modifier 的语义：改的是**散布半径与轮间隔**（✓ 读数，语义 ⚠）
 
