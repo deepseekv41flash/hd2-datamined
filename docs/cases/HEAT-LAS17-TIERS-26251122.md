@@ -341,7 +341,7 @@ python /d/mod/c12-recon/proj_recon.py
 | **2878**（Rapid） | **278** | 339 | **397** | **1200 / 1200 / AP 5,5,5,1** | **64** |
 
 - 两发**共用同一条命中爆炸 64**、同一颗推进器粒子 `0x686DD89BB38E16C5`、初速 2000、质量 12，伤害行进阶关系；
-- **memmod 旧档早已定案**：[c7-component-tables.md §12](<C:/Users/Admin/HD2SDK-CommunityEdition/docs/routes/c7-component-tables.md>)
+- **memmod 旧档早已定案**：`C:/Users/Admin/HD2SDK-CommunityEdition/docs/routes/c7-component-tables.md` §12
   = "切变两发过热弹 = **proj 5（700/AP5）** 与 **proj 273（1200/AP5）**，共用 impact 爆炸 64"（2026-10-03 实机）；
   本 build 对应 **5 / 278**（第二发枚举位移 +5），伤害行 396/397（旧档 385/386），爆炸 64 未变 ⇒ 跨 build 逐项吻合；
 - 旧档同一处还给出配件二分：**beam 行 8 = 配件 1/3**（Standard/Extended）、**beam 行 24 = 配件 2**（Rapid，哨戒炮 MK2 族），
