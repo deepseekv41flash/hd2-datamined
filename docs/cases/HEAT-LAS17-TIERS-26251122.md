@@ -437,3 +437,33 @@ python /d/mod/c12-recon/proj_recon.py
 **R6**：把 Quasar 的 `ProjectileWeaponComponentData +0` 由 **135 → 144**（Scorcher 等离子，资源驻留已在盘上）：
 - 若蓄满发射出去的是**等离子弹 + 爆炸 155** ⇒ 发射走 PW 路径、与 overheat_ability 无关（本页判定成立）；
 - 若仍打原来的火箭弹 ⇒ 说明"满蓄力发射"另有来源，再把 2880 换成 2877 做第二刀。
+
+## 17. R4/R6 实机（2026-11-02 夜）：R6 ✓ 走 PW 路径；R4 ✗ LAS-98 满热崩溃
+
+### 17.1 R6 ✓（LAS-99 Quasar）
+`ProjectileWeaponComponentData +0` 由 135（原火箭）改成 **144（Scorcher 等离子）**，蓄满发射出去的是
+**等离子弹** ⇒ **蓄力发射走正常 `ProjectileWeapon` 路径，与 `overheat_ability`(2880) 无关**（§16 判定成立）。
+
+### 17.2 R4 ✗（LAS-98 Laser Cannon）
+`overheat_ability 2879 → 2877`（LAS-22 的满热吐弹能力），**热量打满瞬间游戏崩溃** ⇒ 该能力不能在 beam 武器上直接借用。
+
+分析（离线段）：
+
+- LAS-22 与 LAS-98 的组件集差异：**LAS-22 独有 `TargetingComponent`**（LAS-98 反而多 `EntityBindComponent` / `SpottableComponent`）；
+  两把武器的 `AbilityComponent`（SpawnAbility 4 槽）**逐字节相同**（`[12,0]`×4）⇒ 不是"技能槽"差异；
+- 全部热量武器里带 `TargetingComponent` 的只有 **LAS-22 和两台 cyborg 固定炮台**（后者的 overheat ability 也是非默认的 2882）
+  ⇒ "特殊过热能力"与 TargetingComponent 的相关性很强；
+- **假说（⚠ 未证）**：ability 2877 的原生实现需要目标/瞄准数据（TargetingComponent）或 LAS-22 自己的状态机/动画事件，
+  在 LAS-98（beam、无 Targeting）上执行到一半空指针崩溃。崩溃日志未取，也可能依赖 beam 状态机。
+
+### 17.3 下一步设计
+
+| 编号 | 做法 | 回答什么 | 风险 |
+|---|---|---|---|
+| **R4c** | LAS-98 的 `+0x248` 2879 → **2880/2881**（Quasar/Nova 的过热能力，两者都没有 Targeting） | "普通过热能力"能否移植；不崩则说明 2877 的特殊性在 Target/状态机 | 低 |
+| **R4b** | 2877 放到 **LAS-16 Sickle**（projectile 热量武器、无 Targeting） | 崩溃是 beam 专属还是 Targeting 必需 | 中（可能再崩） |
+| **安全替代** | 不碰 ability：用**档位**在"热量接近满"时换弹丸 5（700/AP5）或 278（1200/AP5），爆炸 64 已在 `patch_4` 闭包里 | 无崩溃地实现"满热打一发" | 低（LAS-16/17 档位已实机验证） |
+| 真移植能力 | 给目标武器补 `TargetingComponent`（或依赖原生状态机） | 完整复刻 LAS-22 | 高（卡实体块 0 组件清单写法，未解） |
+
+**盘面已复原**：`generated_entities.dl_bin` 回原版（sha256 前 16 `4121f332a6d16307`），本次新增的 `patch_4` 已删；
+`patch_3`（Scorcher 等离子资源）保留。
