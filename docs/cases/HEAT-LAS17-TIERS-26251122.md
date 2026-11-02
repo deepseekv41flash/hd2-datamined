@@ -356,3 +356,36 @@ python /d/mod/c12-recon/proj_recon.py
 | 换满热弹的"种类" | 改对应武器热量行 `+0x248`（2877/2878），或改配件 delta 的 comp 269 `+584`（即"哪个散热器配哪种弹"） |
 | 给别的热量武器装这发 | 把目标武器热量行 `+0x248` 写成 2877/2878 + 资源驻留（推进器粒子 `0x686DD89BB38E16C5`、爆炸 64 的粒子） |
 | **验证"ability 决定弹丸"** | 单变量：把 Standard delta 的 `+584` 由 2877 改 2878 ⇒ Standard 满热弹应变成 1200 那发（需先确认 `generated_entity_deltas` 的保哈希改法）；更稳的替代 = 改伤害行 396/397 做功能归因 |
+
+## 15. 全库热量行的 `overheat_ability` 普查（30 条热行，2026-11-02 离线）
+
+`generated_entities` 热量块（`0x4C981CD9`，30 行）里 `+0x248 overheat_ability` 的分布：
+
+| ability | 使用者 | 容量 | 散热器 `+54/58/5C` | 注 |
+|---|---|---|---|---|
+| **0 ×15** | 非玩家热行：Disintegration Beam ×4 / Gazer / Gazer Spire ×2 / Fusion Smelter Beam / Electric Shock / TACTICAL VIDEO CAMERA / 6 条未知 / 2 条低容（cap100 hs 1/6/1） | 2000/10000 | — | 不锁枪 |
+| 2872 ×2 | LAS-5 Scythe（两实体：cap100 hs 3/6/4；cap200 hs 3/6/6） | 100/200 | | |
+| 2873 ×2 | LAS-16 Sickle + **LAS-17 DE Sickle**（共用） | 100/200 | 2/6/3 | LAS-17 的差别在 lock=0 与三档弹丸，不在 ability |
+| 2874 ×1 | **LAS-12 Sai** | 100 | 4/6/5 | 弹丸族 |
+| 2876 ×1 | LAS-7 Dagger | 100 | 3/6/3 | beam |
+| **2877 ×1** | **LAS-22 Shear** | 100 | 4/6/6 | **满热吐弹丸 5（700/AP5，爆炸 64）** |
+| **2878 ×1**（仅出现在 delta） | LAS-22 + **Rapid 散热器** | — | — | **满热吐弹丸 278（1200/AP5）** |
+| 2879 ×1 | LAS-98 Laser Cannon | 100 | 2/6/2 | beam |
+| 2880 ×1 | **LAS-99 Quasar Cannon** | 100 | 0/6/0 | 弹丸族（蓄力发热也算热量组件） |
+| 2881 ×1 | **LAS-44 Nova** | 100 | 0/6/0 | 弹丸族（疑似未发布） |
+| 2882 ×2 | **Cyborg HMG emplacement + Cyborg MG emplacement**（`cyborg_emplacement_hmg/mg`，敌方固定炮台） | 100 | 3/6/3 | 共用 |
+| 2883 ×1 | LAS-58 Talon | 100 | 2/6/3 | |
+| 2884 ×1 | **Laser Sentry A / LAS-98**（哨戒炮） | 250 | 0/6/0 | |
+| 2885 ×1 | LAS-13 Trident | 100 | 2/6/3 | beam |
+
+**结论**
+
+1. **"可切换/可配置"的 overheat 行为只有 LAS-22**：全 `entity_deltas` 表里只有 3 条 delta 打 `comp 269 +0x248`
+   （就是 LAS-22 的 Standard/Extended/Rapid 三条散热器）——别的武器没有任何配件能改这一格。
+2. 每把热量武器都有**自己独有的一条** overheat ability（2874/2876/2879/2880/2881/2883/2885…），
+   但**没有证据**它们会像 LAS-22 那样吐弹丸；这些 id 更像"该武器自己的过热锁枪/VO/散热表现"。
+   被复用的 id（2873 = 两把 Sickle、2872 = 两实体 Scythe、2882 = 两台赛博炮台）则是同族共用同一行为。
+3. 反过来看 LAS-22 的特殊性：它**没有** `ProjectileWeaponComponentData`，却能吐弹丸 ——
+   这就是"overheat ability 自带一发弹"的直接证据；其他能吐弹的武器本来就有 projectile 组件，不靠这条。
+4. 名单里出现的 **LAS-12 Sai / LAS-44 Nova** 是两把 (疑似未发布) 的**弹丸族热量武器**，
+   LAS-99 Quasar / Laser Sentry 也走热量组件 —— 后续若要扩"热量弹匣"题材，这几个是现成的新靶子。
