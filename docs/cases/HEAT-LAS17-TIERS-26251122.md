@@ -497,3 +497,34 @@ python /d/mod/c12-recon/proj_recon.py
 - 本轮新增的 `patch_4`（LAS-22 满热弹资源闭包 ≈88 MB）已删；`patch_3`（Scorcher 等离子，≈11.5 MB）保留；
 - 留档产物：`out/r1/*`、`out/r2/*`、`out/r4r6/*`、`out/r4bc/*`、`out/r4b2/*`、`D:/mod/c13-heat/r1_residency.py`、
   `D:/mod/c13-heat/r4r6_residency.py`（闭包脚本）、`D:/mod/out/r4r6-res/spec.json`（72 条驻留清单）。
+
+## 19. LAS-22 的 `TargetingComponent` 与别人有什么不一样（2026-11-03）
+
+块 `0x2C0968D2` / 行类型 `0x5E30EC98` / 64 B / 全库 **297 行、71 种不同签名**。
+
+**LAS-22 这一行（row 289）的字段**（有 SDK 佐证的语义已标注）：
+
+| 偏移 | 值 | 说明 |
+|---|---|---|
+| `+0x00` f32 | **25.0** | 目标搜索距离（推断） |
+| `+0x04/+0x08/+0x0C` f32 | **0.5 / 0.5 / 5.0** | **三个计时器** —— HD2Runtime 文档明写 "TargetingComponent timers (0.5 / 0.5 / 5 s on every sentry)" ✔ |
+| `+0x10/+0x14` f32 | 90 / 180 | 视场/锥角类参数（推断：半角/全角，度） |
+| `+0x18` u8 | **1** | 开关位（297 行中 109 行为 1；同组有 Rocket Devastator / War Strider / Reinforced Scout Strider） |
+| `+0x1C` u32 | **0x4A182741** | 目标分类/过滤档位（哈希）：该值被 **84 个实体共用**（HMG/AT Emplacement、SAM、Autocannon/Mortar Sentry、Caustic Spewer…），不是 LAS-22 独有 |
+| `+0x20` u8 | 0 | — |
+| `+0x24/+0x28/+0x2C` f32 | 1.0 / 1.0 / 5.0 | 参数（推断：锁定/丢失目标/重新搜索相关） |
+| `+0x30` vec3 | (1, 0, -1) | 瞄准轴/偏移（推断） |
+| `+0x3C..+0x3F` u8×4 | 1,1,1,0 | 四个开关位 |
+
+**和别人的差异**
+
+1. **数值上不特殊**：LAS-22 的这套数值（25 / 0.5 / 0.5 / 5 / 90 / 180 / (1,0,-1) / 0x4A182741 / [1,1,1,0]）
+   与 **13 个实体完全相同**（含 Wretch、Crusher 和若干未命名实体），是典型的"炮台/自动瞄准"通用档。
+2. **特殊的是"它出现在一把手持主武器上"**：297 个带 TargetingComponent 的实体里
+   - **58 个是炮台/固定武器**（哨戒、HMG/AT 阵地、防空、炮塔…）；
+   - 其余是敌人单位/道具；
+   - **手持实体只有 4 个**：`Seeker`、`Anti-Tank Seeker`、`Larva Container`、**`Shear`(LAS-22)** —— **LAS-22 是唯一的手持武器**。
+3. 这解释了它为什么"能吐弹"以及"2877 搬到别的武器就崩"：**这台武器天生带"自己找目标"的组件**，
+   满热那一发很可能就是靠它选目标/给方向的；把 2877 塞给没有 TargetingComponent 的普通枪（LAS-98/LAS-16），
+   能力代码拿不到目标数据 ⇒ 空指针崩溃（⚠ 仍为推断，未取崩溃日志）。
+   若要真正移植，就得给目标武器补 `TargetingComponent`——仍卡在实体块 0 组件清单写法（未解）。
