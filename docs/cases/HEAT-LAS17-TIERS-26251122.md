@@ -389,3 +389,51 @@ python /d/mod/c12-recon/proj_recon.py
    这就是"overheat ability 自带一发弹"的直接证据；其他能吐弹的武器本来就有 projectile 组件，不靠这条。
 4. 名单里出现的 **LAS-12 Sai / LAS-44 Nova** 是两把 (疑似未发布) 的**弹丸族热量武器**，
    LAS-99 Quasar / Laser Sentry 也走热量组件 —— 后续若要扩"热量弹匣"题材，这几个是现成的新靶子。
+
+## 16. 蓄力型热量武器（LAS-99 Quasar / LAS-44 Nova）：发射**不走** overheat_ability
+
+用户实机：LAS-99 蓄力时热量上涨、满热才发射弹丸；LAS-44 Nova 类似。数据判定：**它们的发射走正常
+`ProjectileWeaponComponentData` + 热量行的"蓄力字段"，`overheat_ability` 只负责过热事件本身。**
+
+### 16.1 蓄力五件套：只有这两把是"满值配置"
+
+热量行里 schema 的蓄力字段按顺序是 `needs_reload_after_overheat(+0x90 byte)`、`firing_charge(+0x94 f32)`、
+`charge_gain_per_second(+0x98 f32)`、`charge_loss_per_second(+0x9C f32)`、`reset_charge_after_shot(+0xA0 byte)`、
+`charging_triggers_dry_fire_events(+0xA1 byte)`。全 30 条热行实测：
+
+| 字段 | **LAS-99 Quasar** | **LAS-44 Nova** | LAS-22 Shear | 其它热量武器 |
+|---|---|---|---|---|
+| `+0x60` 容量 | 100 | 100 | 100 | 100~200 |
+| `+0x74` 每发升温 | **100（=满格）** | **100（=满格）** | 2 | 0.95~15 |
+| `+0x90` 过热后需换弹 | **0** | **0** | 1 | 1 |
+| `+0x94` firing_charge（发射所需蓄力） | **100** | **100** | 100 | 100 |
+| `+0x98` charge_gain_per_second（每秒蓄力） | **33** | **63** | 300 | 200~300 |
+| `+0x9C` charge_loss_per_second（不按时的流失） | 500 | 500 | 500 | 150~500 |
+| `+0xA0` reset_charge_after_shot | **1** | **1** | 1 | 0 |
+| `+0xA1` charging_triggers_dry_fire_events | **1** | **1** | 0 | 0 |
+| `+0x80` 冷却/秒 | 6.66（≈15 s） | 28（≈3.6 s） | 15 | 5~50 |
+| 散热器 `+54/58/5C` | 0/6/0 | 0/6/0 | 4/6/6 | … |
+| 弹丸组件 `ProjectileWeapon +0` | **135** | **182** | **无** | 有/无 |
+| `overheat_ability` | 2880 | 2881 | 2877/2878 | 各武器一条 |
+
+- `+0xA0/+0xA1` 只有 Quasar / Nova 两把全是 1 ⇒ 蓄力武器的两个开关；`+0x74=100(满格)` + `+0x90=0` + 散热器 0/6/0
+  = "发射即顶满热量、不换散热器、靠冷却恢复"。
+- 发射的弹丸是**它们自己的** `ProjectileWeaponComponentData +0`（Quasar=135：初速 1300、质量 12、伤害行 393 = 400/400、
+  命中爆炸 67；Nova=182：初速 1500、质量 8、伤害行 394 = 400/400、无爆炸）。
+
+### 16.2 与 LAS-22 的机制对照（结论）
+
+| | LAS-22 Shear | LAS-99 Quasar / LAS-44 Nova |
+|---|---|---|
+| 有没有 projectile 组件 | **没有**（纯 beam） | **有**（+0 = 具体弹丸） |
+| 满热/满蓄力那发弹丸靠谁 | **`overheat_ability` 原生打出**（2877→弹丸 5、2878→弹丸 278） | **正常开火路径 + 蓄力字段**（charge 到 100 后走 `ProjectileWeapon+0` 的弹丸） |
+| `overheat_ability` 作用 | 就是"发射" | 过热事件（排热音效/VO/表现），不是发射开关 |
+
+⇒ 两者**不是同一机制**：LAS-22 是"没有枪膛、用满热技能硬打一发"；Quasar/Nova 是"蓄力枪，蓄满即正常开火"，
+只是把热量条借来当蓄力条、把发射后的热量顶满当冷却期。
+
+### 16.3 验证设计（单变量，干净）
+
+**R6**：把 Quasar 的 `ProjectileWeaponComponentData +0` 由 **135 → 144**（Scorcher 等离子，资源驻留已在盘上）：
+- 若蓄满发射出去的是**等离子弹 + 爆炸 155** ⇒ 发射走 PW 路径、与 overheat_ability 无关（本页判定成立）；
+- 若仍打原来的火箭弹 ⇒ 说明"满蓄力发射"另有来源，再把 2880 换成 2877 做第二刀。
