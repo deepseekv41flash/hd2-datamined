@@ -271,3 +271,32 @@ python /d/mod/c12-recon/proj_recon.py
 ```
 
 盘面状态与回滚见 §10.3。侦察脚本是只读的；实验产物都有 sha256 记录。
+
+## 13. 附：LAS-22 Shear（未发布光束武器）的"满热弹丸"线索（⚠ 未证）
+
+背景（已有文档）：[WEAPON-CUSTOMIZATION-26251122 §11](../tables/WEAPON-CUSTOMIZATION-26251122.md#11-成品配方把未发布武器玩到手--任意改配件las-22-shear-✓✓-全链实机-2026-10-30)、
+[UNRELEASED-INVENTORY-26088801](../tables/UNRELEASED-INVENTORY-26088801.md)。
+
+- **身份**：实体 `0x7E3145A5BAA4B948`（内部名 `Shear`），**23 个组件**；武器类型 = **光束**
+  （`BeamWeaponComponentData` row 17，`BeamType=8` 与 LAS-5 Scythe 同族；**没有 `ProjectileWeaponComponentData`**），
+  另有 LAS-22 独有的 `TargetingComponent`（全库 93/373 武器都有，不算它特有）。
+- **热量行**（`WeaponHeatComponentData` row 19）：容量 **100**、每发升温 **2**、每秒升温 **30**、冷却 **15/s**、
+  散热器 **4 / 6 / 6**、过热锁 1、`overheat_ability = **2877**`；三档 `HeatLevelSetting` **全 0**
+  ⇒ 它**不是**走"换弹丸档位"那条路（§10.2 的机制在本体上没有启用）。
+- **与同族 LAS-5 Scythe（`0x27EE1ED8F6FB6356`）全组件逐字节 diff**：差异只在身份（名字/包/网格/骨骼）、
+  粒子与震屏、音频事件 id、热参数（heatsink 4/6/6 vs 3/6/4、热率与冷却）、**`overheat_ability` 2877 vs 2872**、
+  reload ability 2795 vs 2793，以及那个 `TargetingComponent` —— **没有任何"弹丸"字段的差异**。
+- **弹丸引用扫描**：拿射弹表 355 个合法 `ProjectileType` 值，对 LAS-22 全部 23 个组件行做 4 字节步进扫描
+  → 只命中 1/2/4/5/6/14 这种小整数巧合，**没有真正的弹丸引用**；`BeamInfo`（112 B）布局里也没有
+  `ProjectileType` 成员。
+- **能力定义不存在于数据表**：全 56 张明文表扫描 `AbilityId` 2872–2885，只在
+  (a) 各武器的热量行 `+0x248`、(b) `generated_entity_deltas.dl_bin`（类型 `ComponentEntityDeltaStorage`，
+  组件 delta 存储）里出现；**没有任何"能力表"** ⇒ `AbilityId` 只是枚举序号（本 build 共 2886 个值，
+  typelib 里名字已剥掉，filediver 名单停在旧 build 的 1459 个），行为在引擎侧。
+
+**结论（⚠）**：LAS-22 "满热吐一发弹丸"≈ `overheat_ability = 2877` 的**引擎内建行为**；
+数据侧唯一的候选杠杆就是这一格（`WeaponHeatComponentData +0x248`）。
+
+**R4 单变量验证设计（待跑）**：把 **LAS-98**（同为光束武器）热量行的 `+0x248` 由 `2879 → 2877`，
+其余一格不动；满热时若从"锁枪"变成"吐一发弹丸"⇒ 该格 = 过热量技能开关，可给任何热量武器移植 LAS-22 的满热一击
+（再进一步就能配合 §10.2 的档位机制做"低热光束 / 满热弹丸"的组合武器）。
