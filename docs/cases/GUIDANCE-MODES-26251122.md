@@ -233,3 +233,29 @@ W2 基于 Spear parity 盘（Spear 的 `+0x240=223` / `GT+0x48=8` / `+0x58=1` �
 | P-92 | 0/0 | 5 / 0.01 | 半径 0 ⇒ 转也看不出 | 无异常 ✓ |
 
 ⇒ 「WASP Burst 弹道毛病」= 大 B（弧线）+ 大尾部（自转）叠加；要"直线"就两者都压小（W2 配置），要"弧线但不打转"就只压尾部（R4 配置）。
+
+## 10. 字段名的外部来源核查（2026-11-02）
+
+**本地**：`refs/hd2runtime-repo`（含其 research/*.json）、`c11-recon/sdk-0.30.3`（全部 JSON）、`refs/helldiversdata` 子集、wiki sqlite
+—— 均**没有** `deviation` / `SeekingMissile` 的字段名文档（`refs/helldiversdata/generated_projectile_settings.json` 只覆盖射弹行字段）。
+
+**网上**：找到社区 dump [shalzuth/HelldiversData](https://github.com/shalzuth/HelldiversData)（游戏**编辑器元数据**：组件字段名 + 官方 tooltip 文本）：
+- `data/components/SeekingMissileComponent.json` → 给出 **29 个字段名 + 官方描述**（该 dump 最后提交 2025-09-20，**早于本 build**）；
+- `data/enums/SeekingMissileTargetingMode.json` → 枚举顺序 **Behavior(0) / Guidance(1) / TargetLock(2) / External(3) / Count(4)** ✓ 与本 build 实测值吻合（Commando=1 Guidance、其余=2 TargetLock）；
+- ❌ **没有 `SeekingMissileDeviationSettings`** —— 该 68 B 结构在本 build 才出现（本 build 行 42 成员 vs dump 版 29 字段）⇒ **其字段名/tooltip 目前无公开来源**。
+
+dump 里对得上本的字段（按默认值/实测值对齐，可用于命名父组件前段）：
+
+| dump 字段 | 官方描述（节选） | 本 build 实测对齐 |
+|---|---|---|
+| `targeting_mode` | 决定使用哪种寻的方式 | +0x000 ✓ |
+| `angle_lost_guidance` | 0–180，超出该夹角则丢失制导 | +0x01C = **180** ✓ |
+| `max_lifetime` | 导弹自爆前的存活时间 | +0x040 = **30** ✓ |
+| `acceleration` | 速度加速度 | +0x054 = **200** ✓ |
+| `max_angle_to_target` | 达到/超过此夹角时最慢但转向最快 | +0x058 = **45** ✓ |
+| `i_factor` | 速度差的积分项 | +0x064 = **1.0** ✓ |
+| `target_update_interval` | 更新目标的频率 | +0x06C = **0** ✓ |
+| `javelin_firing_mode` | **[bool] 开启后导弹会"先上抛再下压"** | 父组件 byte，**不是**我们改的 deviation 结构 |
+| `movement_should_be_processed_by_projectile_system` | [bool] 是否交给射弹系统处理碰撞/爆炸 | 父组件 byte |
+
+**结论**：A 对 / B 对 / V1/V2 / 尾部两格仍只有**我们四轮实机**给出的语义，没有权威字段名可引用；父组件其余字段已有官方名可复用。
