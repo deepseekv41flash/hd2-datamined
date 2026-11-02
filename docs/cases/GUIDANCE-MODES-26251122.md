@@ -139,3 +139,39 @@ Wiki `modes = ["Burst", "Artillery"]` ⇒ 档 0 = Burst，档 1 = Artillery。
 - 想让某武器"只跟准星/激光、不需要锁定"：**换/改导弹实体的 `SeekingMissile +0x000 = 1(Guidance)`**，而不是去动 `GuidanceTarget` 的锁定参数；若要玩家可切换，则给它绑 `LaserGuide` 功能 + `LaserDesignator` 组件（Commando 现成的结构）。
 - 想让某武器"两个锁定档、弹道不同"：像 WASP 一样给第二档配**独立的生成实体**（各带自己的 `SeekingMissile` 参数与可选 `ProjectileCluster`），`GuidanceTarget` 第二档条目保持 `u8[4]=0`。
 - 想"可切换的无制导档"：就是本次 Spear 配方（备弹行 + `u8[4]=1` + `+0x48=8` 绑定）。
+
+## 7. WASP Burst 的「随机发射方向」落在哪个字段
+
+**先排除**：武器层的 spread/recoil 不是原因 —— WASP 的 `WeaponData` 的 spread 相关区（`+0x054` = 0.004/0.004、`+0x060` = 1.0/1.0、`+0x074` = 1/1/1、`+0x0A0`、`+0x0CC`）与 **Spear / Commando 逐字段相同**，且武器层参数两档共用。
+
+⇒ 随机性只能来自"每档自己的生成实体"，即 `SeekingMissile` 组件里的 `SeekingMissileDeviationSettings`（68 B，`+0x0B4` 起）。
+
+**全表 29 条 `SeekingMissile` 行的 deviation 第一对角度（`+0x04/+0x08`）分布**：
+
+| 行 | 归属 | 角度对 | 两个 Vector3 |
+|---|---|---|---|
+| 9 | **WASP Burst** | **−75 / +75** | (20,40,20) / (30,50,30) |
+| 8 | WASP Artillery | −8 / +8 | (5,10,5) / (10,15,10) |
+| 5 | P-33 制导 | −15 / +15 | (10,20,10) / (10,20,10) |
+| 4 | P-92 | 0 / 0 | 0 / 0 |
+| 7 | Spear | 0 / 0 | 0 / 0 |
+| 6 | P-33 非制导 | 0 / 0 | 0 / 0 |
+| 10 | Commando | 0 / 0 | 0 / 0 |
+| 其余 22 行 | Solo Silo / 未知 | 0 / 0 | 0 / 0 |
+
+`SeekingMissileDeviationSettings` 结构（typelib，68 B / 13 成员）：
+`u8 +0x00 · f32 +0x04 · f32 +0x08 · f32 +0x0C · f32 +0x10 · Vector3 +0x14 · Vector3 +0x20 · u8 +0x2C · f32 +0x30/34/38/3C/40`
+
+**判定**：**±75° 就是"随机发射方向"的参数**（全表唯一的最大值；其他武器 ≤±15°，WASP 另一档 ±8°）。
+行为解释：每发导弹在 ±75° 锥内随机取一个初始方向，随后靠制导转向锁定目标 ⇒ 于是会先朝奇怪方向飞、可能撞地形/建筑（与 wiki 原文一致）。
+
+**证据强度**：
+- ✓ 数据结构名 `SeekingMissileDeviationSettings`（filediver 类型名表）；
+- ✓ 数值分布（Burst ±75 全表唯一）；
+- ✓ wiki 行为描述；
+- ⚠ 逐字段语义（哪一对是 yaw/pitch、两个 Vector3 是什么）**未定** —— typelib 剥掉了成员名。
+
+**未做的验证实验**（干净、可做）：
+1. 把 WASP 行 9 的 deviation 块清零/改成 ±8 ⇒ 实机 Burst 应该变成直线齐射（不再乱飞）；
+2. 反向：把 Artillery 行 8 放大到 ±75 ⇒ 单发 Artillery 也应该开始乱射。
+两都是 entities 表里同一行的 68 B（`entity_batch_set` 可写，保哈希）。
