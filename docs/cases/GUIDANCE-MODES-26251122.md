@@ -175,3 +175,29 @@ Wiki `modes = ["Burst", "Artillery"]` ⇒ 档 0 = Burst，档 1 = Artillery。
 1. 把 WASP 行 9 的 deviation 块清零/改成 ±8 ⇒ 实机 Burst 应该变成直线齐射（不再乱飞）；
 2. 反向：把 Artillery 行 8 放大到 ±75 ⇒ 单发 Artillery 也应该开始乱射。
 两都是 entities 表里同一行的 68 B（`entity_batch_set` 可写，保哈希）。
+
+## 8. 「打转」定位闭环（2026-11-02 两轮单变量实机）
+
+`SeekingMissileDeviationSettings`（WASP 弹头实体 `0x14CC0DB942F6D7F2` 的 `SeekingMissile +0xB4`）就是 WASP Burst 弹道毛病的唯一载体：
+
+| 轮 | 改动 | 实机结果 |
+|---|---|---|
+| W1 | 只把角度对 `+0xB8/+0xBC` 由 −75/+75 改成 −8/+8 | 「发射方向随机」消失；**弹头仍然打转** |
+| W2 | 把 P-33 弹头实体（`0xA1470A4DAB237264`）的整块 68 B 原样复制过来（12 处：`+0xB8…+0xE8`） | **随机消失 + 打转消失** |
+
+W2 是纯参数单变量：`UnitComponent +0x000`（单位资源/模型 `0xFFB0F21DCC7B5E15`）**未改**，Attachable / Detector / ThrusterGroup（352 B）逐字节相同 ⇒
+**「打转」不是模型/推进器造成的，而是 deviation 参数块里的角范围/速率字段造成的**（W1 只改了第一对，所以打转还在）。
+
+- 仍未做逐字段拆分（`+0xC0/+0xC4` 与两个 Vector3 范围都可能参与），但"整块复制"已是可用配方。
+- 与 Lua 版 `WASP Trajectory Fix` 的对比：那个 mod 换成 P-33 **生成实体**（8 B）+ 重发 P-33 导弹 mesh/贴图（资源驻留）来达到同样效果；
+  **纯数据层只需改 68 B 参数、连模型和资源都不用动**，更小、更干净。
+
+### 产物（build 26251122）
+
+| 补丁 | 内容 | 指纹 |
+|---|---|---|
+| `D:\mod\out\wasp-dev1.dl_bin` | W1：只改 ±8° | sealed 47,259,544 B / `7fdd447c…` |
+| `D:\mod\out\wasp-devfull.dl_bin` | **W2（当前装盘）**：整块 = P-33 | sealed 47,259,544 B / `0d075ee2479c43bf`；明文 `428d79c6…` |
+
+W2 基于 Spear parity 盘（Spear 的 `+0x240=223` / `GT+0x48=8` / `+0x58=1` 均保留 ✓）。
+回滚到纯 parity：`python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed D:/mod/out/parity-entities.dl_bin`。
