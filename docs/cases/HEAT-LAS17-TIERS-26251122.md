@@ -1241,3 +1241,25 @@ ARC-3 原值：模式槽 `+0x90..+0x9C = [5,6,0,0]`（5=Safe 安全、6=Unsafe �
 
 产物 `out/arc3/epoch-pur-nomcharge.dl_bin`（sealed `93f003dc7063bc05`，明文 `66b6bcff33ef3ab0`），已装盘回读一致。
 **判读**：①能否生成/开火（Purifier 是主武器，删组件有加载期崩风险，若崩记录）；②弹丸外观/威力/速度对应 Min 还是 Full 档；③是否还有蓄力动作/音效。
+
+### 31.4 实机结果：删蓄力后发射哪一档——**完全命中离线预测**（2026-11-03 21:2x）
+
+| 武器 | `ProjectileWeapon +0` | 原蓄力三档 | 删蓄力组件后实发 |
+|---|---|---|---|
+| PLAS-45 Epoch | **168** | Min 168 / Full 196 / Over 196 | **Min 档（168）** ✓ |
+| PLAS-101 Purifier | **301** | Min 131 / Full 301 / Over 301 | **Full 档（301）** ✓ |
+
+**机制结论（已实机）**：
+1. 蓄力武器的**当发弹丸**由 `WeaponChargeComponentData` 的 `ChargeStateSetting[Min/Full/Over].ProjType` 决定（非 0 时）；
+2. **删掉蓄力组件后**，引擎回退到 `ProjectileWeaponComponentData +0`（本测两把武器的回退值分别为 168/301，与实发弹丸逐一吻合）；
+3. 因此"删蓄力"只会改变**蓄力行为**；发射哪一阶段弹丸取决于该武器 `ProjectileWeapon +0` 原本填的是哪一档。
+   ⇒ 想"删蓄力但保留满蓄弹丸"：先确认 `ProjectileWeapon +0` = Full 档弹丸（Purifier 就是这种情况）；
+   想"删蓄力后仍要指定弹丸"：把 `ProjectileWeapon +0` 改成目标弹丸 id 即可（无需再动蓄力组件）。
+
+**与 §31.2/31.3 合并后的蓄力武器三件套**：
+| 行为 | 归属 |
+|---|---|
+| 蓄力时间 / 蓄力弹丸（Min/Full/Over） | `WeaponChargeComponentData +0x00/+0x18/+0x30` 的 `ChargeStateSetting` |
+| 过充自毁爆炸开关 | 同组件 `+0xB9 ExplodesOnOvercharged`（✓ 实机 §31.2） |
+| 过充爆炸用哪一行 | 同组件 `+0xC8 ExplodeType`（离线+旧实机佐证） |
+| 删组件后的回退弹丸 | `ProjectileWeaponComponentData +0`（✓ 实机本节） |
