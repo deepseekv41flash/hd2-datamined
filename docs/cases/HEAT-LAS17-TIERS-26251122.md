@@ -1294,3 +1294,35 @@ L2（62）、三档阈值与弹丸、容量 200 / 每发 1.15 热**均未动**�
 
 若成立，则下一步可直改**伤害行 556 的 Fire 槽（强度 10→0）**或 **tick 伤害行数值**，
 分别验证"点燃强度"与"自伤数值"两个字段（需伤害表工具）。
+
+## 33. 点燃效果能否换成别的状态？——把 556 行的 Fire 槽换成 Electric（2026-11-03 21:5x，已装盘待测）
+
+### 33.1 字段位置（已核对当前 build）
+伤害行 `DamageSettings`（76 B）：`+44 + 8k` = 4 × 状态槽 `{u32 StatusEffectType, f32 value}`。
+- 行 **556**（Hotshot L3 自伤 tick）= `100/100, AP 9,9,9,9`，`+40 element=1`，**槽0 = {type 5 Fire, value 10.0}**；
+- 同一族：554 = 20/20 AP9（L1）、555 = 40/40 AP9（L2）；
+- 电击状态 `36 Electric` 的 tick 行 = **541 = 15/15 AP0**（比火低很多，视觉为电击）。
+
+### 33.2 本轮改动（单变量：只换状态槽 type）
+| 项 | 原 | 新 |
+|---|---|---|
+| 伤害行 **556 槽0** `StatusEffectType` | **5 (Fire)** | **36 (Electric)** |
+| 槽0 `value` | 10.0 | 10.0（保持） |
+| 其它（556 数值/AP/element、554/555、实体表） | — | 未动 |
+
+工具 `dmg_row_edit.py` 用宿主行 537 的空槽做哈希校正字，G1–G7 全 PASS（实际只改 1 字节 + 8 B 校正字）。
+实体表仍为 §32 版本（L1 挂 63 → 低热点燃、L3 挂 62 → 高热不燃）。
+
+装盘：`generated_damage_settings.dl_bin` ← `out/las17/dmg556-electric.dl_bin`（sealed `e35f2a77e67c4413`，明文 `a7c6de39be8d5a1d`），回读一致。
+（注：盘上伤害表此前明文=原版但封包哈希异常，已用 `--accept-current` 接管，原文件另存 `.replaced`。）
+
+### 33.3 判读
+热量 50–99 段（L1→状态 63→tick 556）现在应表现为**电击而非燃烧**：
+1. 视觉：身上电弧/电火花（而非火焰）；
+2. 自伤：每跳 15/15 AP0（火焰版是 100/100 AP9）⇒ 掉血应明显变慢；
+3. 若出现麻痹/动作停滞，说明 Electric 的 strength 10 生效（强度语义可再单测）。
+
+⇒ 成立则证明：**点燃/任何持续状态效果就是伤害行状态槽里的一个通用 `StatusEffectType`，可任意替换**。
+
+后续可选：换 `44 Gas`（毒气云）、`11 Acid Splash`、`71 Poison`；把 value 当强度做语义测试；甚至换成 `29 Stim Heal` 试"高热自愈"。
+回滚：`python tools/dlbin_deploy.py restore --file generated_damage_settings.dl_bin`（实体表另一条）。
