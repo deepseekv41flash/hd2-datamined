@@ -11,7 +11,7 @@
 | 维度 | 判定 |
 |---|---|
 | 它是什么 | 把 `data/game/generated_entities.dl_bin` **整文件替换**成一份「原版 + 15 个 f32 字段改写」的保哈希版本 |
-| 改了什么 | **只改** `avatar_helldiver` 类型记录的 `AvatarComponentData` 第 0 行（`0x4D1C334D294DFA97`）的 15 个 f32：6 个滑步档位参数 + 滑步体力消耗 + 7 个陡坡/自动滑行参数 + 1 个疑似尘土累积参数 |
+| 改了什么 | **只改** `avatar_helldiver` 类型记录的 `AvatarComponentData` 第 0 行（`0x4D1C334D294DFA97`）的 15 个 f32：`StaminaCostSlide` + `SteepSlopeMovementInfo` 7 个（进入角/进入时长/滑速/重力倍率/最短保持/退出角/超角度退出延迟）+ `ActionSlideMovementInfo` 6 个（平地/上坡/下坡 × 时长/速度）+ `WeatheringSettings.DirtSpeedSliding`（字段名见 [AVATAR-HELLDIVER-FIELDS](AVATAR-HELLDIVER-FIELDS-26251122.md)） |
 | 有没有动「物理属性」 | **没有**：不改 unit/bones/物理资源，也不改内存/代码；所有效果都来自这张实体表里的移动参数 |
 | 能否用数据表路线复现 | ✓ **完全可复现**：我们从原版起重建出**逐字节相同**的明文（sha `cf09c51af2d688f4`），并已封包成可直接装盘的产物 |
 | 部署方式 | 作者用 Chef 系「file-mod installer」Lua：游戏**退出时**把内嵌的已封装 dl_bin 写到游戏目录；我们用 `dlbin_deploy.py` 直接装，不需要 Chef |
@@ -99,26 +99,28 @@ python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed p
 
 ### 4.2 字段表（行内偏移；原版 → Tribes OG）
 
-| 行内偏移 | 所在子结构 | 原版 | Tribes OG | 倍率 | 语义 |
+| 行内偏移 | 字段（filediver 名，见 [AVATAR-HELLDIVER-FIELDS](AVATAR-HELLDIVER-FIELDS-26251122.md)） | 原版 | Tribes OG | 倍率 | 作者描述对应 |
 |---:|---|---:|---:|---:|---|
-| `+0x05C` | 0x068EE2A3 +0x58 | 0.05 | 0.0175 | ×0.35 | **`stamina_cost_slide` 滑步体力消耗**（hd2runtime 已命名 ✓） |
-| `+0x098` | 0xDBD22BBB +0x00 | 45 | 36 | ×0.8 | 陡坡/自动滑行块（值像**角度**；推断 = 进入角度） |
-| `+0x09C` | 0xDBD22BBB +0x04 | 0.3 | 0.15 | ×0.5 | 同上（推断 = 进入耗时/延迟，"quicker entry"） |
-| `+0x0A0` | 0xDBD22BBB +0x08 | 3 | 5.4 | ×1.8 | 同上（推断 = 自动滑行速度，"faster automatic sliding"） |
-| `+0x0A4` | 0xDBD22BBB +0x0C | 1 | 1.5 | ×1.5 | 同上（推断 = 下坡拉力，"stronger downhill pull"） |
-| `+0x0A8` | 0xDBD22BBB +0x10 | 0.3 | 0.525 | ×1.75 | 同上（未点名，陡坡相关） |
-| `+0x0AC` | 0xDBD22BBB +0x14 | 40 | 28 | ×0.7 | 同上（值像**角度**；推断 = 退出角度） |
-| `+0x0B0` | 0xDBD22BBB +0x18 | 0.2 | 0.25 | ×1.25 | 同上（未点名） |
-| `+0x0D0` | 0x60BB2B26 +0x00 | 0.5 | 2.0 | ×4.0 | **平地滑步时长**（三变体交叉验证 ✓） |
-| `+0x0D4` | 0x60BB2B26 +0x04 | 3 | 5.1 | ×1.7 | **平地滑步速度**（✓） |
-| `+0x0D8` | 0x60BB2B26 +0x08 | 0.1 | 0.175 | ×1.75 | **上坡滑步时长**（✓，Oxygenator 保持原版） |
-| `+0x0DC` | 0x60BB2B26 +0x0C | 2.9 | 3.335 | ×1.15 | **上坡滑步速度**（✓） |
-| `+0x0E0` | 0x60BB2B26 +0x10 | 1 | 5.2 | ×5.2 | **下坡滑步时长**（✓） |
-| `+0x0E4` | 0x60BB2B26 +0x14 | 3.6 | 7.92 | ×2.2 | **下坡滑步速度**（✓） |
-| `+0x150` | 0x7836993E +0x10 | 20 | 15 | ×0.75 | 推断 = **滑步时尘土累积**（"dirt buildup 75%"，三变体都改且只此一处 ×0.75） |
+| `+0x05C` | `MovementInfo.StaminaCostSlide` | 0.05 | 0.0175 | ×0.35 | 滑步体力 35% ✓ |
+| `+0x098` | `SteepSlopeMovement.SlideEnterAngle` | 45 | 36 | ×0.8 | "quicker entry"（进入角更松） |
+| `+0x09C` | `SteepSlopeMovement.SlideEnterMinimumDuration` | 0.3 | 0.15 | ×0.5 | "quicker entry"（需保持时间减半） |
+| `+0x0A0` | `SteepSlopeMovement.SlideSpeed` | 3 | 5.4 | ×1.8 | "faster automatic sliding" |
+| `+0x0A4` | `SteepSlopeMovement.SlideGravityMultiplier` | 1 | 1.5 | ×1.5 | "stronger downhill pull" |
+| `+0x0A8` | `SteepSlopeMovement.SlideMinimumDuration` | 0.3 | 0.525 | ×1.75 | 最短滑行时间更长 |
+| `+0x0AC` | `SteepSlopeMovement.SlideExitAngle` | 40 | 28 | ×0.7 | 更晚退出滑行 |
+| `+0x0B0` | `SteepSlopeMovement.SlideBeyondMoverMaxAngleExitDuration` | 0.2 | 0.25 | ×1.25 | 超坡度后更晚退出 |
+| `+0x0D0` | `SlideMovementInfo.SlideFlatDuration` | 0.5 | 2.0 | ×4.0 | 平地时长 4× ✓ |
+| `+0x0D4` | `SlideMovementInfo.SlideFlatSpeed` | 3 | 5.1 | ×1.7 | 平地速度 1.7× ✓ |
+| `+0x0D8` | `SlideMovementInfo.SlideUphillDuration` | 0.1 | 0.175 | ×1.75 | 上坡时长 1.75× ✓ |
+| `+0x0DC` | `SlideMovementInfo.SlideUphillSpeed` | 2.9 | 3.335 | ×1.15 | 上坡速度 1.15× ✓ |
+| `+0x0E0` | `SlideMovementInfo.SlideDownhillDuration` | 1 | 5.2 | ×5.2 | 下坡时长 5.2× ✓ |
+| `+0x0E4` | `SlideMovementInfo.SlideDownhillSpeed` | 3.6 | 7.92 | ×2.2 | 下坡速度 2.2× ✓ |
+| `+0x150` | `WeatheringSettings.DirtSpeedSliding` | 20 | 15 | ×0.75 | 滑步尘土 75% ✓ |
 
-> 说明：`+0x5C` 的语义是 hd2runtime 研究文档里已命名的 `stamina_cost_slide`（record 偏移 +92 = 行内 0x5C，逐字对上）；
-> 其余字段名在公开资料里**没有**命名，表中「语义」列均已标注是**实测/交叉验证**还是**推断**。
+> 说明：字段名来自 filediver 的 Go 反向工程（`AvatarComponent` 结构），并已用我们的 typelib 做**偏移级验证**
+> （28/28 成员偏移对齐、总大小 852 B 精确一致）；完整字段图与语义见
+> [AVATAR-HELLDIVER-FIELDS-26251122](AVATAR-HELLDIVER-FIELDS-26251122.md)。
+> 由此**全部 15 个改动都有确定字段名**，作者 README 的每一条描述都能一一落到字段上。
 
 ### 4.3 三个变体交叉验证 → 6 个滑步档位字段坐实
 
@@ -138,7 +140,7 @@ python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed p
 
 ### 4.4 对「移动/物理」的含义
 
-- 这 15 个字段都是**角色移动参数**：滑步时长/速度按坡度分档、滑步体力消耗、陡坡自动滑行与角度类阈值、尘土累积。
+- 这 15 个字段都是**角色移动参数**：`ActionSlideMovementInfo` 的滑步时长/速度（按坡度分档）、`StaminaCostSlide` 体力消耗、`SteepSlopeMovementInfo` 的陡坡自动滑行（进入/退出角、滑速、重力倍率等）、`DirtSpeedSliding` 滑步沾土速率。
 - **不是**发动机物理（没有碰 unit/物理资源、没有碰碰撞体、没有碰重力表）；地形/碰撞/打断仍由引擎逻辑决定。
 - 记录是 **type-wide**：改的是 `avatar_helldiver` 类型记录 ⇒ 本机模拟的每个 Helldiver 都读它（任务内会立刻生效）；
   船上 avatar 有私有副本（hd2runtime 记录的 delta `0x73012E9238B6E3B9`），所以在飞船上测不出来，要在任务里测。

@@ -1,0 +1,1451 @@
+[
+ {
+  "offset": 0,
+  "field": "InputInfo.HoldStanceButtonTimeForProne",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.2 u32=1045220557 0x3E4CCCCD"
+ },
+ {
+  "offset": 4,
+  "field": "MovementInfo.Speeds.ReversingMultiplier",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.75 u32=1061158912 0x3F400000"
+ },
+ {
+  "offset": 8,
+  "field": "MovementInfo.Speeds.Aim",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=2 u32=1073741824 0x40000000"
+ },
+ {
+  "offset": 12,
+  "field": "MovementInfo.Speeds.Walk",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=2 u32=1073741824 0x40000000"
+ },
+ {
+  "offset": 16,
+  "field": "MovementInfo.Speeds.Jog",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=3.2 u32=1078774989 0x404CCCCD"
+ },
+ {
+  "offset": 20,
+  "field": "MovementInfo.Speeds.Sprint",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=5.5 u32=1085276160 0x40B00000"
+ },
+ {
+  "offset": 24,
+  "field": "MovementInfo.Speeds.SprintExerted",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=4.25 u32=1082654720 0x40880000"
+ },
+ {
+  "offset": 28,
+  "field": "MovementInfo.Speeds.CrouchAim",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 32,
+  "field": "MovementInfo.Speeds.CrouchWalk",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.5 u32=1069547520 0x3FC00000"
+ },
+ {
+  "offset": 36,
+  "field": "MovementInfo.Speeds.CrouchJog",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=2.25 u32=1074790400 0x40100000"
+ },
+ {
+  "offset": 40,
+  "field": "MovementInfo.Speeds.CrouchSprint",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=4 u32=1082130432 0x40800000"
+ },
+ {
+  "offset": 44,
+  "field": "MovementInfo.Speeds.Prone",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.5 u32=1069547520 0x3FC00000"
+ },
+ {
+  "offset": 48,
+  "field": "MovementInfo.Speeds.Swim",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.5 u32=1069547520 0x3FC00000"
+ },
+ {
+  "offset": 52,
+  "field": "MovementInfo.SprintStaminaDecayDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=23 u32=1102577664 0x41B80000"
+ },
+ {
+  "offset": 56,
+  "field": "MovementInfo.JogStaminaDecayDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=300 u32=1133903872 0x43960000"
+ },
+ {
+  "offset": 60,
+  "field": "MovementInfo.StaminaRecoverTimeStand",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=7 u32=1088421888 0x40E00000"
+ },
+ {
+  "offset": 64,
+  "field": "MovementInfo.StaminaRecoverTimeCrouch",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=6 u32=1086324736 0x40C00000"
+ },
+ {
+  "offset": 68,
+  "field": "MovementInfo.StaminaRecoverTimeProne",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=5 u32=1084227584 0x40A00000"
+ },
+ {
+  "offset": 72,
+  "field": "MovementInfo.StaminaRecoverDelay",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.5 u32=1069547520 0x3FC00000"
+ },
+ {
+  "offset": 76,
+  "field": "MovementInfo.StaminaCostJump",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.2 u32=1045220557 0x3E4CCCCD"
+ },
+ {
+  "offset": 80,
+  "field": "MovementInfo.StaminaCostDodge",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.1 u32=1036831949 0x3DCCCCCD"
+ },
+ {
+  "offset": 84,
+  "field": "MovementInfo.StaminaCostVault",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 88,
+  "field": "MovementInfo.StaminaCostClimb",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 92,
+  "field": "MovementInfo.StaminaCostSlide",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.05 u32=1028443341 0x3D4CCCCD"
+ },
+ {
+  "offset": 96,
+  "field": "MovementInfo.VisibilityJump",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 100,
+  "field": "MovementInfo.VisibilityDodge",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 104,
+  "field": "MovementInfo.VisibilityVault",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 108,
+  "field": "MovementInfo.VisibilityClimb",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 112,
+  "field": "MovementInfo.VisibilitySlide",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 116,
+  "field": "MovementInfo.HipfireTime",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.5 u32=1056964608 0x3F000000"
+ },
+ {
+  "offset": 120,
+  "field": "MovementInfo.ThrowHipfireTime",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.8 u32=1061997773 0x3F4CCCCD"
+ },
+ {
+  "offset": 124,
+  "field": "MovementInfo.CrouchTurnSpeedMultiplier",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 128,
+  "field": "MovementInfo.ProneTurnSpeedMultiplier",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.65 u32=1059481190 0x3F266666"
+ },
+ {
+  "offset": 132,
+  "field": "MovementInfo.JogTurnSpeedMultiplier",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 136,
+  "field": "MovementInfo.SprintTurnSpeedMultiplier",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 140,
+  "field": "MovementInfo.DownedTurnSpeedMultiplier",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.25 u32=1048576000 0x3E800000"
+ },
+ {
+  "offset": 144,
+  "field": "MovementInfo.SwimTurnSpeedMultiplier",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.6 u32=1058642330 0x3F19999A"
+ },
+ {
+  "offset": 148,
+  "field": "MovementInfo.SprintNoiseRadius",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=10 u32=1092616192 0x41200000"
+ },
+ {
+  "offset": 152,
+  "field": "SteepSlopeMovement.SlideEnterAngle",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=45 u32=1110704128 0x42340000"
+ },
+ {
+  "offset": 156,
+  "field": "SteepSlopeMovement.SlideEnterMinimumDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.3 u32=1050253722 0x3E99999A"
+ },
+ {
+  "offset": 160,
+  "field": "SteepSlopeMovement.SlideSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=3 u32=1077936128 0x40400000"
+ },
+ {
+  "offset": 164,
+  "field": "SteepSlopeMovement.SlideGravityMultiplier",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 168,
+  "field": "SteepSlopeMovement.SlideMinimumDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.3 u32=1050253722 0x3E99999A"
+ },
+ {
+  "offset": 172,
+  "field": "SteepSlopeMovement.SlideExitAngle",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=40 u32=1109393408 0x42200000"
+ },
+ {
+  "offset": 176,
+  "field": "SteepSlopeMovement.SlideBeyondMoverMaxAngleExitDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.2 u32=1045220557 0x3E4CCCCD"
+ },
+ {
+  "offset": 180,
+  "field": "SteepSlopeMovement.SlowedMovementStartAngleUphill",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=10 u32=1092616192 0x41200000"
+ },
+ {
+  "offset": 184,
+  "field": "SteepSlopeMovement.SlowedMovementMaxAngleUphill",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=55 u32=1113325568 0x425C0000"
+ },
+ {
+  "offset": 188,
+  "field": "SteepSlopeMovement.SlowedMovementSpeedMultiplierUphill",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.01 u32=1008981770 0x3C23D70A"
+ },
+ {
+  "offset": 192,
+  "field": "SteepSlopeMovement.SlowedMovementStartAngleDownhill",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=30 u32=1106247680 0x41F00000"
+ },
+ {
+  "offset": 196,
+  "field": "SteepSlopeMovement.SlowedMovementMaxAngleDownhill",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=55 u32=1113325568 0x425C0000"
+ },
+ {
+  "offset": 200,
+  "field": "SteepSlopeMovement.SlowedMovementSpeedMultiplierDownhill",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.02 u32=1017370378 0x3CA3D70A"
+ },
+ {
+  "offset": 204,
+  "field": "SteepSlopeMovement.SlopeAngleInterpolationFractionPerSecond",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.9999 u32=1065351538 0x3F7FF972"
+ },
+ {
+  "offset": 208,
+  "field": "SlideMovementInfo.SlideFlatDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.5 u32=1056964608 0x3F000000"
+ },
+ {
+  "offset": 212,
+  "field": "SlideMovementInfo.SlideFlatSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=3 u32=1077936128 0x40400000"
+ },
+ {
+  "offset": 216,
+  "field": "SlideMovementInfo.SlideUphillDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.1 u32=1036831949 0x3DCCCCCD"
+ },
+ {
+  "offset": 220,
+  "field": "SlideMovementInfo.SlideUphillSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=2.9 u32=1077516698 0x4039999A"
+ },
+ {
+  "offset": 224,
+  "field": "SlideMovementInfo.SlideDownhillDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 228,
+  "field": "SlideMovementInfo.SlideDownhillSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=3.6 u32=1080452710 0x40666666"
+ },
+ {
+  "offset": 232,
+  "field": "ClimbInformation.StartOffset",
+  "type": "mgl32.Vec3",
+  "size": 12,
+  "value": "vec3=(0, 0.4, 2.1)"
+ },
+ {
+  "offset": 244,
+  "field": "ClimbInformation.ClimbOffset",
+  "type": "mgl32.Vec3",
+  "size": 12,
+  "value": "vec3=(0, 0, 0)"
+ },
+ {
+  "offset": 256,
+  "field": "ClimbInformation.MinHeightFalling",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 260,
+  "field": "ClimbInformation.MaxHeight",
+  "type": "mgl32.Vec2",
+  "size": 8,
+  "value": "vec2=(1.95, 1.4) u64=0x3FB333333FF9999A"
+ },
+ {
+  "offset": 268,
+  "field": "ClimbInformation.MaxForwardDistance",
+  "type": "mgl32.Vec2",
+  "size": 8,
+  "value": "vec2=(0.6, 0.5) u64=0x3F0000003F19999A"
+ },
+ {
+  "offset": 276,
+  "field": "ClimbInformation.ForwardStartCheckDistancePerMeterPerSecond",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.05 u32=1028443341 0x3D4CCCCD"
+ },
+ {
+  "offset": 280,
+  "field": "ClimbInformation.MaxAutoStepUpHeight",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.8 u32=1061997773 0x3F4CCCCD"
+ },
+ {
+  "offset": 284,
+  "field": "ClimbInformation.AutoStepUpCooldown",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.5 u32=1056964608 0x3F000000"
+ },
+ {
+  "offset": 288,
+  "field": "ClimbInformation.ClimbRefInterpolationSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=8 u32=1090519040 0x41000000"
+ },
+ {
+  "offset": 292,
+  "field": "ShortThrowInfo.ThrowAngleOffset",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=5 u32=1084227584 0x40A00000"
+ },
+ {
+  "offset": 296,
+  "field": "ShortThrowInfo.PowerMultiplier",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.7 u32=1060320051 0x3F333333"
+ },
+ {
+  "offset": 300,
+  "field": "LongThrowInfo.ThrowAngleOffset",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=5 u32=1084227584 0x40A00000"
+ },
+ {
+  "offset": 304,
+  "field": "LongThrowInfo.PowerMultiplier",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.4 u32=1068708659 0x3FB33333"
+ },
+ {
+  "offset": 308,
+  "field": "DetectInfo.SightModifierStanding",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 312,
+  "field": "DetectInfo.SightModifierCrouching",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.75 u32=1061158912 0x3F400000"
+ },
+ {
+  "offset": 316,
+  "field": "DetectInfo.SightModifierProne",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.5 u32=1056964608 0x3F000000"
+ },
+ {
+  "offset": 320,
+  "field": "WeatheringSettings.MoveSpeedRequirement",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.5 u32=1056964608 0x3F000000"
+ },
+ {
+  "offset": 324,
+  "field": "WeatheringSettings.DirtSpeedStanding",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 328,
+  "field": "WeatheringSettings.DirtSpeedCrouching",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=3 u32=1077936128 0x40400000"
+ },
+ {
+  "offset": 332,
+  "field": "WeatheringSettings.DirtSpeedProne",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=10 u32=1092616192 0x41200000"
+ },
+ {
+  "offset": 336,
+  "field": "WeatheringSettings.DirtSpeedSliding",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=20 u32=1101004800 0x41A00000"
+ },
+ {
+  "offset": 340,
+  "field": "ExertionLevels[0].Index",
+  "type": "enum.ExertionLevelIndex",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 344,
+  "field": "ExertionLevels[0].ExertionThreshold",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 348,
+  "field": "ExertionLevels[0].SwayMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 352,
+  "field": "ExertionLevels[0].SwayMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 356,
+  "field": "ExertionLevels[0].SwayFrequencyMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 360,
+  "field": "ExertionLevels[0].SwayFrequencyMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 364,
+  "field": "ExertionLevels[0].SwayRecoilMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 368,
+  "field": "ExertionLevels[0].SwayRecoilMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 372,
+  "field": "ExertionLevels[0].SwayInterpSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 376,
+  "field": "ExertionLevels[0].EnterAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 380,
+  "field": "ExertionLevels[0].ExitAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 384,
+  "field": "ExertionLevels[0].ExertionGrowsVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 388,
+  "field": "ExertionLevels[0].ExertionRecoversVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 392,
+  "field": "ExertionLevels[1].Index",
+  "type": "enum.ExertionLevelIndex",
+  "size": 4,
+  "value": "f32=1.4013e-45 u32=1 0x00000001"
+ },
+ {
+  "offset": 396,
+  "field": "ExertionLevels[1].ExertionThreshold",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.001 u32=981668463 0x3A83126F"
+ },
+ {
+  "offset": 400,
+  "field": "ExertionLevels[1].SwayMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 404,
+  "field": "ExertionLevels[1].SwayMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 408,
+  "field": "ExertionLevels[1].SwayFrequencyMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 412,
+  "field": "ExertionLevels[1].SwayFrequencyMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 416,
+  "field": "ExertionLevels[1].SwayRecoilMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 420,
+  "field": "ExertionLevels[1].SwayRecoilMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 424,
+  "field": "ExertionLevels[1].SwayInterpSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 428,
+  "field": "ExertionLevels[1].EnterAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 432,
+  "field": "ExertionLevels[1].ExitAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 436,
+  "field": "ExertionLevels[1].ExertionGrowsVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 440,
+  "field": "ExertionLevels[1].ExertionRecoversVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 444,
+  "field": "ExertionLevels[2].Index",
+  "type": "enum.ExertionLevelIndex",
+  "size": 4,
+  "value": "f32=2.8026e-45 u32=2 0x00000002"
+ },
+ {
+  "offset": 448,
+  "field": "ExertionLevels[2].ExertionThreshold",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 452,
+  "field": "ExertionLevels[2].SwayMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.1 u32=1066192077 0x3F8CCCCD"
+ },
+ {
+  "offset": 456,
+  "field": "ExertionLevels[2].SwayMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.1 u32=1066192077 0x3F8CCCCD"
+ },
+ {
+  "offset": 460,
+  "field": "ExertionLevels[2].SwayFrequencyMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.1 u32=1066192077 0x3F8CCCCD"
+ },
+ {
+  "offset": 464,
+  "field": "ExertionLevels[2].SwayFrequencyMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 468,
+  "field": "ExertionLevels[2].SwayRecoilMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 472,
+  "field": "ExertionLevels[2].SwayRecoilMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 476,
+  "field": "ExertionLevels[2].SwayInterpSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 480,
+  "field": "ExertionLevels[2].EnterAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 484,
+  "field": "ExertionLevels[2].ExitAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 488,
+  "field": "ExertionLevels[2].ExertionGrowsVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0.001707 u32=987741549 0x3ADFBD6D"
+ },
+ {
+  "offset": 492,
+  "field": "ExertionLevels[2].ExertionRecoversVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=-28476.4 u32=3336468660 0xC6DE78B4"
+ },
+ {
+  "offset": 496,
+  "field": "ExertionLevels[3].Index",
+  "type": "enum.ExertionLevelIndex",
+  "size": 4,
+  "value": "f32=4.2039e-45 u32=3 0x00000003"
+ },
+ {
+  "offset": 500,
+  "field": "ExertionLevels[3].ExertionThreshold",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.5 u32=1056964608 0x3F000000"
+ },
+ {
+  "offset": 504,
+  "field": "ExertionLevels[3].SwayMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 508,
+  "field": "ExertionLevels[3].SwayMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 512,
+  "field": "ExertionLevels[3].SwayFrequencyMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 516,
+  "field": "ExertionLevels[3].SwayFrequencyMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 520,
+  "field": "ExertionLevels[3].SwayRecoilMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 524,
+  "field": "ExertionLevels[3].SwayRecoilMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 528,
+  "field": "ExertionLevels[3].SwayInterpSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 532,
+  "field": "ExertionLevels[3].EnterAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 536,
+  "field": "ExertionLevels[3].ExitAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=0 u32=0 0x00000000"
+ },
+ {
+  "offset": 540,
+  "field": "ExertionLevels[3].ExertionGrowsVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=-1.58029e+32 u32=4109980544 0xF4F95380"
+ },
+ {
+  "offset": 544,
+  "field": "ExertionLevels[3].ExertionRecoversVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=3.18624e-34 u32=131318526 0x07D3C2FE"
+ },
+ {
+  "offset": 548,
+  "field": "ExertionLevels[4].Index",
+  "type": "enum.ExertionLevelIndex",
+  "size": 4,
+  "value": "f32=5.60519e-45 u32=4 0x00000004"
+ },
+ {
+  "offset": 552,
+  "field": "ExertionLevels[4].ExertionThreshold",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 556,
+  "field": "ExertionLevels[4].SwayMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.3 u32=1067869798 0x3FA66666"
+ },
+ {
+  "offset": 560,
+  "field": "ExertionLevels[4].SwayMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.3 u32=1067869798 0x3FA66666"
+ },
+ {
+  "offset": 564,
+  "field": "ExertionLevels[4].SwayFrequencyMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.3 u32=1067869798 0x3FA66666"
+ },
+ {
+  "offset": 568,
+  "field": "ExertionLevels[4].SwayFrequencyMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 572,
+  "field": "ExertionLevels[4].SwayRecoilMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 576,
+  "field": "ExertionLevels[4].SwayRecoilMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 580,
+  "field": "ExertionLevels[4].SwayInterpSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 584,
+  "field": "ExertionLevels[4].EnterAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=1.82441e+12 u32=1406428079 0x53D463AF"
+ },
+ {
+  "offset": 588,
+  "field": "ExertionLevels[4].ExitAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=-7.67086e-26 u32=2512251870 0x95BDEBDE"
+ },
+ {
+  "offset": 592,
+  "field": "ExertionLevels[4].ExertionGrowsVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=-2.2613e-08 u32=2999074452 0xB2C23E94"
+ },
+ {
+  "offset": 596,
+  "field": "ExertionLevels[4].ExertionRecoversVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=1.42959e-16 u32=623170036 0x2524D1F4"
+ },
+ {
+  "offset": 600,
+  "field": "ExertionLevels[5].Index",
+  "type": "enum.ExertionLevelIndex",
+  "size": 4,
+  "value": "f32=7.00649e-45 u32=5 0x00000005"
+ },
+ {
+  "offset": 604,
+  "field": "ExertionLevels[5].ExertionThreshold",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=2 u32=1073741824 0x40000000"
+ },
+ {
+  "offset": 608,
+  "field": "ExertionLevels[5].SwayMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.4 u32=1068708659 0x3FB33333"
+ },
+ {
+  "offset": 612,
+  "field": "ExertionLevels[5].SwayMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.4 u32=1068708659 0x3FB33333"
+ },
+ {
+  "offset": 616,
+  "field": "ExertionLevels[5].SwayFrequencyMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.4 u32=1068708659 0x3FB33333"
+ },
+ {
+  "offset": 620,
+  "field": "ExertionLevels[5].SwayFrequencyMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 624,
+  "field": "ExertionLevels[5].SwayRecoilMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 628,
+  "field": "ExertionLevels[5].SwayRecoilMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 632,
+  "field": "ExertionLevels[5].SwayInterpSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 636,
+  "field": "ExertionLevels[5].EnterAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=1.82441e+12 u32=1406428079 0x53D463AF"
+ },
+ {
+  "offset": 640,
+  "field": "ExertionLevels[5].ExitAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=-7.67086e-26 u32=2512251870 0x95BDEBDE"
+ },
+ {
+  "offset": 644,
+  "field": "ExertionLevels[5].ExertionGrowsVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=-23777.2 u32=3334062715 0xC6B9C27B"
+ },
+ {
+  "offset": 648,
+  "field": "ExertionLevels[5].ExertionRecoversVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=-3.94151e+20 u32=3786076040 0xE1AAEF88"
+ },
+ {
+  "offset": 652,
+  "field": "ExertionLevels[6].Index",
+  "type": "enum.ExertionLevelIndex",
+  "size": 4,
+  "value": "f32=8.40779e-45 u32=6 0x00000006"
+ },
+ {
+  "offset": 656,
+  "field": "ExertionLevels[6].ExertionThreshold",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=3 u32=1077936128 0x40400000"
+ },
+ {
+  "offset": 660,
+  "field": "ExertionLevels[6].SwayMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.5 u32=1069547520 0x3FC00000"
+ },
+ {
+  "offset": 664,
+  "field": "ExertionLevels[6].SwayMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.5 u32=1069547520 0x3FC00000"
+ },
+ {
+  "offset": 668,
+  "field": "ExertionLevels[6].SwayFrequencyMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.5 u32=1069547520 0x3FC00000"
+ },
+ {
+  "offset": 672,
+  "field": "ExertionLevels[6].SwayFrequencyMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 676,
+  "field": "ExertionLevels[6].SwayRecoilMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 680,
+  "field": "ExertionLevels[6].SwayRecoilMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 684,
+  "field": "ExertionLevels[6].SwayInterpSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 688,
+  "field": "ExertionLevels[6].EnterAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=1.82441e+12 u32=1406428079 0x53D463AF"
+ },
+ {
+  "offset": 692,
+  "field": "ExertionLevels[6].ExitAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=-7.67086e-26 u32=2512251870 0x95BDEBDE"
+ },
+ {
+  "offset": 696,
+  "field": "ExertionLevels[6].ExertionGrowsVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=4.65333e+23 u32=1724191618 0x66C51382"
+ },
+ {
+  "offset": 700,
+  "field": "ExertionLevels[6].ExertionRecoversVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=4.65333e+23 u32=1724191618 0x66C51382"
+ },
+ {
+  "offset": 704,
+  "field": "ExertionLevels[7].Index",
+  "type": "enum.ExertionLevelIndex",
+  "size": 4,
+  "value": "f32=9.80909e-45 u32=7 0x00000007"
+ },
+ {
+  "offset": 708,
+  "field": "ExertionLevels[7].ExertionThreshold",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=3 u32=1077936128 0x40400000"
+ },
+ {
+  "offset": 712,
+  "field": "ExertionLevels[7].SwayMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.6 u32=1070386381 0x3FCCCCCD"
+ },
+ {
+  "offset": 716,
+  "field": "ExertionLevels[7].SwayMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.6 u32=1070386381 0x3FCCCCCD"
+ },
+ {
+  "offset": 720,
+  "field": "ExertionLevels[7].SwayFrequencyMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.6 u32=1070386381 0x3FCCCCCD"
+ },
+ {
+  "offset": 724,
+  "field": "ExertionLevels[7].SwayFrequencyMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 728,
+  "field": "ExertionLevels[7].SwayRecoilMultiplierScoped",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 732,
+  "field": "ExertionLevels[7].SwayRecoilMultiplierThirdperson",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1 u32=1065353216 0x3F800000"
+ },
+ {
+  "offset": 736,
+  "field": "ExertionLevels[7].SwayInterpSpeed",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=1.2 u32=1067030938 0x3F99999A"
+ },
+ {
+  "offset": 740,
+  "field": "ExertionLevels[7].EnterAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=1.82441e+12 u32=1406428079 0x53D463AF"
+ },
+ {
+  "offset": 744,
+  "field": "ExertionLevels[7].ExitAnimationEvent",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=-7.67086e-26 u32=2512251870 0x95BDEBDE"
+ },
+ {
+  "offset": 748,
+  "field": "ExertionLevels[7].ExertionGrowsVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=-1.28549e+24 u32=3884456786 0xE7881B52"
+ },
+ {
+  "offset": 752,
+  "field": "ExertionLevels[7].ExertionRecoversVo",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=-1.28549e+24 u32=3884456786 0xE7881B52"
+ },
+ {
+  "offset": 756,
+  "field": "ExertionVoiceOverParams.OnDeath",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=1.34837e-06 u32=901052799 0x35B4F97F"
+ },
+ {
+  "offset": 760,
+  "field": "ExertionVoiceOverParams.OnSpawn",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=2.68454e-27 u32=324317421 0x1354B0ED"
+ },
+ {
+  "offset": 764,
+  "field": "ExertionVoiceOverParams.OnExertionStart",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=1.47568e-18 u32=567920037 0x21D9C5A5"
+ },
+ {
+  "offset": 768,
+  "field": "ExertionVoiceOverParams.OnExertionStop",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=2.64312e+18 u32=1578285327 0x5E12B90F"
+ },
+ {
+  "offset": 772,
+  "field": "ExertionVoiceOverParams.OnBleedoutStop",
+  "type": "stingray.ThinHash",
+  "size": 4,
+  "value": "f32=4.58405e-36 u32=79887333 0x04C2FBE5"
+ },
+ {
+  "offset": 776,
+  "field": "ExertionVoiceOverParams.InjuryHpThreshold",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.5 u32=1056964608 0x3F000000"
+ },
+ {
+  "offset": 780,
+  "field": "ExertionVoiceOverParams.CriticalBleedHpThreshold",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.2 u32=1045220557 0x3E4CCCCD"
+ },
+ {
+  "offset": 784,
+  "field": "HealSelfDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=8 u32=1090519040 0x41000000"
+ },
+ {
+  "offset": 788,
+  "field": "HealSelfDecayWaitTime",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.5 u32=1056964608 0x3F000000"
+ },
+ {
+  "offset": 792,
+  "field": "HealSelfDecayRate",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.5 u32=1056964608 0x3F000000"
+ },
+ {
+  "offset": 796,
+  "field": "HealSelfCancelDamageAmount",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=5 u32=1084227584 0x40A00000"
+ },
+ {
+  "offset": 800,
+  "field": "RagdollDamageVelocityLower",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=12 u32=1094713344 0x41400000"
+ },
+ {
+  "offset": 804,
+  "field": "RagdollDamageVelocityUpper",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=105 u32=1121058816 0x42D20000"
+ },
+ {
+  "offset": 808,
+  "field": "RagdollDamageMin",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=10 u32=1092616192 0x41200000"
+ },
+ {
+  "offset": 812,
+  "field": "RagdollDamageMax",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=300 u32=1133903872 0x43960000"
+ },
+ {
+  "offset": 816,
+  "field": "RagdollDamageSnowModifier",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.75 u32=1061158912 0x3F400000"
+ },
+ {
+  "offset": 820,
+  "field": "MinAimDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.09 u32=1035489772 0x3DB851EC"
+ },
+ {
+  "offset": 824,
+  "field": "MaxAimDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.5 u32=1056964608 0x3F000000"
+ },
+ {
+  "offset": 828,
+  "field": "MinFireReadyDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.04 u32=1025758986 0x3D23D70A"
+ },
+ {
+  "offset": 832,
+  "field": "MaxFireReadyDuration",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.12 u32=1039516303 0x3DF5C28F"
+ },
+ {
+  "offset": 836,
+  "field": "TauntTimeBeforeDrain",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=10 u32=1092616192 0x41200000"
+ },
+ {
+  "offset": 840,
+  "field": "TauntDrainPerSecond",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.01 u32=1008981770 0x3C23D70A"
+ },
+ {
+  "offset": 844,
+  "field": "TauntOnTriggerProbabilityMul",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=0.5 u32=1056964608 0x3F000000"
+ },
+ {
+  "offset": 848,
+  "field": "TauntCooldownTimer",
+  "type": "float32",
+  "size": 4,
+  "value": "f32=10 u32=1092616192 0x41200000"
+ }
+]
