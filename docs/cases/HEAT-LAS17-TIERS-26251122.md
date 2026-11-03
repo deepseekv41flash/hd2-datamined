@@ -1171,3 +1171,28 @@ B7 候选：`28 LoadoutPackage`、`29 LoadoutEntry`、`32 MeleeAttack`、`105 Co
 3. 若准星仍缩团 ⇒ ARC-3 的准星走另一个字段（`ArcWeapon`/`WeaponCustomization`），需再定位。
 
 回滚：`cd /d/mod && python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`。
+
+### 31.1 追加：给 ARC-3 加「单发 + 全自动」可切换模式（2026-11-03 20:5x，已装盘待测）
+
+依据：`docs/tables/WEAPON-FIRE-MODES-26088801.md` + HD2Runtime `fire-modes.md`。
+
+ARC-3 原值：模式槽 `+0x90..+0x9C = [5,6,0,0]`（5=Safe 安全、6=Unsafe 可过蓄——蓄能武器专属），
+`function_info.left/right = 0/0`（**没有任何模式选择键绑定**）⇒ 与"蓄能武器不接受可切换模式"的假设一致。
+
+改动（在 §31 删充能 + 准星修正之上再加 3 处）：
+| # | 位置 | 原 → 新 |
+|---|---|---|
+| B | `WeaponData +0x90` primary_fire_mode | `5` → **`2`（Single）** |
+| C | `WeaponData +0x94` secondary_fire_mode | `6` → **`1`（Automatic）** |
+| D | `WeaponData +0xB8` function_info.left | `0` → **`3`（Firemode 选择键）** |
+
+`num_burst_rounds(+0x8C)=1` 保持；`+0x98/+0x9C` 保持 0。
+读回确认：`modes=(2,1,0,0)`、`left=3`、`crosshair=4`。
+
+产物：`out/arc3/arc3-auto.dl_bin`（明文 `arc3-auto.plain`），已装盘回读一致。
+
+**测试判读**：
+1. 武器功能键（和 P-92/VG-70 切模式同一个键）能否切「单发 ↔ 全自动」；
+2. 切到全自动后按住扳机：电弧武器是否真的连续放电（预期可能仍按单次放电节奏循环）；
+3. 若模式切换按键无反应 ⇒ 该输入不是可用键（换 `function_info.right(+0xBC)=3` 再试）；
+4. 若切模式直接崩 ⇒ 蓄能武器对"非蓄能模式"确有硬校验，记录崩点。
