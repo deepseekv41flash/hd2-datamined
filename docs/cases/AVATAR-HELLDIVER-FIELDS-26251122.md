@@ -25,8 +25,9 @@
 - 组件块：`AvatarComponentData`，块 tid **`0x40EF204C`**，块头 `0x191B0A8`；payload 1736 B = 哈希图 32 B（2 槽）
   + **2 行 × 852 B**；唯一有效行 = row 0（键即上面的实体键）。
 - 行结构：`AvatarComponent`（tid `0xB501F712`），**852 B**。
-- 当前 build 组件索引：**235**（`component_index_map.py` 用「block0 组件清单 ↔ 各块哈希图归属」离线解出；
-  rank 194→idx 234、rank 196→idx 236 夹出占位 195 的这一块 = 235）。
+- 当前 build 组件索引：**235**（`component_index_map.py` 用「block0 组件清单 ↔ 各块哈希图归属」离线解出
+  264/274 块；Avatar 属于哈希图只有 1 个实体、集合判据不唯一的块，按「块顺序 = 索引单调」
+  由相邻锚点 rank 194→idx 234、rank 196→idx 236 夹出 = 235 ✓）。
 
 ## 2. 结构总览（852 B）
 

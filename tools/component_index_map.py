@@ -78,7 +78,26 @@ def main() -> int:
                             "payload": b["payload"], "entities": len(keys)}
         else:
             unresolved.append((tid, b["head"], "cands=%s" % cand[:8]))
-    print("resolved %d/%d blocks" % (len(results), len(blocks) - 1))
+    # second pass: blocks are stored in the same order as their component indices (verified:
+    # every resolved pair is monotonic), so a run of unresolved blocks between two anchors must take
+    # the remaining unused indices of that gap, in order.
+    order = [(rank, b) for rank, b in enumerate(blocks) if b["type_id"] != B0_TID]
+    rank_of = {b["head"]: rank for rank, b in enumerate(blocks)}
+    used = {info["index"] for info in results.values()}
+    anchors = sorted(((rank_of[b["head"]], results[b["type_id"]]["index"])
+                      for b in blocks if b["type_id"] in results))
+    inferred = 0
+    for (r0, i0), (r1, i1) in zip(anchors, anchors[1:]):
+        run = [b for rank, b in order if r0 < rank < r1 and b["type_id"] not in results]
+        free = [v for v in range(i0 + 1, i1) if v not in used]
+        if len(run) == len(free) and run:
+            for b, v in zip(run, free):
+                results[b["type_id"]] = {"index": v, "head": b["head"], "payload": b["payload"],
+                                         "entities": -1, "inferred": True}
+                used.add(v)
+                inferred += 1
+    print("resolved %d/%d blocks (%d inferred from index order)" % (
+        len(results), len(blocks) - 1, inferred))
     for tid, head, why in unresolved[:12]:
         print("  UNRESOLVED tid 0x%08X head 0x%X %s" % (tid, head, why))
 
