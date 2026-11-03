@@ -880,3 +880,42 @@ found: mov r8d, ebx             ; ← 直接把 -1 当 count
 
 **盘面已复原**（2026-11-03 19:0x）：`generated_entities.dl_bin` 回原版 `4121f332a6d16307`，游戏未运行；
 C1 产物 `out/ctl/las98-nospottable.dl_bin` 留档，脚本 `D:/mod/c13-heat/del_component2.py`。
+
+## 27. 删组件路线的边界（实测矩阵 B1，2026-11-03 已装盘）
+
+### 27.1 机制前提
+- §25 的 `exe+0x4E7987` 崩溃只在"**蓝图里多出一个类型**"时出现（删组件不会触发该路径，C1 已证）；
+- 所以删组件的风险是**另一类**：删掉功能必需组件后，别的代码路径空指针/行为异常。边界只能实测。
+
+### 27.2 已知安全（实机）
+| 删的组件 | 载体 | 结果 |
+|---|---|---|
+| `237 TargetingComponentData` | LAS-22 Shear | 能生成、能开火；只有满热技能崩（§20） |
+| `127 SpottableComponentData` | LAS-98 Laser Cannon | 生成/开火完全正常（C1，§25.7） |
+
+### 27.3 矩阵 B1（一个实体表、6 把武器各删一个类型）
+产物 `out/boundary/b1.dl_bin`（sealed `6ad750182ac2c8cd`，明文 `919d7a4e929c912a`），已装盘并回读一致。
+
+| 局 | 武器（武器槽） | 删的组件 | 预期要观察 |
+|---|---|---|---|
+| S1 | **LAS-5 Scythe**（主武器） | `269 WeaponHeat` | 生成？开火？热量条/过热？ |
+| S1 | **LAS-98 Laser Cannon**（支援） | `88 Unit` | 战备能否叫出？**生成瞬间崩还是不可见**？能捡吗？ |
+| S2 | **LAS-16 Sickle**（主武器） | `324 ProjectileWeapon` | 生成？**扣扳机是否崩**？ |
+| S2 | **LAS-99 Quasar**（支援） | `236 Equipment` | 战备菜单是否还在？叫出后生成/蓄力？ |
+| S3 | **LAS-17 DE Sickle**（主武器） | `293 Ability` | 生成？开火？ |
+| S3 | **MG-43**（支援） | `239 WeaponData` | 生成？开火？ |
+
+### 27.4 判读口径（每项记 4 格）
+1. **生成**：正常 / 崩（记崩点，若仍是 `exe+0x4E7987` 则说明另有加法路径）/ 不可见；
+2. **开火**：正常 / 崩 / 无效果（无伤害、无特效） / 无法扣扳机；
+3. **其它**：拾取提示、换弹、热量条、战备图标、模型；
+4. **结论**：安全（可作删组件工具）/ 功能缺失但不崩 / 崩。
+
+### 27.5 规则预告（待 B1 验证）
+- 删 **数据/能力核心**（Unit 88、WeaponData 239、Equipment 236、Ability 293、ProjectileWeapon 324）预期会残或崩；
+- 删 **表现/装饰类**（Showcase 69、Encyclopedia 77、Spottable 127）预期安全；
+- 删 **功能模块**（Heat 269、Beam 273、Reload 114、Interactable 247）预期"残但不一定崩"。
+
+回滚：`cd /d/mod && python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`。
+脚本：`D:/mod/c13-heat/batch_del_components.py`（spec 在 `out/boundary/spec.json`）。
+后续 B2 候选：`69 Showcase`、`77 Encyclopedia`、`247 Interactable`、`265 Attachable`、`310 StatusEffectReceiver`、`273 BeamWeapon`、未知 `39/240/243`。
