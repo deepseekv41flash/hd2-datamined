@@ -1221,3 +1221,23 @@ ARC-3 原值：模式槽 `+0x90..+0x9C = [5,6,0,0]`（5=Safe 安全、6=Unsafe �
 3. 记录：武器是否还在手上、有无伤害、有无特效。
 
 下一刀（待本轮结果）：Railgun `+0xC8` 326→321（换成 Epoch 那种 800 伤害 3-4-5 m 大爆炸），验证"爆炸行由该字段选择"。
+
+### 31.3 过充爆炸归因结论 + 下一测：删 PLAS-45/Purifier 的蓄力组件，看发射哪一阶段弹丸（2026-11-03 21:1x）
+
+**过充爆炸结论（Railgun `+0xB9` 1→0 实机）**：不再爆炸 ⇒ **过充自毁爆炸由 `WeaponChargeComponentData +0xB9 ExplodesOnOvercharged` 决定**（组件决定，已证）。
+`+0xC8 ExplodeType` 为"用哪一行爆炸"选择器（旧 build 已离线+实机佐证），下一刀可再用它换爆炸行验证。
+
+**本测（已装盘）**：在保留 ARC-3（删充能+全自动）与 Railgun（不炸）成果基础上，
+再删 **PLAS-45 Epoch** 与 **PLAS-101 Purifier** 的 `207 WeaponChargeComponentData`（26→25、24→23）。
+
+**离线预测（关键）**：
+| 武器 | `ProjectileWeapon +0`（删蓄力后唯一弹丸来源） | 蓄力三档（Min/Full/Over） | 预测发哪一档 |
+|---|---|---|---|
+| PLAS-45 Epoch | **168** | 168 / 196 / 196 | **Min 档（168，最弱）** |
+| PLAS-101 Purifier | **301** | 131 / 301 / 301 | **Full 档（301，满蓄）** |
+
+⇒ 该实验同时检验"蓄力弹丸是否只由 Charge 组件的三档 ProjType 提供"：
+删掉后引擎只能退到 `ProjectileWeapon +0`，于是 **Epoch 变弱、Purifier 变满**（两者方向相反，便于区分）。
+
+产物 `out/arc3/epoch-pur-nomcharge.dl_bin`（sealed `93f003dc7063bc05`，明文 `66b6bcff33ef3ab0`），已装盘回读一致。
+**判读**：①能否生成/开火（Purifier 是主武器，删组件有加载期崩风险，若崩记录）；②弹丸外观/威力/速度对应 Min 还是 Full 档；③是否还有蓄力动作/音效。
