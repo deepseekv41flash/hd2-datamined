@@ -758,3 +758,90 @@ R7 的崩因还剩两个未分离的变量：
 - 本轮新增的 `patch_4`（满热弹资源闭包 ≈88 MB）已删；`patch_0..3` 与 `f6fb08` 驻留保留不动；
 - 留档：`out/r7/las98-graft.plain`、`out/r7/las98-graft-2877.plain`（+sealed）、`out/r7b/las98-private-targeting.plain`（+sealed）、
   脚本 `D:/mod/c13-heat/graft_targeting.py`、`graft_targeting2.py`；崩溃转储在 `%APPDATA%/Arrowhead/Helldivers2/dumps/`。
+
+## 25. 崩溃点反汇编：直接证据与**假设修正**（2026-11-03 夜）
+
+> 用户问："有没有'引擎实例化时还会校验每实体已烘焙的组件数据'的直接证据？"
+> 结论先给：**没有拿到"校验"的证据；反而拿到了反证，假设应修正为——
+> 引擎在生成实体时会去运行期组件表里**查找它认为必然存在的组件**，查不到就产生**负 count**，
+> 负 count 被当成长度传进"按属性列表累加字节尺寸"的函数 ⇒ 42 亿次循环 ⇒ 越界读 ⇒ AV。**
+
+### 25.1 取到解密代码（磁盘 exe 是加壳的）
+`helldivers2.exe` 在磁盘上**代码段被加密**（入口点字节为随机数据，静态反汇编不可行）。
+但**崩溃 dump 的代码页是运行期解密后的**：从 `dump_crash.py` 的 memory ranges 直接读 `RIP` 前后字节，得到崩点指令原文。
+
+崩点（`helldivers2.exe+0x4E7987`，dump `18.17.14`）：
+
+```asm
+mov  eax, [r11]              ; r11 = arg2->0x20：属性索引列表（u32×count）
+lea  rcx, [rax+rax*2]        ; 索引 ×3
+movzx eax, byte [rsi+rcx*8+0xC]   ; descA[index].byte_0xC = kind   <<< AV 越界读
+cmp  eax, 0xC / ja ...
+mov  ecx, [r14+rax*4+0x4E7A08] / add rcx,r14 / jmp rcx   ; 13 路跳表
+```
+
+### 25.2 整函数语义（用旧 build 全量 dump 拿到完整函数体）
+`E:\hd2-dumps\kept\crash-20128-full.dmp`（11.06 GB，全量内存）里按函数头 15 字节
+`40 55 48 83 EC 20 45 33 D2 48 8B E9 45 85 C0` **唯一命中**旧 exe `+0x173DE0`（当前 build 的对应函数在 `+0x4E7980`）：
+
+```c
+// 返回：前 count 个属性的字节总尺寸（用于算每个字段在动态结构里的偏移）
+int64 size_of_props(Schema* arg1, Instance* arg2, int count) {
+    u32* idx   = arg2->[0x20];          // 属性索引列表
+    Desc* desc = arg1->[0x18|0x20];     // 24 B/项 描述符数组
+    u64 total = 0;
+    for (i = 0; i < count; i++) {       // ← count 为负 ⇒ 42 亿次
+        u32 k = idx[i];                 // ← 崩在这里读到 0x50AC6619（不是合法索引）
+        total += kind_size(desc[k].kind) + nested(desc[k]);
+    }
+    return total;
+}
+```
+
+### 25.3 四次崩溃的确定性证据
+| dump | 改动 | `rax`（读出的"索引"） | `rdi`（count） |
+|---|---|---|---|
+| 10-31 10:58（P-41 V2） | 蓝图 77→247 ＋ 共享行 | **0x50AC6619** | **0xFFFFFFE7（−25）** |
+| 10-31 11:06（P-41 V3） | 同上 ＋ 追加独立行 | **0x50AC6619** | **0xFFFFFFE7（−25）** |
+| 11-03 18:17（R7） | LAS-98 127→237 ＋ 共享行 | **0x50AC6619** | **0xFFFFFFE3（−29）** |
+| 11-03 18:29（R7b） | 同上但行 289 私有 | **0x50AC6619** | **0xFFFFFFE3（−29）** |
+
+四次 `rax` **逐位相同**、count 为**负**且按实体分组（LAS-98 恒 −29，P-41 恒 −25）
+⇒ **确定性的数据错配**，不是随机坏内存；且 count 负数随实体而变 ⇒ 它由**该实体的数据**算出。
+
+### 25.4 24 个调用点里找到负 count 的来源（直接证据）
+旧 build 里对 `+0x173DE0` 共 24 个直接 `call`。其中一类（`+0x34B3CA`、`+0x34B4DA`、`+0x34B5FB`、`+0x34B85A`、
+`+0x3DA8BA`、`+0x3DAB1A`、`+0x3DDB1C` 等）模式完全一致：
+
+```asm
+mov  edx, [rdi+0x18]        ; 该实体的"组件类型数量"
+xor  ebx, ebx
+loop: cmp [rdi+0x38 + rbx*4], eax   ; 在该实体的组件 id 数组里线性搜一个类型
+      je  found
+      inc ebx / cmp ebx,edx / jb loop
+      mov ebx, 0xFFFFFFFF       ; ← 没找到 ⇒ ebx = -1
+found: mov r8d, ebx             ; ← 直接把 -1 当 count
+       call size_of_props(...)
+```
+
+⇒ **引擎在生成实体时会拿“实体运行期组件 id 数组”去查它认为应该存在的组件；查不到不报错、不兜底，
+而是把 −1 当长度传下去**，于是尺寸函数循环 42 亿次并把属性索引列表当数组读 ⇒ AV。
+
+### 25.5 假设修正：崩因更可能是"**删了组件**"，不是"加了组件"
+- R7 / R7b 的改动里其实有两件事：**加 237(Targeting)** 和 **删 127(Spottable)**；
+- P-41 的 V2/V3 也是 **把 77(百科) 替换成 247(Interactable)**，同样是"删了一个原本存在的组件"；
+- 四次崩溃共用同一崩点、同一 `rax` 魔数 ⇒ 共同点更可能是"**某实体少了引擎认为必需的组件**"，
+  而不是"多了新组件"（R7b 已证明"共享行"不是原因）。
+- 与 §20 不冲突：删 **Targeting** 没事（没有代码在生成期强制查它）；但删 **Spottable/百科** 这类
+  "生成/交互流程里会被查"的组件就会命中上面的 −1 路径。⚠ 该结论仍需对照实验确认（§25.6）。
+
+### 25.6 对照实验 C1（已装盘，待实机）
+只做一件事：**LAS-98 蓝图 27 → 26，删 127(Spottable)**；不加任何组件、heat 行 ability 不动。
+产物 `out/ctl/las98-nospottable.dl_bin`（sealed `5207046d21362815`，明文 `c7bfd5dbe661dbfa`），已装盘并回读一致。
+
+| 实机 | 结论 |
+|---|---|
+| **LAS-98 刷新即崩（同 `exe+0x4E7987`）** | 崩因是"**删了 Spottable**"⇒ §25.5 成立；"加 Targeting"本身可能无害 ⇒ 值得做"净增 2 字节"版重试 |
+| **正常刷新 + 光束正常** | 崩因是"**加 Targeting**"⇒ 补组件路线仍否证；§25.5 被推翻 |
+
+回滚：`cd /d/mod && python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`。
