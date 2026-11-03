@@ -4,6 +4,7 @@
 > 结论：**852 B 记录全部 207 个字段已命名**，字段布局与我们的 typelib **28/28 成员偏移精确对齐**。
 > 机器可读全表：[`refs/avatar-component-fields-26251122.json`](../refs/avatar-component-fields-26251122.json)
 > 工具：[`tools/avatar_field_map.py`](../tools/avatar_field_map.py)（字段图+值）、
+> [`tools/avatar_deltas.py`](../tools/avatar_deltas.py)（哪些 entity delta 写这张表）、
 > [`tools/component_index_map.py`](../tools/component_index_map.py)（离线组件索引）、
 > [`tools/entity_fields_batch.py`](../tools/entity_fields_batch.py)（一次写多个字段并保哈希）。
 

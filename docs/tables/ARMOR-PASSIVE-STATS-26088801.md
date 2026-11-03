@@ -2,6 +2,8 @@
 
 > **一页速查。** 详细证据与逐轮实机记录在 [ARMOR-KIT-WEIGHTS](ARMOR-KIT-WEIGHTS-26088801.md)（§1–§20）。
 > 想改**三数字**（rating / speed / stamina）→ 那个文档；想改**被动与效果**（弹容 / 装填 / 抗性…）→ 本页。
+> 这些「乘数层」与玩家 `AvatarComponentData` 基准字段的连接图（F 缩放体力、S 写 locomotion、Oxygenator=jog/sprint…）
+> 见 [AVATAR-ARMOR-BRIDGE-26251122](../cases/AVATAR-ARMOR-BRIDGE-26251122.md)。
 
 ---
 
