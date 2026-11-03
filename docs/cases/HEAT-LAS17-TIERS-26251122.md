@@ -1087,3 +1087,26 @@ B7 候选：`28 LoadoutPackage`、`29 LoadoutEntry`、`32 MeleeAttack`、`105 Co
 `245 MultiTarget×2`、`249 LinkedAmmo×3`、`250 Sticky×2`、`254 TwoPointChainAttachTarget×3`、`257 Explosive×1`、
 `262 Throwable×1`、`263 Weathering×1`、`268 ArcWeapon×2`、`269 WeaponHeat×13`、`270 AbilityWeapon×3`、`271 MeleeWeapon×10`、
 `272 PhysicsWeapon×1`、`273 BeamWeapon×8`、`287 Behavior×4`、`310 StatusEffectReceiver×11`、`318 SprayWeapon×6`。
+
+### 27.14 B6 实测（2026-11-03 20:4x）与最终边界表
+
+| 删的组件 | 载体 | 结果 |
+|---|---|---|
+| `114 WeaponReload` | GL-52 | **无法换弹**（其余正常）⇒ 残 |
+| `39`（未知） | PLAS-45 | **与原生一致 ⇒ 安全** |
+| `243`（未知） | S-11 | **与原生一致 ⇒ 安全** |
+| `183 NetworkPhysics` | EAT-700 | **与原生一致 ⇒ 安全** |
+
+**最终边界表（本轮 18 种实测）**：
+| 分类 | 组件 |
+|---|---|
+| ✅ 安全（与原生一致） | `69 Showcase`、`77 Encyclopedia`、`127 Spottable`、`237 Targeting`、`39`、`243`、`183 NetworkPhysics` |
+| ⚠ 残但不崩 | `114 WeaponReload`（不能换弹）、`247 Interactable`（不可互动）、`324 ProjectileWeapon`（支援不可开火；主武器加载崩）、`236 Equipment`（动作异常、掉落不可捡）、`265 Attachable`（不附着手/悬空）、`274 WeaponCustomization`（丢配件） |
+| ❌ 崩 | `293 Ability`（使用期 `game.dll+0x7D6F9B`）、`239 WeaponData`（`game.dll+0x10869C4`）、`88 Unit`（引擎 `exe+0x1FA7D5`）、`112 Wieldable`（拾取时）、`240`（生成时） |
+
+### 29. 收口：暂停实测，先查资料（2026-11-03 20:5x）
+
+用户决定：**先测到这里**；剩下 44 种武器相关组件（重点：`28 LoadoutPackage`、`29 LoadoutEntry`、`32 MeleeAttack`、`105 CollisionEvent`、`106 PhysicsImpactEffect`、`160 Animation`，以及 `5 Magazine`/`119 Rounds`/`269 Heat`/`273 Beam`/`207 Charge` 等专有类型）先查本地资料与网上信息，没有定论再以后实测。
+
+盘面：`b6.dl_bin` 已装（sealed `5210e810fc64a01f`，明文 `bbf8d996f1d3a961`），回滚命令
+`cd /d/mod && python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`。
