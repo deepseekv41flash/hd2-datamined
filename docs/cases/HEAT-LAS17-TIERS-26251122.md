@@ -995,3 +995,38 @@ B1 遗留未测的主武器项（Scythe 269 / DE Sickle 293）若要做需单独
 
 产物 `out/boundary/b4.dl_bin`（sealed `639387b515ab256e`，明文 `0f42841e1e16fda4`），已装盘回读一致。
 后续 B5 候选：`265 Attachable`、`274 WeaponCustomization`、`112 Wieldable`、`114 WeaponReload`、未知 `39/240/243`。
+
+### 27.10 B4 实测（2026-11-03 20:0x）
+
+| 删的组件 | 载体 | 结果 |
+|---|---|---|
+| `69 EquipmentShowcase` | S-11 Speargun | **与原生完全一致 ⇒ 安全** |
+| `77 EncyclopediaEntry` | EAT-700 | **与原生完全一致 ⇒ 安全** |
+| `293 Ability` | PLAS-45 Epoch | **崩**：蓄力到一半时崩，崩点 `game.dll+0x7D6F9B`（第三个崩点，游戏逻辑级） |
+| `236 Equipment` | GL-52 De-Escalator | ⚠ **待补测**（本次回报未提） |
+
+用户补充观察（待确认归属）：S-11「不崩但动作奇怪、扔掉后捡不起来」——
+若指 B3 那把（删 `324`）则为"不能开火"的延伸；若指 B4 这把（删 `69`）则说明 `69` 并非全无影响。
+
+**边界表（截至 B4）**：
+| 组件 | 结论 |
+|---|---|
+| `127 Spottable`、`237 Targeting`、`69 Showcase`、`77 Encyclopedia` | ✅ 安全 |
+| `247 Interactable` | ⚠ 残（不可互动，不崩） |
+| `324 ProjectileWeapon` | ⚠ 残（支援武器不可开火）；主武器上加载期崩 |
+| `293 Ability` | ❌ 崩（使用期，`game.dll+0x7D6F9B`） |
+| `239 WeaponData` | ❌ 崩（`game.dll+0x10869C4`） |
+| `88 Unit` | ❌ 崩（引擎级 `exe+0x1FA7D5`） |
+| `236 Equipment` | 待测 |
+
+### 27.11 B5（2026-11-03 20:1x 已装盘）
+
+| 武器 | 删的组件 | 目的 |
+|---|---|---|
+| GL-52 De-Escalator | `274 WeaponCustomization` | 改装/配件挂点 |
+| PLAS-45 Epoch | `112 Wieldable` | 持握能力（可能崩溃或拿不住） |
+| S-11 Speargun | `265 Attachable` | 挂件 |
+| EAT-700 Expendable Napalm | `240`（未知类型） | 探测未知编号 |
+
+产物 `out/boundary/b5.dl_bin`（sealed `5048d5e9f9cf2bde`，明文 `c3d6458d9515e945`），已装盘回读一致。
+B6 候选：`114 WeaponReload`（GL-52/PLAS-45/S-11）、未知 `39`/`243`、`28 LoadoutPackage`、`29 LoadoutEntry`、`32 MeleeAttack`、`105 CollisionEvent`、`106 PhysicsImpactEffect`、`160 Animation`、`183 NetworkPhysics`。
