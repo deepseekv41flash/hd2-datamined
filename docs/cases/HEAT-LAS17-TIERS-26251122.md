@@ -1062,3 +1062,28 @@ B6 候选：`114 WeaponReload`（GL-52/PLAS-45/S-11）、未知 `39`/`243`、`28
 
 产物 `out/boundary/b6.dl_bin`（sealed `5210e810fc64a01f`，明文 `bbf8d996f1d3a961`），已装盘回读一致。
 B7 候选：`28 LoadoutPackage`、`29 LoadoutEntry`、`32 MeleeAttack`、`105 CollisionEvent`、`106 PhysicsImpactEffect`、`160 Animation`（`104`/`269`/`310` 这 4 把武器没有）。
+
+## 28. 组件类型普查与测试覆盖（2026-11-03 20:4x）
+
+- 实体表块 0 里共出现 **322 种组件类型**（u16 编号，最大 326）；
+- 其中 **62 种出现在武器实体上**（133 把武器：主武器/支援/副武器）；
+- 已实测 **12 种** + B6 测试中 4 种；**武器相关剩 44 种未测**；
+- **本轮 4 把测试武器（GL-52/PLAS-45/S-11/EAT-700）身上只剩 6 种未测**：
+  `28 LoadoutPackage`、`29 LoadoutEntry`、`32 MeleeAttack`、`105 CollisionEvent`、`106 PhysicsImpactEffect`、`160 Animation`
+  （B7 一轮 4 种 + B8 一轮 2 种即可收官）。
+
+已测结果（详见 §27.8/27.10/27.12）：
+- 安全：`127`、`237`、`69`、`77`
+- 残：`247`、`324`、`236`、`274`、`265`
+- 崩：`293`、`239`、`88`、`112`、`240`
+- 测试中（B6）：`114`、`39`、`243`、`183`
+
+武器相关但未测的 44 种（`编号 名称 × 使用武器数`）：
+`3 Tag×1`、`5 Magazine×82`、`12 HitEffect×3`、`28 LoadoutPackage×130`、`29 LoadoutEntry×133`、`32 MeleeAttack×121`、
+`55 EffectSwitcher×1`、`63 Backblast×6`、`64 AssistedReload×7`、`76 WeaponWindUp×1`、`84 EntityBind×41`、`90 Faction×6`、
+`104 EffectReference×18`、`105 CollisionEvent×133`、`106 PhysicsImpactEffect×133`、`109 WeaponScreen×2`、`116 WeaponLinker×3`、
+`119 WeaponRounds×21`、`160 Animation×130`、`168 LaserDesignator×3`、`172 CarryEffect×1`、`190 ObjectiveDynamicLink×1`、
+`191 ObjectiveCarry×1`、`194 SensorEye×5`、`207 WeaponCharge×7`、`221 GroundCheck×1`、`222 GuidanceTarget×5`、`227 Health×1`、
+`245 MultiTarget×2`、`249 LinkedAmmo×3`、`250 Sticky×2`、`254 TwoPointChainAttachTarget×3`、`257 Explosive×1`、
+`262 Throwable×1`、`263 Weathering×1`、`268 ArcWeapon×2`、`269 WeaponHeat×13`、`270 AbilityWeapon×3`、`271 MeleeWeapon×10`、
+`272 PhysicsWeapon×1`、`273 BeamWeapon×8`、`287 Behavior×4`、`310 StatusEffectReceiver×11`、`318 SprayWeapon×6`。
