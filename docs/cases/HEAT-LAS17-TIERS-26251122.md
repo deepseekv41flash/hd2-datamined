@@ -1110,3 +1110,40 @@ B7 候选：`28 LoadoutPackage`、`29 LoadoutEntry`、`32 MeleeAttack`、`105 Co
 
 盘面：`b6.dl_bin` 已装（sealed `5210e810fc64a01f`，明文 `bbf8d996f1d3a961`），回滚命令
 `cd /d/mod && python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`。
+
+## 30. 剩余组件类型的离线资料调研（2026-11-03 21:0x，暂停实测期）
+
+### 30.1 本地位移/几何（44 种武器相关剩余类型，均已定位块）
+块 id/行跨距/行数已全量列出（见脚本输出）；重点：
+`28 LoadoutPackage 0x7A858691 32B×551`、`29 LoadoutEntry 0x4F2CF417 32B×199`、
+`32 MeleeAttack 0x5224F28D 16B×168`、`105 CollisionEvent 0xD298697B 32B×482`、
+`106 PhysicsImpactEffect 0xB99E37DB 104B×362`、`160 Animation 0x4856D42D 112B×770`。
+
+### 30.2 行内容判据：**全零行 ⇒ 删了应无影响**
+对 133 把武器的行做扫描：
+| 编号 | 组件 | 武器行数 | 全零行 | 结论 |
+|---|---|---:|---:|---|
+| `105` | CollisionEvent | 133 | **133（全部）** | 删了应**无影响**（无数据可丢） |
+| `272` | PhysicsWeapon | 2 | **2（全部）** | 删了应**无影响** |
+| 其余 42 种 | — | — | 0 | **行全非空** ⇒ 删了必有功能损失（崩不崩另说） |
+
+### 30.3 行内字段的离线解读（GL-52 实测行）
+| 组件 | 行内容（关键字段） | 含义推断 |
+|---|---|---|
+| `28 LoadoutPackage` | `+0x00` 固定 0x1534F3FD；**`+0x08` = 资产包 id**（GL-52=`0x4FEE9CC13C0B4CEC`）；`+0x10` 第二包 id；`+0x18` 标志 | 资产加载声明；删除 ⇒ 武器资产不加载（不可见/占位） |
+| `29 LoadoutEntry` | `+0x00` 条目 id；**`+0x04` 槽类型**（2=支援/1=主/3=副/4=投掷）；`+0x0C` 条目哈希 | 军械库条目；删除 ⇒ 槽位/条目信息丢失（加载链风险） |
+| `32 MeleeAttack` | 16 B = `{u32 82, u32 74}` | 近战攻击参数（伤害行/动作）；删除 ⇒ 枪托近战失效 |
+| `105 CollisionEvent` | 32 B 全零 | 武器不用该功能 ⇒ 删除无影响 |
+| `106 PhysicsImpactEffect` | `+0x00` = 45；`+0x10` = f32 5.0 | 物理撞击特效（类型行+半径）；删除 ⇒ 撞击特效消失 |
+| `160 Animation` | 前 3 个 f32 = 0.1 / 0.1 / 0.97…，多处 1.0 + 计数 | 动画速度/混合参数；删除 ⇒ 动画异常（类似 §27.12 `265` 悬空） |
+
+### 30.4 公开资料（HD2Runtime 文档，外部参考）
+- `LoadoutPackageComponentData`：物品的 mesh / projectile / effect / pickup 资产包（[asset-loading.md](https://github.com/skyeshade/hd2runtime/blob/219d70864032150f4e4359281add5ead23cb86dc/docs/asset-loading.md)）；
+- `WeaponReloadComponentData` = 换弹时长（`+56`）+ 换弹动画事件（不可写），`WeaponMagazine` = 容量/初始/补给/备弹（[magazine-attachments.md](https://github.com/skyeshade/hd2runtime/blob/219d70864032150f4e4359281add5ead23cb86dc/docs/magazine-attachments.md)）；
+- `WeaponHeat` 字段（SDK 偏移 `+96/+116/+120/+128/+84/88/92`）、`WeaponCustomization.DefaultCustomizations`（8 B `(slot, optionId)` 列表，slot 5 = 弹匣）、`Beam/Arc/Melee/Spray` 各自类型字段（[player-weapon-composition.md](https://github.com/skyeshade/hd2runtime/blob/219d70864032150f4e4359281add5ead23cb86dc/docs/player-weapon-composition.md)、[player-weapon-runtime-mapper.md](https://github.com/skyeshade/hd2runtime/blob/219d70864032150f4e4359281add5ead23cb86dc/docs/player-weapon-runtime-mapper.md)）；
+- **未找到**：`MeleeAttack`/`CollisionEvent`/`PhysicsImpactEffect`/`Animation` 的公开说明，也**没有任何**关于"删组件会怎样"的社区资料 ⇒ 这部分只能实测。
+
+### 30.5 结论与建议
+1. **可免测**：`105`、`272`（全零行，删除无影响）；
+2. **建议补测（高信息）**：`28`、`29`（加载链关键，预期崩/不可用）、`106`（预期残）、`160`（预期动画异常）；
+3. **专有类型**（`5` 弹匣、`119` 备弹、`269` 热量、`273` 光束、`207` 蓄力、`268` 电弧、`271` 近战、`318` 喷流）：语义已明，删除预期=对应功能失效；要判"崩不崩"需换带该组件的武器载体测。
