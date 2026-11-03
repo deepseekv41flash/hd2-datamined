@@ -1196,3 +1196,28 @@ ARC-3 原值：模式槽 `+0x90..+0x9C = [5,6,0,0]`（5=Safe 安全、6=Unsafe �
 2. 切到全自动后按住扳机：电弧武器是否真的连续放电（预期可能仍按单次放电节奏循环）；
 3. 若模式切换按键无反应 ⇒ 该输入不是可用键（换 `function_info.right(+0xBC)=3` 再试）；
 4. 若切模式直接崩 ⇒ 蓄能武器对"非蓄能模式"确有硬校验，记录崩点。
+
+### 31.2 过充爆炸是否由组件决定？—— 单变量第一刀：Railgun `+0xB9` 1→0（2026-11-03 21:1x，已装盘待测）
+
+**旧文档结论（CHARGE-WEAPONS §2/§6.5）**：过充爆炸的开关与行号都在 `WeaponChargeComponentData` 里：
+`+0xB9 ExplodesOnOvercharged`（u8，是否触发自毁爆炸）、`+0xC8 ExplodeType`（u32，指向爆炸表行）。
+
+**当前 build 全表核对**（11 行蓄力组件）：
+| 武器 | ExplodesOnOvercharged | ExplodeType |
+|---|---|---|
+| Accelerator Rifle (PLAS-39) | 1 | **326** |
+| Railgun (RS-422) | 1 | **326** |
+| Arc Thrower / Electric Shock ×2 / Loyalist / Purifier / 未知 | 1 | 269（共用，非自毁专属） |
+| Epoch / Meltagun | **0** | 321 |
+
+⇒ 真正"独立自毁爆炸"的只有 **PLAS-39 与 Railgun（type 326）**。
+
+**本轮改动（单变量）**：Railgun 蓄力行 `+0xB9`：**1 → 0**；`+0xC8` 保持 326，其余一切不动
+（ARC-3 的删充能+全自动改动保留）。产物 `out/arc3/railgun-nooverexpl.dl_bin`，已装盘回读一致。
+
+**测试判读**（RS-422 Railgun：蓄满后继续按住到过蓄，原版会自毁爆炸）：
+1. **不再爆炸** ⇒ 过充爆炸的触发**确实由蓄力组件这一格决定**；
+2. **仍然爆炸** ⇒ 触发不在该字段（可能引擎按"过蓄状态"硬触发，`+0xB9` 只影响别的），需改查 `ExplodeType` 或引擎逻辑；
+3. 记录：武器是否还在手上、有无伤害、有无特效。
+
+下一刀（待本轮结果）：Railgun `+0xC8` 326→321（换成 Epoch 那种 800 伤害 3-4-5 m 大爆炸），验证"爆炸行由该字段选择"。
