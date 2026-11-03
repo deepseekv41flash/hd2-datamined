@@ -960,3 +960,38 @@ B1 遗留未测的主武器项（Scythe 269 / DE Sickle 293）若要做需单独
 
 产物 `out/boundary/b3-del.dl_bin`（sealed `ce66dc6b743ebc76`，明文 `9fc77f44c4b318a6`），已装盘回读一致。
 建议呼叫顺序（低风险→高风险，崩一局后重启补测剩余）：**EAT-700 → PLAS-45 → GL-52 → S-11**。
+
+### 27.8 B3 实测结果（2026-11-03 19:5x）与两个新崩点
+
+| 删的组件 | 载体 | 结果 | 崩点（dump） |
+|---|---|---|---|
+| `88 Unit` | GL-52 De-Escalator | **崩** | `helldivers2.exe+0x1FA7D5`（引擎级，新） |
+| `239 WeaponData` | PLAS-45 Epoch | **崩** | `game.dll+0x10869C4`（游戏逻辑级） |
+| `324 ProjectileWeapon` | S-11 Speargun | 不崩，**无法开火** | — |
+| `247 Interactable` | EAT-700 | 不崩，**无法互动/拾取** | — |
+
+**崩点归类（重要）**：
+- `game.dll+0x10869C4`：**"游戏逻辑取缺失组件"通用崩点** —— PLAS-45 删 WeaponData 与 LAS-16（主武器）删 324 的加载期崩**同址**
+  ⇒ 删"功能/数据"类组件，崩在游戏逻辑层；
+- `helldivers2.exe+0x1FA7D5`：**引擎级新崩点** —— 删 `Unit(88)` 这种"引擎侧资源/实体底座"才会出现；
+- 与 §25 的 `exe+0x4E7987`（只出现在"**加**组件"）不同，删组件不会落到那个点。
+
+**与已知基线合并的边界（截至 B3）**：
+| 组件 | 结果 |
+|---|---|
+| `127 Spottable`、`237 Targeting` | **安全**（生成/开火正常） |
+| `247 Interactable` | 残：不可互动/拾取，不崩 |
+| `324 ProjectileWeapon` | 残：不可开火，不崩（支援武器）；**主武器上加载期崩** |
+| `239 WeaponData`、`88 Unit` | **崩**（分别游戏逻辑层 / 引擎层） |
+
+### 27.9 B4（2026-11-03 20:0x 已装盘）：补"装备/Ability/装饰"三类
+
+| 武器 | 删的组件 | 目的 |
+|---|---|---|
+| GL-52 De-Escalator | `236 Equipment` | 装备/携带核心 |
+| PLAS-45 Epoch | `293 Ability` | 能力槽 |
+| S-11 Speargun | `69 EquipmentShowcase` | 装饰类（预期安全） |
+| EAT-700 Expendable Napalm | `77 EncyclopediaEntry` | 装饰类（预期安全） |
+
+产物 `out/boundary/b4.dl_bin`（sealed `639387b515ab256e`，明文 `0f42841e1e16fda4`），已装盘回读一致。
+后续 B5 候选：`265 Attachable`、`274 WeaponCustomization`、`112 Wieldable`、`114 WeaponReload`、未知 `39/240/243`。
