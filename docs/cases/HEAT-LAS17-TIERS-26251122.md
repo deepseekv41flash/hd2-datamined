@@ -941,3 +941,22 @@ C1 产物 `out/ctl/las98-nospottable.dl_bin` 留档，脚本 `D:/mod/c13-heat/de
 
 判读口径同 §27.4（生成 / 开火 / 其它 / 结论）。已知安全：`127 Spottable`、`237 Targeting`。
 B1 遗留未测的主武器项（Scythe 269 / DE Sickle 293）若要做需单独开局（预期加载期崩）。
+
+### 27.7 B3：只测"不自然生成"的 4 把支援武器（2026-11-03 19:4x，已装盘）
+
+**用户补充的两条约束**：
+1. **会自然生成**的武器（如 EAT-17、MG-43——世界掉落点会预生成该实体）删组件会**在加载期崩**；
+   主武器同理（LAS-16 删 `324 ProjectileWeapon` 已实机确认加载期崩）；
+2. 投送链不用搭（用户自己有办法叫出这 4 把），只改实体表即可。
+
+⇒ 最终 B3 = **原始实体表 + 4 个删除**（无 rack/战备表改动）：
+
+| 武器（不自然生成） | 键 | 删的组件 |
+|---|---|---|
+| GL-52 De-Escalator | `0xFE3B29B2CFA63F9B` | `88 Unit` |
+| PLAS-45 Epoch | `0xE8D5F49AD7780E54` | `239 WeaponData` |
+| S-11 Speargun | `0x3828E2051AA9E897` | `324 ProjectileWeapon` |
+| EAT-700 Expendable Napalm | `0xB2B5E0D185605F9E` | `247 Interactable` |
+
+产物 `out/boundary/b3-del.dl_bin`（sealed `ce66dc6b743ebc76`，明文 `9fc77f44c4b318a6`），已装盘回读一致。
+建议呼叫顺序（低风险→高风险，崩一局后重启补测剩余）：**EAT-700 → PLAS-45 → GL-52 → S-11**。
