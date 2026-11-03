@@ -918,4 +918,26 @@ C1 产物 `out/ctl/las98-nospottable.dl_bin` 留档，脚本 `D:/mod/c13-heat/de
 
 回滚：`cd /d/mod && python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`。
 脚本：`D:/mod/c13-heat/batch_del_components.py`（spec 在 `out/boundary/spec.json`）。
-后续 B2 候选：`69 Showcase`、`77 Encyclopedia`、`247 Interactable`、`265 Attachable`、`310 StatusEffectReceiver`、`273 BeamWeapon`、未知 `39/240/243`。
+后续候选：`69 Showcase`、`77 Encyclopedia`、`247 Interactable`、`265 Attachable`、`310 StatusEffectReceiver`、`273 BeamWeapon`、未知 `39/240/243`。
+
+### 27.6 实机反馈与矩阵修订 → **B2：支援武器专用矩阵**（2026-11-03 19:2x）
+
+**用户实测（B1 期间）**：LAS-16 Sickle（删 `324 ProjectileWeapon`）在**加载阶段就崩**（还没进任务）。
+⇒ **主武器删组件会崩在加载期**，没法与其它测试共局；而**支援武器只在生成（战备落地）时**才可能崩。
+⇒ B1 的主武器项作废，改成支援武器矩阵 B2：一局带 4 把支援武器，逐个叫、逐个判（归因干净）。
+
+**产物** `out/boundary/b2.dl_bin`（sealed `1bc10fc2d6a61d6c`，明文 `413855e111847318`），已装盘并回读一致。
+
+| 局 | 武器（战备） | 删的组件 | 已知/预期 |
+|---|---|---|---|
+| A | **LAS-98 Laser Cannon** | `88 Unit` | 模型/实体核心；预期崩或不可见 |
+| A | **MG-43 Machine Gun** | `239 WeaponData` | 武器数值核心；预期崩或不能开火 |
+| A | **EAT-17** | `324 ProjectileWeapon` | 发射核心；预期崩或扣不动 |
+| A | **Quasar Cannon** | `269 WeaponHeat` | 蓄力/热量系统；预期残 |
+| B | **Recoilless Rifle** | `236 Equipment` | 装备核心；预期崩或不可拾取 |
+| B | **Autocannon** | `293 Ability` | 技能槽；预期残 |
+| B | **Grenade Launcher** | `247 Interactable` | 交互/拾取；预期"能落地但捡不了" |
+| B | **Flamethrower** | `69 EquipmentShowcase` | 展示类；预期安全 |
+
+判读口径同 §27.4（生成 / 开火 / 其它 / 结论）。已知安全：`127 Spottable`、`237 Targeting`。
+B1 遗留未测的主武器项（Scythe 269 / DE Sickle 293）若要做需单独开局（预期加载期崩）。
