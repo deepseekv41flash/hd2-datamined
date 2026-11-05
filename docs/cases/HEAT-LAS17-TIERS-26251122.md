@@ -528,6 +528,9 @@ python /d/mod/c12-recon/proj_recon.py
    满热那一发很可能就是靠它选目标/给方向的；把 2877 塞给没有 TargetingComponent 的普通枪（LAS-98/LAS-16），
    能力代码拿不到目标数据 ⇒ 空指针崩溃（⚠ 仍为推断，未取崩溃日志）。
    若要真正移植，就得给目标武器补 `TargetingComponent`——仍卡在实体块 0 组件清单写法（未解）。
+   > **2026-11-05 补**：不必移植。LAS22FileTool 案例用「交换 `LoadoutEntryComponentData +0x0` 目录 id」
+   > 让 **LAS-22 真实体**直接上军械库（自带 Targeting / `overheat_ability 2877`），块 0 净增这条未解项被绕开；
+   > 见 [RECON-LAS22-FILETOOL-26251122](RECON-LAS22-FILETOOL-26251122.md) §7.3。
 
 ### 19.1 两发过热弹丸（5 / 278）的引用面：**全库零引用**（2026-11-03 复查）
 

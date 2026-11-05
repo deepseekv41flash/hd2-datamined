@@ -182,6 +182,12 @@ Suzuka 当年也是这么写的（写 offset 16），引擎应按 slot 查表、
 
 **建议**：这条线在"改表"层面收口。若将来还想做配件解锁，唯一剩下的方向是**资源侧**（武器资源里的 customization 定义）——成本高、且当年 memmod 已经证明要用运行期定位。
 
+> **2026-11-05 更新（LAS22FileTool 案例，见 [RECON-LAS22-FILETOOL §7](../cases/RECON-LAS22-FILETOOL-26251122.md)）**：
+> "新增可选"确实做不到，但有三条**数据表侧**的绕过/杠杆被验证或定位：
+> ① 默认项改成宿主已解锁的选项（L0）；② 把宿主选项的 `AddPath` 换成目标配件资产（换皮，全局生效）；
+> ③ `WeaponCustomizationComponentData +0x12FC`（原 `UnknownThinHash2`）= **配件解锁/升级组键**，改指针可借另一把枪的解锁树。
+> 另：未发布装备可以不碰解锁层——交换 `LoadoutEntryComponentData +0x0`（目录 id）即"借位上架"。
+
 ---
 
 ## 9. 支援武器假设与实验 K（2026-10-30 21:1x 已装盘）
@@ -747,6 +753,10 @@ cp "D:/mod/backups/spray-capsule/generated_entities.vanilla.dl_bin" "…/data/ga
 V3 排除了"共享行"这个单一解释，说明卡因在**蓝图加组件的实例化路径本身**（或 Interactable 行内容与 P-41 骨架不兼容），不是可修复的配置问题。
 
 **未测替代**：实体套壳（把 P-41 的武器数据行搬到 Peacemaker 实体上，借用它的 Interactable/蓝图）——留作后续。
+
+> **2026-11-05 更省事的替代**：只交换**目录 id**——P-41 行 161 的 `+0x0 = 0xC9F609BA` 与 P-2 Peacemaker 的 `0xA7977F98` 互换
+> ⇒ 配装界面直接装备 P-41，不需要拾取、不需要 Interactable、不需要动蓝图（机制见
+> [RECON-LAS22-FILETOOL §7.3](../cases/RECON-LAS22-FILETOOL-26251122.md)）。代价是 P-2 从军械库消失；未实测。
 
 **盘面**：实体表已回滚原版（`/d/mod/backups/spray-capsule/generated_entities.vanilla.dl_bin`）；`patch_5` 三个文件保留（无害，撤法见下）。
 

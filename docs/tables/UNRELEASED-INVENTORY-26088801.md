@@ -202,6 +202,12 @@ settings.UNLOCKS = {
 > 不是「额外战备」路线；本页只做盘点，路线见
 > [`RECON-SHODAN-EXTRA-STRATAGEM`](../cases/RECON-SHODAN-EXTRA-STRATAGEM-26088801.md)。
 
+> **更新（2026-11-05，离线/未实机）**：第 11–14 项多了一条**不需要加载器**的路线——
+> 交换 `LoadoutEntryComponentData +0x0`（后端目录 id）把已注册装备的身份借给未发布实体，
+> 军械库入口即解析到新实体（LAS-5 Scythe `0xE673DCC8` ↔ LAS-22 Shear `0x7DE53646` 就是这个做法）。
+> 它绕开"副武器不可拾取"（P-41 可直接在配装界面装备，不必进世界），代价是宿主装备从军械库消失。
+> 机制与逐字段见 [RECON-LAS22-FILETOOL-26251122](../cases/RECON-LAS22-FILETOOL-26251122.md)。
+
 > **补充（2026-10-31，实机）**：T2 任务物件里的 **89 `MISSIONS. REMOTE EXPLOSIVES`** 也把投放链打通了
 > （挂在 RESUPPLY 34 上：能带、能按、真掉东西），但载荷落地瞬间爆炸、**不可拾取** ⇒ 仍按任务物件归类，**不列入本表**。
 > 细节见 [UNRELEASED-STRATAGEMS-26088801](UNRELEASED-STRATAGEMS-26088801.md) §3.2。
