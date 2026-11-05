@@ -131,6 +131,44 @@ Suzuka 当年也是这么写的（写 offset 16），引擎应按 slot 查表、
 与第三方 `meaning: 'not proven current player selection'` / `NO_OWNER_IN_BOUNDED_SCOPE` / `selectedAttachmentOwnersProven: 0` **完全一致**。
 ⇒ 已回滚到原版实体表（与明文缓存逐字节一致，`Constitution +0x10 = 00…`、`FLAM-40 +0x10 = 0.0`）。
 
+### 6.1 实验 J2（2026-11-05，已装盘待实机）：既然槽位本来就有，那就"借解锁组"
+
+**起因**：LAS22FileTool 案把 `+0x12FC` 判定成"配件解锁/升级组键"（见
+[RECON-LAS22-FILETOOL §7](../cases/RECON-LAS22-FILETOOL-26251122.md)）。回头重读 Constitution 行：
+
+| 字段 | Constitution（`0x7B75E5132FFD4CA6`）| 说明 |
+|---|---|---|
+| `+0x50` `CustomizationSlots` | **`(1,3,2)`** = 下挂 / 涂装 / **光学** | **槽位本来就有，J 当年不缺槽** |
+| `+0x00` 默认项 | `(1, 0x71052F45 Bayonet)`、`(3, 0x80FBE63D Default)` | 换弹/涂装两格 |
+| `+0x12FC` | `0x75A17A94` | 它自己的解锁组（组内容不在明文）|
+| `LoadoutEntry +0x0` | `0xF80523DD`（slot 1）| 目录 id |
+
+⇒ J 失败的最可能解释不是"L0 不生效"，而是 **L0 里写的配件不在该武器的可选集合里，被过滤**。
+可选集合的入口就是 `+0x12FC` 指向的解锁组 —— 于是有了 J2。
+
+**J2 装盘内容（单变量 = 换组键）**
+
+| 目标 | 字段 | 原值 → 新值 |
+|---|---|---|
+| `0xEBA8F3D0` 行 114 | `+0x10`（默认项第 3 格，8 B）| `(0,0)` → **`(2, 0xE8C28B34 COMBAT SCOPE 4x)`** |
+| 同上 | `+0x12FC` | `0x75A17A94` → **`0xF3D7617E`（R-63 Diligence 的解锁组）** |
+
+- 同族证据：R-63 Diligence 的默认光学就是 `0xE8C28B34`（4x 战斗镜），本行 `+0x50` 也含光学槽；
+- 产物 `out/consti/r1.dl_bin`（sealed sha256 `130e449363b6b4ed`，明文 47,259,408 B），
+  G1/G2/G3/G4/G6/G7/G8 全 PASS，解封回读逐字节一致；
+- 已 `dlbin_deploy install --accept-current` 装盘（接管了盘上 `981422ab…` 那版，另存 `.replaced`）。
+
+**判读表（实机后填）**
+
+| 现象 | 结论 |
+|---|---|
+| 军械库改装页**列出** 4x / 其它光学项 | `+0x12FC` = 可选集合来源 → **不牺牲任何枪就能给武器加配件**，下一步换 10x 供体（R-63CS `0x8D78238D`） |
+| 页里出现但显示**未解锁/灰** | 同上成立，只是进度按供体组算（拿 Constitution 打会涨 Diligence 的解锁） |
+| 改装页变空/异常，进游戏也没镜 | 组键不是绑定层 ⇒ 走 J3：**目录 id 互换**（已备 `out/consti/r2.dl_bin`，Constitution ↔ AR-23 Liberator，sha `4af00a5736216d40`） |
+
+回滚：`python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`（回原版）；
+要回 LAS-17 三档盘：`python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed out/las17/las17-clean-gas-stim.dl_bin`。
+
 ---
 
 ## 7. L1 在明文表里吗？—— **一半在，一半不在**（2026-10-30 实测）
