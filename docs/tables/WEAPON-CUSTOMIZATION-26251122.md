@@ -936,3 +936,32 @@ MG-43 的 stratagem 行 @`0xE074`（id 95）`+0x04` 和 `+0xF8` 都是 `0x1B4F8F
 - 判读：① PRIMARY 页出现「MG-43 Machine Gun」⇒ 成员资格模型成立 ② 能装备、能进任务开火 ⇒ 路线全通
   ③ 出现但配装保存被服务端拒 ⇒ 改用 S2（合法主武器 id）。
 - 回滚/装盘命令同 §12.8；注意它会覆盖当时的实体表（装前先确认 J2 已测完）。
+
+---
+
+## 14. L1 配件表的「名字 → optionId → 槽位」映射（2026-11-05 破解）
+
+`generated_weapon_customization_settings.dl_bin` 的 9 个块结构：`LDLD` 头 24 B → **body**；
+每块 `body + 16` 起是 **88 B 的 item**，item 的 `+0x00`（u32）是**相对 body 的名字偏移**
+（`cstr(body + name_off)` 就是选项名），`+0x08` = optionId，`+0x20` = AddPath，
+`+0x30`/`+0x38` = 槽位数组偏移（同样相对 body）/个数。
+
+已导出全量 **342 条（252 条有名字）**：`refs/weapon-customization-options-26251122.json`
+（字段 `option_id / name / add_path / slots / block`）。例：
+
+| optionId | 名字 | 槽位 |
+|---|---|---|
+| `0xE790FA4F` | REFLEX SIGHT MKII | 2 |
+| `0xBF35EFF8` | **Angled Foregrip** | 1 |
+| `0x53120A73` / `0x5672E4B7` / `0x3D0687C6` | Rapid / Standard / Extended Heatsink (Charge) | 5 |
+| `0xD9A3531E` | Laser Sight Flashlight | 1 |
+| `0xE8C28B34` | COMBAT SCOPE 4x | 2 |
+
+⇒ 以后"换某个配件"不用再猜 id：按名字从 JSON 里取 optionId + 槽位即可。
+
+### 14.1 当前实验（2026-11-05 夜）：无驻留的 L0 改装
+
+盘面 = 原版两张表 + LAS-22 行 121 三个默认项：光学 `0xE790FA4F`、下挂 `0xBF35EFF8`、弹匣 `0x53120A73`；
+**资源补丁全部删除**（不做驻留），LAS-22 靠代理注入上架。要回答两件事：
+① L0 在"已拥有但不可改装"的武器上还生效吗（服务端 L2 里光学=红点、下挂=手电，可作判据）；
+② 军械库装备路径会不会**按需流式加载**武器与配件资产（模型/特效），从而不再需要驻留补丁。
