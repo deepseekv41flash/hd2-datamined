@@ -169,6 +169,41 @@ Suzuka 当年也是这么写的（写 offset 16），引擎应按 slot 查表、
 回滚：`python tools/dlbin_deploy.py restore --file generated_entities.dl_bin`（回原版）；
 要回 LAS-17 三档盘：`python tools/dlbin_deploy.py install --file generated_entities.dl_bin --sealed out/las17/las17-clean-gas-stim.dl_bin`。
 
+### 6.2 J2 实机结果（2026-11-05 22:0x）：改装页崩溃 ⇒ 已回滚，转 J4 身份互换
+
+| 项 | 结果 |
+|---|---|
+| 操作 | 军械库 → R-2124 Constitution → **点进改装页** |
+| 结果 | **崩溃**（进程直接退出，未留 dump；WER LocalDumps 已为此 exe 打开，供后续取证）|
+| 盘面 | 已 `restore` 回原版（解封回读 == 明文 `dc6d52a1…`，逐字节一致）|
+
+**这轮不是白崩**：改之前（实验 J）页面能开、只是不显示镜子；改之后（J2）一进页面就崩 ⇒
+**`+0x12FC` 确实被改装页读取**，它不是"进度元数据"这种没人读的字段。但把"组键"单独搬到另一把枪上
+**不安全**，两个候选解释（下一轮区分）：
+
+1. **槽位集合不匹配**：Diligence 的组含 slot 4/5/6/8/9，而 Constitution 的 `CustomizationSlots` 只有 `{1,2,3}`
+   ⇒ 页面按组枚举时越界；
+2. **组键必须与目录 id 成套**：LAS-22 文件版是 id + 组**一起**换的，单换组 = 内部不一致。
+
+### 6.3 J4（已装盘）：整套身份互换，供体 = R-2 Amendment
+
+选供体的三个条件都满足：**已拥有**（inventory 有 `0xDFF8870C`）、
+`CustomizationSlots` 与 Constitution **完全相同** `(2,1,3)`、默认就带 4x 战斗镜 `0xE8C28B34`。
+
+| 字段 | 原值 → 新值 |
+|---|---|
+| `LoadoutEntry` Constitution `+0x0` | `0xF80523DD` → **`0xDFF8870C`**（Amendment 的目录 id）|
+| `LoadoutEntry` Amendment `+0x0` | `0xDFF8870C` → **`0xF80523DD`** |
+| `WC` Constitution `+0x12FC` | `0x75A17A94` → **`0xAB6BEB66`**（Amendment 的组）|
+
+产品 `out/consti/j4.dl_bin`（sealed `77b74ffea2a54a4e`，明文 47,259,424 B），G1–G8 全 PASS，已装盘。
+
+| 实机现象 | 判读 |
+|---|---|
+| 页面能开且光学栏列出 4x | ✅ 身份互换成立；在军械库选上 4x（写 L2）即为成品 |
+| 仍崩 | 改装页对"非原生武器"一律不安全 ⇒ 只剩 L0+资产驻留 / 资源侧两条路 |
+| Constitution 从军械库消失 | 供体 id 没被认（ownership/整体解析问题），换一个已拥有供体再试 |
+
 ---
 
 ## 7. L1 在明文表里吗？—— **一半在，一半不在**（2026-10-30 实测）
