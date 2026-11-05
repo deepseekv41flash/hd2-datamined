@@ -834,3 +834,70 @@ python tools/entity_row_append.py --plain Y.plain --block 0xFCCA29DB \
 | 投掷物作舱载荷（原版值 4 / 交互 14） | **✗ 无提示**（出现但不可交互） |
 | 投掷物交互改 13（舱内取） | **⚠ 半通**：有提示、能取，但**投掷物栏无变化**；资产驻留 + 改带别的投掷物后**仍无变化** ⇒ 无授予路径 |
 | 值 5（other_item） | 3 个实体 = 任务遥控起爆器 + 未使用针剂道具 + 占位；**没有对应军械库页签**，改槽无实际意义（未实机） |
+
+---
+
+## 13. 支援武器为什么进不了军械库 & 怎么把它顶上去（2026-11-05，抓包+全表复读）
+
+### 13.1 一句话
+
+**军械库的成员资格 = 后端 `/api/Progression/inventory` 里拥有的 item id（951 个 `mixId`）。**
+支援武器的 `LoadoutEntry +0x0` 根本不是"物品 id"，而是**武器家族/包声明 id**——多把同族枪共用同一个值，
+它从来不在 inventory 里 ⇒ `+0x04` 改成 1 也没用（那个字段只决定**已入场条目**进哪个页签）。
+
+### 13.2 证据
+
+抓包（`D:\mod\out\gwe\*api_Progression_inventory.json`，2026-10-29 两次一致）：
+
+| 事实 | 读数 |
+|---|---|
+| inventory 物品数 | **951 个 `mixId`**（同一 id 空间：与 LoadoutEntry `+0x0` 交叉命中 83 个）|
+| type1 主武器 id ∈ inventory | **47 / 59** |
+| type3 副武器 | **19 / 28** |
+| type4 投掷物 | **17 / 27** |
+| **type2 支援武器** | **0 / 46** |
+| **type6 背包** | **0 / 36** |
+| type5 其它 | **0 / 3** |
+| 关键个体 | LAS-5 Scythe `0xE673DCC8` ✓、LAS-7 Dagger ✓、AR-23 Liberator ✓、Constitution ✓、P-2 ✓；**MG-43 `0x1B4F8FA2` ✗、LAS-22 `0x7DE53646` ✗、P-41 `0xC9F609BA` ✗** |
+
+支援武器的 id 是**家族共用**的（这也解释了 13.2 里那 7 组"重复 id"）：
+
+| id | 谁在用 |
+|---|---|
+| `0x1FC9CA61` | TEAM WEAPONS. HEAVY MACHINEGUN：**3 个实体**（MG-206 ×2 + 1）|
+| `0x00DAE676` | TEAM WEAPONS. LIGHT MACHINE GUN：**4 个实体**（Stalwart 家族）|
+| `0x5563504D` | FLAMETHROWER：2 个（Flamethrower / Cremator）|
+| `0x1E86BFC1` | GL-28 Belt-Fed + GL-28 Backpack（武器+背包共用一个声明 id）|
+| `0x1B4F8FA2` | MG-43（家族只有它自己）|
+
+这些 id 同时被 `generated_stratagem_settings` 当**包声明**引用（`+0x04` 与 `+0xF8`）：
+MG-43 的 stratagem 行 @`0xE074`（id 95）`+0x04` 和 `+0xF8` 都是 `0x1B4F8FA2`，另一行 @`0xE394` 的 `+0xF8` 也是它。
+
+### 13.3 为什么当年 2→1 没反应
+
+不是"支援武器惰性"，而是它**不在军械库候选集**里。`+0x04` 只改页签，三个反例都能证明：
+
+| 实验 | 结果 |
+|---|---|
+| Peacemaker `+0x04` 3→1 | 军械库进 PRIMARY ✓ |
+| Constitution `+0x04` 1→3 | 军械库进 SECONDARY ✓ |
+| G-16 `+0x04` 4→1 | 军械库进 PRIMARY ✓（但进任务崩，缺武器组件）|
+| **MG-43 `+0x04` 2→1** | **无任何变化** ✗ —— 因为它的 id 不是"拥有物品" |
+
+### 13.4 两条实现路线
+
+| 方案 | 做法 | 代价 |
+|---|---|---|
+| **S1 借"没人用的已拥有 id"** | MG-43 行 `+0x0 := 拥有、且任何表都不引用的 id`（候选 753 个，如 `0x73EFF2F3`），`+0x04 := 1` | 牺牲一个纯装饰 id；MG-43 的 stratagem 包声明（3 处）会悬空，需要时再补 |
+| **S2 与一把已拥有主武器互换 id** | LAS-22 文件版同款（见 [RECON-LAS22-FILETOOL](../cases/RECON-LAS22-FILETOOL-26251122.md)）| 那把主武器从军械库消失；MG-43 的 stratagem 声明会指向被换过去的实体 |
+
+> 顺带把 LAS-22 文件版的根也钉死了：Scythe 的 `0xE673DCC8` **确实在 inventory 里（=已拥有）**，所以它借 id 才能上架。
+> 也给"支援武器家族"开了另一扇门：挑**多成员家族**里的一个（如 HMG×3 中的一把）移出去，家族声明 id 仍留在兄弟行上，stratagem 声明不会悬空。
+
+### 13.5 产物与判读（S1，已封包未装盘）
+
+- `out/support2primary/v1.dl_bin`（sealed sha256 `bd10ae717fa9237b`，明文 47,259,408 B）：MG-43 行
+  `+0x0` `0x1B4F8FA2` → `0x73EFF2F3`、`+0x04` 2 → 1；G1–G8 全 PASS。
+- 判读：① PRIMARY 页出现「MG-43 Machine Gun」⇒ 成员资格模型成立 ② 能装备、能进任务开火 ⇒ 路线全通
+  ③ 出现但配装保存被服务端拒 ⇒ 改用 S2（合法主武器 id）。
+- 回滚/装盘命令同 §12.8；注意它会覆盖当时的实体表（装前先确认 J2 已测完）。

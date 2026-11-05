@@ -1010,6 +1010,11 @@ python tools/murmur64.py "$WORK/restored.plain"   # 必须 = 原版锚点
 | 77 | repack 丢容器头 56 B | 新建容器只塞条目会丢「头里的 unknown / 偏移 16 起的 56 B / 每条目 blob 偏移提示」；`Package.parse` 读入再 `to_bytes` 才 IDENTICAL | 改写已有补丁必须「原容器进、原容器出」 | **✗ 否证** |
 | 78 | 判据假阳性 | 第一版判据只看「句柄是否创建成功」，而这个判据本身不可能失败 | 判据必须能失败：换成「真的读到一个字节」；教训是方法论级的，细节回指 [MEMORY-ACCESS](../boundaries/MEMORY-ACCESS-25988413.md) §12 | **✗ 否证** |
 
+> **2026-11-05 更新（#68 的边界修正）**：军械库的成员资格已被抓包钉死 = **后端 `/api/Progression/inventory` 里拥有的 item id**
+> （951 个 `mixId`）。支援武器/背包的 `LoadoutEntry +0x0` 是「武器家族/包声明 id」而不是物品 id，
+> 46 把支援武器 **0/46** 在 inventory 里 ⇒ 只改 `+0x04` 永远不会入场。
+> 绕法 = 借一个已拥有 id（S1 借装饰 id / S2 与主武器互换），见 [WEAPON-CUSTOMIZATION §13](../tables/WEAPON-CUSTOMIZATION-26251122.md)。
+
 ### 10.4 路线边界（实测于 `25988413`；`26088801` 换了 `helldivers2.exe` / `game.dll`，引擎级结论未在本 build 复验）
 
 | # | 坑 / 否证 | 事实 | 证据 | 状态 |
