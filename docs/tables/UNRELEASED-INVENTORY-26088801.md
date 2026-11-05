@@ -971,3 +971,40 @@ GATER 壳里**没有** attach_oil / attach_canister 之类命名的节点（246 
 
 ⚠ 遗留待清（更早的整包实验残留，确认无用后可删）：
 `f6fb08cc02d24255.patch_0`…`patch_17`（64 MB + 伴随文件）与 `9ba626afa44a3aa3.patch_0`…`patch_9`。
+
+---
+
+## 9. 2026-11-05 重爬武器页后的修正（+ 一条新的判据）
+
+重跑 `tools/fetch_wiki_pages.py --category Weapons --category Stratagems`：**241 页**（Weapons 157 + Stratagems 127，
+去重 241），写入 `refs/wiki/pages/`。实体↔wiki 对表（199 个 `loadout_type` 实体）后，
+
+**仍然没有 wiki 页面的武器只有 3 件**：
+
+| 实体 | key | 类型 | 备注 |
+|---|---|---|---|
+| LAS-22 Shear | `0x7E3145A5BAA4B948` | primary | 未发布 ✓ |
+| SG-8F Punisher fire of liberty | `0xBCC2177439D231BE` | primary | 未发布 ✓ |
+| P-41 Ombudsman | `0xBDE1F2534280300D` | sidearm | 未发布 ✓ |
+
+其余无页面的 28 项里，25 项是背包子部件/无名占位（t6/t4/t5）。**AR-23L Liberator Legacy 现在有页面**（此前误列未发布），
+LAS-13 Trident 也有页面（Siege Breakers 第 1 页，35 奖章）。
+
+### 9.1 新的判据：**服务端物品目录 = "已发布/已知"**
+
+抓到 `GET /api/Progression/items`（3020 条 `{itemId, mixId, progressionCategory, tags…}`）后，三类可以直接分开：
+
+| 类别 | 判据 | 解锁成本 |
+|---|---|---|
+| 已发布且已拥有 | 在 inventory | — |
+| **已发布未购买** | **在 items 目录、不在 inventory** | **只加一行 inventory 注入**（LAS-13 已实机证明：它的目录记录本来就有，只加了拥有层就上架了）|
+| **未发布** | **既不在 items 也不在 inventory** | inventory + items 双注入（LAS-22 / P-41 / SG-8F 已实机）|
+
+按这个判据，当前 build「目录里有、但未拥有」的可装备行共 **24 条**（一行为一件，加进 inventory 即可）：
+
+R-4 Hyena、MA5C Assault Rifle、SMG/FLAM-34 Stoker、SMG-203 Gallant、MP-98 Knight、R/40-K Hot-shot、
+M7S SMG、R-40 Sightliner、M90A Shotgun、**LAS-13 Trident**、M6C/SOCOM Pistol、P-33 Missile Pistol、
+P/40-K Bolt Pistol、P-69 Veto、P-44 Mist、CQC-72 Entrenchment Tool、CQC-42 Machete、
+G-11 Caltrops、G-7 Pineapple、G/40-K Melta Mine、G-48 Giga Grenade、G-89 Smokescreen、G/SH-39 Shield、G-31 Arc。
+
+（"目录"这一层是**服务端**给的，所以它天然是"官方认为已发布"的清单；wiki 只用来做名称与人读校验。）
