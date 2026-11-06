@@ -14,6 +14,7 @@
 | 耐力的基线值在 `AvatarComponentData`（明文实体表）| **✓ 双源** | 本仓库字段图（852 B / 207 字段，typelib 28/28 对齐）+ filediver 的 Go 结构注释 |
 | `1.3` 在这条上 = 排空速率 ÷ 1.3 | **✓ 双源** | 第三方 `booster.stamina_scale = 1.3`，消费方式写明 "drain ÷ v"；同一文档在 `stamina_sprint_duration` 注释里写 "(÷ 1.3 with modifier 2)" |
 | wiki 的 +22.5% 上限 / +40% 回复 与 1.3 的对应关系 | **⚠ 未证** | 同一 Booster 的三条效果，代码里可能是三条公式/常量；单看 1.3 推不出 1.225/1.4 |
+| 标量就是"倍率"这件事本身 | **✓ 我们自己核过一对** | `FLEXIBLE REINFORCEMENT BUDGET +0x08 = 0.75` ↔ wiki「reduces the 2:00 cooldown to **1:30**」= 120 s × 0.75 = 90 s，**逐值吻合**（不依赖第三方） |
 
 ## 1. `+0x08` 不是指针：三条独立判据
 
