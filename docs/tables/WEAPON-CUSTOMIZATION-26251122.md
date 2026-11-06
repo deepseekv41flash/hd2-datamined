@@ -1022,6 +1022,13 @@ LAS-13 的目录记录本来就有所以只加拥有行）：
 
 ### 15.1 附件根本不是"物品"
 
+> **2026-11-06 修正（重要）**：本节结论只对**这两个清单**成立 —— 附件确实不在
+> `inventory.items[]` 与 `items` 目录里。但实机日志抓到花 Requisition 解锁附件时客户端会调
+> `POST /api/Progression/ProgressionPackage/AcquireUnlockableItem`（136 B body → 200），
+> 随后 `PUT /api/Progression/Items/Customize/v2` 写选中项 ⇒ **解锁是服务端动作，不是纯客户端**，
+> 记录在"可解锁项"结构里而非 inventory。见 proxy 仓库 `docs/API-ENDPOINTS-2026-11-01.md` §8。
+> 下面的"没有拥有层"应读作"不在拥有清单/物品目录里"。
+
 用 `refs/weapon-customization-options-26251122.json` 的 **321 个 optionId** 去查两个服务端清单：
 
 | 清单 | 规模 | 命中附件 optionId |
@@ -1058,7 +1065,7 @@ LAS-13 的目录记录本来就有所以只加拥有行）：
 
 | 想做的事 | 能不能 |
 |---|---|
-| 通过代理"送"配件 | ✗ 配件不是物品，服务端没有对应清单行 |
+| 通过代理"送"配件 | ✗ inventory/items 两个清单里没有配件行；但**解锁本身是可伪造的候选**——若 `AcquireUnlockableItem` 的 body 只带解锁项 id，就可能直接 POST 伪造（待抓 body 验证）|
 | 通过改表"解锁"配件 | ✗ 解锁图在资源/运行期；等级载体未定位 |
 | **改 L0 默认项让武器出生即带某配件** | **✓ 已实机**（§14.2，不需要资源补齐，军械库装备路径按需流式加载）|
 | 改 `+0x12FC` 借另一把枪的解锁组 | ⚠ 单独搬组键会崩（§6.2，槽位集合不匹配 / 必须与目录 id 成套）|
