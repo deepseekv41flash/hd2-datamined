@@ -11,7 +11,7 @@
 |---|---|---|
 | Firebomb = 爆炸 `83` / 伤害 `438` | **✓ 双源**（wiki 逐字段 + 旧版名字恢复） | wiki 数值表 7 项全中；`refs/explosion-rows.json` 行 192 名字 `ExplosionType_HellpodImpact_FieryDrop` |
 | Stun Pods = 爆炸 `335` / 伤害 `439` | **✓ 双源**（wiki 逐字段 + 相邻行 + 孤儿判定） | wiki 数值表 8 项全中（含 `50 Arc`、`Stun Massive 100`、stagger 50 / push 0） |
-| Concealed Insertion = 爆炸 `401` / 伤害 `0` | **⚠ 中置信** | wiki 页无数值表可对；靠"同族相邻行 + 烟雾同构 + 孤儿"三条间接证据 |
+| Concealed Insertion = 爆炸 `401` / 伤害 `0` | **⚠ 中置信** | wiki 页无数值表可对；靠"同族相邻行 + 烟雾同构 + 孤儿"三条间接证据。hd2runtime 旧 build 写 `400`，本 build 的 400 是 `Tower_Collapse`，见 §4.1 |
 | 三条都只由代码触发 | **✓ 离线** | 弹丸表 `+0x90/+0x9C` 全表扫，三个 type 命中 **0** |
 
 ## 1. 表位置（本 build）
@@ -67,6 +67,20 @@ wiki 的 Concealed Insertion 页面**没有数值表**（只有描述与战术�
 4. **同包**：三行的粒子资源全在同一个包 `7ed1f941859987b4`。
 
 ⇒ 行 194（type `401`）是三条里唯一"零伤害 + 5 m + 无震屏 + 有粒子"且紧邻前两条的行。
+
+### 4.1 ⚠ 与 hd2runtime 的口径分歧：它写 `400`，本 build 是 `401`
+
+hd2runtime SDK 的 booster research（快照 `F5FEE03DCFDB`，**旧版本**）写的是"hellpod 分支 spawn
+83 / 335 / **400**（smoke）"。这条**不能搬**到本 build：
+
+| 依据 | 内容 |
+|---|---|
+| 本 build 的 `400` 是什么 | `type 400` = `ExplosionType_Tower_Collapse`（row 351：伤害行 495、半径 20/40/70、震屏 5000、无粒子）—— 与"烟雾、无伤害、5 m"完全不符 |
+| 跨我们两个 build 的稳定性 | build `25988413` 与 `26251122` 的爆炸表 **424 行 type 逐行零差异** ⇒ 我们这两个 build 里烟雾只有 `401` 这一个候选 |
+| 号段漂移是常态 | 同一份第三方文档在 Dead Sprint 上给的 `status 59 / DamageInfo 541` 在本 build 也对不上（status 59 每跳伤害 0；541 挂在 status 36）⇒ 它的 id 全部要按本 build 重对 |
+
+⇒ **本仓库口径：Concealed Insertion = `401`**（中置信，缺 wiki 数值可对）；`400` 记为旧 build 号段，
+不采纳。最终一分钱验证：改 194/`401` 的半径或粒子，进局看落舱烟是否变化。
 
 ## 5. 改法（都走文件侧，保内容哈希）
 
