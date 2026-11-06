@@ -80,6 +80,16 @@ python tools/entity_fields_batch.py set --block <AvatarComponentData 块> --key 
 ```
 （`--block`/`--key` 取值照 [AVATAR-HELLDIVER-FIELDS](../cases/AVATAR-HELLDIVER-FIELDS-26251122.md) §5 的配方）
 
+> ⚠ **运行时路线在本代 build 上不存在**（所以"改内存里的 1.3 再掐表"这条验证方法作废）：
+> 外部句柄被 EAC `ObRegisterCallbacks` 剥 `PROCESS_VM_READ`、进程内 `loadlib` 被镜像加载白名单挡
+> （未签名 577 / 签名但不在名单 193），引擎 API 只给身份·位姿·资源、不含玩法数值 ——
+> 见 [MEMORY-ACCESS §12f](../boundaries/MEMORY-ACCESS-25988413.md)。**唯一通道是资源侧。**
+>
+> ⇒ 要判 `÷1.3` 还是 `×1.3`，只能靠**游戏内掐表**（不需要任何内存读写）：
+> 基线 `+0x034 = 23 s`，三种假设的期望值差得很开 —— **≈29.9 s**（只除排空速率）、
+> **≈36.6 s**（排空 ÷1.3 且 wiki 的「最大体力 +22.5%」也生效）、**≈17.7 s**（乘 1.3）。
+> 一次直线冲刺计时即可三分。
+
 ## 4. 与第三方（hd2runtime）的对照口径 —— 它那张快照是**旧版本**
 
 hd2runtime 的 booster research 来自快照 `F5FEE03DCFDB`，**不是本 build**。可用/不可用要分开：
