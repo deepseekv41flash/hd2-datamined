@@ -1020,14 +1020,28 @@ LAS-13 的目录记录本来就有所以只加拥有行）：
 
 **背景**：武器本身已经能用代理两层注入上架（§14），那配件能不能同样处理？答案是不能，而且原因是结构性的。
 
-### 15.1 附件根本不是"物品"
+### 15.1 附件不是"物品目录里的独立物品"，但**解锁状态就是 inventory 里的一行**
 
-> **2026-11-06 修正（重要）**：本节结论只对**这两个清单**成立 —— 附件确实不在
-> `inventory.items[]` 与 `items` 目录里。但实机日志抓到花 Requisition 解锁附件时客户端会调
-> `POST /api/Progression/ProgressionPackage/AcquireUnlockableItem`（136 B body → 200），
-> 随后 `PUT /api/Progression/Items/Customize/v2` 写选中项 ⇒ **解锁是服务端动作，不是纯客户端**，
-> 记录在"可解锁项"结构里而非 inventory。见 proxy 仓库 `docs/API-ENDPOINTS-2026-11-01.md` §8。
-> 下面的"没有拥有层"应读作"不在拥有清单/物品目录里"。
+> **2026-11-06 17:25 实测修正（结论翻案）**：本节原结论"配件在 inventory/目录里 0 命中 ⇒ 没有拥有层"
+> **是字段比错了**——当时拿 **optionId**（`0x…`）去比 inventory 的 **`mixId`** 字段。
+> 实际上 `/api/Progression/items` 里 `progressionCategory == 2` 且带 `parentId` 的记录就是附件解锁行，
+> 字段关系是：**`itemId` = 附件 optionId、`parentId` = 武器 mixId、`mixId` = 这把枪这个附件的库存键**。
+>
+> 实证链（2026-11-06）：
+>
+> | 事件 | 证据 |
+> |---|---|
+> | 花 Requisition 解锁 AR-23A 的 ANGLED FOREGRIP | `POST /api/Progression/ProgressionPackage/AcquireUnlockableItem` → `{itemMixId:718265621, targetLevel:7, packageId32:2221505542, expectedCost:[{mixId:3608481516, amount:5000}]}` |
+> | 服务端回应 | `{packageId32, inventoryChanges:[{货币 −5000},{itemMixId +1}]}` ⇒ **解锁 = inventory 加一行** |
+> | 早先解锁的 CB-9 REFLEX SIGHT | 下一次 `Progression/inventory` 由 963 → **964 条**，新增 `2828694410` = `{itemId:0xB7303DA1, parentId:0x73C93995, cat:2}` |
+>
+> ⇒ 客户端的"这个配件解锁了没有"就是查 **inventory 里有没有对应 mixId 那一行**。
+> 全目录共 **1455 条附件行 / 57 把武器 / 247 种附件**，本账号当时已拥有 **279**。
+> 详细报文与 id 模型见 proxy 仓库 `docs/API-ENDPOINTS-2026-11-01.md` §8.1–8.3。
+> **由此获得一条新能力**：往 `inventory.items[]` 塞 `{mixId, amount:1}` 即可解锁任意武器的任意附件
+> （与武器上架同一条路，工具 `tools/attach_items.py`，配置 `runtime/inventory_attach_inject.json`）。
+
+下面这段扫描结果仍然成立（**这两个清单里确实没有 optionId**），只是不能由此推出"没有拥有层"：
 
 用 `refs/weapon-customization-options-26251122.json` 的 **321 个 optionId** 去查两个服务端清单：
 
@@ -1065,7 +1079,7 @@ LAS-13 的目录记录本来就有所以只加拥有行）：
 
 | 想做的事 | 能不能 |
 |---|---|
-| 通过代理"送"配件 | ✗ inventory/items 两个清单里没有配件行；但**解锁本身是可伪造的候选**——若 `AcquireUnlockableItem` 的 body 只带解锁项 id，就可能直接 POST 伪造（待抓 body 验证）|
+| **通过代理"送"配件** | **✓ 可行（2026-11-06 定案）**：附件的解锁状态 = inventory 里一行 `{mixId: 库存键, amount:1}`，直接注入即可；1455 条附件行覆盖 57 把枪 / 247 种附件，生成器 `tools/attach_items.py`。实机验证待做 |
 | 通过改表"解锁"配件 | ✗ 解锁图在资源/运行期；等级载体未定位 |
 | **改 L0 默认项让武器出生即带某配件** | **✓ 已实机**（§14.2，不需要资源补齐，军械库装备路径按需流式加载）|
 | 改 `+0x12FC` 借另一把枪的解锁组 | ⚠ 单独搬组键会崩（§6.2，槽位集合不匹配 / 必须与目录 id 成套）|
