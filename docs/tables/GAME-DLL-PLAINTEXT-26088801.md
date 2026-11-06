@@ -86,12 +86,77 @@ IMPROVED GUIDANCE SENSORS   – …
 2. **舰船模块对表**：game.dll 模块名 ↔ `generated_stratagem_upgrade_settings`，列未发布模块清单；
 3. 收工：`stop.ps1` 停代理回纯转发。
 
+### 4.1 这些表能改吗？——壳的实测边界与三道关卡（2026-11-07 补）
+
+> 背景：这些表（Booster `0x2CB4840`、Operation 目录 `0x2077570`、舰船模块 `0x208A454`…）都在
+> `game.dll` 里，而 `game.dll` 是**带壳**的。本节给出壳的实数边界，以及"改它"要过哪几道门。
+
+**壳的实测**（本机 `data/game/game.dll`，49,075,800 B，sha256 前缀 `61dcfcd201dacbf3`，PE32+ / 7 段）：
+
+| 段 | 原始大小 | 熵 | 64 KB 分块判据 | 判定 |
+|---|---:|---:|---|---|
+| `.text` | 0x1F98000 | **8.0000** | 506/506 块 > 7.95 | **整段密文**（入口点 RVA `0x1F10CEC` 处字节随机，无函数序言）|
+| `.rdata` | 0x51B200 | 7.6659 | 50 块密文 / 10 块明文 | **半明半密** |
+| **`.data`** | 0x82AA00 | 6.4258 | 14 块密文 / 28 块明文 | **以明文为主 ← 我们的表都在这里** |
+| `.pdata` | 0x1B7000 | 7.9999 | 28/28 块 > 7.95 | 密文（异常表本应低熵 ~4）|
+| `_RDATA` | 0x3000 | 7.9836 | — | 密文 |
+| `.rsrc` / `.reloc` | — | 2.7295 / 5.4958 | — | 明文 |
+| **文件尾覆盖层** | **10,328 B** | 7.6232 | — | **Authenticode 证书表**（数据目录 `dir[4]` rva `0x2ECAE00` / size `0x2858` = 10,328，与尾长**精确相等**）|
+
+⇒ 壳的形态是"**代码 + 异常表 + 一部分 `.rdata` 加密，静态数据表留明文**"，与 §1 的观察一致。
+（另：可选头校验和字段非 0，`0x02ED103A`；用户态 DLL 的校验和正常不被校验。）
+
+**三道关卡**：
+
+| 关卡 | 现状 | 对"改表"的影响 |
+|---|---|---|
+| ① 壳的解密链 | `.text`/`.pdata` 在盘上是密文，运行期由加载侧解密 | **不影响**：我们只改明文 `.data`，密文段原样不动，解密链路照跑 |
+| ② Authenticode 签名 | 文件带证书表（10,328 B）| 改**任一字节**签名即失效；是否被拦取决于加载路径与 EAC（自 build 25988413 起 GameGuard → **Easy Anti-Cheat (EOS)**，内核驱动 `EasyAntiCheat_EOSSys`）|
+| ③ 字段是否真被消费 | 记录只有 `itemId / +0x04 / +0x08 f32 / +0x0C / locids`，语义靠对表推断 | **离线不可证**：读这些字段的代码在熵 8.0 的加密段里 |
+
+**旁证（重要对照）**：`dl_bin` 的内容哈希闸门 —— 引擎会比对 `MurmurHash64A(明文)` 与**内置预期值**，
+说明 `game.dll` 里确实存着一张期望哈希表（在哪一段不可读）。我们这条线一直是**保哈希**绕开它，
+从来没有去改那张表。
+
+**结论**：`game.dll` 的这几张表 —— **读**完全可行（已验证 Booster 30/20 条、Operation 12 条、舰船模块 44 条）；
+**写**在字节层面可行（表在明文段、不碰壳），但"会不会被接受""改了有没有效果"两问都**离线不可证**，
+且踩在 EAC 上。⇒ **默认不碰**，把它当字典用；可调参数一律走 `generated_*.dl_bin`（爆炸/伤害/状态/实体/战备行都已验证可改）。
+
+**若一定要验"游戏是否读盘上这个文件"**（最小风险序列，仍非零风险）：
+
+1. 备份原 dll（49,075,800 B，sha256 前缀 `61dcfcd201dacbf3`）；
+2. **零行为 canary**：把某条 Booster 的**名称/描述 locid** 改成另一个**已存在**的 locid（只改显示文案，
+   不动任何数值与状态槽），进游戏看该 Booster 的 UI 文案是否变化；
+   - 文案变了 ⇒ 游戏确实读我们改的文件，且这张表是 UI 数据源；
+   - 没变 / 报错 / 被踢 ⇒ 存在完整性校验，路线到此为止；
+3. canary 通过后再做**强度差分**（例：`SAMPLE EXTRICATOR` 的 `+0x08` 10.0 → 50.0），用行为回答
+   "`+0x08` 是行为参数还是显示参数"。
+
+⚠ 风险声明：这是篡改受签名保护的游戏可执行模块，在 EAC 下**有封号风险**；本仓库至今**没有任何一次**
+`game.dll` 上机改动记录（所有成功改动都在 `dl_bin` + 代理侧）。
+
 ## 5. 复现
 
 ```bash
 python tools/gamedll_data_survey.py --json out/gamedll-clusters.json   # 数据簇摘要（locid 字扫描）
 python tools/opmod_scan.py --csv out/opmod.csv --json out/opmod.json   # 13 条 Operation Modifiers
 ```
+
+段表 / 熵 / 签名目录自查（只读）：
+
+```python
+import struct, math, pathlib
+from collections import Counter
+b = pathlib.Path(r"D:/SteamLibrary/steamapps/common/Helldivers 2/data/game/game.dll").read_bytes()
+ent = lambda d: -sum((v/len(d))*math.log2(v/len(d)) for v in Counter(d).values()) if d else 0
+e = struct.unpack_from('<I', b, 0x3C)[0]; opt = e + 24; sec = opt + 240
+for i in range(7):
+    o = sec + i*40
+    nm = b[o:o+8].rstrip(b'\x00').decode('latin1')
+    vs, va, rs, rp = struct.unpack_from('<IIII', b, o+8)
+    print(f"{nm:8} raw=0x{rs:08X} 熵={ent(b[rp:rp+rs]):.4f}")
+```
+
 
 证据等级：数据簇/偏移/样例文案 = ✓ 离线（可复算）；簇身份猜测 = ⚠ 推断；
 OperationSettings 字段语义 = ⚠ 未证；代码引用关系 = ✗ 不可读（`.text` 加密）。
