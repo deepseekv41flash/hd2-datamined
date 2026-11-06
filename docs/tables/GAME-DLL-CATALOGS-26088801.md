@@ -223,3 +223,31 @@ python tools/gamedll_catalog_extract.py --json out/gamedll-catalogs.json
 - **改 Booster 的实际强度**：文件侧入口是 **game.dll 这张表**（`+0x08` f32 最像倍率，⚠ 未证）或 entities 侧的效果实现；
   **不是** dl_bin 明文表（那 55 张里没有 Booster 表）。
 - **解锁 Booster**：走代理注入 `cat 5`（一行 inventory）即可，不需要动任何文件。
+
+### 5.5 特例：`SURPLUS EAT ALLOCATION` 发的是**专用战备复制体**（2026-11-06 定）
+
+`game.dll` Booster 表里这条记录**唯一**有一个非零的 `+0x04`：`15`（其余 20 条全是 0）——
+这就是"有限次数"的来源。而战备表里 EAT-17 **有两条独立行**（名字与 locid 完全相同）：
+
+| 内部名 | 显示名 | name_id | 战备表行 |
+|---|---|---|---|
+| `TEAM WEAPONS. EXPENDABLE ANTI-TANK` | Expendable Anti-Tank | `1885509695` | 行 103（原始）|
+| `TEAM WEAPONS. EXPENDABLE ANTI-TANK (Booster)` | Expendable Anti-Tank | `1885509695`（**同一个**）| 行 104（**Booster 专用复制体**）|
+
+两行逐字段对齐（`generated_stratagem_settings` 明文，行基址 `0xD57C` / `0xD70C`，步长 `0x190`=400 B），
+共 **15 个 dword 不同**，关键差异：
+
+| 偏移 | 原版（行 103）| Booster 版（行 104）| 解读 |
+|---|---|---|---|
+| `+0x008` | **151** | **15** | **两条独立的 stratagem id** |
+| **`+0x058`** | **`0xFFFFFFFF`** | **`2`** | **使用次数：原版=无符号（无限）→ 复制体=2（有限）** ⚠ 字段名待与 `STRATAGEM-FIELDS` 交叉确认 |
+| `+0x020…+0x02C` | `15975 / 0 / 16003 / 0` | 全 `0xFFFFFFFF` | 复制体少了 4 个 locid（描述类字段为空）|
+| `+0x088` | 3 | 1 | 数量类差异 ⚠ |
+| `+0x09C` | 0 | 1 | 标志位差异 ⚠ |
+| `+0x070` | `1116471296`（f32 8.0）| 0 | 数值差异 ⚠ |
+| 其余 9 处 | — | — | 多为 locid / 索引顺延 |
+
+**结论**：Surplus EAT Allocation **不是**调用原版 EAT-17（id `151`），而是发放一条**专用复制体**（id `15`），
+两者显示名与 name_id 完全相同，所以界面上看起来一模一样；复制体自带"有限次数"（`+0x058=2`），
+因此不会污染原版 EAT-17 的无限使用。⇒ 想改这个 Booster 的"给多少发"，动的是这两处之一：
+`game.dll` Booster 表 `+0x04`（15），或战备复制体行的 `+0x058`（2）——两者语义待进一步确认。
