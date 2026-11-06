@@ -1000,6 +1000,20 @@ MG-43 的 stratagem 行 @`0xE074`（id 95）`+0x04` 和 `+0xF8` 都是 `0x1B4F8F
 
 副作用/边界：改装页仍 CANNOT EDIT（缺 manager 槽位）；要 UI 可编辑只能整套 id 互换（牺牲宿主）或 Lua/加载器。
 
+### 14.4 复刻验证：一次注入三把，全部上架（2026-11-05 22:50 实机）
+
+把配方套到另外三件上（`runtime/inventory_inject.json` +4 行拥有、`runtime/items_inject.json` +3 条目录克隆，
+LAS-13 的目录记录本来就有所以只加拥有行）：
+
+| 武器 | 页签 | 目录层 | 实机 |
+|---|---|---|---|
+| P-41 Ombudsman `0xC9F609BA` | SECONDARY | 需克隆 | **✓ 出现** |
+| SG-8F Punisher fire of liberty `0x7349AF9A` | PRIMARY | 需克隆 | **✓ 出现** |
+| LAS-13 Trident `0xAB1B4972` | PRIMARY | 本来就有 | **✓ 出现**（只加拥有层）|
+
+离线单测：目录 3020→3023、拥有 951→955；资产按需原生加载，**没有任何资源补丁**。
+审计日志对应 `ITEMS REWRITE +1 entries` ×3 + `INV REWRITE +1 -0 items`。
+
 ---
 
 ## 15. 附件的「拥有层」与等级：为什么"解锁配件"不能靠加物品（2026-11-05 排查）
