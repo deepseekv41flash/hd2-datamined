@@ -249,5 +249,108 @@ python tools/gamedll_catalog_extract.py --json out/gamedll-catalogs.json
 
 **结论**：Surplus EAT Allocation **不是**调用原版 EAT-17（id `151`），而是发放一条**专用复制体**（id `15`），
 两者显示名与 name_id 完全相同，所以界面上看起来一模一样；复制体自带"有限次数"（`+0x058=2`），
-因此不会污染原版 EAT-17 的无限使用。⇒ 想改这个 Booster 的"给多少发"，动的是这两处之一：
-`game.dll` Booster 表 `+0x04`（15），或战备复制体行的 `+0x058`（2）——两者语义待进一步确认。
+因此不会污染原版 EAT-17 的无限使用。⇒ 想改这个 Booster 的"给多少发"，动的是战备复制体行的
+`+0x058`（`max_uses`，2）；Booster 表 `+0x04` 只是**指向**那条复制体（见 §5.5.1）。
+
+#### 5.5.1 `+0x04` 不是"数量"，更像"关联战备 id"（2026-11-06 晚修正）
+
+原先把 `+0x04 = 15` 读成"发放 15 次"，但 15 恰好等于 **EAT 复制体自己的 stratagem id**，而其余 20 条
+Booster 全是 0（它们没有任何关联战备）。两者择一，后者解释力更强：
+
+| 证据 | 读数 |
+|---|---|
+| EAT 复制体 stratagem id | `15` |
+| `SURPLUS EAT ALLOCATION` 的 `+0x04` | `15` |
+| 其余 20 条 Booster 的 `+0x04` | 全 `0`（且它们在战备表里都没有"(Booster)"变体）|
+
+⇒ 记作 **"关联战备 id，0 = 无"**（⚠ n=1 的强假设，还没有第二个非零样本）。真正决定"几发"的是
+被指向的那条战备行的 `+0x058`。
+
+---
+
+## 5.6 特例：`ARMED RESUPPLY PODS` 用的是**代码生成的独立炮塔实体**（2026-11-06 定）
+
+和 §5.5 完全不同的机制 —— 这条 Booster **没有**任何战备复制体，它靠代码把一台炮塔挂到补给舱上。
+
+### 5.6.1 先说否掉的三条路
+
+| 假设 | 否证 |
+|---|---|
+| 有一条"Resupply (Booster)"战备复制体 | 战备表 153 行里 `RESUPPLY` 只有 2 行（id `34` 玩家版 / id `112` 任务版），全表唯一带 `(Booster)` 后缀的行是 EAT 那条 |
+| Booster 表里存了实体/战备引用 | ARP 记录（idx 15）：`+0x04=0`、`+0x08=0.0`、`+0x0C=1`，其余 10 个 dword 全是 locid；**整条记录没有任何实体哈希字段** |
+| 炮塔是补给舱 `MountComponentData` 里的挂载件 | 补给舱实体 `0x5052EC6A928CCF1A`（`content/fac_helldivers/hellpod/ammo_rack/ammo_rack`）只有 **13 个组件**，**不含** `Mount` / `Turret` / `ProjectileWeapon` / `Wieldable`；`MountComponentData` 165 行里也没有它 |
+
+补给舱的 13 个组件：`Animation` `Attachable` `Destructible` `Faction` `Health` `HellpodPayload`
+`HellpodRack` `LoadoutPackage` `Spottable` `StatusEffectReceiver` `Tag` `Unit` `UnitCustomization`。
+
+### 5.6.2 炮塔本体：`0x73681FFD58FA1A90`
+
+做法：把全库 242 个"同时有 `WeaponMagazine` + `ProjectileWeapon`"的实体逐条读 `+0x88`（弹匣容量）
+与 `+0x08`（射速）——**容量 140 的实体全库只有一个**，就是它。
+
+| 字段 | 读数 | wiki（Armed Resupply Pods / AR-23P P）|
+|---|---|---|
+| `WeaponMagazine +0x88` 容量 | **140** | Capacity **140** ✓ |
+| `ProjectileWeapon +0x08` 射速 | **640** | Fire Rate **640 rpm** ✓ |
+| `ProjectileWeapon +0x00` 弹丸类型 | `8` | 与 M-103 炮塔同型，wiki 标 `AR-23P P` ✓（二者同弹丸）|
+| `ProjectileWeapon +0x10` 距离 | `75` | — |
+| `Behavior +0x00`（**AIBEH**）| **`214`** | —（FRV 那台是 `213`）|
+| `SensorEye +0x00` / `Targeting +0x00` | `25` / `25` | wiki 写 30 m ⚠ |
+| `Turret +0x08` / `+0x0C` | `50` / `80`（俯仰/水平转速）| — |
+| `Turret +0x14…+0x20` 角度限位 | `-60 / 90 / -180 / 180` | — |
+| `HellpodPayload +0x04` 寿命 | **`0`**（不自行撤走）| "until ran out of bullets or the pod itself being demolished" ✓ |
+| `HellpodPayload +0x08` 载荷模板 | `1272` | — |
+| 组件数 | **24**，且**没有** `WeaponReload` | "打完就停"，不能装填 ✓ |
+
+### 5.6.3 同族对照：M-103 Supply FRV 的炮塔 = 真·挂载件
+
+`MountComponentData` row 121（宿主 `0x9B2140378640432E` = M-103 车身）slot 0 的件是
+`0x4DF41F84668D07FB`，与上面那台只差三点：
+
+| 字段 | ARP 炮塔 `0x7368…` | FRV 炮塔 `0x4DF4…` | wiki M-103 |
+|---|---|---|---|
+| 容量 `+0x88` | **140** | **120** | Capacity **120** ✓ |
+| 射速 | 640 | 640 | 640 ✓ |
+| 弹丸 | 8 | 8 | AR-23P P ✓ |
+| AIBEH `Behavior+0x00` | `214` | `213` | — |
+| 转速 `Turret +0x08/+0x0C` | 50 / 80 | **90 / 130** | ↔130 ↕90 ✓✓ |
+| `WeaponReload` 组件 | **无** | **有** | "可用补给架装填" ✓ |
+| 寿命 `HellpodPayload+0x04` | 0 | 0 | — |
+| 装载包 `LoadoutPackage+0x08` | `0xFB48DE3E9D5F187C` | `0xFB48DE3E9D5F187C` | — |
+
+转速 90/130 与 wiki 逐值吻合，说明 `Turret +0x08/+0x0C` 的读法没问题，也说明这两条是"同一族的
+两份实体"，不是同一个东西（容量与装填能力是刻意分开的）。
+
+### 5.6.4 为什么判定"代码生成"而不是"数据挂载"
+
+- `0x73681FFD58FA1A90` 在 `generated_entities.dl_bin` 里**零外部引用**（只有自己的
+  `UnitComponentData +0` 自引用）；55 张 `generated_*` 表、153 条战备载荷数组、165 行 `Mount` 表
+  **全都不引用它**；
+- 补给舱那 3 个同壳变体（`0x5052EC6A928CCF1A` / `0xD7F32C2DF7934784` / `0xAF04113302F5621D`）
+  组件集完全相同，也没有任何"带武装"的补给舱变体存在（全库没有 `HellpodRack + 武器` 的实体）；
+- `game.dll` 里也不含任何实体哈希（49 MB 全文 u64 命中 0）⇒ 生成关系只可能在代码里，靠哈希表
+  在加载期解析。
+
+⇒ 最合理解释：**ARP 生效时，代码在补给舱落地点额外拉起 `0x73681FFD58FA1A90` 这台炮塔**，
+它自带 AIBEH/索敌/转动/无限时长，所以看起来像"挂"在舱顶。
+
+### 5.6.5 这条线的可改点（⚠ 未实机）
+
+| 想改什么 | 改哪 |
+|---|---|
+| ARP 炮塔弹量 140 | `0x73681FFD58FA1A90` 的 `WeaponMagazine +0x88` |
+| 射速 640 | 同行 `ProjectileWeapon +0x08` |
+| 索敌距离（25 m）| `SensorEye +0x00` / `Targeting +0x00` |
+| 转速 / 俯仰限位 | `Turret +0x08/+0x0C/+0x14…+0x20` |
+| 会不会自己消失 | `HellpodPayload +0x04`（现 0 = 不消失）|
+| AI 行为 | `Behavior +0x00`（214；FRV 是 213）|
+
+因为 FRV 的炮是**另一个实体**（`0x4DF4…`），改 `0x7368…` 理论上只影响 ARP，不会连带改 M-103。
+工具：`tools/entity_fields_batch.py set`（保内容哈希）。
+
+### 5.6.6 还没证 / 下一步
+
+- ⚠ 没有数据侧硬引用，**"0x7368… = ARP 炮塔"是字段吻合 + wiki 三值对上**的识别，不是引用链证明；
+  唯一的一分钱验证：把 `+0x88` 从 140 改成 999，进一局带 ARP 打光看弹量。
+- 同族之外还有 19 条 Booster，机制未必都像 EAT（复制体）或 ARP（代码生成炮塔）；`+0x04=0`
+  说明它们都没有关联战备，具体形态要逐条挖。
