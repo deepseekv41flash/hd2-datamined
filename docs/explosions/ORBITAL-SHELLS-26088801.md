@@ -1084,6 +1084,13 @@ rm "/d/SteamLibrary/steamapps/common/Helldivers 2/data/f6fb08cc02d24255.patch_0"
 - 区分（常见混淆）：社区清单的 `[effect 1426/1427/1428]` 是 **type32 临时配发战备**（`values[0]` = 战备 hash
   `0x8DFA4622 / 0x166D0C91 / 0x0C064A00`，本 build 表里 0 命中 ⇒ 新战备未发布），卡名 `WEAPONS EXPERIMENTATION`、
   描述模板 `The #V_ONE stratagem is available to all Helldivers.` —— 和 type94 的"改现有战备行为"是两条线。
+- **2026-11-06 更新（type32 发放已有活样本）**：`effect 1393`（type32，`values[0] = 0xDA0600D7`）
+  自 **2026-11-03 21:08** 起挂在 `globalEvents` 1501108「ASSURANCE」的 `effectIds` 上，
+  事件文案原文 *"...fleetwide availability of the INCINERATOR FRV Stratagem."* ⇒ 官方正在**全局发放 M-104 Incinerator FRV**。
+  该 effect 在 `stratagem_catalog`（58 条）里 `id=1393`、名称 `M-104（Incinerator FRV）`，
+  与 `values[0]` 逐字吻合。⇒ `globalEvents[].effectIds` = 全局发放通道 **✓✓ 实机（由官方自己验证）**，
+  也说明未发布战备"先由服务器发、客户端本地必须有定义"这个前提对 M-104 成立（本地表有 M-104）。
+  同期在线 type32 只剩 `1279`（M-102 Fast Recon Vehicle，按星球），`1426/1427/1428` 均已下线。
 - 旁证：`refs/strings-en-26088801.json` 里 `763846539 = "Make Snowball"` 正好命中 §9.12 #9 雪球实体的
   `InteractableComponentData +0x3C`（交互提示文案）⇒ 雪球身份再确认。
 - **✓✓ 实机（2026-11-01 20:03）**：走代理把 `{"index": 星球, "galacticEffectId": 1346}` 追加进 Status，
