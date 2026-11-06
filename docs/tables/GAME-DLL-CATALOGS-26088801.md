@@ -354,3 +354,9 @@ Booster 全是 0（它们没有任何关联战备）。两者择一，后者解�
   唯一的一分钱验证：把 `+0x88` 从 140 改成 999，进一局带 ARP 打光看弹量。
 - 同族之外还有 19 条 Booster，机制未必都像 EAT（复制体）或 ARP（代码生成炮塔）；`+0x04=0`
   说明它们都没有关联战备，具体形态要逐条挖。
+
+### 5.7 另一类形态：投送舱落地爆炸（Firebomb / Stun Pods / Concealed Insertion）
+
+这三条吃的是**爆炸表**，不是战备行也不是实体：`83`（Firebomb，伤害行 438）、`335`（Stun Pods，
+伤害行 439）、`401`（Concealed Insertion，伤害行 0）—— 三条都是弹丸表 0 引用的"代码触发"行。
+逐字段证据、改法边界见 [POD-IMPACT-EXPLOSIONS](../explosions/POD-IMPACT-EXPLOSIONS-26088801.md)。
