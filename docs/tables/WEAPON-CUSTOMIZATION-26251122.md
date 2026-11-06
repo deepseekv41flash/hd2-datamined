@@ -882,6 +882,12 @@ python tools/entity_row_append.py --plain Y.plain --block 0xFCCA29DB \
 
 ### 13.2 证据
 
+**直接因果证据（2026-11-05 实机对照，代理侧 `INVENTORY-INJECTION-2026-11-05.md` §3.2）**：
+只改写 `/api/Progression/inventory`、把已拥有的 R-63 Diligence（`0x8986A03E`）从清单里删掉，
+**重启后 R-63 Diligence 从军械库 PRIMARY 消失**；同一轮把 LAS-22 加进清单，它**没有**出现
+（⇒「拥有」之外还需要物品目录里认识该 id）。这是"成员资格 = inventory"的正面观测，
+而不是靠 24 件未发布武器在时出现的相关性。
+
 抓包（`D:\mod\out\gwe\*api_Progression_inventory.json`，2026-10-29 两次一致）：
 
 | 事实 | 读数 |
