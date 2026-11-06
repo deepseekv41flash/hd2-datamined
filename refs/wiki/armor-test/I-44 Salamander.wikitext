@@ -1,0 +1,40 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Inflammable
+|source=[[Superstore]]
+|cost={{Currency|SC|250|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|125|notext}}
+|order=52
+}}
+{{Quote|The signature orange pauldron allows easy battlefield detection of the bearer, alive or dead, on ash-strewn battlefields.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be bought from the [[Freedom's Flame Premium Warbond|Freedom's Flame]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|250|notext}} and 125 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Inflammable}}
+
+==Media==
+<gallery mode=nolines>
+I-44 Salamander Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.002|date=2024-08-08|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

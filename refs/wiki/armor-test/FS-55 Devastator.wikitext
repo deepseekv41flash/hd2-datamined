@@ -1,0 +1,40 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Fortified
+|source=[[Democratic Detonation Premium Warbond#Page 3|Democratic Detonation]] <small>{{Tooltip|P3|Page 3}}</small>
+|cost={{Currency|Medals|64|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Democratic Detonation Premium Warbond#Page 3|Democratic Detonation]] <small>{{Tooltip|P3|Page 3}}</small>
+|helmet_cost={{Currency|Medals|48|notext}}
+|order=39
+}}
+{{DisambigMsg|the Democratic Detonation armor set|the Automaton enemy|Devastator}}
+{{Quote|Domestic versions of this [[armor]] enable colonial farmers to plant crops and mines side by side, safely.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page three of the [[Democratic Detonation Premium Warbond#Page 3|Democratic Detonation]] Premium [[Warbond]] for {{Currency|Medals|64|notext}} and 48 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Fortified}}
+
+==Media==
+<gallery mode=nolines>
+FS-35 Devastator Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.002|changes=Fixed incorrect description.}}
+{{Change History Update|1.000.202|date=2024-04-11|changes=Added with the release of Democratic Detonation.}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

@@ -1,0 +1,36 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image=Eye of Freedom Cape Render.png
+|armor=<span style=color:gray>100
+|speed=<span style=color:gray>100
+|stam_regen=<span style=color:gray>100
+|passive=[[Armor Passives#Standard Issue|Standard Issue]]
+|source=Anniversary Gift
+|cost={{Tooltip|❌|Exclusive}}
+|type=Cape
+|order=44
+|source_type=Special
+}}
+{{Quote|A mark of stalwart loyalty bestowed only to those who have proved themselves worthy through unquestioning dedication.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a [[cape]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued between February 8 and February 10, 2025,<ref>[https://x.com/helldivers2/status/1888240162091458765 HELLDIVERS™ 2 | Twitter]</ref> to [[Helldiver]]s whose accounts existed prior to February 10, 2025,<ref>Discord conversation with AH Support regarding exclusive item eligibility brackets | [https://discord.com/channels/1210060956584124416/1210073264928456764/1496914142777311253 Discord link] | [[:File:Primary_Source_Discord_conversation_with_BVits_regarding_exclusive_item_eligibility_brackets.png|File]]</ref> alongside the [[B-22 Model Citizen]] armor set.
+
+== Media ==
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.002.101|date=2025-02-08|changes=
+One-year gift.
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

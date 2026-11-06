@@ -1,0 +1,45 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Integrated Explosives
+|source=[[Servants of Freedom Premium Warbond#Page 1|Servants of Freedom]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Servants of Freedom Premium Warbond#Page 1|Servants of Freedom]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medal|30|notext}}
+|order=70
+}}
+
+{{Quote|Modeled after the Statue of Mournful Liberty, who weeps over the existence of tyranny, this [[armor]] is worn by those who would give their lives to dry her tears.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[helmet]] can be claimed from page one of the [[Servants of Freedom Premium Warbond#Page 1|Servants of Freedom]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 30 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Integrated Explosives}}
+
+== Trivia ==
+* The chest plate is inscribed with the phrase "[[Fre Liberam|fre liberam]] [[Per Democrasum|per democrasum]]", a pseudo-Latin motto that translates to "freedom through democracy".
+** Both capes and player cards from the Servants of Freedom warbond are named for each half of the phrase.
+
+== Media ==
+<gallery mode=nolines>
+IE-3 Martyr Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.002.101|date=2025-02-06|changes=
+Added with the release of Servants of Freedom.}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

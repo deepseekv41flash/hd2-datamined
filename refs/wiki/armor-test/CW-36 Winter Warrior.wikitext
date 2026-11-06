@@ -1,0 +1,43 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Servo-Assisted
+|source=[[Polar Patriots Premium Warbond#Page 1|Polar Patriots]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|18|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Polar Patriots Premium Warbond#Page 1|Polar Patriots]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|12|notext}}
+|order=44
+}}
+{{Quote|Offering camouflage in snowy environments, surplus sets of this [[armor]] are used by nature photographers and keen hunters alike.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page one of the [[Polar Patriots Premium Warbond#Page 1|Polar Patriots]] Premium [[Warbond]] for {{Currency|Medals|18|notext}} and 12 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Servo-Assisted}}
+
+== Trivia ==
+* This armor set, especially the helmet, is seemingly modeled after the [https://www.starwars.com/databank/range-troopers Range Trooper] from [[wp:Solo: A Star Wars Story|Solo: A Star Wars Story]].
+
+==Media==
+<gallery mode=nolines>
+CW-36 Winter Warrior Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.303|date=2024-05-09|changes=
+Added with the release of Polar Patriots.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=79
+|speed=521
+|stam_regen=111
+|passive=Engineering Kit
+|source=[[Superstore]]
+|cost={{Currency|SC|150|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|75|notext}}
+|order=32
+}}
+
+{{Quote|A quality product, this [[armor]] can destroy over 300,000 kilometers of fencing with no decline in operational efficiency.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be bought from the [[Cutting Edge Premium Warbond|Cutting Edge]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|150|notext}} and 75 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Engineering Kit}}
+
+==Media==
+<gallery mode=nolines>
+CE-67 Titan Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.102|date=2024-03-14|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

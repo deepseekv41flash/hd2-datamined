@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Advanced Filtration
+|source=[[Chemical Agents Premium Warbond#Page 1|Chemical Agents]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|40|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Chemical Agents Premium Warbond#Page 1|Chemical Agents]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|30|notext}}
+|order=58
+}}
+{{Quote|“We fear not [[Damage#Damage Types|poison]], fear not death; spite our [[Enemies|foes]] with every breath.” From the beloved classic Hazard Pay: The Musical.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page one of the [[Chemical Agents Premium Warbond#Page 1|Chemical Agents]] Premium [[Warbond]] for {{Currency|Medals|40|notext}} and 30 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Advanced Filtration}}
+
+==Media==
+<gallery mode=nolines>
+AF-50 Noxious Ranger Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.001|date=2024-09-19|changes=
+Added with the release of Chemical Agents.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

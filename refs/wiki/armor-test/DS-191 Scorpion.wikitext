@@ -1,0 +1,51 @@
+{{Last Updated|1.004.000}}<!--
+-->{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Desert Stormer
+|source=[[Dust Devils Premium Warbond#Page 2|Dust Devils]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|55|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Dust Devils Premium Warbond#Page 2|Dust Devils]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order=89
+}}
+
+{{Quote|This multi-layered protective armor keeps rough sand, spores, and other coarse granules from irritating the skin.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page two of the [[Dust Devils Premium Warbond#Page 2|Dust Devils]] Premium [[Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Desert Stormer}}
+
+== Trivia ==
+
+* The Armory description for this armor is possibly a reference to a quote spoken by Anakin Skywalker in the movie Star Wars: Episode II - Attack of the Clones.
+
+==Media==
+<gallery mode=nolines>
+DS-191 Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.004.000|date=2025-09-04|changes=
+Addition
+* Added to the game.
+}}
+{{Change History Update|1.003.302|changes=
+Announced
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

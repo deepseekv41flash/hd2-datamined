@@ -1,0 +1,44 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Advanced Filtration
+|source=[[Superstore]]
+|cost={{Currency|SC|400|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|250|notext}}
+|order=56
+}}
+{{Quote|Heavily layered to protect against ocular blistering, subdermal liquification, and gastrointestinal shattering, this [[armor]] is a testament to the power of iterative improvements based on user feedback.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be bought from the [[Chemical Agents Premium Warbond|Chemical Agents]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|400|notext}} and 250 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Advanced Filtration}}
+
+==Media==
+<gallery mode=nolines>
+AF-52 Lockdown Armor Set Image.png|Armor Set
+AF-52-gas-proof.mp4|AF-52 with Vitality booster, showcasing immunity to gas
+</gallery>
+
+==Notes==
+* If this armor is used with the [[Vitality Enhancement]] booster, the wearer becomes immune to [[Damage#Damage Types|gas damage]] entirely.
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.001|date=2024-09-19|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

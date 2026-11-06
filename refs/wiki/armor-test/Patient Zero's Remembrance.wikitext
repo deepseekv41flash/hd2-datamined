@@ -1,0 +1,34 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=32
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Chemical Agents Premium Warbond#Page 2|Chemical Agents]] <small>{{Tooltip|P2|Page 2}}</small>
+|cape_cost={{Currency|Medals|20|notext}}
+|card_cost={{Currency|Medals|5|notext}}
+}}
+{{Quote|With this [[cape]] we honor the bio-warfare pioneers of Division Zero, conscripted from quarantine zones and hospices to spread their Carcino-Plague on the battlefield.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page two of the [[Chemical Agents Premium Warbond#Page 2|Chemical Agents]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|20|notext}} and 5 [[Medal]]s.
+
+==Trivia==
+The Division Zero symbol, also used on the casing of the [[G-4 Gas]] grenade, resembles the [[wikipedia:File:WMD-chemical.svg|U.S. Army symbol for chemical weapons]] but with [[The Helldivers|the Helldiver]] skull in its center.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.001|date=2024-09-19|changes=
+Added with the release of Chemical Agents.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

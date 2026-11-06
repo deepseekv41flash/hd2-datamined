@@ -1,0 +1,40 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image={{PAGENAME}} Cape Render.png
+|armor=<span style=color:gray>100
+|speed=<span style=color:gray>100
+|stam_regen=<span style=color:gray>100
+|passive=[[Armor Passives#Standard Issue|Standard Issue]]
+|source=[[Heart of Democracy]]
+|cost={{Tooltip|❌|Exclusive}}
+|source_type=Special
+|type=Cape
+|order=55
+}}
+{{Quote|When the [[Illuminate]] threatened [[Super Earth]], the very [[Heart of Democracy]], [[the Helldivers]] answered the call.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a [[cape]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued by the [[Ministry of Prosperity]] on June 17, 2025,<ref>[https://twitter.com/helldivers2/status/1934943606525055188 HELLDIVERS™ 2 | Twitter]</ref> to all [[Helldiver]]s who logged in between May 20 and June 2, 2025.<ref>Discord conversation with AH Support regarding exclusive item eligibility brackets | [https://discord.com/channels/1210060956584124416/1210073264928456764/1496914142777311253 Discord link] | [[:File:Primary_Source_Discord_conversation_with_BVits_regarding_exclusive_item_eligibility_brackets.png|File]]</ref>
+
+== Media ==
+
+<gallery>
+Helldivers 2 Tweet 2025-06-17 Protector Of The Heart Cape file.png|Twitter image
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.003.103|changes=
+Added to the game.
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

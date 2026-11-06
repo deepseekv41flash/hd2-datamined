@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Reinforced Epaulettes
+|source=[[Superstore]]
+|cost={{Currency|SC|400|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|200|notext}}
+|order=76
+}}
+{{Quote|Commonly replicated in stage adaptations of “Lady Liberty's Tower”, in which young Diver Beatrick dons this [[armor]] to slay Oppressio, the Tyrant Rex.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be bought from the [[Masters of Ceremony Premium Warbond|Masters of Ceremony]] page in the [[Superstore]] for {{Currency|SC|400|notext}} and 200 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Reinforced Epaulettes}}
+
+==Media==
+<gallery mode=nolines>
+RE-824 Bearer of the Standard Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.006.100|date=2026-3-17|changes=
+Added in the permanent catalogue of the [[Superstore]].}}
+{{Change History Update|1.003.000|date=2025-05-15|changes=
+First made available in the Superstore.}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

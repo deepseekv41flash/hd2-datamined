@@ -1,0 +1,42 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=40
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Righteous Revenants Legendary Warbond|Righteous Revenants]] <small>{{Tooltip|P2|Page 2}}</small>
+|cape_cost={{Currency|Medals|25|notext}}
+|card_cost={{Currency|Medals|7|notext}}
+}}
+{{Quote|Commemorating the [[New Stockholm]] treaty on prisoners of war, this [[cape]] celebrates the right of all [[enemy]] combatants to a swift and merciful execution.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page two of the [[Righteous Revenants Legendary Warbond#Page 2|Righteous Revenants]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|25|notext}} and 7 [[Medal]]s.
+
+==Trivia==
+* Part of the content released in collaboration with ''Killzone 2'' for their crossover.
+* The name of this cosmetic set, as well as the [[Strength in Our Arms]] cosmetic set, are both references to the speech of [https://killzone.fandom.com/wiki/Scolar_Visari Scolar Visari] from the intro cutscene of the first ''Killzone'' game.
+* The Armory Description is a reference to a cutscene from ''Killzone 3''.<ref>https://killzone.fandom.com/wiki/Stahl_Arms_Infiltration/Transcript#Cutscene_#3</ref>
+* Although originally slated for the second rotation of the crossover's ''Premium [[Superstore]]'', the items were ultimately given out as a holiday gift following backlash over the steep pricing of the first rotation.
+** Players who got the items as a gift do not need to spend medals to unlock them in the Warbond, they are unlocked automatically.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.002.003|date=2024-12-19|changes=
+Presented as a holiday gift.
+<ref>[https://store.steampowered.com/news/app/553850/view/516322672418750491 HELLDIVERS™ 2 | Steam]</ref>}}
+<ref>[https://blog.playstation.com/2025/12/11/the-helldivers-2-x-killzone-items-return-as-a-legendary-warbond-dec-18/ Mitchell Ayre | PlayStation Blog]</ref> <ref>[https://store.steampowered.com/news/app/553850/view/491584577841661619 HELLDIVERS™ 2 | Steam]</ref>
+
+
+{{Nav Cosmetic}}
+
+==References==
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+[[Category:Killzone]]

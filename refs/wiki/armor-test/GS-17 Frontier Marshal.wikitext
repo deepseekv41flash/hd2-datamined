@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image=GS-17 Frontier Marshal Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Gunslinger
+|source=[[Borderline Justice Premium Warbond#Page 1|Borderline Justice]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image=GS-17 Frontier Marshal Helmet Render.png
+|helmet_source=[[Borderline Justice Premium Warbond#Page 1|Borderline Justice]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|30|notext}}
+|order=74
+}}
+{{Quote|Inspired by the trailblazing agents of the [[Super Earth]] Terraforming Company. These rugged adventurers surveyed hostile new [[planets]] during the post-[[Galactic War#The First Galactic War|GW1]] Great Expansion era, preparing the untamed frontier for rapid and efficient assimilation.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the [[body armor]] and [[helmet]] can be claimed from page one of the [[Borderline Justice Premium Warbond#Page 1|Borderline Justice]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 30 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Gunslinger}}
+
+== Media ==
+<gallery mode=nolines>
+GS-17 Frontier Marshal Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.002.200|date=2025-03-20|changes=
+Added with the release of Borderline Justice.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

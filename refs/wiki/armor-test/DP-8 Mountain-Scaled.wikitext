@@ -1,0 +1,51 @@
+{{Last Updated|1.006.003}}<!--
+-->{{Infobox Armor
+|title = {{PAGENAME}}
+|image = {{PAGENAME}} Armor Render.png
+|type = Medium
+|armor = 100
+|speed = 500
+|stam_regen = 100
+|passive=Siege-Ready|source = [[Superstore]]
+|cost = {{Currency|SC|250|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|125|notext}}
+|order = 98
+}}
+{{Quote|This armor recalls the legendary heroes who scared a ravenous [[Hive Lord]] away from a colony village, using only the village's battery of patriotic fireworks.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[Medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be bought from the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|250|notext}} and 125 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Siege-Ready}}
+
+== Trivia ==
+* This set of armor, along with the [[Thundering Hooves of Loyalty]] cape and player card set, was most likely introduced to commemorate the Chinese New Year of 2026 which is the Year of the Horse.
+* The Armory description for this armor is a reference to the [[Wikipedia:Nian|nian]] in Chinese mythology.
+
+==Issues==
+SR is generally the designation for armors with the Siege Ready passive, not DP, which should be reserved for [[Democracy Protects]] armors.
+
+== Media ==
+<gallery mode=nolines>
+DP-8 Mountain-Scaled Armor Render.png|Body (Render)
+DP-8 Mountain-Scaled Helmet Render.png|Helmet (Render)
+DP-8 Mountain-Scaled Armor Set Image.png|Armor Set
+File:Helldivers 2 Tweet 2026-02-11 War Horse Set Armor file.png|Promo Image
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.006.003|changes=
+Added in the permanent catalogue of the [[Superstore]].
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Electrical Conduit
+|source=[[Cutting Edge Premium Warbond#Page 2|Cutting Edge]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Cutting Edge Premium Warbond#Page 2|Cutting Edge]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|35|notext}}
+|order=35
+}}
+{{Quote|As the electric [[Damage#Damage Types|arc]] generates a strong magnetic field, wearers should avoid use while in vicinity of stapled paperwork.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page two of the [[Cutting Edge Premium Warbond#Page 2|Cutting Edge]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 35 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Electrical Conduit}}
+
+==Media==
+<gallery mode=nolines>
+EX-16 Prototype 16 Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.102|date=2024-03-14|changes=
+Added with the release of Cutting Edge.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

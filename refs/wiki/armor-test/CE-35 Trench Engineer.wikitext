@@ -1,0 +1,49 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Engineering Kit
+|source=[[Helldivers Mobilize Warbond#Page 3|Helldivers Mobilize!]] <small>{{Tooltip|P3|Page 3}}</small>
+|cost={{Currency|Medals|10|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Helldivers Mobilize Warbond#Page 3|Helldivers Mobilize!]] <small>{{Tooltip|P3|Page 3}}</small>
+|helmet_cost={{Currency|Medals|7|notext}}
+|order=11
+}}
+{{Quote|After colonists of [[Hellmire]] recovered a lost shipment of this [[armor]], the local pastime of fence-smashing was born.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page three of the [[Helldivers Mobilize Warbond#Page 3|Helldivers Mobilize!]] [[Warbond]] for {{Currency|Medals|10|notext}} and 7 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Engineering Kit}}
+
+==Media==
+<tabber>
+Armory=
+<gallery mode=nolines>
+CE-35 Trench Engineer Armor Set Image.png|Armor Set
+</gallery>
+|-|
+Images=
+<gallery mode=nolines widths=384 heights=216>
+FLAM-40 Flamethrower Marketing.png|Marketing
+</gallery>
+</tabber>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

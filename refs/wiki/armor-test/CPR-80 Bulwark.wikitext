@@ -1,0 +1,48 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=180
+|speed=450
+|stam_regen=50
+|passive=Concussive Padding, Reinforced
+|source=[[Superstore]]
+|cost={{Currency|SC|250|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|125|notext}}
+|order=99
+}}
+{{Quote|This armour pays tribute to the immovable heroes of the front line—those who refuse to acknowledge incoming fire, and consider "dodging" to be an abstract concept akin to cowardice.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be bought from the [[Entrenched Division Premium Warbond|Entrenched Division]] page on the [[Superstore]] for {{Currency|SC|250|notext}} and 125 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Concussive Padding, Reinforced}}
+
+==Trivia==
+*Due to its armor rating and explosive resistance, it is the only armor that allows a helldiver to survive stepping on an [[MD-6 Anti-Personnel Minefield|MD-6 Anti-Personnel Mine]].
+*The body armor is likely inspired by the [https://www.forgottenweapons.com/wwi-german-trench-armor-at-ria/ Grabenpanzer] worn by the [[wp:Imperial German Army|Imperial German Army]] in [[wp:World War I|World War I]].
+
+==Media==
+<gallery mode=nolines>
+CPR-80 Bulwark Body Armory.png|Body (Armory)
+CPR-80 Bulwark Helmet Armory.png|Helmet (Armory)
+CPR-80 Bulwark Armor Set Image.png|Armor Set
+</gallery>
+
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.006.100|changes=
+Addition
+* Added to the game.
+}}
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

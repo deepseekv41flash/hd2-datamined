@@ -1,0 +1,36 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=84
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Exo Experts Premium Warbond#Page 2|Exo Experts]] <small>{{Tooltip|P2|Page 2}}</small>
+|cape_cost={{Currency|Medals|25|notext}}
+|card_cost={{Currency|Medals|7|notext}}
+}}
+{{Quote|This cape's retro print. first made popular in GW1 cereal merchandising, helps children remember that not all machines are twisted mechano-socialists; some are piloted by true-hearted humans, and we can all rest easy in their gaze.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page two of the [[Exo Experts Premium Warbond#Page 2|Exo Experts]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|25|notext}} and 7 [[Medal]]s.
+
+== Media ==
+<gallery mode=nolines>
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.006.202|changes=
+Added to the game
+}}
+{{Change History Update|date=2026-04-21|1.006.102|changes=
+Announced
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

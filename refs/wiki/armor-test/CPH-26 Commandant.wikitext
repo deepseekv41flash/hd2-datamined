@@ -1,0 +1,50 @@
+{{Infobox Armor
+|title={{PAGENAME}} (Armor)
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Concussive Padding, Hazmat
+|source=[[Entrenched Division Premium Warbond#Page 2|Entrenched Division]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|55|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Entrenched Division Premium Warbond#Page 2|Entrenched Division]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order=101
+}}
+{{Quote|Featuring a high collar scientifically designed to deflect mud, blood, and indirect non-lethal projectiles, this pristine armor bestows the authority to overcome close-quarters combat through a time-honored tradition: the delegation—or court-martialing—of subordinates.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page 2 of the [[Entrenched Division Premium Warbond|Entrenched Division]] Premium [[Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Concussive Padding, Hazmat}}
+
+==Media==
+<gallery mode=nolines>
+CPH-26 Commandant Body Armory.png|Body (Armory)
+CPH-26 Commandant Helmet Armory.png|Helmet (Armory)
+CPH-26 Commandant Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.006.100|changes=
+Addition
+* Added to the game.
+}}
+{{Change History Update|1.006.003|date=2026-03-10|changes=
+Announced <ref>[https://blog.playstation.com/2026/03/10/helldivers-2-entrenched-division-premium-warbond-out-march-17/ Katherine Baskin | Playstation Blog]</ref>}}
+
+{{clear}}
+== References ==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

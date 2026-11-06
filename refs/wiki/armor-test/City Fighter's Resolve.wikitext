@@ -1,0 +1,32 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=87
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card.png
+|source_type=Warbond
+|source=[[Castellan’s Creed Legendary Warbond|Castellan’s Creed]]
+|cape_cost={{Currency|Medals|25|notext}}
+|card_cost={{Currency|Medals|7|notext}}
+}}
+{{Quote|The Helldivers are all that stand between Democracy and the Fascist Hordes. Trained since birth in the art of Defensive Warfare, they meet mindless legions with the steady aim of one who has seen countless battles. - Excerpt from the journal of a Charan Democracy Officer, ca. 2082 SE|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page two of the [[Castellan’s Creed Legendary Warbond|Castellan’s Creed]] Legendary [[Warbond]], can be claimed separately for {{Currency|Medals|25|notext}} and 7 [[Medal]]s, respectively.
+
+== Trivia ==
+*The name of the cape and player card is a reference to the [https://megalodon.jp/2026-1105-2157-52/https://warhammer40k.wiki.gg:443/wiki/Codex:_Cityfight Cityfight] 3rd Edition Supplement book revolving around Urban Warfare.
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.000|changes=
+Added to the game.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

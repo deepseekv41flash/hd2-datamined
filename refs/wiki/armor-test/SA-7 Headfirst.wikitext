@@ -1,0 +1,40 @@
+{{Infobox Armor
+|title = {{PAGENAME}}
+|image = {{PAGENAME}} Armor Render.png
+|type = Medium
+|armor = 125
+|speed = 500
+|stam_regen = 100
+|passive=Supplemental Adrenaline|source = [[Siege Breakers Premium Warbond#Page 1|Siege Breakers]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost = {{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Siege Breakers Premium Warbond#Page 1|Siege Breakers]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|30|notext}}
+|order = 96
+}}
+{{Quote|Disarmingly scrappy and viciously disarming, this armor is a staple of the Balayage FW/2185 collection "Frontline Moxie".|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[Medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[helmet]] can be claimed from the [[Siege Breakers Premium Warbond#Page 1|Siege Breakers]] [[Warbond]] for {{Currency|Medals|45|notext}} and 30 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Supplemental Adrenaline}}
+
+== Media ==
+<gallery mode=nolines>
+SA-7 Headfirst Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.006.001|changes=
+Added with the release of Siege Breakers.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

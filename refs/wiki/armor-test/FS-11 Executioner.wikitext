@@ -1,0 +1,40 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Fortified
+|source=[[Superstore]]
+|cost={{Currency|SC|150|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|75|notext}}
+|order=28
+}}
+{{Quote|Popularized by actor Chip Messiter, who wore this in the action-rom-com-musical “Lost My Heart to a Man in a [[Helmet]].”|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and helmet can be bought from the [[Helldivers Mobilize Warbond|Helldivers Mobilize!]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|150|notext}} and 75 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Fortified}}
+
+==Media==
+<gallery mode=nolines>
+FS-11 Executioner Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.008|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

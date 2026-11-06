@@ -1,0 +1,44 @@
+{{Infobox Armor
+|title=RS-89 Shadow Paragon
+|image=RS-89 Shadow Paragon Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Reduced Signature
+|source=[[Redacted Regiment Premium Warbond#Page 1|Redacted Regiment]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= RS-89 Shadow Paragon Helmet Render.png
+|helmet_source=[[Redacted Regiment Premium Warbond#Page 1|Redacted Regiment]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|30|notext}}
+|order=94
+}}
+{{Quote|Armor befitting infiltrators of all caliber. Inspired by mythical Democracy-dispensers, whose meticulously undocumented operations remain an inspiration to all students of stealth.|[[Armory]] Description}}
+
+'''RS-89 Shadow Paragon''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page 1 of the [[Redacted Regiment Premium Warbond]] for {{Currency|Medals|45|notext}} and 30 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Reduced Signature}}
+
+==Media==
+<gallery mode=nolines>
+RS-89 Shadow Paragon Armor Set Image.png|Armor Set
+</gallery>
+
+==Trivia==
+
+{{Empty section|date=September 2026}}
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.005.002|changes=Released}}
+{{Change History Update|1.005.001|date=2026-01-13|changes=Announced}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

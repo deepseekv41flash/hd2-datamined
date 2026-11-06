@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Peak Physique
+|source=[[Superstore]]
+|cost={{Currency|SC|150|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|75|notext}}
+|order=47
+}}
+{{Quote|“Prowl like a jaguar, strike like a viper.”—Motto of the storied [[Super Earth Armed Forces|SEAF]] special operations unit whose real exploits were portrayed in the classic comic book series “Tales of the [[Viper Commandos]].”|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be bought from the [[Viper Commandos Premium Warbond|Viper Commandos]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|150|notext}} and 75 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Peak Physique}}
+
+==Media==
+<gallery mode=nolines>
+PH-56 Jaguar Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.400|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

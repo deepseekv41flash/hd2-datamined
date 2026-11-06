@@ -1,0 +1,29 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image={{PAGENAME}} Cape Render.png
+|source=[[Steeled Veterans Premium Warbond#Page 2|Steeled Veterans]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|16|notext}}
+|type=Cape
+|order=15
+|source_type=Warbond
+}}
+{{Quote|Research suggests that [[Helldiver]]s wearing this [[cape]] are seen as 17% more patriotic.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape in ''[[Helldivers 2]]''.
+
+==Acquisition==
+It can be claimed in the [[Steeled Veterans Premium Warbond#Page 2|Steeled Veterans]] Premium [[Warbond]], page two, for {{Currency|Medals|16}}.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.001|changes=
+Added some time after launch to page 2 of Steeled Veterans.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

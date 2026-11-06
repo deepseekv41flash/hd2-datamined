@@ -1,0 +1,47 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=150
+|speed=500
+|stam_regen=100
+||passive=Extra Padding
+|source=Pre-Order Bonus
+|cost={{Tooltip|❌|Exclusive}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=Pre-Order Bonus
+|helmet_cost={{Tooltip|❌|Exclusive}}
+|order=2
+}}
+{{Quote|Promotional [[armor]] made by SUMY Corp. as part of a highly successful marketing campaign for frozen yogurt.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+The set was obtained by pre-ordering Helldivers 2. It has not been made available since.<ref>Discord conversation with AH Support regarding exclusive item eligibility brackets | [https://discord.com/channels/1210060956584124416/1210073264928456764/1496914142777311253 Discord link] | [[:File:Primary_Source_Discord_conversation_with_BVits_regarding_exclusive_item_eligibility_brackets.png|File]]</ref>
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Extra Padding}}
+
+== Trivia ==
+*The armor set is simply an exclusive [[B-01 Tactical]] reskin—albeit a fresh-looking one.
+
+== Media ==
+<gallery mode=nolines>
+TR-7 Ambassador of the Brand Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+== References ==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

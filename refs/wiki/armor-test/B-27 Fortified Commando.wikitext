@@ -1,0 +1,45 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=200
+|speed=450
+|stam_regen=50
+||passive=Extra Padding
+|source=[[Superstore]]
+|cost={{Currency|SC|400|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|200|notext}}
+|order=24
+}}
+{{Quote|This [[armor]] set first appeared in the music video for the summer anthem ‘Our Love Is like Liberty (Indestructible)’.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be bought from the [[Steeled Veterans Premium Warbond|Steeled Veterans]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|400|notext}} and 200 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Extra Padding}}
+
+== Trivia ==
+
+* This armor set is the only Heavy Armor with the Extra Padding passive, boasting the highest available armor rating of 200.
+* Visually, the B-27 Fortified Commando resembles an EOD suit but lacks a  heightened collar most EOD suits have.
+
+== Media ==
+<gallery mode=nolines>
+B-27 Fortified Commando Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.004|date=2024-02-12|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

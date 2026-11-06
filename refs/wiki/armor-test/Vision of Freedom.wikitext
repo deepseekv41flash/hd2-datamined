@@ -1,0 +1,31 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=41
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Superstore
+|source=[[Superstore]]
+|cape_cost={{Currency|SC|100|notext}}
+|card_cost={{Currency|SC|35|notext}}
+}}
+{{Quote|Artists and sculptors have made countless attempts at depicting the face of Liberty, but the truth is that any citizen can see it—they need only requisition a mirror.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+This [[Cosmetics#Capes and Cards|Cape and Player Card set]] can be bought from the [[Servants of Freedom Premium Warbond|Servants of Freedom]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|100|notext}} and 35 [[Super Credits]], respectively.
+
+== Media ==
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.002.101|date=2025-02-06|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

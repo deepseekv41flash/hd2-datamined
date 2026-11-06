@@ -1,0 +1,33 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image={{PAGENAME}} Cape Render.png
+|armor=<span style=color:gray>100
+|speed=<span style=color:gray>100
+|stam_regen=<span style=color:gray>100
+|passive=[[Armor Passives#Standard Issue|Standard Issue]]
+|source=[[Super Citizen Edition]]
+|cost={{Tooltip|💲|USD}}20
+|type=Cape
+|order=2
+|source_type=Special
+}}
+{{Quote|Contains a grain of sand from [[Super Earth]]—so its bearers carry a small piece of Liberty with them, wherever they go.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape in ''[[Helldivers 2]]''.
+
+==Acquisition==
+'''{{PAGENAME}}''' is included in the [[Super Citizen Edition]] which can be purchased for {{Tooltip|💲|USD}}20 {{Tooltip|United States dollars|USD}} or the equivalent in foreign currency.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

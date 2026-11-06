@@ -1,0 +1,49 @@
+{{Last Updated|1.004.000}}<!--
+-->{{Infobox Armor
+|title={{PAGENAME}}
+|image=DS-42 Federation's Blade Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Desert Stormer
+|source=[[Dust Devils Premium Warbond#Page 1|Dust Devils]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Dust Devils Premium Warbond#Page 1|Dust Devils]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|30|notext}}
+|order=88
+}}
+{{Quote|This patriotic armor comes recommended by the Ministry of Expansion, empowering the wearer to re-seize from our enemies any territory that any human has laid claim to, at any point in time.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page one of the [[Dust Devils Premium Warbond#Page 1|Dust Devils]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 30 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Desert Stormer}}
+
+== Trivia ==
+* The name of the armor set and the appearance of the helmet indicate that this armor set may be a reference to Sardaukar soldiers from the film [[wp:Dune (2021 film)|Dune (2021)]].
+
+==Media==
+<gallery mode=nolines>
+DS-42 Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.004.000|date=2025-09-04|changes=
+Addition
+* Added to the game.
+}}
+{{Change History Update|1.003.302|changes=
+Announced
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

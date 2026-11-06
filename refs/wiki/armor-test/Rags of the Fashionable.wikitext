@@ -1,0 +1,35 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=75
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image=Rags of The Fashionable Player Card Icon.png
+|source_type=Warbond
+|source=[[Siege Breakers Premium Warbond#Page 1|Siege Breakers]] <small>{{Tooltip|P1|Page 1}}</small>
+|cape_cost={{Currency|Medals|8|notext}}
+|card_cost={{Currency|Medals|2|notext}}
+}}
+{{Quote|Gently stonewashed by experienced hands, this luxury cape exudes the essence of state-approved attitude.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page 1 of the [[Siege Breakers Premium Warbond#Page 1|Siege Breakers]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|8|notext}} and 2 [[Medal]]s.
+
+==Media==
+<gallery mode=nolines>
+File:Rags of the Fashionable Cape Render.png|Cape Render
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.006.001|changes=
+Added with the release of Siege Breakers.
+}}
+
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

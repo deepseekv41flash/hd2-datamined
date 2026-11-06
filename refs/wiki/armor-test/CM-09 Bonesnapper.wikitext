@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title=CM-09 Bonesnapper
+|image=CM-09 Bonesnapper Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Med-Kit
+|source=[[Helldivers Mobilize Warbond#Page 4|Helldivers Mobilize!]] <small>{{Tooltip|P4|Page 4}}</small>
+|cost={{Currency|Medals|15|notext}}
+|helmet_image= CM-09 Bonesnapper Helmet Render.png
+|helmet_source=[[Helldivers Mobilize Warbond#Page 4|Helldivers Mobilize!]] <small>{{Tooltip|P4|Page 4}}</small>
+|helmet_cost={{Currency|Medals|12|notext}}
+|order=12
+}}
+{{Quote|Based on a colonial surgeon's gown, where surgeries were often interrupted by a need to perform defensive duties.|[[Armory]] Description}}
+
+'''CM-09 Bonesnapper''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the [[body armor]] and [[helmet]] can be claimed from page four of the [[Helldivers Mobilize Warbond#Page 4|Helldivers Mobilize!]] [[Warbond]] for {{Currency|Medals|15|notext}} and 12 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Med-Kit}}
+
+== Media ==
+<gallery mode=nolines>
+CM-09 Bonesnapper Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

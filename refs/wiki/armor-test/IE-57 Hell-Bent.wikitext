@@ -1,0 +1,40 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Integrated Explosives
+|source=[[Superstore]]
+|cost={{Currency|SC|250|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|125|notext}}
+|order=69
+}}
+{{Quote|Assembled from pieces of recovered [[Helldiver]] [[armor]] and [[Super Earth Armed Forces|SEAF]] gear, for those who won't let a lack of full body protection keep them from the battlefront.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be bought from the [[Servants of Freedom Premium Warbond|Servants of Freedom]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|250|notext}} and 125 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Integrated Explosives}}
+
+==Media==
+<gallery mode=nolines>
+IE-57 Hell-Bent Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.002.101|date=2025-02-06|changes=
+First made available in the Superstore.}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

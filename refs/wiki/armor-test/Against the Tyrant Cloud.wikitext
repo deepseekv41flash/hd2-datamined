@@ -1,0 +1,42 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image=Against the Tyrant Cloud Cape Render.png
+|armor=<span style=color:gray>100
+|speed=<span style=color:gray>100
+|stam_regen=<span style=color:gray>100
+|passive=[[Armor Passives#Standard Issue|Standard Issue]]
+|source=[[Oshaune]]
+|source_type=Special
+|cost={{Tooltip|❌|Exclusive}}
+|type=Cape
+|order=70
+}}
+{{Quote|No oppressive murk, no fascist penumbra, no dictatorial haze and no unfree emanation; no tyrannical [[Gloom]] shall ever stand a chance against the searing light of Helldiver fire.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued on December 10, 2025,<ref>[https://x.com/helldivers2/status/1998694453406552223 HELLDIVERS™ 2 | Twitter]</ref> to [[Helldiver]]s who logged in between September 2 and November 4, 2025.<ref>Discord conversation with AH Support regarding exclusive item eligibility brackets | [https://discord.com/channels/1210060956584124416/1210073264928456764/1496914142777311253 Discord link to file] | [[:File:Primary_Source_Discord_conversation_with_BVits_regarding_exclusive_item_eligibility_brackets.png|File]]</ref>
+
+== Lore ==
+Issued to all Helldivers for their triumph over the [[Hive World]] [[Oshaune]], having had successfully {{MajorOrderLink | id = A2-10-6 | text = liberated the Hive World}}.
+
+== Media ==
+<gallery mode=nolines>
+Against the Tyrant Cloud Cape Icon.png|Armory
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.005.000|changes=
+Added to the game.
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

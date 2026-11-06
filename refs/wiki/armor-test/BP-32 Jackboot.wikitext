@@ -1,0 +1,45 @@
+{{Last Updated|1.003.102}}<!--
+-->{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Ballistic Padding
+|source=[[Force of Law Premium Warbond#Page 2|Force of Law]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|55|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Force of Law Premium Warbond#Page 2|Force of Law]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order=81
+}}
+{{Quote|Named for [[Helldiver]] Jack Boote, who shut down 908 illegal broadcasts before retiring with honors.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page two of the [[Force of Law Premium Warbond#Page 2|Force of Law]] Premium [[Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Ballistic Padding}}
+
+==Media==
+<gallery mode=nolines>
+BP-32 Jackboot Armor Set Image.png|Armor Set
+</gallery>
+
+==Trivia==
+* The name "Jackboot" is a reference to the [https://en.wikipedia.org/wiki/Jackboot footwear of the same name] which have become a symbol of authoritarianism since their use by the Nazi regime.
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.003.102|changes=
+Added with the release of Force of Law.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

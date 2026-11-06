@@ -1,0 +1,45 @@
+{{Last Updated|1.003.102}}<!--
+-->{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Ballistic Padding
+|source=[[Force of Law Premium Warbond#Page 1|Force of Law]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Force of Law Premium Warbond#Page 1|Force of Law]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medal|30|notext}}
+|order=80
+}}
+{{Quote|A welcome sight in all Democratic neighborhoods, this [[armor]] inspires both civil pride and civic obedience.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page one of the [[Force of Law Premium Warbond#Page 1|Force of Law]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 30 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Ballistic Padding}}
+
+==Trivia==
+*The armor's design is inspired by the titular character from the [https://mgm.com/franchise/robocop ''RoboCop'' franchise.]
+*The armor is incorrectly named "BP-20 Corrections Officer" in the in-game Super Store.
+==Media==
+<gallery mode=nolines>
+BP-20 Correct Officer Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.003.102|changes=
+Added with the release of Force of Law.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

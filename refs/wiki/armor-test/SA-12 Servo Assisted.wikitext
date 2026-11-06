@@ -1,0 +1,42 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Servo-Assisted
+|source=[[Steeled Veterans Premium Warbond#Page 2|Steeled Veterans]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Steeled Veterans Premium Warbond#Page 2|Steeled Veterans]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medal|35|notext}}
+|order=20
+}}
+{{DisambigMsg|the Steeled Veterans armor set|the armor passive|Servo-Assisted}}
+{{Quote|Each [[servo-assisted]] limb contains 138 miniature motors, to support a natural gait and long-term spinal health.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page two of the [[Steeled Veterans Premium Warbond#Page 2|Steeled Veterans]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 35 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Servo-Assisted}}
+
+==Media==
+<gallery mode=nolines>
+SA-12 Servo Assisted Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

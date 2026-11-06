@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=70
+|speed=530
+|stam_regen=115
+|passive=Scout
+|source=[[Helldivers Mobilize Warbond#Page 1|Helldivers Mobilize!]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|3|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Helldivers Mobilize Warbond#Page 1|Helldivers Mobilize!]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|2|notext}}
+|order=9
+}}
+{{Quote|This suit's plutonium-238 nuclear battery enables environmental scanning long after the user has ceased operation.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page one of the [[Helldivers Mobilize Warbond#Page 1|Helldivers Mobilize!]] [[Warbond]] for {{Currency|Medals|3|notext}} and 2 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Scout}}
+
+==Media==
+<gallery mode=nolines>
+SC-34 Infiltrator Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

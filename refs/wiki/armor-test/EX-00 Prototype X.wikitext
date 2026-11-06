@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Electrical Conduit
+|source=[[Cutting Edge Premium Warbond#Page 3|Cutting Edge]] <small>{{Tooltip|P3|Page 3}}</small>
+|cost={{Currency|Medals|64|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Cutting Edge Premium Warbond#Page 3|Cutting Edge]] <small>{{Tooltip|P3|Page 3}}</small>
+|helmet_cost={{Currency|Medals|48|notext}}
+|order=36
+}}
+{{Quote|The end result of several billion [[Super Credits]] and 12 years of research into creating “the Soldier of Tomorrow.”|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page three of the [[Cutting Edge Premium Warbond#Page 3|Cutting Edge]] Premium [[Warbond]] for {{Currency|Medals|64|notext}} and 48 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Electrical Conduit}}
+
+==Media==
+<gallery mode=nolines>
+EX-00 Prototype X Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.102|date=2024-03-14|changes=
+Added with the release of Cutting Edge.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

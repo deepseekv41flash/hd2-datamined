@@ -1,0 +1,32 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=49
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Superstore
+|source=[[Superstore]]
+|cape_cost={{Currency|SC|250|notext}}
+|card_cost={{Currency|SC|75|notext}}
+}}
+{{Quote|Made famous by the [[Super Earth Armed Forces|SEAF]] commander of the same name, this seal reminds us that only perfect Unity can ensure perfect Freedom.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|Cape and Player Card set]] can be bought from the [[Masters of Ceremony Premium Warbond|Masters of Ceremony]] page on the [[Superstore]] for {{Currency|SC|250|notext}} and 75 [[Super Credits]], respectively.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.006.100|date=2026-3-17|changes=
+Added in the permanent catalogue of the [[Superstore]].}}
+{{Change History Update|1.003.000|date=2025-05-15|changes=
+First made available in the Superstore.}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

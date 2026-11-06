@@ -1,0 +1,44 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Democracy Protects
+|source=[[Liberty Day]]
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Liberty Day]]
+|order=60
+}}
+{{DisambigMsg|the Liberty Day armor set|the default armor set|B-01 Tactical|the Helldivers 1 armor set|Helldivers_1:Armor#Tactical{{!}}HD1 Tactical Armor}}
+{{Quote|This classic [[armor]] set is recognized by every citizen: worn by the heroic [[Helldiver]]s who battled and forever defeated the [[Terminids]], [[Helldivers 1:Cyborgs|Cyborgs]], and [[Illuminate]] in the [[Galactic War#The First Galactic War|First Galactic War]].|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Distributed to all present and future Helldivers as of October 27, 2024, along with the [[R-2124 Constitution|Constitution]] rifle, to celebrate [[Liberty Day]].
+
+==Passive Ability==
+{{Armor Passive Info Panel|Democracy Protects}}
+
+==Lore==
+'''DP-00''' is a modernized version of [[Helldivers 1:Armor#Tactical|Mk-5 Tactical]] from ''[[Helldivers 1]]'', the predecessor of [[B-01 Tactical|B-01]]. It is aptly designated as “00,” being the first armor created for the Helldivers.
+
+==Media==
+<gallery mode=nolines perrow=3>
+DP-00 Tactical Armor Set Image.png|Armor Set
+01 tactical.png|Mk-5 Tactical
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.104|date=2024-10-27|changes=
+Added to the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

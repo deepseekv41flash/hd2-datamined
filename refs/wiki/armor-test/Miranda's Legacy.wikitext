@@ -1,0 +1,37 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=53
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Force of Law Premium Warbond#Page 1|Force of Law]] <small>{{Tooltip|P1|Page 1}}</small>
+|cape_cost={{Currency|Medals|8|notext}}
+|card_cost={{Currency|Medals|2|notext}}
+}}
+{{Quote|Although [[Ranks#Unique Ranks|Super Citizen]] Miranda's true identity has been lost to time, most legal historians agree that she was once a patron of highly-efficient interrogation techniques.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page one of the [[Force of Law Premium Warbond#Page 1|Force of Law]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|8|notext}} and 2 [[Medal]]s.
+
+==Media==
+
+==Trivia==
+The cape's name, and description are most likely references to the United States Supreme Court case Miranda v. Arizona.<ref>https://en.wikipedia.org/wiki/Miranda_v._Arizona</ref>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.003.102|changes=
+Added with the release of Force of Law.
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

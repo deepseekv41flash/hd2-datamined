@@ -1,0 +1,44 @@
+{{Last Updated|1.003.201}}<!--
+-->{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Adreno-Defibrillator
+|source=[[Control Group Premium Warbond#Page 1|Control Group]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Control Group Premium Warbond#Page 1|Control Group]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|30|notext}}
+|order=83
+}}
+{{Quote|Pushing the boundaries of bionic engineering, this [[armor]] collects and dispenses a number of vital fluids, several of which are soon to be declassified.|[[Armory]] Description}}
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[helmet]] can be claimed from page one of the [[Control Group Premium Warbond#Page 1|Control Group]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 30 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Adreno-Defibrillator}}
+
+== Trivia ==
+The studs on the helmet and especially on the pauldrons seem to be inspired by "molecular bonding studs" that feature on various designs of Warhammer 40,000 [https://megalodon.jp/2026-1105-2204-37/https://warhammer40k.wiki.gg:443/wiki/Space_Marines Space Marine] armor, most prominently on Mark V "Heresy Armour"
+
+== Media ==
+<gallery mode=nolines>
+AD-26 Bleeding Edge Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.003.201|changes=
+Added with the release of Control Group.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

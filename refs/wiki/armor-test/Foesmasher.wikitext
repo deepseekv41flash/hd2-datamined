@@ -1,0 +1,31 @@
+{{Infobox Cosmetic
+|image=Foesmasher Cape Render.png
+|source=Starter Equipment
+|type=Cape
+|order=1
+|source_type=Starter
+}}
+{{Quote|Durable, waterproof, and thermally-lined, surplus units of this [[cape]] are favored by domestic campers, to make tents.|[[Armory]] Description}}
+
+'''Foesmasher''' is a cape in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Issued to all [[Helldiver]]s.
+
+==Lore==
+Earn your Helldiver cape by completing the [[Earn Your Helldiver Cape|examination]].
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Starter Loadout]]
+__FORCETOC__

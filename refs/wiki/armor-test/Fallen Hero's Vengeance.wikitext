@@ -1,0 +1,39 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image=Fallen Hero's Vengeance Cape Render.png
+|armor=<span style=color:gray>100
+|speed=<span style=color:gray>100
+|stam_regen=<span style=color:gray>100
+|passive=[[Armor Passives#Standard Issue|Standard Issue]]
+|source=[[Malevelon Creek Memorial Day]]
+|cost={{Tooltip|❌|Exclusive}}
+|type=Cape
+|order=20
+|source_type=Special
+}}
+{{Quote|Our heroic fallen live on in this [[cape]], guiding its bearer's aim to the heart of those who killed them.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued on April 3, 2024, to all [[Helldiver]]s whose accounts existed prior to that date.<ref>Discord conversation with AH Support regarding exclusive item eligibility brackets | [https://discord.com/channels/1210060956584124416/1210073264928456764/1496914142777311253 Discord link to file] | [[:File:Primary_Source_Discord_conversation_with_BVits_regarding_exclusive_item_eligibility_brackets.png|File]]</ref>
+
+== Lore ==
+Issued to all Helldivers in commemoration of their fallen comrades, on Malevelon Creek Memorial Day. A day serving as a reminder of all the 'divers who lost their lives in battles over [[Malevelon Creek|the Creek]], both during the {{MajorOrderLink|id=A1-2-1|text=opening weeks}} of the [[Galactic War#The Second Galactic War|Second Galactic War]] and the {{MajorOrderLink|id=A1-4-1|text=Liberation of Malevelon Creek}}.
+
+== Media ==
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.000.201|changes=
+Added to the game.
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

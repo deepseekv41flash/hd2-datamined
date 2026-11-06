@@ -1,0 +1,53 @@
+{{Infobox Armor
+|title = {{PAGENAME}}
+|image = {{PAGENAME}} Armor Render.png
+|type = Heavy
+|armor = 150
+|speed = 450
+|stam_regen =50
+|passive =Kinetic Displacement Mitigation
+|source = [[Campaigns#Permanent Enclosure|Permanent Enclosure]]
+|cost = 
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Campaigns#Lightning Intercept|Lightning Intercept]]
+|helmet_cost=
+|order = 105
+}}
+{{Quote|Ruggedized for extended operation beyond the reach of paved logistics. This armor's heavy plating is intended for the "unpaving" of hostile territory, providing a mobile bulkhead for Helldivers who don't know the meaning of "environmental obstacles".|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[Armor#Heavy-0|Heavy Armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+The [[Armor#Helmet-0|helmet]] was awarded to all Helldivers who have participated in any stage of the [[Campaigns#Lightning Intercept|Lightning Intercept Campaign]] on July 27th, 2026. The body armor was given out to all Helldivers who participated in any stage of the [[Campaigns#Permanent Enclosure|Permanent Enclosure Campaign]] on August 11th, 2026.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Kinetic Displacement Mitigation}}
+
+== Trivia ==
+* The KDM-500 Outrider is the first armor set where the helmet and body armor were announced separately.
+** The Helmet was given as a reward for [[Campaigns#Lightning Intercept|Operation: Lightning Intercept]].
+** The Body Armor was given as a reward for [[Campaigns#Permanent Enclosure|Operation: Permanent Enclosure]].
+
+== Media ==
+<gallery mode=nolines>
+KDM-500 Outrider Promotional Image.png|Promotional image of the helmet.
+KDM-500 Outrider Promotional Image 2.png|Promotional image of the body armor.
+KDM-500 Outrider Armor Set Image.png|Armor set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.006.301|date=2026-07-28|changes=
+Body Armor announced<ref>[https://youtu.be/Afl_8m6Zl_E Helldivers 2 - Campaign Brief: Permanent Enclosure]</ref>
+}}
+{{Change History Update|1.006.301|date=2026-07-14|changes=
+Helmet announced<ref>[https://youtu.be/n7TqsET5yHM Helldivers 2 - Campaign Brief: Lightning Intercept]</ref>
+}}
+
+== References ==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Helmets]]
+[[Category:Heavy Armor]]

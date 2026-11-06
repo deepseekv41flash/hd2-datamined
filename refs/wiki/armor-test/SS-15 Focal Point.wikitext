@@ -1,0 +1,71 @@
+{{Infobox Armor
+|title = {{PAGENAME}}
+|image = SS-15 Focal Point Armor Render.png
+|type = Medium
+|armor = 100
+|speed = 500
+|stam_regen = 100
+|passive = Stationary Shroud
+|source = [[Scope of Authority Premium Warbond#Page 2|Scope of Authority]]<small>{{Tooltip|P2|Page 2}}</small>
+|cost = {{Currency|Medals|55}}
+|helmet_image= SS-15 Focal Point Helmet Render.png
+|helmet_source= [[Scope of Authority Premium Warbond#Page 2|Scope of Authority]]<small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost= {{Currency|Medals|45}}
+|order = 114
+}}
+{{Quote|Designed for forward observers coordinating long-range decrees. This medium suit features, integrated adaptive camouflage capabilities and an asymmetrical optic visor, ensuring hostile movements are cataloged meticulously--and discreetly--before being permanently stricken from state records.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[Armor#Medium-0|medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the [[Armor#Armor-0|armor]] and [[Armor#Helmet-0|helmet]] can be claimed on page 2 of the [[Scope of Authority Premium Warbond#Page 2|Scope of Authority Premium Warbond]] for {{Currency|Medals|55|notext}} and {{Currency|Medals|45}}, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Stationary Shroud}}
+
+== Media ==
+<gallery mode=nolines>
+SS-15 Focal Point Desert Armor Render.png|Desert Armor Render
+SS-15 Focal Point Winter Armor Render.png|Arctic Armor Render
+SS-15 Focal Point Forest Armor Render.png|Forest Armor Render
+SS-15 Focal Point Crimson Armor Render.png|Crimson Armor Render
+</gallery>
+<gallery mode=nolines>
+SS-15 Focal Point Desert Helmet Render.png|Desert Helmet Render
+SS-15 Focal Point Winter Helmet Render.png|Arctic Helmet Render
+SS-15 Focal Point Forest Helmet Render.png|Forest Helmet Render
+SS-15 Focal Point Crimson Helmet Render.png|Crimson Helmet Render
+</gallery>
+<gallery mode=nolines>
+SS-15 Focal Point Armor Promo.png|Promotional Image
+SS-15 Focal Point Default Armor Set Image.png|Armor Set, <br>Standard Camo
+SS-15 Focal Point Desert Armor Set Image.png|Armor Set, <br>Desert Camo
+SS-15 Focal Point Forest Armor Set Image.png|Armor Set, <br>Forest Camo
+SS-15 Focal Point Artic Armor Set Image.png|Armor Set, <br>Arctic Camo
+</gallery>
+<gallery mode=nolines>
+SS-15 Focal Point Armor Set Image - Standard.png|Armor Set, <br>Standard Camo, <br>in game
+</gallery>
+
+== Trivia ==
+* The SS-15 Focal Point, [[SS-500 Pale Prosecutor]], and [[SS-33 Mimetic Marshal]] are the first armor sets to include "Interactive Adaptive Camouflage." This means that the color and pattern of the armor's camouflage will change depending on the wearer's current [[Biomes|biome]]. 
+** It is unknown if the Interactive Adaptive Camouflage has any effect on enemy detection range, outside of the {{Passive|Stationary Shroud}} armor passive.
+{{CamoAvailability}}
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.200|changes=
+Addition
+* Added to the game.
+}}
+{{Change History Update|1.007.101|date=2026-10-13|changes=
+Announced <ref> https://blog.playstation.com/2026/10/13/helldivers-2-scope-of-authority-premium-warbond-launches-oct-20/</ref>
+}}
+
+== References ==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Helmets]]
+[[Category:Medium Armor]]

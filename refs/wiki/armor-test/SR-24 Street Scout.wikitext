@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Siege-Ready
+|source=[[Urban Legends Premium Warbond#Page 1|Urban Legends]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|40|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Urban Legends Premium Warbond#Page 1|Urban Legends]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|30|notext}}
+|order=65
+}}
+{{Quote|This [[Armor|armor's]] nostalgic color scheme brings to mind beloved trappings of colonial yesteryear: concrete frontier domiciles, slate-colored civilian jumpsuits, and Space Settlers' Pie.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page one of the [[Urban Legends Premium Warbond#Page 1|Urban Legends]] Premium [[Warbond]] for {{Currency|Medals|40|notext}} and 30 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Siege-Ready}}
+
+==Media==
+<gallery mode=nolines>
+SR-24 Street Scout Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.002.001|changes=
+Added with the release of Urban Legends.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

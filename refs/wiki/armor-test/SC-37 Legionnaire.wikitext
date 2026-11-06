@@ -1,0 +1,42 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Servo-Assisted
+|source=[[Superstore]]
+|cost={{Currency|SC|150|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|75|notext}}
+|order=7
+}}
+{{DisambigMsg|the Superstore armor set|the Helldivers 1 Cyborg enemy|Helldivers 1:Legionnaire}}
+{{Quote|This [[armor]] is based on the antique uniforms of the ‘[[Federation of Super Earth|Super Earth]] Legion’, a less patriotic precursor to [[the Helldivers]].|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be bought from the [[Steeled Veterans Premium Warbond|Steeled Veterans]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|150|notext}} and 75 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Servo-Assisted}}
+
+==Media==
+<gallery mode=nolines>
+SC-37 Legionnaire Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

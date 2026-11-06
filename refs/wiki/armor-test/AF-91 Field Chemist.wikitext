@@ -1,0 +1,44 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Advanced Filtration
+|source=[[Superstore]]
+|cost={{Currency|SC|250|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|125|notext}}
+|order=57
+}}
+{{Quote|This [[armor]], together with its friendly-faced [[helmet]], is instantly recognizable from the beloved children's show “Jen Shriver the Science Diver.”|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and helmet can be bought from the [[Chemical Agents Premium Warbond|Chemical Agents]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|250|notext}} and 125 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Advanced Filtration}}
+
+==Trivia==
+“Jen Shriver the Science Diver” is likely a play on the title of the {{Tooltip|TV|television}} show ''Bill Nye the Science Guy''.
+
+==Media==
+<gallery mode=nolines>
+AF-91 Field Chemist Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.001|date=2024-09-19|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

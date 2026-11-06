@@ -1,0 +1,35 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image= United_in_Equality_Cape_Render.png
+|source={{MajorOrderLink|id=A3-5-6|text=Major Order A3-5-6}}
+|cost={{Tooltip|❌|Exclusive}}
+|type=Cape
+|order=85
+|source_type=Special
+}}
+{{Quote|To honor the heartfelt siblinghood of the heroes who stood together, bled together, and laid down their lives together in defense of Equality-On-Sea, all [[Helldiver]]s are awarded one (1) commemorative polyester cape.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued on 30th May, 2026 to Helldivers whose accounts existed prior to that date, as a reward for completing the {{MajorOrderLink|id=A3-5-6|text=Victory Day Crusade Major Order}}.
+
+== Media ==
+<gallery mode=nolines>
+</gallery>
+
+== Trivia ==
+The cape's design resembles the [[wp:Oriental_Pearl_Tower|Oriental Pearl Tower]] in Shanghai, China, which is the real-life inspiration for Equality-On-Sea.
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.006.250|date=30-05-2026|changes=
+Rewarded.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

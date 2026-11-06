@@ -1,0 +1,36 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image={{PAGENAME}} Cape Render.png
+|armor=<span style=color:gray>100
+|speed=<span style=color:gray>100
+|stam_regen=<span style=color:gray>100
+|passive=[[Armor Passives#Standard Issue|Standard Issue]]
+|source=Social Media [[Major Orders|MO]]
+|cost={{Tooltip|❌|Exclusive}}
+|type=Cape
+|order=45
+|source_type=Special
+}}
+{{Quote|Created to honor the great Freedom Chant of 2-14, in which over 10,000 loyal citizens united as one to express their undying respect for Freedom.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a [[cape]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued between February 8 and February 10, 2025, to [[Helldiver]]s whose accounts existed prior to February 10, 2025,<ref>Discord conversation with AH Support regarding exclusive item eligibility brackets | [https://discord.com/channels/1210060956584124416/1210073264928456764/1496914142777311253 Discord link] | [[:File:Primary_Source_Discord_conversation_with_BVits_regarding_exclusive_item_eligibility_brackets.png|File]]</ref> after commenters reached a required number of [https://knowyourmeme.com/memes/press-f-to-pay-respects "F" to pay respect] comments on [[Arrowhead Game Studios|Arrowhead's]] social media posts.<ref>[https://facebook.com/photo?fbid=1168659638593184 Helldivers 2 | Facebook]</ref><ref>[https://x.com/helldivers2/status/1888271574287200401 HELLDIVERS™ 2 | X]</ref><ref>[https://instagram.com/helldivers2game/p/DF0cmbuthwq helldivers2game | Instagram]</ref>
+
+== Media ==
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.002.101|date=2025-02-08|changes=
+Social media challenge reward.
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

@@ -1,0 +1,31 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=35
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Truth Enforcers Premium Warbond#Page 3|Truth Enforcers]] <small>{{Tooltip|P3|Page 3}}</small>
+|cape_cost={{Currency|Medals|30|notext}}
+|card_cost={{Currency|Medals|15|notext}}
+}}
+{{Quote|This [[cape]] signifies that its wearer thinks, feels and acts correctly at all times, and thus bears the responsibility to educate and re-educate their fellow citizen.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page three of the [[Truth Enforcers Premium Warbond#Page 3|Truth Enforcers]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|30|notext}} and 15 [[Medal]]s.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.201|date=2024-10-31|changes=
+Added with the release of Truth Enforcers.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

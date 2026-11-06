@@ -1,0 +1,45 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type= Medium
+|armor= 100
+|speed= 500
+|stam_regen= 100
+|passive=Rock Solid
+|source=[[Superstore]]
+|cost={{Currency|SC|300|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|150|notext}}
+|order=90
+}}
+{{Quote|The understated color scheme and precision-molded armor plates make this armor a sensible choice for the Helldiver on the go.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be bought from the [[Python Commandos Premium Warbond|Python Commandos]] page on the [[Superstore|SuperStore]] for {{Currency|Super Credits|300|notext}} and 150 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Rock Solid}}
+
+==Media==
+<gallery mode=nolines>
+RS-6 Fiend Destroyer Armor Render.png|Body (Render)
+RS-6 Fiend Destroyer Helmet Render.png|Helmet (Render)
+RS-6 Fiend Destroyer Armor Set Image.png|Armor Set
+</gallery>
+
+==Trivia==
+The armour looks to be inspired by the video game series DOOM.
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.005.000|changes=Made available in the Superstore}}
+{{Change History Update|1.004.102|date=2025-11-25|changes=Announced}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

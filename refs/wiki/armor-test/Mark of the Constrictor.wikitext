@@ -1,0 +1,34 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=68
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Python Commandos Premium Warbond#Page 1|Python Commandos]] <small>{{Tooltip|P1|Page 1}}</small>
+|cape_cost={{Currency|Medals|8|notext}}
+|card_cost={{Currency|Medals|2|notext}}
+}}
+{{Quote|Marks the most Free of the Free, those who will seize tyranny by the neck and squeeze until no oppression remains.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page 1 of the [[Python Commandos Premium Warbond#Page 1|Python Commandos]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|8|notext}}  and 2 [[Medal]]s.
+
+==Media==
+<gallery mode=nolines>
+Mark of the Constrictor Cape Armory.png|Cape (Armory)
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.005.000|changes=
+Released
+}}
+{{Change History Update|1.004.102|date=2025-11-25|changes=Announced. <ref>[https://blog.playstation.com/2025/11/25/helldivers-2-python-commandos-premium-warbond-airdrops-dec-2/ Katherine Baskin | Playstation Blog]</ref> <ref>[https://store.steampowered.com/news/app/553850/view/604173306943244176 HELLDIVERS™ 2 | Steam]</ref>}}
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

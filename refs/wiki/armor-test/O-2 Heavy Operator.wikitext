@@ -1,0 +1,47 @@
+{{Infobox Armor
+|title = {{PAGENAME}}
+|image = {{PAGENAME}} Armor Render.png
+|type = Heavy
+|armor = 150
+|speed = 450
+|stam_regen = 50
+|passive = Oxygenator
+|source = [[Exo Experts Premium Warbond#Page 2|Exo Experts]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost = {{Currency|Medals|55|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Exo Experts Premium Warbond#Page 2|Exo Experts]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order = 104
+}}
+{{Quote|This armor is the required uniform for many Super Earth Citizens operating heavy machinery. Long-time users will be delighted to learn that as of this year's Efficiency in Machine Operation Symposium and Gala, wearing this armor is no longer itself considered operating heavy machinery.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[Armor#Heavy-0|Heavy Armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[Armor#Helmet-0|helmet]] can be claimed from the [[Exo Experts Premium Warbond#Page 2|Exo Experts Premium Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Oxygenator}}
+
+== Media ==
+<gallery mode="nolines">
+O-2 Heavy Operator Armor Set Image.png|Armor Set
+File:O-2 heavy operator closeup.png|A close-up image of the armor set, showing the Helldivers 1 skull on it's chest plate.
+</gallery>
+
+== Trivia ==
+* The presence of the [[Helldivers 1]] skull on the armor's chest plate alongside its description suggests it was in circulation since the [[First Galactic War]].
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.006.202|changes=
+Added to the game
+}}
+{{Change History Update|date=2026-04-21|1.006.102|changes=
+Announced
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]

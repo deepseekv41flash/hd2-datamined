@@ -1,0 +1,44 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Fortified
+|source=[[Helldivers Mobilize Warbond#Page 6|Helldivers Mobilize!]] <small>{{Tooltip|P6|Page 6}}</small>
+|cost={{Currency|Medals|35|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Helldivers Mobilize Warbond#Page 6|Helldivers Mobilize!]] <small>{{Tooltip|P6|Page 6}}</small>
+|helmet_cost={{Currency|Medal|25|notext}}
+|order=14
+}}
+{{Quote|This aim-stabilizing [[armor]] found surprising secondary market success among alien birdwatching enthusiasts.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page six of the [[Helldivers Mobilize Warbond#Page 6|Helldivers Mobilize!]] [[Warbond]] for {{Currency|Medals|35|notext}} and 25 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Fortified}}
+
+==Trivia==
+* This is the armor set that is displayed on the mannequin in the [[Armory]] module.
+
+==Media==
+<gallery mode=nolines>
+FS-23 Battle Master Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

@@ -1,0 +1,44 @@
+{{Last Updated|1.003.102}}<!--
+-->{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Adreno-Defibrillator
+|source=[[Superstore]]
+|cost={{Currency|SC|300|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|150|notext}}
+|order=82
+}}
+{{Quote|Part of a long line of experimental [[armor]] commonly seen on industrial engineering campuses, in the basements of select science aficionados, and around [[Super Destroyer]] Mega Garages.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[helmet]] can be bought from the [[Control Group Premium Warbond|Control Group]] page on the [[Superstore]] for {{Currency|SC|300|notext}} and 150 [[Super Credits]], respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Adreno-Defibrillator}}
+
+== Media ==
+<gallery mode=nolines>
+AD-11 Livewire Armor Set Image.png|Armor Set
+AD-11 Livewire Body Icon.png|Body Armor (Armory)
+AD-11 Livewire Helmet Icon.png|Helmet (Armory)
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.003.201|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

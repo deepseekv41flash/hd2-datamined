@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=100
+|speed=550
+|stam_regen=125
+||passive=Extra Padding
+|source=[[Superstore]]
+|cost={{Currency|SC|150|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|75|notext}}
+|order=26
+}}
+
+{{Quote|Compact and flexible, this kevlar [[armor]] adds minimal mass, making it a common choice for [[Helldiver]] fitness tests.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be bought from the [[Helldivers Mobilize Warbond|Helldivers Mobilize!]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|150|notext}} and 75 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Extra Padding}}
+
+==Media==
+<gallery mode=nolines>
+B-08 Light Gunner Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.006|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

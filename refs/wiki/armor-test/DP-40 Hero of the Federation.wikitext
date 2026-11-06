@@ -1,0 +1,53 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Democracy Protects
+|source=[[Helldivers Mobilize Warbond#Page 5|Helldivers Mobilize!]] <small>{{Tooltip|P5|Page 5}}</small>
+|cost={{Currency|Medals|25|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Helldivers Mobilize Warbond#Page 5|Helldivers Mobilize!]] <small>{{Tooltip|P5|Page 5}}</small>
+|helmet_cost={{Currency|Medals|20|notext}}
+|order=13
+}}
+
+{{Quote|Though originally intended solely for ceremonial use, its inspirational energy proved equally useful on the battlefield.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page five of the [[Helldivers Mobilize Warbond#Page 5|Helldivers Mobilize!]] [[Warbond]] for {{Currency|Medals|25|notext}} and 20 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Democracy Protects}}
+
+==Trivia==
+The armor's name, “Hero of the Federation,” is likely derived from the subtitle of [https://sonypictures.com/movies/starshiptroopers2heroofthefederation ''Starship Troopers 2: Hero of the Federation''.]
+
+==Media==
+<tabber>
+Armory=
+<gallery mode=nolines>
+DP-40 Hero of the Federation Armor Set Image.png|Armor Set
+</gallery>
+|-|
+Images=
+<gallery mode=nolines widths=384 heights=216>
+LAS-98 Laser Cannon Marketing.png|Marketing
+</gallery>
+</tabber>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

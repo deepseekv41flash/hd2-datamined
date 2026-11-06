@@ -1,0 +1,44 @@
+{{Last Updated|1.003.201}}<!--
+-->{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Adreno-Defibrillator
+|source=[[Control Group Premium Warbond#Page 2|Control Group]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|55|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Control Group Premium Warbond#Page 2|Control Group]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order=84
+}}
+{{Quote|Equipped with the latest computational systems, subsystems, and supersystems, this [[armor]] is worth the equivalent of a small Megacity.|[[Armory]] Description}}
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[helmet]] can be claimed from page two of the [[Control Group Premium Warbond#Page 2|Control Group]] Premium [[Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Adreno-Defibrillator}}
+
+== Trivia ==
+The studs on the helmet and especially on the pauldrons seem to be inspired by "molecular bonding studs" that feature on various designs of Warhammer 40,000 [https://megalodon.jp/2026-1105-2204-37/https://warhammer40k.wiki.gg:443/wiki/Space_Marines Space Marine] armor, most prominently on Mark V "Heresy Armour"
+
+
+== Media ==
+<gallery mode=nolines>
+AD-49 Apollonian Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.003.201|changes=
+Added with the release of Control Group.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

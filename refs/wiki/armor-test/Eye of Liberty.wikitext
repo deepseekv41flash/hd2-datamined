@@ -1,0 +1,41 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image={{PAGENAME}} Cape Render.png
+|armor=<span style=color:gray>100
+|speed=<span style=color:gray>100
+|stam_regen=<span style=color:gray>100
+|passive=[[Armor Passives#Standard Issue|Standard Issue]]
+|source=Anniversary Gift
+|cost={{Tooltip|❌|Exclusive}}
+|type=Cape
+|order=78
+|source_type=Special
+}}
+
+{{Quote|Let the Second Anniversary of the Second Galactic War be witnessed by the lidless eye of Liberty, that ever-watchful orb which provides safety through its ceaseless surveillance.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a [[cape]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued by the [[Ministry of Prosperity]] on March 2, 2026,<ref>[https://x.com/helldivers2/status/2023051047481061803 HELLDIVERS™ 2 | Twitter]</ref> to [[Helldiver]]s who logged in between 00:00 February 1 and 09:50 March 2 2026, CET.<ref>Discord conversation with AH Support regarding exclusive item eligibility brackets | [https://discord.com/channels/1210060956584124416/1210073264928456764/1496914142777311253 Discord link] | [[:File:Primary_Source_Discord_conversation_with_BVits_regarding_exclusive_item_eligibility_brackets.png|File]]</ref>
+
+== Media ==
+<gallery mode=nolines>
+File:Eye of Liberty Cape Twitter.png|Promotional Material
+File:Helldivers 2 Tweet 2026-03-03 New Cape Eye Of Liberty Commemorative Gift file.png|Promotional Material 2
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.006.003|date=2026-03-02|changes=
+Added to the game.
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

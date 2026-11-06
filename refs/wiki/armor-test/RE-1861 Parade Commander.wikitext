@@ -1,0 +1,43 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Reinforced Epaulettes
+|source=[[Masters of Ceremony Premium Warbond#Page 2|Masters of Ceremony]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|55|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Masters of Ceremony Premium Warbond#Page 2|Masters of Ceremony]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order=78
+}}
+{{Quote|Awarded to those promoted to their point of greatest competency, and beyond.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page two of the [[Masters of Ceremony Premium Warbond#Page 2|Masters of Ceremony]] Premium [[Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Reinforced Epaulettes}}
+
+==Media==
+<gallery mode=nolines>
+RE-1861 Parade Commander Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.003.000|date=2025-05-15|changes=
+Added with the release of Masters of Ceremony.}}
+
+== Trivia ==
+* The RE-1861 Parade Commander is reminiscent of the United States' Marine Corps uniform.
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

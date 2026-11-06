@@ -1,0 +1,31 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=34
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Truth Enforcers Premium Warbond#Page 2|Truth Enforcers]] <small>{{Tooltip|P2|Page 2}}</small>
+|cape_cost={{Currency|Medals|20|notext}}
+|card_cost={{Currency|Medals|5|notext}}
+}}
+{{Quote|Granted to the Truth Enforcers' Informant of the Month, this tasteful [[cape]] conjures images of dissident blood on asphalt.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page two of the [[Truth Enforcers Premium Warbond#Page 2|Truth Enforcers]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|20|notext}} and 5 [[Medal]]s.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.201|date=2024-10-31|changes=
+Added with the release of Truth Enforcers.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

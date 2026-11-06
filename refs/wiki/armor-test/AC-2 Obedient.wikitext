@@ -1,0 +1,51 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Acclimated
+|source=[[Righteous Revenants Legendary Warbond|Righteous Revenants]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|55|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Righteous Revenants Legendary Warbond|Righteous Revenants]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order=68
+}}
+
+{{Quote|The muted colors and relaxed, high-mobility fit make it a favorite among long-distance snipers and hide-and-seek champions alike.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page two of the [[Righteous Revenants Legendary Warbond#Page 2|Righteous Revenants]] Legendary [[Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Acclimated}}
+
+==Trivia==
+*This armor is part of the [[Killzone]] crossover, designed to mirror the [https://killzone.fandom.com/Helghast_Sniper Helghast Sniper.]
+*Although originally slated for the second rotation of the crossover's ''Premium [[Superstore]]'', the items were ultimately given out as a holiday gift following backlash over the steep pricing of the first rotation.
+*The armor set's previous description read: "The helmet is equipped with heptafocal specialty lenses, making it a favorite among long-distance snipers and micro-sculpture enthusiasts alike."
+
+==Media==
+<gallery mode=nolines>
+AC-2 Obedient Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.002.003|date=2024-12-19|changes=
+Presented as a holiday gift.
+<ref>[https://store.steampowered.com/news/app/553850/view/516322672418750491 HELLDIVERS™ 2 | Steam]</ref> <ref>[https://blog.playstation.com/2025/12/11/the-helldivers-2-x-killzone-items-return-as-a-legendary-warbond-dec-18/ Mitchell Ayre | PlayStation Blog]</ref> <ref>[https://store.steampowered.com/news/app/553850/view/491584577841661619 HELLDIVERS™ 2 | Steam]</ref>}}
+
+==References==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+[[Category:Killzone]]
+__FORCETOC__

@@ -1,0 +1,31 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=26
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Polar Patriots Premium Warbond#Page 3|Polar Patriots]] <small>{{Tooltip|P3|Page 3}}</small>
+|cape_cost={{Currency|Medals|30|notext}}
+|card_cost={{Currency|Medals|16|notext}}
+}}
+{{Quote|Adorned with the insignia of the {{PAGENAME}}, a [[Super Earth Ministries|Ministry]]-sanctioned Patriot's Club for citizens who pledge themselves to preserving the sanctity of voting.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page three of the [[Polar Patriots Premium Warbond#Page 3|Polar Patriots]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|30|notext}} and 16 [[Medal]]s.
+
+== Media ==
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.000.303|date=2024-05-09|changes=
+Added with the release of Polar Patriots.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

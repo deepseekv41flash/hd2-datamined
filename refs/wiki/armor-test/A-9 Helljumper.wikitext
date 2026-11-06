@@ -1,0 +1,43 @@
+{{Last Updated|1.003.302}}<!--
+-->{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Feet First
+|source=[[Obedient Democracy Support Troopers Legendary Warbond#Page 1|Halo: ODST]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Obedient Democracy Support Troopers Legendary Warbond#Page 1|Halo: ODST]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|30|notext}}
+|order=85
+}}
+{{Quote|Debuted during the New Mombasa Armor Show, this sleek ensemble is sure to turn heads and blow minds.|[[Armory]] Description}}
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the [[body armor]] and [[helmet]] can be claimed from page one of the [[Obedient Democracy Support Troopers Legendary Warbond#Page 1|Obedient Democracy Support Troopers]] Legendary [[Warbond]] for {{Currency|Medals|45|notext}} and 30 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Feet First}}
+
+== Media ==
+<gallery mode=nolines>
+A-9 Helljumper Helmet Icon.png|Helmet (Armory)
+A-9 Helljumper Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.003.302|changes=
+Addition
+:Added with the Halo: ODST crossover.}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+[[Category:Halo]]
+__FORCETOC__

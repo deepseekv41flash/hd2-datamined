@@ -1,0 +1,43 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Rock Solid
+|source=[[Python Commandos Premium Warbond#Page 1|Python Commandos]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|45|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Python Commandos Premium Warbond#Page 1|Python Commandos]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|30|notext}}
+|order=91
+}}
+
+{{Quote|The official uniform of the League of Patriotic Arm Wrestlers, this armor's lycra base layer is supple and sweat-wicking for maximum flexing comfort.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page one of the [[Python Commandos Premium Warbond]] for {{Currency|Medals|45|notext}} and 30 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Rock Solid}}
+
+==Media==
+<gallery mode=nolines>
+RS-20 Constrictor Armor Set Image.png|Armor Set
+</gallery>
+
+==Trivia==
+* The design of the helmet's mask appears to be based on Yautja bio-mask designs from the [https://en.wikipedia.org/wiki/Predator_(franchise) Predator] franchise.
+* The eyepiece over the left eye of the helmet resembles the Solid Eye worn by Solid Snake in ''Metal Gear Solid 4''.
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.005.000|changes=Released}}
+{{Change History Update|1.004.102|date=2025-11-25|changes=Announced <ref>[https://blog.playstation.com/2025/11/25/helldivers-2-python-commandos-premium-warbond-airdrops-dec-2/ Katherine Baskin | Playstation Blog]</ref> <ref>[https://store.steampowered.com/news/app/553850/view/604173306943244176 HELLDIVERS™ 2 | Steam]</ref>}}
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

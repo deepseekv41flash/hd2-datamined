@@ -1,0 +1,57 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Med-Kit
+|source=[[Downloadable Content]]
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Downloadable Content]]
+|order=6
+}}
+{{DisambigMsg|the event armor set|the Terminid enemy|Alpha Commander}}
+{{Quote|For warriors who are so strong and confident that they don't need any reassurance whatsoever.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is free [[DLC]] for ''[[Helldivers 2]]'', containing a [[medium armor]] set.
+
+==Acquisition==
+The set was initially only claimable via a finite [https://twitch.tv/drops Twitch Drop] between February 8th - 23rd, 2024.<br>
+On December 12th, 2024, it was made available to [https://store.steampowered.com/app/2765950 Steam] users, in partnership with [https://thegameawards.com The Game Awards.]<ref>{{cite web|url=https://steamcommunity.com/games/553850/announcements/detail/603016424736161844|title=HELLDIVERS™ 2 &#124; Steam|date=2024-12-12|quote=Visit the Game Awards on Steam to unlock the TR-117 Alpha Commander armor early!}}</ref><br>
+On December 19th, 2024, it was made available to [[Helldiver]]s across all platforms.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Med-Kit}}
+
+==Trivia==
+*The familiar military green with metallic black accents and the number “117” allude to John-117 and his MJOLNIR armor from the [https://halowaypoint.com ''Halo''] series. Moreover, both “Alpha” and “Commander” are synonymous with his [[rank]], Master Chief.
+*The armor set is primarily a [[CM-14 Physician]] reskin, with the exception that the left shoulder canisters are replaced by a second shoulder pad.
+
+==Media==
+<tabber>
+Armory=
+<gallery mode=nolines>
+TR-117 Alpha Commander Armor Set Image.png|Armor Set
+</gallery>
+|-|
+Images=
+<gallery mode=nolines widths=384 heights=216>
+TR-117 Alpha Commander DLC Cover.jpg|{{Tooltip|DLC|Downloadable Content}} Cover
+</gallery>
+</tabber>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+==References==
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+[[Category:Downloadable Content]]
+[[Category:Halo|Ω]]
+__FORCETOC__

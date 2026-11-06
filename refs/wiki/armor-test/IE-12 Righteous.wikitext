@@ -1,0 +1,44 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Integrated Explosives
+|source=[[Servants of Freedom Premium Warbond#Page 2|Servants of Freedom]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|55|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Servants of Freedom Premium Warbond#Page 2|Servants of Freedom]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medal|45|notext}}
+|order=71
+}}
+{{Quote|Modeled after the myriad Statues of Judicious Liberty, who keep a watchful eye on checkout lines, schoolyards, perpetual rehabilitation communities, and public confession theaters.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the [[body armor]] and [[helmet]] can be claimed from page two of the [[Servants of Freedom Premium Warbond#Page 2|Servants of Freedom]] Premium [[Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Integrated Explosives}}
+
+== Trivia ==
+* The chest plate is inscribed with the phrase "[[Fre Liberam|fre liberam]] [[Per Democrasum|per democrasum]]", a pseudo-Latin motto that translates to "freedom through democracy".
+** Both capes, and player cards from the Servants of Freedom warbond are named for each half of the phrase.
+
+== Media ==
+<gallery mode=nolines>
+IE-12 Righteous Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.002.101|date=2025-02-06|changes=
+Added with the release of Servants of Freedom.}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

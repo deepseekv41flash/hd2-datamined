@@ -1,0 +1,40 @@
+{{Infobox Armor
+|title = {{PAGENAME}}
+|image = {{PAGENAME}} Armor Render.png
+|type = Medium
+|armor = 100
+|speed = 500
+|stam_regen = 100
+|passive = Oxygenator
+|source = [[Superstore]]
+|cost = {{Currency|SC|250|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|125|notext}}
+|order = 102
+}}
+{{Quote|This armor celebrates the wearer's close relationship to their Exosuit---as intimate as is possible without succumbing to cyborgry.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[Armor#Medium-0|Medium Armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[Armor#Helmet-0|helmet]] can be claimed from the [[Superstore]] for {{Currency|SC|250|notext}} and 125 [[Super Credits]], respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Oxygenator}}
+
+== Media ==
+<gallery mode=nolines>
+O-44 Bonded Pilot Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.006.202|changes=
+Added to the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]

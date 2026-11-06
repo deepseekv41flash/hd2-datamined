@@ -1,0 +1,40 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image=Pillars of Freedom Cape Render.png
+|armor=<span style=color:gray>100
+|speed=<span style=color:gray>100
+|stam_regen=<span style=color:gray>100
+|passive=[[Armor Passives#Standard Issue|Standard Issue]]
+|source=[[Ministry of Prosperity]]
+|type=Cape
+|order=56
+|source_type=Starter
+}}
+{{Quote|Woven in honor of our loyal [[Helldivers]], whose hearts' blood is the foundation on which Super Earth is built.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a [[cape]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued by the [[Ministry of Prosperity]] on June 27, 2025<ref>{{cite twitter|url=https://x.com/helldivers2/status/1938573095230390728|text=In honor of their unquestioning commitment to the defense of Managed Democracy, the Helldivers have been awarded a commemorative cape. The new uniform piece will be available in all Super Destroyer Armories as soon as the rollout is complete. This cape will be awarded to all existing players. As with our previous item rollouts, please allow some time for the item to arrive in your inbox.}}</ref> to all present and future Helldivers.
+
+== Trivia ==
+The review-bomb themed cape was introduced after the resolution of [[Sony Interactive Entertainment#Account Linking|Sony's account-linking controversy]]. The issue, which began in May 2024 and was reflected in a significant increase in negative reviews, resulted in 177 regional restrictions that remained in place for approximately 14 months before being lifted.
+
+== Media ==
+<gallery mode=nolines>
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.003.104|date=2025-06-27|changes=
+Added to the game.
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

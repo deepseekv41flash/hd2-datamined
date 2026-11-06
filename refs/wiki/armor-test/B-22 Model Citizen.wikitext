@@ -1,0 +1,44 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Democracy Protects
+|source=Anniversary Gift
+|cost={{Tooltip|❌|Exclusive}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=Anniversary Gift
+|helmet_cost={{Tooltip|❌|Exclusive}}
+|order=72
+}}
+{{Quote|Gifted to [[Helldiver]]s whose civilian lives were distinguished by exemplary citizenship, patriotism, and service to the [[Federation of Super Earth|Federation]].|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued between February 8 and February 10, 2025,<ref>[https://x.com/helldivers2/status/1888240162091458765 HELLDIVERS™ 2 | Twitter]</ref> to [[Helldiver]]s whose accounts existed prior to February 10, 2025,<ref>Discord conversation with AH Support regarding exclusive item eligibility brackets | [https://discord.com/channels/1210060956584124416/1210073264928456764/1496914142777311253 Discord link] | [[:File:Primary_Source_Discord_conversation_with_BVits_regarding_exclusive_item_eligibility_brackets.png|File]]</ref> alongside the [[Eye of Freedom]] cape.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Democracy Protects}}
+
+== Media ==
+<gallery mode=nolines>
+B-22 Model Citizen Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.002.101|date=2025-02-08|changes=
+One-year gift.
+}}
+
+== References ==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

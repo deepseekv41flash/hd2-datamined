@@ -1,0 +1,71 @@
+{{Infobox Armor
+|title = {{PAGENAME}}
+|image = SS-33 Mimetic Marshal Armor Render.png
+|type = Light
+|armor = 50
+|speed = 550
+|stam_regen = 125
+|passive = Stationary Shroud
+|source = [[Scope of Authority Premium Warbond#Page 1|Scope of Authority]]<small>{{Tooltip|P1|Page 1}}</small>
+|cost = {{Currency|Medals|45}}
+|helmet_image= SS-33 Mimetic Marshal Helmet Render.png
+|helmet_source= [[Scope of Authority Premium Warbond#Page 1|Scope of Authority]]<small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost= {{Currency|Medals|30}}
+|order = 113
+}}
+{{Quote|This light armor features state-of-the-art synthetic adaptive fibers and light-diffusing scrim netting, enabling its wearer to blend seamlessly into any wilderness, and carry out unannounced compliance audits with as much surprise as they deem appropriate.|[[Armory]] description}}
+
+'''{{PAGENAME}}''' is a set of [[Armor#Light-0|light armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the [[Armor#Armor-0|armor]] and [[Armor#Helmet-0|helmet]] can be claimed on page 1 of the [[Scope of Authority Premium Warbond#Page 1|Scope of Authority Premium Warbond]] for {{Currency|Medals|45|notext}} and {{Currency|Medals|30}}, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Stationary Shroud}}
+
+== Media ==
+<gallery mode=nolines>
+SS-33 Mimetic Marshal Desert Armor Render.png|Desert Armor Render
+SS-33 Mimetic Marshal Winter Armor Render.png|Arctic Armor Render
+SS-33 Mimetic Marshal Forest Armor Render.png|Forest Armor Render
+SS-33 Mimetic Marshal Crimson Armor Render.png|Crimson Armor Render
+</gallery>
+<gallery mode=nolines>
+SS-33 Mimetic Marshal Desert Helmet Render.png|Desert Helmet Render
+SS-33 Mimetic Marshal Winter Helmet Render.png|Arctic Helmet Render
+SS-33 Mimetic Marshal Forest Helmet Render.png|Forest Helmet Render
+SS-33 Mimetic Marshal Crimson Helmet Render.png|Crimson Helmet Render
+</gallery>
+<gallery mode=nolines>
+SS-33 Mimetic Marshal Armor Promo.png|Promotional Image
+SS-33 Mimetic Marshal Default Armor Set Image.png|Armor Set, <br>Standard Camo
+SS-33 Mimetic Marshal Desert Armor Set Image.png|Armor Set, <br>Desert Camo
+SS-33 Mimetic Marshal Forest Armor Set Image.png|Armor Set, <br>Forest Camo
+SS-33 Mimetic Marshal Artic Armor Set Image.png|Armor Set, <br>Arctic Camo
+</gallery>
+<gallery mode=nolines>
+SS-33 Mimetic Marshal Armor Set Image - Standard.png|Armor Set, <br>Standard Camo, <br>in game
+</gallery>
+
+== Trivia ==
+* The [[SS-15 Focal Point]], [[SS-500 Pale Prosecutor]], and SS-33 Mimetic Marshal are the first armor sets to include "Interactive Adaptive Camouflage." This means that the color and pattern of the armor's camouflage will change depending on the wearer's current [[Biomes|biome]]. 
+** It is unknown if the Interactive Adaptive Camouflage has any effect on enemy detection range, outside of the {{Passive|Stationary Shroud}} armor passive.
+{{CamoAvailability}}
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.200|changes=
+Addition
+* Added to the game.
+}}
+{{Change History Update|1.007.101|date=2026-10-13|changes=
+Announced <ref> https://blog.playstation.com/2026/10/13/helldivers-2-scope-of-authority-premium-warbond-launches-oct-20/</ref>
+}}
+
+== References ==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Helmets]]
+[[Category:Light Armor]]

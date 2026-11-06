@@ -1,0 +1,45 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Engineering Kit
+|source=[[Democratic Detonation Premium Warbond#Page 1|Democratic Detonation]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|18|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Democratic Detonation Premium Warbond#Page 1|Democratic Detonation]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|12|notext}}
+|order=37
+}}
+{{Quote|“The ground is just another obstacle that hasn't yet been cleared.”—SGM Janet Jones, Excavation Corps Founder.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page one of the [[Democratic Detonation Premium Warbond#Page 1|Democratic Detonation]] Premium [[Warbond]] for {{Currency|Medals|18|notext}} and 12 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Engineering Kit}}
+
+==Trivia==
+''Fallout'' fans have speculated whether the helmet's inspiration came from the [https://fallout.wiki/wiki/NCR_Ranger_Helmet NCR Rangers;] while the similarities are notable, we'd have to consider [[Helldivers 1:Armor#Hazard Ops|Mk-9 Hazard Ops]]… although one does not preclude the other.
+
+==Media==
+<gallery mode=nolines>
+CE-27 Ground Breaker Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.005.000|changes=Fix
+* Fixed an armor gap affecting CE-27 Ground Beaker and CW-9 White Wolf whilst using the 'Draw!' emote}}
+{{Change History Update|1.000.203|changes=CE-27 Ground Breaker armor now has the Engineer Kit passive as previously advertised. <small>(Formerly [[Servo-Assisted]])</small>}}
+{{Change History Update|1.000.202|date=2024-04-11|changes=Added with the release of Democratic Detonation.}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

@@ -1,0 +1,32 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=77
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Superstore
+|source=[[Superstore]]
+|cape_cost={{Currency|SC|100|notext}}
+|card_cost={{Currency|SC|35|notext}}
+}}
+{{Quote|No dissident or alien, no creature big or small, can ever hope to stand against the furious stampede of Managed Democracy.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|Cape and Player Card set]] can be bought from the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|100|notext}} and 35 [[Super Credits]], respectively.
+
+== Trivia ==
+* This cape and player card set, along with the [[DP-8 Mountain-Scaled]] set of armor, was most likely introduced to commemorate the Chinese New Year of 2026 which is the Year of the Horse.
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.006.003|changes=
+Made available in the Superstore.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

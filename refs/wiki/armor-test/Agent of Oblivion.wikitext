@@ -1,0 +1,31 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=19
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Cutting Edge Premium Warbond#Page 3|Cutting Edge]] <small>{{Tooltip|P3|Page 3}}</small>
+|cape_cost={{Currency|Medals|30|notext}}
+|card_cost={{Currency|Medals|16|notext}}
+}}
+{{Quote|0.05% of profits are donated to Superstone National Park, as part of the [[Ministry of Unity|Ministry of Unity's]] “Greener Galaxy” campaign.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page three of the [[Cutting Edge Premium Warbond#Page 3|Cutting Edge]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|30|notext}} and 16 [[Medal]]s.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.102|date=2024-03-14|changes=
+Added with the release of Cutting Edge.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

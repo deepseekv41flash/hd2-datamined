@@ -1,0 +1,31 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=16
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Steeled Veterans Premium Warbond#Page 3|Steeled Veterans]] <small>{{Tooltip|P3|Page 3}}</small>
+|cape_cost={{Currency|Medals|20|notext}}
+|card_cost={{Currency|Medals|16|notext}}
+}}
+{{Quote|Based on a [[Super Earth Armed Forces|SEAF]] Signaller's [[Cape]], which was intended to enable easy location of fallen heroes by aerial recovery crews.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page three of the [[Steeled Veterans Premium Warbond#Page 3|Steeled Veterans]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|20|notext}} and 16 [[Medal]]s.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

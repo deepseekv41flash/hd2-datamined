@@ -1,0 +1,46 @@
+{{Infobox Armor
+|title=BFM-77 Reformer
+|image=BFM-77 Reformer Armor Render.png
+|type=Medium
+|armor=125
+|speed=500
+|stam_regen=100
+|passive=Blunt-Force Mitigation
+|source = [[Superstore]]
+|cost = {{Currency|SC|250|notext}}
+|helmet_image= BFM-77 Reformer Helmet Render.png
+|helmet_source = [[Superstore]]
+|helmet_cost = {{Currency|SC|125|notext}}
+|order=109
+}}
+{{Quote|Molded from high-impact synthetic polymers. This sleek, stark white faceless armor both reduces mass manufacturing costs and ensures the wearer is highly visible on almost every battlefield, bravely drawing enemy fire away from considerably more costly vehicular assets.|[[Armory]] Description}}
+
+'''BFM-77 Reformer''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[helmet]] can be purchased from the Superstore for {{Currency|SC|250|notext}} and {{Currency|SC|125}} respectively.
+
+== Trivia ==
+* The Reformer bears a resemblance to the armor worn by [https://starwars.fandom.com/wiki/Imperial_Remnant_AT-RT_Driver Imperial Remnant AT-RT Drivers] from the ''Star Wars'' franchise, first appearing in [https://starwars.fandom.com/wiki/Star_Wars:_The_Mandalorian_and_Grogu ''The Mandalorian And Grogu (2026)''].
+** Additionally, the numeric designation of BFM-'''77''' may be in reference to original release date of ''Star Wars'', May 25, 1977.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Blunt-Force Mitigation}}
+
+== Media ==
+<gallery mode=nolines>
+BFM-77 Reformer Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.100|changes=
+Addition
+* Added to the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

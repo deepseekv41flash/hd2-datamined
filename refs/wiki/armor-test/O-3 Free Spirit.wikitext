@@ -1,0 +1,43 @@
+{{Infobox Armor
+|title = {{PAGENAME}}
+|image = {{PAGENAME}} Armor Render.png
+|type = Light
+|armor = 50
+|speed = 550
+|stam_regen = 125
+|passive = Oxygenator
+|source = [[Exo Experts Premium Warbond#Page 1|Exo Experts]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost = {{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Exo Experts Premium Warbond#Page 1|Exo Experts]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|30|notext}}
+|order = 103
+}}
+{{Quote|The SteerComfort fit of this armor allows the wearer to feel every curve, bump, and jostle of their Exosuit, as if they were one single being.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[Armor#Light-0|Light Armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[Armor#Helmet-0|helmet]] can be claimed from the 1st page of the [[Exo Experts Premium Warbond#Page 1|Exo Experts Premium Warbond]] for {{Currency|Medals|45|notext}} and 30 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Oxygenator}}
+
+== Media ==
+<gallery mode=nolines>
+O-3 Free Spirit Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.006.202|changes=
+Added to the game.
+}}
+{{Change History Update|date=2026-04-21|1.006.102|changes=
+Announced
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Light Armor]]
+[[Category:Helmets]]

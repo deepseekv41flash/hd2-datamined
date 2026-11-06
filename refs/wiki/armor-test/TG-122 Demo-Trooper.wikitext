@@ -1,0 +1,61 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=True Grit
+|source=[[Castellan's Creed Legendary Warbond#Page 2|Castellan's Creed]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|55|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Castellan's Creed Legendary Warbond#Page 2|Castellan's Creed]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order=107
+}}
+{{Quote|The design of the Demo-Trooper armor has been a corporate secret since ST Construction first issued it to the Charan National Guard in the early days of the Galactic Federation. Now, STC has contracted with the Ministry of Defense to issue the storied armor of its fallen homeworld to the Helldivers.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[helmet]] can be claimed from the 2nd page of the [[Castellan’s Creed Legendary Warbond|Castellan’s Creed]] [[Legendary Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medals]], respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|True Grit}}
+
+== Trivia ==
+* As a crossover to Warhammer 40,000 (abbreviated as WH40k), there are couple nods to the original source material, specificially to the Cadians, a type of Imperial Guard regiment based on the destroyed Fortress World of Cadia.
+** The {{PAGENAME}}'s appearance is based on the [https://megalodon.jp/2026-1105-2205-52/https://warhammer40k.wiki.gg:443/wiki/Kasrkin Cadian Kasrkin Killteam], specifically the [https://megalodon.jp/2026-1105-2152-12/https://warhammer40k.wiki.gg:443/wiki/File:KasrkinGunner.jpg Demo-Trooper Model].
+** Its color scheme and armor number is a nod to the [https://megalodon.jp/2026-1106-0003-58/https://warhammer40k.wiki.gg:443/wiki/Cadian_122nd Cadian 122nd]<ref>{{cite discord
+ | url         = https://discord.com/channels/1102970375731691612/1102973812179488798/1532412049139826880
+ | message     = It's because we decided to base the second armor on the Cadian 122nd regiments colors, as seen on and in the City Fight-book from 3rd edition
+ | access_date = 31 July
+ | author      = lando_viggo
+ | channel     = hd2-general-chat-1
+}}</ref>, which is featured on the cover and in [https://megalodon.jp/2026-1105-2157-52/https://warhammer40k.wiki.gg:443/wiki/Codex:_Cityfight Cityfight], a 3rd Edition Supplement book revolving around Urban Warfare.
+*The symbol on the right shoulder pauldron is that of the Cadian Gate, denoting a large area around [https://megalodon.jp/2026-1105-2154-43/https://warhammer40k.wiki.gg:443/wiki/Cadia Cadia]. The symbol is commonly used as an "honorific badge", showing the Cadian [https://megalodon.jp/2026-1106-0003-46/https://warhammer40k.wiki.gg:443/wiki/Guardsman Guardsman] wearing it fought on Cadia during the time of the [https://megalodon.jp/2026-1106-0003-57/https://warhammer40k.wiki.gg:443/wiki/Black_Crusade Black Crusades].
+* The "STC" in the armor's description is a reference to Warhammer 40,000's [https://megalodon.jp/2026-1106-0003-52/https://warhammer40k.wiki.gg:443/wiki/Standard_Template_Construct Standard Template Constructs], highly advanced automated factories that have been lost to time.
+
+== Media ==
+<gallery mode=nolines>
+TG-122 Demo-Trooper Armor Icon.png|Render
+TG-122 Demo-Trooper Armor Set Image.png|Ingame
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.000|changes=
+Added to the game with the release of Castellan's Creed.
+}}
+{{Change History Update|1.006.301|date=2026-07-30|changes=
+Announced
+}}
+
+== References ==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

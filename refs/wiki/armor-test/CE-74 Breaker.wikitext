@@ -1,0 +1,42 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Engineering Kit
+|source=[[Superstore]]
+|cost={{Currency|SC|250|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|125|notext}}
+|order=23
+}}
+{{DisambigMsg|the Superstore armor set|the shotgun from Helldivers Mobilize|SG-225 Breaker|the Helldivers 1 shotgun|Helldivers 1:SG-225 Breaker}}
+
+{{Quote|A domestic version of this [[armor]] is available for citizens who wish to perform efficient home renovation projects.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be bought from the [[Steeled Veterans Premium Warbond|Steeled Veterans]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|250|notext}} and 125 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Engineering Kit}}
+
+==Media==
+<gallery mode=nolines>
+CE-74 Breaker Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.004|date=2024-02-10|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

@@ -1,0 +1,31 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=51
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Masters of Ceremony Premium Warbond#Page 2|Masters of Ceremony]] <small>{{Tooltip|P2|Page 2}}</small>
+|cape_cost={{Currency|Medals|8|notext}}
+|card_cost={{Currency|Medals|2|notext}}
+}}
+{{Quote|This modest [[cape]] has been worn by those guarding the Chamber of Unanimous Decision since time immemorial.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page two of the [[Masters of Ceremony Premium Warbond#Page 2|Masters of Ceremony]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|8|notext}} and 2 [[Medal]]s.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.003.000|date=2025-05-15|changes=
+Added with the release of Masters of Ceremony.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

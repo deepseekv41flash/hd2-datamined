@@ -1,0 +1,36 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=67
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Superstore
+|source=[[Superstore]]
+|cape_cost={{Currency|SC|120|notext}}
+|card_cost={{Currency|SC|40|notext}}
+}}
+{{Quote|This convenient cape can double as ground insulation, warming blanket, or camp roofing to the enterprising defoliator.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|Cape and Player Card set]] can be bought from the [[Python Commandos Premium Warbond|Python Commandos]] page on the [[Superstore]] for {{Currency|SC|120|notext}} and 40 [[Super Credits]], respectively.
+
+==Media==
+<gallery mode=nolines>
+De-Forester's Sailcloth Cape Icon.png|Cape (Armory)
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.005.000|changes=
+Addition
+* Added to the game.
+}}
+
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

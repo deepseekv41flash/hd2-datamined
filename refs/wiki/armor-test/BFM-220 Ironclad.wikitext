@@ -1,0 +1,53 @@
+{{DisambigMsg|the heavy armor|the warbond|Ironclad Democracy Premium Warbond}}
+{{Infobox Armor
+|title=BFM-220 Ironclad
+|image=BFM-220 Ironclad Armor Render.png
+|type=Heavy
+|armor=175
+|speed=450
+|stam_regen=50
+|passive=Blunt-Force Mitigation
+|source = [[Ironclad Democracy Premium Warbond|Ironclad Democracy]]<small>{{Tooltip|P2|Page 2}}</small>
+|cost = {{Currency|Medals|55|notext}}
+|helmet_image= BFM-220 Ironclad Helmet Render.png
+|helmet_source = [[Ironclad Democracy Premium Warbond|Ironclad Democracy]]<small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost = {{Currency|Medals|45|notext}}
+|order=111
+}}
+{{Quote|Forged from surplus hull plating, this hulking suit features an integrated servo-bracing system and a towering blast-shield collar as favored by Helldiver barbershop quartets heard throughout the galaxy.|[[Armory]] Description}}
+
+'''BFM-220 Ironclad''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[helmet]] can be claimed from the 2nd page of the [[Ironclad Democracy Premium Warbond]] for {{Currency|Medals|55|notext}} and {{Currency|Medals|45}} respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Blunt-Force Mitigation}}
+
+== Media ==
+<gallery mode=nolines>
+BFM-220 Ironclad Armor Set Image.png|Armor Set
+</gallery>
+
+== Trivia == 
+* The Ironclad armor set shares its numeral designation of "'''220'''" with the [[TD-220 Bastion MK XVI|Bastion tank]], hinting that this armor may have been primarily designed for tank operators.
+** In the Playstation Blog, it mentions that the armor's plates were taken from surplus hull plating, which further links the two.
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.100|changes=
+Addition
+* Added to the game.
+}}
+{{Change History Update|1.007.002|date=2026-09-15|changes=
+Announced <ref> https://blog.playstation.com/2026/09/15/helldivers-2-ironclad-democracy-warbond-launches-sept-22/</ref>
+}}
+
+== References ==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

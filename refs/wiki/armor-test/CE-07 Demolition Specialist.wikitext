@@ -1,0 +1,45 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=64
+|speed=536
+|stam_regen=118
+|passive=Engineering Kit
+|source=[[Democratic Detonation Premium Warbond#Page 2|Democratic Detonation]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Democratic Detonation Premium Warbond#Page 2|Democratic Detonation]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|35|notext}}
+|order=38
+}}
+{{Quote|Originally worn by lunar terraformers, this suit can withstand rapid changes in pressure, heat, and personal velocity.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page two of the [[Democratic Detonation Premium Warbond#Page 2|Democratic Detonation]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 35 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Engineering Kit}}
+
+==Media==
+<gallery mode=nolines>
+CE-07 Demolition Specialist Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.005.000|date=|changes=
+Fixes
+
+* Fixed a torso clipping issue with the CE-07 Demolition Specialist armor
+}}{{Change History Update|1.000.202|date=2024-04-11|changes=
+Added with the release of Democratic Detonation.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

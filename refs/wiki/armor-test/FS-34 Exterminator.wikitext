@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Fortified
+|source=[[Superstore]]
+|cost={{Currency|SC|400|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|200|notext}}
+|order=31
+}}
+{{Quote|Features a patented non-stick coating, which makes scraping viscera off after a long day of battle less taxing.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be bought from the [[Helldivers Mobilize Warbond|Helldivers Mobilize!]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|400|notext}} and 200 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Fortified}}
+
+==Media==
+<gallery mode=nolines>
+FS-34 Exterminator Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.002.103|changes=Pants reverted back to red.}}
+{{Change History Update|1.002.101|changes=Pants recolored from red to brown.}}
+{{Change History Update|1.000.009|date=2024-02-18|changes=First made available in the Superstore.}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

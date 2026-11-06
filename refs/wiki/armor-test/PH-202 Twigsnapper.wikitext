@@ -1,0 +1,39 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Peak Physique
+|source=[[Viper Commandos Premium Warbond#Page 2|Viper Commandos]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|45|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Viper Commandos Premium Warbond#Page 2|Viper Commandos]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|35|notext}}
+|order=50
+}}
+{{Quote|The omission of upper-limb coverings allows for optimized freedom of movement, perspiration, and communication of upper body strength to squadmates.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page two of the [[Viper Commandos Premium Warbond#Page 2|Viper Commandos]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 35 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Peak Physique}}
+
+==Media==
+<gallery mode=nolines>
+PH-202 Twigsnapper Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.402|changes=Fixed missing description for the PH-202 Twigsnapper helmet.}}
+{{Change History Update|1.000.400|changes=Added with the release of Viper Commandos.}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

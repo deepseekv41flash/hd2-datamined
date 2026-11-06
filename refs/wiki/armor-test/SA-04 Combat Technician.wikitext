@@ -1,0 +1,47 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Scout
+|source=[[Helldivers Mobilize Warbond#Page 8|Helldivers Mobilize!]] <small>{{Tooltip|P8|Page 8}}</small>
+|cost={{Currency|Medals|60|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Helldivers Mobilize Warbond#Page 8|Helldivers Mobilize!]] <small>{{Tooltip|P8|Page 8}}</small>
+|helmet_cost={{Currency|Medals|40|notext}}
+|order=16
+}}
+{{Quote|Due to the enhanced strength caused by this [[armor]], caution is advised when using door handles or [[Hug|embracing]] colleagues.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page eight of the [[Helldivers Mobilize Warbond#Page 8|Helldivers Mobilize!]] [[Warbond]] for {{Currency|Medals|60|notext}} and 40 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Scout}}
+
+==Trivia==
+Unlike other cape icons, the [[Judgment Day]] cape's Warbond model wears this helmet instead of the standard [[B-01 Tactical]]—see [[Helldivers Mobilize Warbond#Page 6|page six]].
+
+==Issues==
+SC is generally the designation for armors with the Scout passive, not SA, which should be reserved for [[Servo-Assisted]] armors.
+
+==Media==
+<gallery mode=nolines>
+SA-04 Combat Technician Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

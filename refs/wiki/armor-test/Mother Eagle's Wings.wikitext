@@ -1,0 +1,31 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=54
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Force of Law Premium Warbond#Page 2|Force of Law]] <small>{{Tooltip|P2|Page 2}}</small>
+|cape_cost={{Currency|Medals|25|notext}}
+|card_cost={{Currency|Medals|7|notext}}
+}}
+{{Quote|Those taken under the wings of the Law can rest easy knowing that their transgressions will soon be laid bare, their harms amended, and their citizenship safely sequestered.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page two of the [[Force of Law Premium Warbond#Page 2|Force of Law]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|25|notext}} and 7 [[Medal]]s.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.003.102|changes=
+Added with the release of Force of Law.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

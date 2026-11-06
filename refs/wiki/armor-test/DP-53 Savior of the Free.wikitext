@@ -1,0 +1,42 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Democracy Protects
+|source=[[Super Citizen Edition]]
+|cost={{Tooltip|💲|USD}}20
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Super Citizen Edition]]
+|helmet_cost={{Tooltip|💲|USD}}20
+|order=5
+}}
+
+{{Quote|A faithful replica of the [[armor]] worn at The Battle of Liberty Peak. Honor their legacy, and wear it with pride.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+'''{{PAGENAME}}''' is included in the [[Super Citizen Edition]] which can be purchased for {{Tooltip|💲|USD}}20 {{Tooltip|United States dollars|USD}} or the equivalent in foreign currency.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Democracy Protects}}
+
+==Media==
+<gallery mode=nolines>
+DP-53 Savior of the Free Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

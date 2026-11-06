@@ -1,0 +1,31 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=4
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Helldivers Mobilize Warbond#Page 2|Helldivers Mobilize!]] <small>{{Tooltip|P2|Page 2}}</small>
+|cape_cost={{Currency|Medals|3|notext}}
+|card_cost={{Currency|Medals|1|notext}}
+}}
+{{Quote|The two stripes serve as a reminder of the two pillars of successful military campaigns: attack, and further attack.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page two of the [[Helldivers Mobilize Warbond#Page 2|Helldivers Mobilize!]] [[Warbond]], can be claimed separately for {{Currency|Medals|3|notext}} and 1 [[Medal]]s.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

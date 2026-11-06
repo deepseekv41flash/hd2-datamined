@@ -1,0 +1,31 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=81
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Entrenched Division Premium Warbond#Page 2|Entrenched Division]] <small>{{Tooltip|P2|Page 2}}</small>
+|cape_cost={{Currency|Medals|25|notext}}
+|card_cost={{Currency|Medals|6|notext}}
+}}
+{{Quote|With sharp geometric angles to symbolize the rigid chain of command, this cape embodies the sanctity and moral fortitude of unblemished leadership over the mud-caked warriors they direct.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page two of the [[Entrenched Division Premium Warbond#Page 2|Entrenched Division]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|25|notext}} and 6 [[Medal]]s.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.006.100|changes=
+Added with the release of Entrenched Division.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

@@ -1,0 +1,80 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image= B-01 Tactical v1 Armor Render.png
+|images=
+B-01 Tactical v2 Armor Render.png:2,
+B-01 Tactical v3 Armor Render.png:3,
+B-01 Tactical v4 Armor Render.png:4
+|type=Medium
+|armor=150
+|speed=500
+|stam_regen=100
+||passive=Extra Padding
+|source=Starter Equipment
+|helmet_image= B-01 Tactical v1 Helmet Render.png
+|helmet_images=B-01 Tactical v2 Helmet Render.png:2,
+B-01 Tactical v3 Helmet Render.png:3,
+B-01 Tactical v4 Helmet Render.png:4
+|helmet_source=Starter Equipment
+|order=1
+}}
+{{DisambigMsg|the default armor set|the Liberty Day armor set|DP-00 Tactical|the Helldivers 1 armor set|Helldivers_1:Armor#Tactical{{!}}HD1 Tactical Armor}}
+{{Quote|This [[armor]] is the [[Federation of Super Earth|Super Earth]] Standard Issue, made from the same titanium alloy as the [[Super Destroyer|Destroyer's]] hull.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Issued to all [[Helldiver]]s.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Extra Padding}}
+
+==Lore==
+The true successor to [[Helldivers 1:Armor#Tactical|Mk-5 Tactical]] from ''[[Helldivers 1]]'', which was modernized as [[DP-00 Tactical|DP-00]]. The [[Helldivers 1:Armor#Next-Gen|Mk-1b Next-Gen]] design closely resembles '''B-01'''.
+
+==Media==
+<tabber>
+Render=
+<gallery mode=nolines perrow=4>
+B-01 Tactical v1 Armor Render.png|Body, {{Tooltip|V1|Variant 1}}
+B-01 Tactical v1 Helmet Render.png|Helmet, {{Tooltip|V1|Variant 1}}
+
+B-01 Tactical v2 Armor Render.png|Body, {{Tooltip|V2|Variant 2}}
+B-01 Tactical v2 Helmet Render.png|Helmet, {{Tooltip|V2|Variant 2}}
+
+B-01 Tactical v3 Armor Render.png|Body, {{Tooltip|V3|Variant 3}}
+B-01 Tactical v3 Helmet Render.png|Helmet, {{Tooltip|V3|Variant 3}}
+
+B-01 Tactical v4 Armor Render.png|Body, {{Tooltip|V4|Variant 4}}
+B-01 Tactical v4 Helmet Render.png|Helmet, {{Tooltip|V4|Variant 4}}
+
+B-01 Tactical Armor Set Image.png|Armor Set, {{Tooltip|V1|Variant 1}}
+B-01 Tactical Armor Set Image 2.png|Armor Set, {{Tooltip|V2|Variant 2}}
+B-01 Tactical Armor Set Image 3.png|Armor Set, {{Tooltip|V3|Variant 3}}
+B-01 Tactical Armor Set Image 4.png|Armor Set, {{Tooltip|V4|Variant 4}}
+</gallery>
+|-|
+Images=
+<gallery mode=nolines widths=384 heights=216>
+16 next-gen.png|Mk-1b Next-Gen
+</gallery>
+</tabber>
+
+==Trivia==
+*[[wp:Ghost_of_Yōtei|Ghost of Yōtei]] is adding armor sets to the Ghost of Yōtei Complete Edition, one of which is inspired by the {{PAGENAME}} set.<ref>{{cite twitter|url=https://x.com/SuckerPunchProd/status/2104979827937910890|text=In addition to The Last of Us, we're excited to add new armor sets to Ghost of Yōtei Complete Edition inspired by Helldivers, Astro Bot, and Journey!<br>Unlock them by playing Ghost of Yōtei: Most Wanted starting October 1. Once they're unlocked, wear them anywhere in the base game, Echoes of Sekigahara, or Legends!}}</ref>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+==References==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+[[Category:Starter Loadout]]
+__FORCETOC__

@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Democracy Protects
+|source=[[Helldivers Mobilize Warbond#Page 10|Helldivers Mobilize!]] <small>{{Tooltip|P10|Page 10}}</small>
+|cost={{Currency|Medals|100|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Helldivers Mobilize Warbond#Page 10|Helldivers Mobilize!]] <small>{{Tooltip|P10|Page 10}}</small>
+|helmet_cost={{Currency|Medal|75|notext}}
+|order=18
+}}
+{{Quote|The three stripes on the pauldrons stand for the three principles of [[Federation of Super Earth|Super Earth]]: Liberty, Democracy, and Prosperity.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page ten of the [[Helldivers Mobilize Warbond#Page 10|Helldivers Mobilize!]] [[Warbond]] for {{Currency|Medals|100|notext}} and 75 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Democracy Protects}}
+
+==Media==
+<gallery mode=nolines>
+DP-11 Champion of the People Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

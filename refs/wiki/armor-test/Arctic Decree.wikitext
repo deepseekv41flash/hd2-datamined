@@ -1,0 +1,39 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=92
+|cape_image=Arctic Decree Cape Render.png
+|card_image=Arctic Decree Player Card Icon.png
+|source_type=Superstore
+|source = [[Superstore]]
+|cape_cost={{Currency|SC|100|notext}}
+|card_cost={{Currency|SC|35|notext}}
+}}
+{{Quote|Sewn from premium canvas and equipped with integrated adaptive camouflage capabilities, this cape features a prominent, high-contrast target reticle printed directly on the back.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a player card in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on the [[Scope of Authority Premium Warbond|Scope of Authority]] page of the [[Superstore]], can be claimed separately for {{Currency|SC|100|notext}} and {{Currency|SC|35}} respectively.
+
+== Media ==
+<gallery mode=nolines>
+Arctic Decree Cape Render.png|Cape, Standard Camo
+Arctic Decree Desert Cape Render.png|Cape, Desert Camo
+Arctic Decree Forest Cape Render.png|Cape, Forest Camo
+Arctic Decree Winter Cape Render.png|Cape, Winter Camo
+Arctic Decree Crimson Cape Render.png|Cape, Crimson Camo
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.200|changes=
+Addition
+* Added to the game.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

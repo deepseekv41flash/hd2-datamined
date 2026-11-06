@@ -1,0 +1,40 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=39
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Righteous Revenants Legendary Warbond|Righteous Revenants]] <small>{{Tooltip|P1|Page 1}}</small>
+|cape_cost={{Currency|Medals|8|notext}}
+|card_cost={{Currency|Medals|2|notext}}
+}}
+{{Quote|The symbol on this [[cape]] represents the pillars of freedom: duty, obedience, and loyalty.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page one of the [[Righteous Revenants Legendary Warbond#Page 1|Righteous Revenants]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|8|notext}} and 2 [[Medal]]s.
+
+== Trivia ==
+*Part of the content released in collaboration with ''Killzone 2'' for their crossover.
+*The name of this cosmetic set, as well as the [[Defender of Our Dream]] cosmetic set, are both references to the speech of [https://killzone.fandom.com/wiki/Scolar_Visari Scolar Visari] from the intro cutscene of the first ''Killzone'' game.
+*The [[Cosmetics#Capes and Cards|cosmetic set]] could previously be bought from the ‘Premium [[Superstore]]’ for a whopping {{Currency|SC|310|notext}} and 90 [[Super Credits]], respectively! Later on these items were bundled together into the [[Righteous Revenants Legendary Warbond]].
+**The items in this Premium Superstore rotation were originally scheduled to be removed after five days; however, due to player concerns over missing out ({{Tooltip|FOMO|Fear of Missing Out}}), the developers extended their availability to ten days.
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.002.003|changes=
+First made available in the Superstore.
+<ref>[https://store.steampowered.com/news/app/553850/view/516322672418750491 HELLDIVERS™ 2 | Steam]</ref>
+<ref>[https://blog.playstation.com/2025/12/11/the-helldivers-2-x-killzone-items-return-as-a-legendary-warbond-dec-18/ Mitchell Ayre | PlayStation Blog]</ref> <ref>[https://store.steampowered.com/news/app/553850/view/491584577841661619 HELLDIVERS™ 2 | Steam]</ref>}}
+
+==References==
+<references/>
+
+{{Nav Cosmetic}}
+
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+[[Category:Killzone]]

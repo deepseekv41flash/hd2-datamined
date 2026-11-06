@@ -1,0 +1,49 @@
+{{Infobox Armor
+|title = {{PAGENAME}}
+|image = {{PAGENAME}} Armor Render.png
+|type = Heavy
+|armor = 150
+|speed = 450
+|stam_regen = 50
+|passive=Rock Solid|source = [[Python Commandos Premium Warbond#Page 2|Python Commandos]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost = {{Currency|Medals|55|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Python Commandos Premium Warbond#Page 2|Python Commandos]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order = 92
+}}
+{{Quote|Evoking legendary Helldiver Ronald Mambo on the eve of his untimely disappearance, the striking silhouette projects power, burliness, and strength.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[Heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page two of the [[Python Commandos Premium Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Rock Solid}}
+
+==Media==
+<gallery mode=nolines>
+RS-40 Beast of Prey Armor Render.png|Body (Render)
+RS-40 Beast of Prey Helmet Render.png|Helmet (Render)
+RS-40 Beast of Prey Armor Set Image.png|Armor Set
+</gallery>
+
+==Trivia==
+*The PlayStation Blog post announcing the release of Python Commandos misspelled the armor set's name as '''"Best of Prey"'''.
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.005.000|changes=Released
+}}
+{{Change History Update|1.004.102|date=2025-11-25|changes=Announced <ref>[https://blog.playstation.com/2025/11/25/helldivers-2-python-commandos-premium-warbond-airdrops-dec-2/ Katherine Baskin | Playstation Blog]</ref> <ref>[https://store.steampowered.com/news/app/553850/view/604173306943244176 HELLDIVERS™ 2 | Steam]</ref>
+}}
+
+==References==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

@@ -1,0 +1,43 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Peak Physique
+|source=[[Viper Commandos Premium Warbond#Page 1|Viper Commandos]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|40|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Viper Commandos Premium Warbond#Page 1|Viper Commandos]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|30|notext}}
+|order=49
+}}
+{{Quote|Based on the uniform of [[Minor Characters#Jackle 6|Jackle 6]], a veteran of the [[Viper Commandos]] who held off an entire [[Terminid]] brood on [[Nublaria I|Nublaria]] in the [[Galactic War#The First Galactic War|First Galactic War]] with nothing but a [[MG-43 Machine Gun|machine gun]], pocket knife, and [[Orbital Laser]] Strikes.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the [[body armor]] and [[helmet]] can be claimed from page one of the Viper Commandos Premium [[Warbond]] for {{Currency|Medals|40|notext}} and 30 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Peak Physique}}
+
+== Media ==
+<gallery mode=nolines>
+PH-9 Predator Body Icon.png|Body (Armory)
+PH-9 Predator Helmet Icon.png|Helmet (Armory)
+PH-9 Predator Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.000.400|changes=
+Added with the release of Viper Commandos.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

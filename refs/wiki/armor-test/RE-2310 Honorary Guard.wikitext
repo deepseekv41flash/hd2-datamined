@@ -1,0 +1,40 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Reinforced Epaulettes
+|source=[[Masters of Ceremony Premium Warbond#Page 1|Masters of Ceremony]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Masters of Ceremony Premium Warbond#Page 1|Masters of Ceremony]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|30|notext}}
+|order=77
+}}
+{{Quote|This traditional [[armor]] has remained unchanged since time immemorial. Now with self-heated padding.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page one of the [[Masters of Ceremony Premium Warbond#Page 1|Masters of Ceremony]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 30 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Reinforced Epaulettes}}
+
+==Media==
+<gallery mode=nolines>
+RE-2310 Honorary Guard Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.003.000|date=2025-05-15|changes=
+Added with the release of Masters of Ceremony.}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

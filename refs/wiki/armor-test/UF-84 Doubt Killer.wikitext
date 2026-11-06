@@ -1,0 +1,44 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=125
+|speed=500
+|stam_regen=100
+|passive=Unflinching
+|source=[[Superstore]]
+|cost={{Currency|SC|400|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|200|notext}}
+|order=61
+}}
+{{Quote|Even among the most depraved of dissidents, the mere sight of this [[armor]] is enough to inspire a change of heart.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be bought from the [[Truth Enforcers Premium Warbond|Truth Enforcers]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|400|notext}} and 200 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Unflinching}}
+
+==Trivia==
+This armor was likely inspired either by the Nazi elite soldiers in ''[https://machinegames.com/games/wolfenstein-the-new-order Wolfenstein: The New Order,]'' or from the counter-terrorism unit in ''[https://fr.futabasha.co.jp/special/kerberos-saga Kerberos Panzer Cop]'' called ''“Kerberos”'' —or, perhaps more fittingly, the “Hellhounds.”
+
+==Media==
+<gallery mode=nolines>
+UF-84 Doubt Killer Armor Set Image.png|Armor Set
+Helldivers 2 Tweet 2024-10-31 Acquisition Centre Supplies file.png|Bundle
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.201|date=2024-10-31|changes=
+First made available in the Superstore.}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

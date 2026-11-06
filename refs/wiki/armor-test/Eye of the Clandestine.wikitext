@@ -1,0 +1,32 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=62
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Obedient Democracy Support Troopers Legendary Warbond#Page 2|Halo: ODST]] <small>{{Tooltip|P2|Page 2}}</small>
+|cape_cost={{Currency|Medals|25|notext}}
+|card_cost={{Currency|Medals|7|notext}}
+}}
+{{Quote|Those who serve Liberty from the shadows often elect to stay anonymous, moving like traceless specters through the night. May they watch over us always.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[cosmetic set]], found on page two of the [[Obedient Democracy Support Troopers Legendary Warbond#Page 2|Obedient Democracy Support Troopers]] Legendary [[Warbond]], can be claimed separately for {{Currency|Medals|25|notext}} and 7 [[Medal]]s.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.003.302|changes=
+Addition
+:Added with the Halo: ODST crossover.}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+[[Category:Halo]]
+__FORCETOC__

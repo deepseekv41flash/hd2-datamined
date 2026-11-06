@@ -1,0 +1,36 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=90
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source = [[Ironclad Democracy Premium Warbond|Ironclad Democracy]] <small>{{Tooltip|P1|Page 1}}</small>
+|cape_cost={{Currency|Medals|8|notext}}
+|card_cost={{Currency|Medals|2|notext}}
+}}
+{{Quote|Adorned with a fearsome armored division crest, this abbreviated cape ensures the wearer’s elite status is clearly broadcast to their subordinates, without the hem becoming fatally entangled in their own vehicle’s heavy tread mechanisms.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page 1st of the [[Ironclad Democracy Premium Warbond]], can be claimed separately for {{Currency|Medals|8|notext}} and {{Currency|Medals|2}} respectively.
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.100|changes=
+Addition
+* Added to the game.
+}}
+{{Change History Update|1.007.002|date=2026-09-15|changes=
+Announced <ref> https://blog.playstation.com/2026/09/15/helldivers-2-ironclad-democracy-warbond-launches-sept-22/</ref>
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

@@ -1,0 +1,34 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=86
+|cape_image={{PAGENAME}} Cape Icon.png
+|card_image={{PAGENAME}} Player Card.png
+|source_type=Warbond
+|source=[[Castellan’s Creed Legendary Warbond|Castellan’s Creed]]
+|cape_cost={{Currency|Medals|8|notext}}
+|card_cost={{Currency|Medals|2|notext}}
+}}
+{{Quote|The horrors of Tyranny are manifold, their minions many, but they are naught before Democracy's twin swords: overwhelming firepower, and those trained to unquestioningly wield it.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page one of the [[Castellan’s Creed Legendary Warbond|Castellan’s Creed]] Legendary [[Warbond]], can be claimed for {{Currency|Medals|8|notext}} and 2 [[Medal]]s, respectively.
+
+== Trivia ==
+* The symbol on the top right of the player card is that of the [https://megalodon.jp/2026-1105-2212-48/https://warhammer40k.wiki.gg:443/wiki/Cadian_Gate Cadian Gate], denoting a large area around [https://megalodon.jp/2026-1105-2154-43/https://warhammer40k.wiki.gg:443/wiki/Cadia Cadia]. The symbol is commonly used as an "honorific badge", showing the wearer fought on Cadia during the time of the [https://megalodon.jp/2026-1106-0003-57/https://warhammer40k.wiki.gg:443/wiki/Black_Crusade Black Crusades].
+* Both the cape and the player card are a reference to the camo cloaks used by the marksman in Kasrkin teams.
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.000|changes=
+Addition
+* Added to the game.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

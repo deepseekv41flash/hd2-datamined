@@ -1,0 +1,35 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image={{PAGENAME}} Cape Render.png
+|type=Cape
+|source_type=Special
+|source=[[Campaigns#Blazing Electorate|Blazing Electorate]]
+|cost={{Tooltip|❌|Exclusive}}
+|order=88
+}}
+
+'''{{PAGENAME}}''' is a cape in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+This cape is currently unavailable to all Helldivers.
+
+This [[Cosmetics#Capes and Cards|cape]] was intended to be given out to any Helldivers who partook in the [[Campaigns#Blazing Electorate|Blazing Electorate Campaign]]. However, with the campaign ending in a failure, this did not happen.
+
+== Trivia ==
+* The {{PAGENAME}} cape is the first Campaign Reward to not be given out, due to [[Campaigns#Blazing Electorate|Operation: Blazing Electorate]] ending in a failure.
+** While it is possible for it to return at a later date, this is unconfirmed.
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.002|changes=
+Announced.<ref>{{cite twitter|url=https://x.com/helldivers2/status/2101657803043582115|text=Nothing says "mission completed" like a patriotic incentive! Dive now to secure your campaign reward!}}</ref>
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

@@ -1,0 +1,47 @@
+{{Last Updated|1.004.000}}
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Desert Stormer
+|source=[[Superstore]]
+|cost={{Currency|SC|300|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|150|notext}}
+|order=87
+}}
+{{Quote|With its rustic charm and huntsmanlike detailing, this armor evokes those heroic expansionists who braved the alien wilds and ushered in our current age of bio-uniformity.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be bought from the [[Dust Devils Premium Warbond|Dust Devils]] page on the [[Superstore]] for {{Currency|Super Credits|300|notext}} and 150 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Desert Stormer}}
+
+==Media==
+<gallery mode=nolines>
+DS-10 Big Game Hunter Render.png|Armor Set (Official Render)
+DS-10 Armor Set Image.png|Armor Set (In game)
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.004.000|date=2025-09-04|changes=
+Addition
+* Added to the game. Made available in the Superstore.
+}}
+{{Change History Update|1.003.302|changes=
+Announced
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

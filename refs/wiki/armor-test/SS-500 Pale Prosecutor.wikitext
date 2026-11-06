@@ -1,0 +1,59 @@
+{{Infobox Armor
+|title = {{PAGENAME}}
+|image = SS-500 Pale Prosecutor Armor Render.png
+|type = Light
+|armor = 50
+|speed = 550
+|stam_regen = 125
+|passive = Stationary Shroud
+|source = [[Superstore]]
+|cost = {{Currency|SC|250}}
+|helmet_image= SS-500 Pale Prosecutor Helmet Render.png
+|helmet_source= [[Superstore]]
+|helmet_cost= {{Currency|SC|125}}
+|order = 113
+}}
+{{Quote|Tailored from insulated canvas, with a design honoring the ghost-like marksmen of ancient sub-zero campaigns. Featuring adaptive camouflage capabilities, it is engineered for long-duration vigils delivering swift, legally binding verdicts from extreme range.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[Armor#Light-0|light armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the [[Armor#Armor-0|armor]] and [[Armor#Helmet-0|helmet]] can be claimed on the [[Scope of Authority Premium Warbond|Scope of Authority]] page of the [[Superstore]] for {{Currency|SC|250|notext}} and {{Currency|SC|125}}, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Stationary Shroud}}
+
+== Media ==
+<gallery mode=nolines>
+SS-500 Pale Prosecutor Desert Helmet Render.png|Helmet, <br>Desert Camo
+SS-500 Pale Prosecutor Forest Helmet Render.png|Helmet, <br>Forest Camo
+SS-500 Pale Prosecutor Winter Helmet Render.png|Helmet, <br>Arctic Camo
+SS-500 Pale Prosecutor Crimson Helmet Render.png|Helmet, <br>Crimson Camo
+</gallery>
+<gallery mode=nolines>
+SS-500 Pale Prosecutor Desert Armor Render.png|Armor, <br>Desert Camo
+SS-500 Pale Prosecutor Forest Armor Render.png|Armor, <br>Forest Camo
+SS-500 Pale Prosecutor Winter Armor Render.png|Armor, <br>Arctic Camo
+SS-500 Pale Prosecutor Crimson Armor Render.png|Armor, <br>Crimson Camo
+</gallery>
+<gallery mode=nolines>
+SS-500 Pale Prosecutor Armor Set Image - Standard.png|Armor Set, <br>Standard Camo, <br>in game
+</gallery>
+
+== Trivia == 
+* The name, appearance, and description of this armor set suggest that it is a reference to famous Finnish sniper [[wp:Simo_H%C3%A4yh%C3%A4|Simo Häyhä]], nicknamed "The White Death".
+* The [[SS-15 Focal Point]], SS-500 Pale Prosecutor, and [[SS-33 Mimetic Marshal]] are the first armor sets to include "Interactive Adaptive Camouflage." This means that the color and pattern of the armor's camouflage will change depending on the wearer's current [[Biomes|biome]]. 
+** It is unknown if the Interactive Adaptive Camouflage has any effect on enemy detection range, outside of the {{Passive|Stationary Shroud}} armor passive.
+{{CamoAvailability}}
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.200|changes=
+Addition
+* Added to the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Helmets]]
+[[Category:Light Armor]]

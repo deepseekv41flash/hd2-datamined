@@ -1,0 +1,44 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=125
+|speed=500
+|stam_regen=100
+|passive=Unflinching
+|source=[[Truth Enforcers Premium Warbond#Page 2|Truth Enforcers]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Truth Enforcers Premium Warbond#Page 2|Truth Enforcers]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|35|notext}}
+|order=62
+}}
+{{Quote|Users are advised not to scratch at the lacquer, as the Red 20,000 pigment that gives this [[armor]] its signature sheen may be correlated with rapid DNA unspooling.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page two of the [[Truth Enforcers Premium Warbond#Page 2|Truth Enforcers]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 35 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Unflinching}}
+
+== Trivia ==
+
+* The UF-50 Bloodhound may be inspired by the [https://www.starwars.com/databank/sith-troopers Sith Trooper] armor from ''Star Wars: The Rise of Skywalker''.
+
+==Media==
+<gallery mode=nolines>
+UF-50 Bloodhound Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.201|date=2024-10-31|changes=
+Added with the release of Truth Enforcers.}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

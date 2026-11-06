@@ -1,0 +1,31 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=23
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Democratic Detonation Premium Warbond#Page 3|Democratic Detonation]] <small>{{Tooltip|P3|Page 3}}</small>
+|cape_cost={{Currency|Medals|30|notext}}
+|card_cost={{Currency|Medals|16|notext}}
+}}
+{{Quote|Let all who see this [[cape]] be struck still with Freedom's beauty, or struck dead with Liberty's bullets.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page three of the [[Democratic Detonation Premium Warbond#Page 3|Democratic Detonation]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|30|notext}} and 16 [[Medal]]s.
+
+==Media==
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.202|date=2024-04-11|changes=
+Added with the release of Democratic Detonation.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

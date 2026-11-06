@@ -1,0 +1,51 @@
+{{Infobox Armor
+|title=BFM-16 Tanker
+|image=BFM-16 Tanker Armor Render.png
+|type=Light
+|armor=75
+|speed=550
+|stam_regen=125
+|passive=Blunt-Force Mitigation
+|source = [[Ironclad Democracy Premium Warbond|Ironclad Democracy]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost = {{Currency|Medals|45|notext}}
+|helmet_image= BFM-16 Tanker Helmet Render.png
+|helmet_source = [[Ironclad Democracy Premium Warbond|Ironclad Democracy]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost = {{Currency|Medals|30|notext}}
+|order=110
+}}
+{{Quote|Inspired by the legendary armored cavalry of the First Galactic War, this lightweight suit features integrated acoustic dampeners to shield the wearer from the deafening roar of Freedom, and the disruptive screams of dissidence.|[[Armory]] Description}}
+
+'''BFM-16 Tanker''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[helmet]] can be claimed from the 1st page of the [[Ironclad Democracy Premium Warbond]] for {{Currency|Medals|30|notext}} and {{Currency|Medals|45}} respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Blunt-Force Mitigation}}
+
+== Media ==
+<gallery mode=nolines>
+BFM-16 Tanker Armor Set Image.png|Armor Set
+</gallery>
+
+== Trivia ==
+* The BFM-16 Tanker bears a resemblance to Soviet-era Tanker Helmets, specifically, the top of the helmet having similar details to the [[fandom:equipment:TSh-4|TSh-4M]]. Notably, this helmet is missing the ear coverings, leaving the headset exposed.
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.100|changes=
+Addition
+* Added to the game.
+}}
+{{Change History Update|1.007.002|date=2026-09-15|changes=
+Announced <ref>https://blog.playstation.com/2026/09/15/helldivers-2-ironclad-democracy-warbond-launches-sept-22/</ref>
+}}
+
+== References ==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

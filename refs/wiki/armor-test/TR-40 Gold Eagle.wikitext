@@ -1,0 +1,53 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=150
+|speed=500
+|stam_regen=100
+||passive=Extra Padding
+|source=[[Escalation of Freedom]]
+|cost={{Tooltip|❌|Exclusive}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Escalation of Freedom]]
+|helmet_cost={{Tooltip|❌|Exclusive}}
+|order=51
+}}
+{{Quote|This high-visibility [[armor]] allows its bearer to be easily seen through smoke, fog, and spewing viscera.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued on August 8, 2024, to [[Helldiver]]s whose accounts existed prior to that date.<ref>Discord conversation with AH Support regarding exclusive item eligibility brackets | [https://discord.com/channels/1210060956584124416/1210073264928456764/1496914142777311253 Discord link] | [[:File:Primary_Source_Discord_conversation_with_BVits_regarding_exclusive_item_eligibility_brackets.png|File]]</ref> Viewers of the [https://store.steampowered.com/news/app/553850/view/4339865428685122196 Escalation of Freedom livestream event] received two days early access to this set.<ref>{{cite discord|url=https://discord.com/channels/1102970375731691612/1102974129734434919/1270006727856881665|author=baskinator|message=Join us and PlayStation Access for a sneak peek of Escalation of Freedom on Steam. Watch our devs answer questions and get 48 hours early access to the new armor set "TR-40 Golden Eagle".|channel=hd2-announcements}}</ref>
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Extra Padding}}
+
+== Trivia ==
+<!--—WARNING———
+This is not a page nor wiki for fan fiction: you could be deemed a vandal.
+For communities, create a new page with ‘Community’ preceding the title—e.g. Community:Cheesedivers—and categorize it under [[Category:Community Content]].
+-->*The armor set is simply a [[B-01 Tactical]] reskin.
+
+== Media ==
+<gallery mode=nolines>
+TR-40 Gold Eagle Armor Set Image.png|Armor Set
+</gallery>
+
+== Issues ==
+The in-game quote reads: "This high-visibility armor allows '''it's''' bearer …" The use of an apostrophe in "it's" incorrectly forms "it is", which disrupts the intended meaning of the sentence.
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.001.002|changes=
+Added to the game.
+}}
+
+== References ==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

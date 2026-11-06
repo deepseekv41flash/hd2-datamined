@@ -1,0 +1,52 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Concussive Padding, Grenadier
+|source=[[Entrenched Division Premium Warbond#Page 1|Entrenched Division]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Entrenched Division Premium Warbond#Page 1|Entrenched Division]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medals|35|notext}}
+|order=100
+}}
+{{Quote|With extra capacity for storing throwable munitions, this armor ensure every enemy stronghold can be tactically ventilated, as per forceful de-fortification protocols.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the [[body armor]] and [[helmet]] can be claimed from page 1 of the [[Entrenched Division Premium Warbond|Entrenched Division]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 35 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Concussive Padding, Grenadier}}
+
+== Trivia ==
+The Sapper's helmet resembles a variety of real-life WWI-era helmet designs, such as the British [[wp:Brodie_helmet|Brodie helmet]].
+
+== Media ==
+<gallery mode=nolines>
+CPG-48 Sapper Body Armory.png|Body (Armory)
+CPG-48 Sapper Helmet Armory.png|Helmet (Armory)
+CPG-48 Sapper Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.006.100|changes=
+Addition
+* Added to the game.
+}}
+{{Change History Update|1.006.003|date=2026-03-10|changes=
+Announced <ref>[https://blog.playstation.com/2026/03/10/helldivers-2-entrenched-division-premium-warbond-out-march-17/ Katherine Baskin | Playstation Blog]</ref>}}
+
+== References ==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

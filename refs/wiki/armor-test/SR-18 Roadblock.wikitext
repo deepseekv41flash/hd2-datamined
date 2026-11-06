@@ -1,0 +1,40 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Siege-Ready
+|source=[[Urban Legends Premium Warbond#Page 2|Urban Legends]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|45|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Urban Legends Premium Warbond#Page 2|Urban Legends]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|35|notext}}
+|order=66
+}}
+{{Quote|The crest on this [[Armor|armor's]] shoulder shows friendlies that safety is near, and [[Enemies|foes]] that they have reached the end of the road.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page two of the [[Urban Legends Premium Warbond#Page 2|Urban Legends]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 35 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Siege-Ready}}
+
+==Media==
+<gallery mode=nolines>
+SR-18 Roadblock Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.002.001|changes=
+Added with the release of Urban Legends.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

@@ -1,0 +1,34 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=43
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Servants of Freedom Premium Warbond#Page 2|Servants of Freedom]] <small>{{Tooltip|P2|Page 2}}</small>
+|cape_cost={{Currency|Medals|25|notext}}
+|card_cost={{Currency|Medals|7|notext}}
+}}
+{{Quote|This [[cape]] honors the [[Eagle]] pilots who would follow a [[Stratagem]] beacon into the very jaws of tyranny, even when the beacon's placement seems inscrutable to the non-[[Helldiver]] mind.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page two of the [[Servants of Freedom Premium Warbond#Page 2|Servants of Freedom]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|25|notext}} and 7 [[Medal]]s.
+
+== Trivia ==
+* Both capes and player cards from the Servants of Freedom warbond are named for each half of the phrase "[[Fre Liberam|fre liberam]] per democrasum", a pseudo-Latin motto that translates to "freedom through democracy".
+** Both armor sets from the warbond are also inscribed with the full phrase.
+** The full phrase is a lyric from "[[March of the Helldivers]]".
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.002.101|date=2025-02-06|changes=
+Added with the release of Servants of Freedom.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Body Icon.png
+|type=Medium
+|armor=129
+|speed=471
+|stam_regen=71
+|passive=Fortified
+|source=[[Superstore]]
+|cost={{Currency|SC|150|notext}}
+|helmet_image= {{PAGENAME}} Helmet Icon.png
+|helmet_source=[[Superstore]]
+|helmet_cost={{Currency|SC|75|notext}}
+|order=22
+}}
+{{Quote|In field tests, 84% of users said that the [[armor]] improved their posture and self-esteem.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be bought from the [[Steeled Veterans Premium Warbond|Steeled Veterans]] page of the [[Superstore#Permanent_Catalog|Permanent Catalog]] on the [[Superstore]] for {{Currency|SC|150|notext}} and 75 [[Super Credits]], respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Fortified}}
+
+==Media==
+<gallery mode=nolines>
+B-24 Enforcer Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.004|date=2024-02-10|changes=
+First made available in the Superstore.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

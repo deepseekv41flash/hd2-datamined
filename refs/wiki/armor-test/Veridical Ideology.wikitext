@@ -1,0 +1,39 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image=Veridical Ideology Cape Render.png
+|armor=<span style=color:gray>100
+|speed=<span style=color:gray>100
+|stam_regen=<span style=color:gray>100
+|passive=[[Armor Passives#Standard Issue|Standard Issue]]
+|source=[[Liberty Day]]
+|cost={{Tooltip|❌|Exclusive}}
+|type=Cape
+|source_type=Special
+|order=66
+}}
+{{Quote|This [[cape]] celebrates the one Veridical Ideology—Managed Democracy—a truth so self evident, it requires no proof beyond the unwavering obedience of its champions.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued on [[Liberty Day]], October 26th, 2025, to all [[Helldiver]]s who logged in between August 28th and October 26th, 2025.<ref>Discord conversation with AH Support regarding exclusive item eligibility brackets | [https://discord.com/channels/1210060956584124416/1210073264928456764/1496914142777311253 Discord link] | [[:File:Primary_Source_Discord_conversation_with_BVits_regarding_exclusive_item_eligibility_brackets.png|File]]</ref>
+
+== Lore ==
+Issued to all Helldivers for their triumph on Liberty Day, having had successfully {{MajorOrderLink | id = A2-10-5 | text = killed 40 million enemies of democracy}} using only the [[R-2124 Constitution]].
+
+== Media ==
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.004.100|changes=
+Added to the game.
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

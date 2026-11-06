@@ -149,3 +149,77 @@ python tools/gamedll_catalog_extract.py --json out/gamedll-catalogs.json
 
 `generated_stratagem_upgrade_settings.dl_bin` 恒为 133 B 空表并不能说明“模块表被删”——模块定义从来不在 dl_bin，
 而是 `game.dll` 这张 44 条表 + 引擎实现；wiki 30 条与 44 条的对表就是完整证据链（30/30 + 14 未发布）。
+
+
+---
+
+## 5. Booster（配装增益）定义表 —— 2026-11-06 新发现（`0x2CB4840`）
+
+**背景**：代理侧注入 `cat 5`（`progressionCategory=5`，30 条）即可解锁 Booster（实机 ✓，见 proxy 仓库
+`UNLOCK-MAP` §10，R2）。但**55 张 `generated_*` 明文表里没有 Booster 表** —— 定义在 `game.dll`。
+
+### 5.1 表位置与结构
+
+| 项 | 值 |
+|---|---|
+| 文件 | `data/game/game.dll`（46.8 MB）|
+| 基址 | **`0x2CB4840`** |
+| 步长 | **`0x38`（56 B）** |
+| 条数 | **21**（idx 0 = `NO BOOSTER`，其后 20 个真实 Booster）|
+
+记录字段（偏移相对记录首字节）：
+
+| 偏移 | 类型 | 含义 | 例（VITALITY ENHANCEMENT）|
+|---|---|---|---|
+| `+0x00` | u32 | **itemId**（= 目录里 `cat 5` 的 `mixId`）| `1110686504` |
+| `+0x04` | u32 | 0（保留；`SURPLUS EAT ALLOCATION` 这条是 15，语义 ⚠）| 0 |
+| `+0x08` | f32 | **强度/倍率**（语义 ⚠ 未证，但与效果强弱档位吻合）| `0.9` |
+| `+0x0C` | u32 | 恒 1（flag/count，⚠）| 1 |
+| `+0x10` | u32 | **名称 locid（全大写）** | `'VITALITY ENHANCEMENT'` |
+| `+0x14` | u32 | **名称 locid（标题式）** | `'Vitality Enhancement'` |
+| `+0x18` | u32 | **描述 locid** | "Provides minor damage reduction…" |
+| `+0x1C` 起 | u32×n | 另有 4–6 个 locid（短/长描述、参数化模板等）| — |
+
+### 5.2 全表（20 条真实 Booster + 强度值）
+
+| idx | itemId | 强度 f32 | 名字 |
+|---:|---:|---:|---|
+| 0 | 2747100039 | 1.000 | NO BOOSTER（占位）|
+| 1 | 1110686504 | 0.900 | VITALITY ENHANCEMENT |
+| 2 | 684729784 | 1.300 | STAMINA ENHANCEMENT |
+| 3 | 2776452811 | 0.350 | MUSCLE ENHANCEMENT |
+| 4 | 4136928865 | 1.500 | UAV RECON BOOSTER |
+| 5 | 4066886572 | 1.000 | INCREASED REINFORCEMENT BUDGET |
+| 6 | 4273318008 | 0.750 | FLEXIBLE REINFORCEMENT BUDGET |
+| 7 | 1908198785 | 1.500 | HELLPOD SPACE OPTIMIZATION |
+| 8 | 876985512 | 0.900 | LOCALIZATION CONFUSION |
+| 9 | 3504405746 | 0.700 | EXPERT EXTRACTION PILOT |
+| 10 | 2709264466 | 0.500 | MOTIVATIONAL SHOCKS |
+| 11 | 3912131454 | 1.000 | EXPERIMENTAL INFUSION |
+| 12 | 3102833400 | 1.000 | FIREBOMB HELLPODS |
+| 13 | 336215081 | 0.150 | SAMPLE SCANNER |
+| 14 | 2239116615 | 0.050 | DEAD SPRINT |
+| 15 | 3793458484 | 0.000 | ARMED RESUPPLY PODS |
+| 16 | 796779894 | 10.000 | SAMPLE EXTRICATOR |
+| 17 | 1151328602 | 1.000 | STUN PODS |
+| 18 | 1602836857 | 1.000 | CONCEALED INSERTION |
+| 19 | 3545987157 | 0.500 | INTEGRATED EXTINGUISHERS |
+| 20 | 1213901450 | 1.000 | SURPLUS EAT ALLOCATION |
+
+### 5.3 覆盖度：目录 30 条里有 10 条**本地无 Booster 定义**
+
+代理抓到的目录里 `cat 5` 共 **30** 条，本表只覆盖 **20** 条。剩下 10 条在整个 `game.dll` 里
+**0 命中**（不止这张表，全文都搜不到）：
+
+```
+196883860  767342143  1046516979  1175500164  1195476753  1607993656  2031253145  2262930209  3126789594  3229102862
+```
+
+⇒ 这 10 条是**"服务端目录里有、本地没有 Booster 定义"**的条目 —— 与"未上架/占位"的形态一致。
+（代理注入能解锁它们，但客户端拿不到本地定义，所以效果/名字可能异常；待单独观察。）
+
+### 5.4 能力边界
+
+- **改 Booster 的实际强度**：文件侧入口是 **game.dll 这张表**（`+0x08` f32 最像倍率，⚠ 未证）或 entities 侧的效果实现；
+  **不是** dl_bin 明文表（那 55 张里没有 Booster 表）。
+- **解锁 Booster**：走代理注入 `cat 5`（一行 inventory）即可，不需要动任何文件。

@@ -1,0 +1,46 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image=Reckoning's Cheer Cape Render.png
+|armor=<span style=color:gray>100
+|speed=<span style=color:gray>100
+|stam_regen=<span style=color:gray>100
+|passive=[[Standard Issue]]
+|source=[[Festival of Reckoning]]
+|cost={{Tooltip|❌|Exclusive}}
+|type=Cape
+|order=71
+|source_type=Special
+}}
+{{Quote|When facing the enemies of Freedom this Reckoningtide, keep up the festive spirit by recalling the opening line of A Vengeant Carol: "They'll soon be dead, to begin with."|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a [[cape]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued by the [[Ministry of Prosperity]] on January 1st, 2026 to players who logged in between December 18, 2025 and December 31, 2025.<ref>Discord conversation with AH Support regarding exclusive item eligibility brackets | [https://discord.com/channels/1210060956584124416/1210073264928456764/1496914142777311253 Discord link] | [[:File:Primary_Source_Discord_conversation_with_BVits_regarding_exclusive_item_eligibility_brackets.png|File]]</ref>
+
+== Lore ==
+Issued to all Helldivers who participated in [[Major Orders#A2-12-4|2185's]] [[Festival of Reckoning]] by High Command.
+
+== Trivia ==
+* The cape’s design appears to be based on the emblem of the Terran Empire from ''Star Trek''.
+
+== Media ==
+<gallery mode=nolines>
+Reckoning's Cheer Cape Icon.png|Armory
+Festival of Reckoning Cape Promotional.png|Promotional Material
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.005.001|changes=
+Added to the game.
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

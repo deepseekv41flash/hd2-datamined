@@ -1,0 +1,40 @@
+{{Infobox Armor
+|title = {{PAGENAME}}
+|image = {{PAGENAME}} Armor Render.png
+|type = Heavy
+|armor = 175
+|speed = 450
+|stam_regen = 50
+|passive=Supplemental Adrenaline
+|source = [[Siege Breakers Premium Warbond|Siege Breakers]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost = {{Currency|Medals|55|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Siege Breakers Premium Warbond|Siege Breakers]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order = 97
+}}
+{{Quote|The heavy plate used in this armor is sustainably sourced from the corpses of non-sentient Automaton, then processed by other, similarly non-sentient Automatons.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[helmet]] can be claimed from the [[Siege Breakers Premium Warbond#Page 2|Siege Breakers]] [[Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Supplemental Adrenaline}}
+
+== Media ==
+<gallery mode=nolines>
+SA-8 Ram Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.006.001|changes=
+Added with the release of Siege Breakers.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]

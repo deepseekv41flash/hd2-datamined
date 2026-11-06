@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Inflammable
+|source=[[Freedom's Flame Premium Warbond#Page 2|Freedom's Flame]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Freedom's Flame Premium Warbond#Page 2|Freedom's Flame]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medal|35|notext}}
+|order=55
+}}
+{{Quote|Completely sheathed in 14-cm silica fiber foam, except for a thin tube to the ear canal to enable hearing the satisfying screeches of Freedom's [[enemies]] as they burn.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page two of the [[Freedom's Flame Premium Warbond#Page 2|Freedom's Flame]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 35 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Inflammable}}
+
+==Media==
+<gallery mode=nolines>
+I-102 Draconaught Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.002|date=2024-08-08|changes=
+Added with the release of Freedom's Flame.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

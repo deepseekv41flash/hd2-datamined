@@ -1,0 +1,46 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=True Grit
+|source=[[Castellan's Creed Legendary Warbond#Page 1|Castellan's Creed]] <small>{{Tooltip|P1|Page 1}}</small>
+|cost={{Currency|Medals|45|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Castellan's Creed Legendary Warbond#Page 1|Castellan's Creed]] <small>{{Tooltip|P1|Page 1}}</small>
+|helmet_cost={{Currency|Medal|30|notext}}
+|order=106
+}}
+{{Quote|"Where lesser soldiers break, Helldivers obey. When Tyranny's horrors swarm, Helldivers obey. When death is certain, and hope and sense have fled, Helldivers obey." -- Last Lord Governor of Chara.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[helmet]] can be claimed from the first page of the [[Castellan’s Creed Legendary Warbond|Castellan’s Creed]] Legendary [[Warbond]] for {{Currency|Medals|45}} and {{Currency|Medals|30}} respectfully.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|True Grit}}
+
+== Trivia ==
+*This armor is based on Warhammer 40,000 [https://megalodon.jp/2026-1105-2205-52/https://warhammer40k.wiki.gg:443/wiki/Kasrkin Cadian Kasrkin Killteam] armor.  The helmet is modified with additional optics to increase accuracy at range.
+*The number 8 in the name of the armor is a reference to the [https://megalodon.jp/2026-1106-0004-08/https://warhammer40k.wiki.gg:443/wiki/Cadian_8th Cadian 8th Regiment], which this armors appearance and paintjob is based on.
+*The symbol on the right shoulder pauldron is that of the [https://megalodon.jp/2026-1105-2212-48/https://warhammer40k.wiki.gg:443/wiki/Cadian_Gate Cadian Gate], denoting a large area around [https://megalodon.jp/2026-1105-2154-43/https://warhammer40k.wiki.gg:443/wiki/Cadia Cadia]. The symbol is commonly used as an "honorific badge", showing the Cadian [https://megalodon.jp/2026-1106-0003-46/https://warhammer40k.wiki.gg:443/wiki/Guardsman Guardsman] wearing it fought on Cadia during the time of the [https://megalodon.jp/2026-1106-0003-57/https://warhammer40k.wiki.gg:443/wiki/Black_Crusade Black Crusades].
+
+== Media ==
+<gallery mode=nolines>
+TG-8 Sharpshooter Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.000|changes=
+Added to the game with the release of Castellan's Creed.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

@@ -1,0 +1,44 @@
+{{Last Updated|1.003.302}}<!--
+-->{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Feet First
+|source=[[Obedient Democracy Support Troopers Legendary Warbond#Page 2|Halo: ODST]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|55|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Obedient Democracy Support Troopers Legendary Warbond#Page 2|Halo: ODST]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order=86
+}}
+{{Quote|Made famous by the [[Ministry of Intelligence|Ministry of Intelligence's]] hide-and-seek-and-destroy champion of '52, this [[armor]] has been improved by removing excess shoulder protection.|[[Armory]] Description}}
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the body armor and [[helmet]] can be claimed from page two of the [[Obedient Democracy Support Troopers Legendary Warbond#Page 2|Obedient Democracy Support Troopers]] Legendary [[Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Feet First}}
+
+== Media ==
+<gallery mode=nolines>
+A-35 Recon Body Icon.png|Body (Armory)
+A-35 Recon Helmet Icon.png|Helmet (Armory)
+A-35 Recon Armor Set Image.png|Armor Set
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.003.302|changes=
+Addition
+:Added with the Halo: ODST crossover.}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+[[Category:Halo]]
+__FORCETOC__

@@ -1,0 +1,40 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=75
+|speed=550
+|stam_regen=125
+|passive=Unflinching
+|source=[[Truth Enforcers Premium Warbond#Page 3|Truth Enforcers]] <small>{{Tooltip|P3|Page 3}}</small>
+|cost={{Currency|Medals|65|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Truth Enforcers Premium Warbond#Page 3|Truth Enforcers]] <small>{{Tooltip|P3|Page 3}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order=63
+}}
+{{Quote|Made famous by the “Truth Enforcers: Enforcers of Truth” mystery novels, this [[armor]] calls to mind those paragons of patriotism who protect us from treasonous lies.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page three of the [[Truth Enforcers Premium Warbond#Page 3|Truth Enforcers]] Premium [[Warbond]] for {{Currency|Medals|65|notext}} and 45 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Unflinching}}
+
+==Media==
+<gallery mode=nolines>
+UF-16 Inspector Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.201|date=2024-10-31|changes=
+Added with the release of Truth Enforcers.}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

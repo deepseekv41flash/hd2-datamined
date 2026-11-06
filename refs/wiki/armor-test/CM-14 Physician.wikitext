@@ -1,0 +1,41 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Med-Kit
+|source=[[Helldivers Mobilize Warbond#Page 9|Helldivers Mobilize!]] <small>{{Tooltip|P9|Page 9}}</small>
+|cost={{Currency|Medals|70|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Helldivers Mobilize Warbond#Page 9|Helldivers Mobilize!]] <small>{{Tooltip|P9|Page 9}}</small>
+|helmet_cost={{Currency|Medal|50|notext}}
+|order=17
+}}
+{{Quote|The distinctive red, white, and green of the Intergalactic Medical Corps signal to all [[Helldiver]]s that help is at hand.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page nine of the [[Helldivers Mobilize Warbond#Page 9|Helldivers Mobilize!]] [[Warbond]] for {{Currency|Medals|70|notext}} and 50 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Med-Kit}}
+
+==Media==
+<gallery mode=nolines>
+CM-14 Physician Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

@@ -1,0 +1,45 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Light
+|armor=50
+|speed=550
+|stam_regen=125
+|passive=Scout
+|source=[[Helldivers Mobilize Warbond#Page 7|Helldivers Mobilize!]] <small>{{Tooltip|P7|Page 7}}</small>
+|cost={{Currency|Medals|50|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Helldivers Mobilize Warbond#Page 7|Helldivers Mobilize!]] <small>{{Tooltip|P7|Page 7}}</small>
+|helmet_cost={{Currency|Medals|35|notext}}
+|order=15
+}}
+{{Quote|The patented fabric absorbs visible, infrared, and ultraviolet radiation, to prevent detection by all known species.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[light armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the [[body armor]] and [[helmet]] can be claimed from page seven of the [[Helldivers Mobilize Warbond#Page 7|Helldivers Mobilize!]] [[Warbond]] for {{Currency|Medals|50|notext}} and 35 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Scout}}
+
+==Lore==
+The SC-30's design traces its roots back to the [[Helldivers 1:Armor#Ranger|Mk-8 Ranger]], a hallmark of the [[Galactic War#First Galactic War (Helldivers 1)|First Galactic War]]. Although that uniform remains unavailable to [[Helldiver]]s during the [[Galactic War#Second Galactic War (Helldivers 2)|Second]], its influence is unmistakable—as evidenced by the helmet.
+
+==Media==
+<gallery mode=nolines perrow=3>
+SC-30 Trailblazer Scout Armor Set Image.png|Armor Set
+17 ranger.png|Mk-8 Ranger
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|1]]
+[[Category:Light Armor]]
+[[Category:Helmets]]
+__FORCETOC__

@@ -1,0 +1,48 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image=GS-66 Lawmaker Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Gunslinger
+|source=[[Borderline Justice Premium Warbond#Page 2|Borderline Justice]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|55|notext}}
+|helmet_image=GS-66 Lawmaker Helmet Render.png
+|helmet_source=[[Borderline Justice Premium Warbond#Page 2|Borderline Justice]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|45|notext}}
+|order=75
+}}
+{{Quote|Embodies the ethos of Manifest Democracy—that it is our voter-given responsibility to emancipate the savage, un-Liberated galaxy. To rest only when every [[planet]] is safe, civilized, and Free.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Both the [[body armor]] and [[helmet]] can be claimed from page two of the [[Borderline Justice Premium Warbond#Page 2|Borderline Justice]] Premium [[Warbond]] for {{Currency|Medals|55|notext}} and 45 [[Medal]]s, respectively.
+
+== Passive Ability ==
+{{Armor Passive Info Panel|Gunslinger}}
+
+
+== Media ==
+<gallery mode=nolines>
+GS-66 Lawmaker Body Icon.png|Body (Armory)
+GS-66 Lawmaker Helmet Icon.png|Helmet (Armory)
+GS-66 Lawmaker Armor Set Image.png|Armor Set
+</gallery>
+
+== Trivia ==
+* The Lawmaker bears more than a passing resemblance to 2 notable pieces of sci-fi armor:
+** The helmet appears to be based off of Tony Stark’s Iron Man Mark 1, and the body armor appears to be based off the beskar armor worn by the Mandalorian bounty hunter Din Djarin.
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.002.200|date=2025-03-20|changes=
+Added with the release of Borderline Justice.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

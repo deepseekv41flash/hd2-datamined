@@ -1,0 +1,40 @@
+{{Infobox Armor
+|title={{PAGENAME}} 
+|image={{PAGENAME}} Armor Render.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Fortified
+|source=[[Polar Patriots Premium Warbond#Page 2|Polar Patriots]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|45|notext}}|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Polar Patriots Premium Warbond#Page 2|Polar Patriots]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|35|notext}}
+|order=45
+}}
+{{Quote|The CW-22 Kodiak [[armor]] was thoroughly pressure-tested by patriotic volunteers, as part of the “Test Subjects for [[Federation of Super Earth|Super-Earth]]” Citizen Advancement Program.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page two of the [[Polar Patriots Premium Warbond#Page 2|Polar Patriots]] Premium [[Warbond]] for {{Currency|Medals|45|notext}} and 35 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Fortified}}
+
+==Media==
+<gallery mode=nolines>
+CW-22 Kodiak Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.303|date=2024-05-09|changes=
+Added with the release of Polar Patriots.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

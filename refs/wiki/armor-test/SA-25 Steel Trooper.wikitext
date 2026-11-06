@@ -1,0 +1,49 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Armor Render.png
+|type=Medium
+|armor=100
+|speed=500
+|stam_regen=100
+|passive=Servo-Assisted
+|source=[[Steeled Veterans Premium Warbond#Page 1|Steeled Veterans]] <small>{{Tooltip|P1|Page 1}} </small>
+|cost={{Currency|Medals|18|notext}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Steeled Veterans Premium Warbond#Page 1|Steeled Veterans]] <small>{{Tooltip|P1|Page 1}} </small>
+|helmet_cost={{Currency|Medals|12|notext}}
+|order=19
+}}
+{{Quote|For optimal performance, the manufacturer recommends avoiding immersing this [[armor]] in salt water for prolonged periods.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[medium armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page one of the [[Steeled Veterans Premium Warbond#Page 1|Steeled Veterans]] Premium [[Warbond]] for {{Currency|Medals|18|notext}} and 12 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Servo-Assisted}}
+
+==Media==
+<tabber>
+Armory=
+<gallery mode=nolines>
+SA-25 Steel Trooper Armor Set Image.png|Armor Set
+</gallery>
+|-|
+Images=
+<gallery mode=nolines widths=384 heights=216>
+Steeled Veterans Premium Warbond Marketing 2.jpg|Marketing
+</gallery>
+</tabber>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|2]]
+[[Category:Medium Armor]]
+[[Category:Helmets]]
+__FORCETOC__

@@ -1,0 +1,42 @@
+{{Infobox Cosmetic
+|title={{PAGENAME}}
+|image={{PAGENAME}} Cape Render.png
+|armor=<span style=color:gray>100
+|speed=<span style=color:gray>100
+|stam_regen=<span style=color:gray>100
+|passive=[[Standard Issue]]
+|source=[[Station-81]]
+|cost={{Tooltip|❌|Exclusive}}
+|type=Cape
+|order=60
+|source_type=Special
+}}
+{{Quote|This [[cape]] reminds us that even faced with the abyssal darkness of space, nothing can stand against our human ingenuity, our powers of collaboration, or our sheer overwhelming numbers.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a [[cape]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+Issued by the [[Ministry of Prosperity]] on July 22, 2025,<ref>[https://twitter.com/helldivers2/status/1947583094900363368 HELLDIVERS™ 2 | Twitter]</ref> to [[Helldiver]]s who logged in between May 9 and July 22, 2025.<ref>Discord conversation with AH Support regarding exclusive item eligibility brackets | [https://discord.com/channels/1210060956584124416/1210073264928456764/1496914142777311253 Discord link] | [[:File:Primary_Source_Discord_conversation_with_BVits_regarding_exclusive_item_eligibility_brackets.png|File]]</ref>
+
+== Lore ==
+Distributed to all [[Helldiver]]s in recognition of the community coming together in a days-long {{Tooltip|ARG|Alternative Reality Game}} quest to bring [[Station-81]] back online.
+
+== Media ==
+<gallery mode=nolines>
+File:Helldivers 2 Tweet 2025-07-22 Ingress81 Cape Distribution file.png|Twitter Image
+</gallery>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.003.201|date=2025-07-22|changes=
+Added to the game.
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+__FORCETOC__

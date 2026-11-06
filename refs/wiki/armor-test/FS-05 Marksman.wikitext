@@ -1,0 +1,42 @@
+{{Infobox Armor
+|title={{PAGENAME}}
+|image={{PAGENAME}} Body Icon.png
+|type=Heavy
+|armor=150
+|speed=450
+|stam_regen=50
+|passive=Fortified
+|source=[[Helldivers Mobilize Warbond#Page 2|Helldivers Mobilize!]] <small>{{Tooltip|P2|Page 2}}</small>
+|cost={{Currency|Medals|6|notext}}
+|helmet_image= {{PAGENAME}} Helmet Icon.png
+|helmet_source=[[Helldivers Mobilize Warbond#Page 2|Helldivers Mobilize!]] <small>{{Tooltip|P2|Page 2}}</small>
+|helmet_cost={{Currency|Medals|5|notext}}
+|order=10
+}}
+{{DisambigMsg|the Helldivers Mobilize armor set|a list of Marksman weapons|Weapons#Marksman_Rifle-0{{!}}Marksman Rifles}}
+{{Quote|While early prototypes used shock-absorbing gels, this [[armor]] stabilizes aim with the use of internal gyroscopes.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a set of [[heavy armor]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Both the body armor and [[helmet]] can be claimed from page two of the [[Helldivers Mobilize Warbond#Page 2|Helldivers Mobilize!]] [[Warbond]] for {{Currency|Medals|6|notext}} and 5 [[Medal]]s, respectively.
+
+==Passive Ability==
+{{Armor Passive Info Panel|Fortified}}
+
+==Media==
+<gallery mode=nolines>
+FS-05 Marksman Armor Set Image.png|Armor Set
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.000.000|changes=
+Released with the game.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Heavy Armor]]
+[[Category:Helmets]]
+__FORCETOC__

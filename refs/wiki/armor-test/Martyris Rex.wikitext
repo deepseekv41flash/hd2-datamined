@@ -1,0 +1,33 @@
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=18
+|cape_image={{PAGENAME}} Cape Render.png
+|card_image={{PAGENAME}} Player Card Icon.png
+|source_type=Warbond
+|source=[[Cutting Edge Premium Warbond#Page 2|Cutting Edge]] <small>{{Tooltip|P2|Page 2}}</small>
+|cape_cost={{Currency|Medals|20|notext}}
+|card_cost={{Currency|Medals|5|notext}}
+}}
+{{Quote|It is said that only the truly Democratic can lift this [[cape]] to their shoulders.|[[Armory]] Description}}
+
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page two of the [[Cutting Edge Premium Warbond#Page 2|Cutting Edge]] Premium [[Warbond]], can be claimed separately for {{Currency|Medals|20|notext}} and 5 [[Medal]]s.
+
+== Trivia ==
+* "Martyris Rex" comes from latin, for "King of Martyrs".
+** The description of the cape may be inspired by the story of Excalibur, in which only the king can lift the sword Excalibur.
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.000.102|date=2024-03-14|changes=
+Added with the release of Cutting Edge.
+}}
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

@@ -1,0 +1,66 @@
+{{WIP}}
+{{Infobox CapeCard
+|title={{PAGENAME}}
+|order=93
+|cape_image=Mimetic Mesh Cape Icon.png
+|card_image=Mimetic Mesh Player Card Icon.png
+|source_type=Warbond
+|source = [[Scope of Authority Premium Warbond#Page 1|Scope of Authority]]<small>{{Tooltip|P1|Page 1}}</small>
+|cape_cost={{Currency|Medals|8}}
+|card_cost={{Currency|Medals|2}}
+}}
+{{Quote|Woven from breathable adaptive camouflage mesh designed to mimic surrounding biomes, allowing them to carry out discreet compliance checks completely unbothered by less observant hostiles.|[[Armory]] Description}}
+'''{{PAGENAME}}''' is a cape and a [[player card]] in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+This [[Cosmetics#Capes and Cards|cosmetic set]], found on page # of the [[Scope of Authority Premium Warbond#Page 1|Scope of Authority Premium Warbond]], can be claimed separately for {{Currency|Medals|8|notext}} and {{Currency|Medals|2}} respectively
+
+== Media ==
+<gallery mode=nolines class=responsive-image>
+Mimetic Mesh Cape Promo.png|Promotional Image
+Mimetic Mesh Cape Default.png|Cape, Standard Camo
+Mimetic Mesh Cape Desert.png|Cape, Desert Camo
+Mimetic Mesh Cape Forest.png|Cape, Forest Camo
+Mimetic Mesh Cape Artic.png|Cape, Arctic Camo
+Mimetic Mesh Cape Crimson.png|Cape, Crimson Camo
+</gallery>
+
+== Trivia ==
+* Mimetic Mesh and [[Boundary Banner]] are the first capes to include "Interactive Adaptive Camouflage." This means that the color and pattern of the cape's camouflage will change depending on the wearer's current [[Biomes|biome]]. 
+<details> <summary> List of Biomes for each pattern </summary> 
+''Note: When on a [[Metropolis]], the planet's camo will be used.''
+{|class="wikitable sortable"
+!Camo!!Item
+|-
+|Standard Camo||[[Moon]], [[Deadlands]], [[Boneyard]], [[Desert Cliffs]], [[Ionic Jungle]], [[Magma Desert]]
+|-
+|Forest Camo||[[Volcanic Jungle]], [[Plains]], [[Tundra]], [[Basic Swamp]], [[Haunted Swamp]], [[Deciduous Forest]], 
+|-
+|Desert Camo||[[Acidic Badlands]], [[Desert Dunes]], [[Scorched Moor]], [[Autumn Forest]], [[Desert Oasis]], [[Hive World]]
+|-
+|Crimson Camo||[[Ionic Crimson]], [[Crimson Forest]]
+|-
+|Arctic Camo||[[Icy Glaciers]]
+|-
+|}
+</details>
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.200|changes=
+Addition
+* Added to the game.
+}}
+{{Change History Update|1.007.101|date=2026-10-13|changes=
+Announced <ref> https://blog.playstation.com/2026/10/13/helldivers-2-scope-of-authority-premium-warbond-launches-oct-20/</ref>
+}}
+
+== References ==
+<references/>
+
+{{Nav Cosmetic}}
+[[Category:Armor|C]]
+[[Category:Cosmetics|1]]
+[[Category:Capes]]
+[[Category:Player Cards]]
+__FORCETOC__

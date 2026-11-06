@@ -1,0 +1,34 @@
+{{Infobox Armor
+|title = {{PAGENAME}}
+|helmet_image= {{PAGENAME}} Helmet Render.png
+|helmet_source=[[Campaigns#Void Piercer|Void Piercer]]
+|helmet_cost=
+|order = 108
+}}
+{{Quote|A helmet worn by the pioneering [[Helldiver]]s who first ventured into [[the Void]]. Designed by Super Earth scientists with liberated [[Illuminate]] blueprints.|Armory Description}}
+
+'''{{PAGENAME}}''' is a helmet in ''[[Helldivers 2]]''.
+
+== Acquisition ==
+The [[Armor#Helmet-0|helmet]] was awarded to all Helldivers who have participated in any stage of the [[Campaigns#Void Piercer|Void Piercer Campaign]].
+
+== Trivia ==
+* The {{PAGENAME}} is the second helmet that could be received as a campaign reward, with the first one being the [[KDM-500 Outrider]].
+* The IX-Voidwalker vaguely resembles the armor of Isaac Clark, the main protagonist of the [[wikipedia:Dead Space|''Dead Space'' Franchise]].
+** The helmet also evokes the colors and horizontal, three-banded visor of the [[Elevated Overseer]]'s helmet.
+
+== Known Issues ==
+*The {{PAGENAME}} disappears in certain camera angles while performing specific actions.
+
+== Change History ==
+{{Change History Head}}
+{{Change History Update|1.007.001|date=2026-08-19|changes=
+Helmet announced<ref>{{cite twitter|url=https://x.com/helldivers2/status/2090046296472027413|text=The noble fight for Liberty calls. Dive Now to be eligible for your campaign reward!}}</ref>
+}}
+
+== References ==
+<references/>
+
+{{Nav Armor}}
+[[Category:Armor|3]]
+[[Category:Helmets]]

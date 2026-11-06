@@ -1,0 +1,177 @@
+{{Tabs
+|name1=Helldivers 2
+|link1=Armor
+|name2=Helldivers 1
+|link2=Helldivers 1:Armor
+}}
+<small>''{{Hatnote|Looking for something that isn't here? Visit the [[:Category:Armor|category]] for all armor-related pages.}}''</small>
+{{Breadcrumb Auto}}
+
+'''Armor''' can be equipped at the [[Armory]] or in a [[Hellpod]] on the [[Bridge]] before [[Missions]] in ''[[Helldivers 2]]''.
+
+==Acquisition==
+Most armor sets can be acquired by unlocking them through [[Warbonds]] with [[Medals]] or buying them from the [[Superstore]] using [[Super Credits]]. 
+
+==Armory==
+<tabber>
+Armor=
+Body armors come with designated [[Armor Passives|armor passive]] abilities and specific stats; they are categorized into light, medium, and heavy types.
+There are a total of {{PAGESINCAT:Light Armor}} light, {{PAGESINCAT:Medium Armor}} medium, and {{PAGESINCAT:Heavy Armor}} heavy armors.
+{{#tag:tabber|Light=
+Light armor enhances mobility with minimal protection.
+{{Armor Table|Light|sort=displayorder}}
+
+{{!}}-{{!}}
+Medium=
+Medium armor balances defense and agility.
+{{Armor Table|Medium|sort=displayorder}}
+
+{{!}}-{{!}}
+Heavy=
+Heavy armor provides superior protection, though it compromises mobility.
+{{Armor Table|Heavy|sort=displayorder}}
+
+}}
+|-|Helmet=
+Designated as [[Armor Passives#Standard Issue|standard issue]], helmets provide ''no additional bonuses''; they have no practical effect despite being rated at 100 for armor, speed, and stamina. However, if the worn body's armor rating exceeds 100, the wearer takes reduced headshot [[Damage#Armor Damage Modifiers|damage]] as well.
+{{Helmet Grid}}
+
+|-|Cape=
+Capes, like helmets, are effectively [[Cosmetics#Cape-0|cosmetic]]. However, since they display stats in-game, they are categorized as armor.
+{{Cape Grid}}
+
+</tabber>
+
+==Armor Stats==
+Armors have three primary stats:
+ • '''Armor Rating''' : Represents the armor's ability to absorb damage.
+ • '''Speed'''        : Determines how quickly the [[Helldiver]] can move across the battlefield.
+ • '''Stamina Regen''': Affects the regeneration of stamina, which is used when sprinting and performing other strenuous actions.
+
+<br>
+'''Armor rating''' (AR) increases or reduces damage taken using the following formulas:
+ • If Armor Rating ≤ 150
+   ◦ Damage taken = Attack Damage × (1.5 - (Armor Rating ÷ 200))
+ • If Armor Rating > 150
+   ◦ Damage taken = Attack Damage × (1.05 - (Armor Rating ÷ 500))
+
+<br>
+'''Speed''' is calculated based on the raw Armor Rating stat (before factoring in passives like [[Extra Padding]]) using the following formula:
+ • Speed = 600 − Armor Rating
+Based on the formula Light armor (50 AR) is 10% faster than Meduim (100 AR) and 22% faster than Heavy (150 AR) and Heavy armor is 10% slower than Medium.
+{| class="wikitable sortable mw-collapsible"
+|+
+!AR
+!Speed, units
+!Speed, %
+!SR
+!Example armor
+|-
+|50<ref name=":0">[[Oxygenator]]</ref>
+|''<u>605*</u>''
+|''<u>121,0</u>''
+|125
+|[[O-3 Free Spirit]]
+|-
+|'''50'''
+|550
+|110,0
+|125
+|[[SC-30 Trailblazer Scout]]
+|-
+|64
+|536
+|107,2
+|118
+|[[CM-21 Trench Paramedic]]
+|-
+|70
+|530
+|106,0
+|115
+|[[SC-34 Infiltrator]]
+|-
+|79
+|521
+|104,2
+|111
+|[[CE-67 Titan]]
+|-
+|100<ref name=":0" />
+|''550*''
+|''110,0''
+|100
+|[[O-44 Bonded Pilot]]
+|-
+|'''100'''
+|500
+|'''100,0'''
+|100
+|[[B-01 Tactical]]
+|-
+|129
+|471
+|94,2
+|71
+|[[B-24 Enforcer]]
+|-
+|150<ref name=":0" />
+|''450*''
+|''99,0''
+|50
+|[[O-2 Heavy Operator]]
+|-
+|'''150'''
+|<u>450</u>
+|<u>90,0</u>
+|50
+|[[FS-05 Marksman]]
+|}
+<nowiki>*</nowiki> – Calculated after passive perk [[Oxygenator]]<ref name=":0" /> is applied.
+
+
+'''Stamina Regen''' (SR) is similarly calculated using these formulas:
+ • If Armor Rating {{Tooltip|≥|greater-than or equal to}} 100
+   ◦ Stamina Regen = 200 − Armor Rating
+ • If Armor Rating {{Tooltip|<|less-than}} 100
+   ◦ Stamina Regen = 150 − Armor Rating ÷ 2
+
+==Media==
+<gallery mode="nolines" widths="480" heights="480">
+Helldivers 2 Armor Gallery.png|alt=Image of all armor sets in Helldivers 2.|All armors as of Patch [[1.007.100]]
+</gallery>
+
+==Change History==
+{{Change History Head}}
+{{Change History Update|1.001.104|changes=
+Changes
+* Helldiver armor tweaks
+** Both Heavy and Light armor are now more effective,
+** Heavy armor reduces damage taken by 25%, up from 20%
+*** 5% more damage reduction
+* Light armor increases damage taken by 25%, down from 33%
+** 8% less damage taken
+Note: These changes actually apply to Heavy and Light armor's default armor values of 150 and 50 respectively, not the type of armor itself.
+}}
+{{Change History Update|1.000.400|changes=
+Fix
+* Fixed a bug where the Helldivers armor could appear invisible for other players.
+}}
+{{Change History Update|1.000.300|changes=
+Change
+* Armors with armor rating above 100 now also reduce damage on headshots.
+}}
+{{Change History Update|1.000.200|changes=
+Changes
+* Heavy and medium armor protects better and you now take about 10% less damage than before while wearing heavy and about 5% less when wearing medium armor. Fortified commando and light armor is unchanged.
+* Helldiver limbs explosion damage reduction increased from 0% to 100%.
+Undocumented Change
+* Helldiver chest explosion damage reduction increased to 50%.
+}}
+{{Change History Update|1.000.100|changes=
+Fix
+* Fixed armor rating values not reducing damage as intended.
+}}
+
+{{Nav Armor}}
+[[Category:Armor|!]]
