@@ -29,6 +29,7 @@
 
 | 我想改 | 读 | 关键小节 | build |
 |---|---|---|---|
+| **让未拥有 / 未发布的武器出现在军械库 · 解锁武器配件 · CANNOT EDIT 怎么办** | **[UNLOCK-MAP ↗（网络层仓库）](https://github.com/deepseekv41flash/hd2-network-proxy/blob/master/docs/UNLOCK-MAP-2026-11-06.md)** | 决定树 · 三分法 · 配方 A/B/C · **CANNOT EDIT 三分类** · 能力状态；本文属网络层（代理注入），故放 proxy 仓库 | `26251122` |
 | 战备冷却 / 呼叫时间 / 使用次数 | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | §2 面板公式 · §5.2 鹰式次数 · §5.3 float32 边界 | `26088801` |
 | **Eagle 回收时间** | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | **§5.4 `EAGLE. REARM` 独立行** | `26088801` |
 | **Eagle 冷却 / 回收的升级公式** | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | **§5.4.4**（两个公式都已实机解开） | `26088801` |
@@ -119,7 +120,7 @@
 | 社区包怎么做 / 能不能共存 | [CASE-STUDY](docs/cases/CASE-STUDY-20261021.md) · [COMMUNITY-MODS-COMPAT](docs/cases/COMMUNITY-MODS-COMPAT-26088801.md) · [PATCH-SALVAGE](docs/builds/PATCH-SALVAGE-25988413.md) |
 | 一个**大型闭源护甲外观系统**怎么部署 / 自检 / 分发（我们能借什么、借不到什么） | [RECON-HD2-INTEGRATED-ARMOR-SYSTEM](docs/cases/RECON-HD2-INTEGRATED-ARMOR-SYSTEM.md)：`.patch_N` 用法旁证 · bundle 基线自检可借 · 一批掉坑结论 · 分发模板；**无数据字段可回收** |
 
-## 2. 按类型浏览（69 篇）
+## 2. 按类型浏览（83 篇）
 
 | 类别 | 放什么 | 篇数 |
 |---|---|---:|
@@ -451,6 +452,10 @@
 | **跨包加载**：`+0xA8`（物品包）+ `+0xF8`（武器的 LoadoutEntry）双声明口；口不够时接 `+0xC8` 额外战备链（不占位）；**或走补丁把资源/整包塞进常驻包（不受口上限）** | **✓✓ 实机**（只换 `+0xA8` → 谁出模型跟着换；`+0xC8` 链带进 4 条战备；补丁：79 KB 顶掉 68 MB 包、整包 50/51 条进**共享基础包**与注册表包、舱里三件零声明全出；挂载件整包 41 条零声明 ⚠ 待实机）—— 声明口见 [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md)，补丁见 [RESOURCE-RESIDENCY](docs/engine/RESOURCE-RESIDENCY-26088801.md) |
 | **空声明槽普查**：153 行战备里 **133 行没填满**，空槽存量 **155 个**（两槽全空 22 行 / 仅 `+0xA8` 空 17 行 / 仅 `+0xF8` 空 94 行）⇒ `strat_slot_fill.py` 按名字填空槽 | **✓✓ 实机**（R3：把 Warp 的包填进 `Reinforce` 的 `+0xA8` ⇒ **关卡加载即驻留**，不叫、不带、不死；投送舱里两件不同包的物品同时正常，**三个包并存**）。`+0xF8` 另有否证（R1：不授予武器的战备上不读它）—— 见 [LIMITED-CROSS-PACKAGE-LOADING](docs/engine/LIMITED-CROSS-PACKAGE-LOADING-26088801.md) §6.6 |
 | 解锁未发布物品（`LoadoutEntry.selectable`） | ✗ 已否证（发布数据里没有这个开关） |
+| **已发布未购买武器上架**（代理 1 层：加一行 inventory） | ✓✓ 已实机（LAS-13、24 件批量）—— 见 [UNLOCK-MAP ↗](https://github.com/deepseekv41flash/hd2-network-proxy/blob/master/docs/UNLOCK-MAP-2026-11-06.md) §2 |
+| **未发布武器上架**（代理 2 层：inventory + items 目录克隆） | ✓✓ 已实机（LAS-22 / P-41 / SG-8F）—— 同上 §2.3 |
+| **解锁武器配件**（附件在服务端 = inventory 一行） | ✓✓ 已实机（AR-23A 28 个、5 把 140 行）—— 同上 §3.2 |
+| **让「无附件行」武器可改装**（CANNOT EDIT 类别②） | ✗ 两轮伪造否证（2026-11-06，R/40-K）—— 同上 §3.4 |
 
 ## 6. 已验证的核心结论
 

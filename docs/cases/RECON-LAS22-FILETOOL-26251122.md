@@ -29,7 +29,7 @@
 - 游戏注册表（184 B 记录 / item id 键）在 **game.dll loader data**，dl_bin 改不到（Lua 版 mod 就是内存改它）。
 - 但 `LAS-22 Shear` 的档案里写着 `key = 0x7DE53646, template_key = 0xE673DCC8`，
   而 `0xE673DCC8` 正是 **LAS-5 Scythe**（已注册）的键
-  （见 [UNRELEASED-INVENTORY §](/d/mod/work/repo-datamined/docs/tables/UNRELEASED-INVENTORY-26088801.md) 行 159）。
+  （见 [UNRELEASED-INVENTORY §](../tables/UNRELEASED-INVENTORY-26088801.md) 行 159）。
 - ⇒ 把两张 `LoadoutEntryComponentData` 行的键**互换**：
   `0xE673DCC8`（Scythe，已注册）现在指向 **Shear 的实体行**，`0x7DE53646`（Shear，未注册）给了 Scythe 行。
   军械库按已注册键解析时，拿到的就是 Shear 的数据 ⇒ **LAS-22 显示并可装备**；Scythe 因为拿着未注册键而隐藏。
@@ -95,7 +95,7 @@
 
 - 复刻：按 §4 的 9+2 处字段写我们的 `entity_fields_batch` 风格脚本即可（注意 entities 的基座要**用当前已装表**，否则容器尺寸/尾字会不同）。
 - 若想**不牺牲 LAS-5**：可改用「把 Shear 的组件行数据写进 Scythe 行 / 或者给 Shear 行补 Spottable+EntityBind 后用投送舱路线」
-  （见 [WEAPON-CUSTOMIZATION §10](WEAPON-CUSTOMIZATION-26251122.md)），但那需要更多表/资源驻留，不如这个方案省事。
+  （见 [WEAPON-CUSTOMIZATION §10](../tables/WEAPON-CUSTOMIZATION-26251122.md)），但那需要更多表/资源驻留，不如这个方案省事。
 - 数据来源已记录：`las22-unlock-analysis.json`（Lua 版逐层分析）；
   `UNRELEASED-INVENTORY` 行 159（`key=0x7DE53646, template_key=0xE673DCC8`）；
   `WEAPON-CUSTOMIZATION-26251122.md` §10.4（三条 charge 散热器的 optionId/addPath 与"谁在用"）。

@@ -976,6 +976,9 @@ GATER 壳里**没有** attach_oil / attach_canister 之类命名的节点（246 
 
 ## 9. 2026-11-05 重爬武器页后的修正（+ 一条新的判据）
 
+> 统一入口：[UNLOCK-MAP ↗](https://github.com/deepseekv41flash/hd2-network-proxy/blob/master/docs/UNLOCK-MAP-2026-11-06.md)（武器上架 · 配件解锁 · CANNOT EDIT 三分类，网络层仓库）。
+> 本篇只保留**数据表侧**的盘点与判据证据。
+
 重跑 `tools/fetch_wiki_pages.py --category Weapons --category Stratagems`：**241 页**（Weapons 157 + Stratagems 127，
 去重 241），写入 `refs/wiki/pages/`。实体↔wiki 对表（199 个 `loadout_type` 实体）后，
 
