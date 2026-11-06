@@ -1000,7 +1000,9 @@ LAS-13 Trident 也有页面（Siege Breakers 第 1 页，35 奖章）。
 | **已发布未购买** | **在 items 目录、不在 inventory** | **只加一行 inventory 注入**（LAS-13 已实机证明：它的目录记录本来就有，只加了拥有层就上架了）|
 | **未发布** | **既不在 items 也不在 inventory** | inventory + items 双注入（LAS-22 / P-41 / SG-8F 已实机）|
 
-按这个判据，当前 build「目录里有、但未拥有」的可装备行共 **24 条**（一行为一件，加进 inventory 即可）：
+按这个判据，当前 build「目录里有、但未拥有」的可装备行共 **24 条**（一行为一件，加进 inventory 即可）。
+> **2026-11-06 复核**：按最新服务端 inventory（963 条）重算，其中 **G-48 Giga Grenade、SMG/FLAM-34 Stoker、
+> CQC-72 Entrenchment Tool 三件账号已拥有**（注入清单已剔除，27→24 条，其中 21 条已发布未购买 + 3 条未发布）。
 
 R-4 Hyena、MA5C Assault Rifle、SMG/FLAM-34 Stoker、SMG-203 Gallant、MP-98 Knight、R/40-K Hot-shot、
 M7S SMG、R-40 Sightliner、M90A Shotgun、**LAS-13 Trident**、M6C/SOCOM Pistol、P-33 Missile Pistol、
@@ -1008,3 +1010,63 @@ P/40-K Bolt Pistol、P-69 Veto、P-44 Mist、CQC-72 Entrenchment Tool、CQC-42 M
 G-11 Caltrops、G-7 Pineapple、G/40-K Melta Mine、G-48 Giga Grenade、G-89 Smokescreen、G/SH-39 Shield、G-31 Arc。
 
 （"目录"这一层是**服务端**给的，所以它天然是"官方认为已发布"的清单；wiki 只用来做名称与人读校验。）
+
+---
+
+## 10. 注入会不会回写账号？——2026-11-06 核验（结论：所有权不回写）
+
+**问题**：代理注入的"拥有"是纯客户端可见，还是会写回账号？如果回写，就不能再放开做注入实验。
+
+### 10.1 抓包点是"改写前"，dump 就是服务端真值
+
+`tools/war_proxy.py` 里顺序是固定的：
+
+| 行 | 动作 |
+|---|---|
+| 646 | 把客户端请求转给上游 |
+| 654-660 | 读完上游响应、dechunk |
+| **661** | **`_gwe_capture_dump(path, rbody, rhdrs)` ← 抓包点** |
+| 742 / 759 | `_gwe_inventory_rewrite` / `_gwe_items_rewrite` ← 改写点 |
+
+抓包在改写**之前**，所以 `D:\mod\out\gwe\*_api_Progression_inventory.json` 里没有我们加的任何一件 —— 可以直接当**服务端真值**用。
+
+### 10.2 27 件注入物 vs 服务端 963 条 inventory
+
+拿 `runtime/inventory_inject.json` 的 27 个 `mixId` 去比服务端 inventory：
+
+| dump | 时间 | mixId 数 | 命中我们的注入物 |
+|---|---|---|---|
+| `123a8ee9` | 10-29 | 951 | **0** |
+| `26a026a2` | 10-29 | 951 | **0** |
+| `51a32514` | 11-06 | 963 | **3** |
+
+命中的 3 件是 `0B4761B8`(G-48)、`77E1231D`(SMG/FLAM-34 Stoker)、`818A2931`(CQC-72) —— **用户确认这三件账号本来就已拥有**，
+属于 10-29→11-06 之间的正常账号进度（期间 inventory 净增 12 条）。因此：
+
+- **LAS-22 / P-41 / SG-8F 及其余 21 件，一条都没出现在服务端 inventory 里 ⇒ 所有权注入不回写账号。**
+- 上一版把"新增 12 条里有 3 条是我们注入的"当成持久化证据是**错的**，已撤回。判据应以"注入物是否出现在服务端真值里"为准，
+  而不是拿两次 inventory 做增量差分（账号自己也会变）。
+
+### 10.3 但 `customize_v2` 确实会被客户端写回（只写改装状态，不含所有权）
+
+`GET /api/Progression/Items/Customize/v2` 结构：`{items:[{mixId32, modes[4], activeIndex, customizations:[{index, slots[8]}]}]}`，
+即**每把武器的改装槽快照**。同一会话内的 5 次抓取：
+
+| dump | 时间 | 条数 | 新增 |
+|---|---|---|---|
+| `588aeff4` | 10-29 22:19 | 59 | —（那时 LAS-22 记录已存在） |
+| `37325b20` | 11-05 23:49 | 64 | `3B21EE6A` `7386969F` `A7977F98` **`AB1B4972`(LAS-13)** `E9DE8D7F` |
+| `eb7773d0` | 11-05 23:51 | 65 | **`80DD6F30`(MP-98)** |
+| `23321895` | 11-05 23:52 | 66 | **`850C35D4`(R-4 Hyena)** |
+| `239e4f3a` | 11-05 23:52 | 67 | **`202ABB40`(SMG-203)** |
+
+67 条里有 **18 条属于服务端并不拥有（不在 inventory 里）的武器** —— 客户端把"我改装过的武器"连同槽位一起 PUT 上去，
+服务端照收。LAS-22 的记录里能看到 `53120A73`（Rapid Heatsink，与我们 L0 设的弹匣项一致）。
+
+**含义**：注入 + 改装会在账号里留下**改装记录**这些"痕迹"，但**不会产生拥有权**；痕迹无害（一条记录 = 8 个 u32），
+且不会让未发布武器在别的客户端上出现（别的客户端拿不到 inventory 行）。
+
+### 10.4 副作用清理
+
+`runtime/inventory_inject.json` 已按新基线刷新：**27 → 24 条**（21 条已发布未购买 + LAS-22 / P-41 / SG-8F），
+剔除 `0B4761B8` / `77E1231D` / `818A2931`，避免给已拥有物品再加一条重复 inventory 行（`isDiscovered:false` 还会被当成新物品）。
