@@ -1114,3 +1114,38 @@ LAS-13 的目录记录本来就有所以只加拥有行）：
 - **每把枪能改哪些槽位**写在明文行内 `+0x50` 的 `CustomizationSlots`（10×u32）：Scythe 与 Shear 都是 `(2,1,4,5,3)`；
 - **L0 的 10 组 `(slot, optionId)` 默认项与顺序无关**，`slot` 字段才是指针：
   Scythe 行内顺序 `5,4,2,1,3`、Shear 行内顺序 `4,2,1,5,3`，两者都能正确装配 ⇒ 写 L0 时不必凑顺序。
+
+### 15.6 C 方案：给类别②伪造附件行（R/40-K 试点，2026-11-06 布好待判读）
+
+目标：`R/40-K Hot-Shot Marksman Rifle`（mixId `0xF16B0BCF`）—— 目录里 **0 条**附件行，但客户端有激光族
+3 个默认项（枪口 `0xE917F79B` / 光学 `0x322A9233` / 下挂 `0xD9A3531E`），属**类别②**。
+
+**做法 = 两层伪造，optionId 直接借用同为激光族的 LAS-5 Scythe**
+
+| 层 | 内容 |
+|---|---|
+| 目录 `/api/Progression/items` | 38 行：`{itemId: <LAS-5 的原生 38 个 optionId>, parentId: 0xF16B0BCF, mixId: 0xF1400000+i, progressionCategory: 2, isConsumable:false, buyPrice:[], sellPrice:[]}` |
+| 库存 `/api/Progression/inventory` | 38 行：`{mixId: 0xF1400000+i, amount: 1, isDiscovered: false}` |
+
+为什么用 LAS-5 的 optionId：R/40-K 的 L0 行（`weapon-keys` → 行 86）`code` 标的是 **LAS-5**，
+默认项就是激光族那三个；LAS-5 在目录里有 **38 条**完整附件行，覆盖槽位 **1/2/3/4/5**
+（枪口 Prism、5 种光学、5 种下挂、3 种散热器、11 种涂装）。
+
+**钩子扩展**（`tools/war_proxy.py` `_gwe_items_rewrite`）：原实现只支持
+`{id, template}` 克隆且把 `itemId=mixId=id`，无法表达「itemId ≠ mixId 的附件行」。现支持整行覆盖字段
+`itemId / mixId / parentId / progressionCategory / isConsumable / requiredLevel / tags / requiredItems / buyPrice / sellPrice / maxCap`，
+去重改为**按 mixId**（附件行会共享 itemId，按 itemId 去重会漏）。
+
+**离线预检（通过）**：目录 `3020 → 3061`（+3 武器行 +38 附件行）；库存 `965 → 1167`（+24 武器行 +178 附件行
+= B 的 140 + 本次 38）；178 条附件键全部就位。
+
+**判读（待实机）**：
+
+| 现象 | 结论 |
+|---|---|
+| R/40-K 改装页可编辑、配件可选、装上能用 | 🎯 **类别②可救**，未发布武器改装的最后一块拼图到手，可照搬到 LAS-22（多一层武器行伪造）|
+| 可编辑但列表为空 | 目录行被接受、但客户端按**本地武器→配件绑定**渲染 ⇒ 需要 dl_bin 侧给它加槽位/绑定 |
+| 仍 CANNOT EDIT | 说明还有 manager 槽位一层（`0x12FC` 那条线），回到 dl_bin/内存路线 |
+
+**回滚**：`runtime/items_inject.json` 删掉 38 条 `parentId: 4050324431` 的记录、
+`runtime/inventory_attach_inject.json` 删掉 38 条 `0xF1400000..0xF1400025`（或整体 `enabled:false`），重启游戏即恢复。
