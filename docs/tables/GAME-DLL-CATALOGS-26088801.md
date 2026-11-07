@@ -155,6 +155,9 @@ python tools/gamedll_catalog_extract.py --json out/gamedll-catalogs.json
 
 ## 5. Booster（配装增益）定义表 —— 2026-11-06 新发现（`0x2CB4840`）
 
+> **✓ 收口入口**：整条 Booster 线的全表、机制四形态、能力边界与未解清单见
+> [BOOSTER-COMPLETE-26088801](BOOSTER-COMPLETE-26088801.md)；本节只留表本体与三个特例的原始记录。
+
 **背景**：代理侧注入 `cat 5`（`progressionCategory=5`，30 条）即可解锁 Booster（实机 ✓，见 proxy 仓库
 `UNLOCK-MAP` §10，R2）。但**55 张 `generated_*` 明文表里没有 Booster 表** —— 定义在 `game.dll`。
 

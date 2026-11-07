@@ -30,6 +30,7 @@
 | 我想改 | 读 | 关键小节 | build |
 |---|---|---|---|
 | **让未拥有 / 未发布的武器出现在军械库 · 解锁武器配件 · CANNOT EDIT 怎么办** | **[UNLOCK-MAP ↗（网络层仓库）](https://github.com/deepseekv41flash/hd2-network-proxy/blob/master/docs/UNLOCK-MAP-2026-11-06.md)** | 决定树 · 三分法 · 配方 A/B/C · **CANNOT EDIT 三分类** · 能力状态；本文属网络层（代理注入），故放 proxy 仓库 | `26251122` |
+| **Booster（配装增益）**（**✓ 收口**） | [BOOSTER-COMPLETE](docs/tables/BOOSTER-COMPLETE-26088801.md) | **§2 全表 20 条（itemId / `+0x04` / `+0x08` / 落点 / 证据）· §3 机制四形态 · §5 能力边界（能改 C/D 六条，改不了倍率与新增）· §6 未解清单**；细节 → [BOOSTER-MAPPING](docs/tables/BOOSTER-MAPPING-26088801.md)（标量语义 + 耐力）、[POD-IMPACT-EXPLOSIONS](docs/explosions/POD-IMPACT-EXPLOSIONS-26088801.md)（落舱爆炸）| `26251122` |
 | 战备冷却 / 呼叫时间 / 使用次数 | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | §2 面板公式 · §5.2 鹰式次数 · §5.3 float32 边界 | `26088801` |
 | **Eagle 回收时间** | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | **§5.4 `EAGLE. REARM` 独立行** | `26088801` |
 | **Eagle 冷却 / 回收的升级公式** | [STRATAGEM-FIELDS](docs/tables/STRATAGEM-FIELDS-26088801.md) | **§5.4.4**（两个公式都已实机解开） | `26088801` |
@@ -171,6 +172,7 @@
 
 | 文档 | 一句话 | build |
 |---|---|---|
+| ★★ [BOOSTER-COMPLETE-26088801](docs/tables/BOOSTER-COMPLETE-26088801.md) | **Booster 线收口**：定义在 `game.dll` 21 行硬编码表（`0x2CB4840`/`0x38`：`+0` itemId · **`+4` granted StratagemType** · **`+8` 调谐标量** · locids），55 张明文表 0 命中；**标量不是指针**（行内无 64 位槽；`FLEXIBLE 0.75 ↔ wiki 2:00→1:30` 逐值吻合）；数据侧落点四形态，**能改的只有 6 条**（Firebomb 83 · Stun 335 · Concealed 401 · ARP 实体 · Surplus EAT 战备 15 · Experimental 状态 29）；目录 30 条里 10 条本地无定义；改倍率/新增行只能动 `game.dll`（不碰） | `26251122` |
 | ★★ [FACTION-BEHAVIOR-26088801](docs/tables/FACTION-BEHAVIOR-26088801.md) | **阵营/AI 行为/外来件/特效的全线台账**：`Faction +0` 位掩码（2=终结者 4=光明族 8=自动化 1=超级地球）· `Behavior +0`（645→658 把 AI 领走）· 挂载换件 · **§17 特效根因：粒子包写在教学关行 138 ⇒ 普通任务不读；搬到 SOS 行 59 后拖尾/命中爆炸全出（✓ 实机）** · `+0xC8` 额外战备链把声明口带进栏（✓ 实机） | `26088801` |
 | ★ [EXO-ARM-VARIANTS-26088801](docs/tables/EXO-ARM-VARIANTS-26088801.md) | **机甲臂件变体普查**：社区编号 MK2/MK3 对应哪些实体键；200 发机炮件与原版只差「弹匣 100→200 + 默认射速 175→300 rpm」；真正的 `_MK2` 类型在导弹家族（伤害/AP/爆炸逐项对照） | `26088801` |
 | ★ [WEAPON-FIRE-MODES-26088801](docs/tables/WEAPON-FIRE-MODES-26088801.md) | **射击模式 / 射速档位**:`FireMode` 四连槽 `+0x90…0x9C` + `function_info` 选择键（`Firemode=3` / `ROF=2`）；枚举 1 自动 / 2 半自动 / 3 连发 / **4 齐射 / 5 安全 / 6 不安全 / 7 全射**（**槽位上限 3**）；任意枪可加全自动与全射（均已实机） | `26088801` |
