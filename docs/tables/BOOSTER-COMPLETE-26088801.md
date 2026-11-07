@@ -103,7 +103,7 @@ A/B 两类只能改它们读的基值（等效替代），改不了 Booster 自�
 
 | # | 未解项 | 下一步怎么找 |
 |---:|---|---|
-| 1 | **A 类 9 条的标量落点**（尤其 MUSCLE 0.35、UAV 1.5、EXPERT EXTRACTION 0.7）| 先从 `generated_scenario_settings`（27 组）/`generation_settings` 里按语义找；或按 wiki 数值（30%/50%/30%）反查 f32 |
+| 1 | **A 类 9 条的标量落点**（尤其 MUSCLE 0.35、UAV 1.5、EXPERT EXTRACTION 0.7）| 候选容器（已探过形状，未解字段）：**`environment_settings`**（17 组 × 576 B，首 dword = 条件 id `0..0x10`）与 **`weather_settings`**（184 组 × 648 B）—— 天气/地形条件最可能住在这里；另可先用 wiki 数值（30% / 50% / 30%）反查 f32 |
 | 2 | **耐力 1.3 的方向（÷ vs ×）** | 只需**游戏内掐表**：基线 23 s，期望 29.9 / 36.6 / 17.7 s 三档（见 BOOSTER-MAPPING §3.3）|
 | 3 | **Concealed Insertion = 401** 的一分钱验证 | 改 401 的半径或粒子，看落舱烟变化 |
 | 4 | **DEAD SPRINT 的状态 id** | 本 build 里 status 59 每跳伤害为 0，541 属于 status 36（Arc）；需按"掉血曲线"重新定位 |
