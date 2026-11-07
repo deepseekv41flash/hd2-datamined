@@ -1,0 +1,546 @@
+[
+ {
+  "id": 2,
+  "str_a": "arctic",
+  "str_b": "planet_type_arctic",
+  "str_c": "arctic_default",
+  "str_d": "",
+  "flag208": 4,
+  "col1": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "light": [
+   48.0,
+   48.0,
+   48.0
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.1,
+   0.1,
+   0.1
+  ],
+  "f_20": -0.0,
+  "f_24": -0.0,
+  "f_238": 1.0,
+  "tail": "arctic\u0000planet_type_arctic\u0000arctic_default"
+ },
+ {
+  "id": 1,
+  "str_a": "desert",
+  "str_b": "planet_type_desert",
+  "str_c": "desert_default",
+  "str_d": "",
+  "flag208": 2,
+  "col1": [
+   0.1686,
+   0.1137,
+   0.0588
+  ],
+  "light": [
+   15.0,
+   12.0,
+   7.5
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.1,
+   0.067,
+   0.033
+  ],
+  "f_20": -0.0,
+  "f_24": 1.5682537548343943e+28,
+  "f_238": 1.0,
+  "tail": "desert\u0000planet_type_desert\u0000desert_default"
+ },
+ {
+  "id": 0,
+  "str_a": "forest",
+  "str_b": "planet_type_forest",
+  "str_c": "forest_default",
+  "str_d": "",
+  "flag208": 1,
+  "col1": [
+   0.1486,
+   0.1437,
+   0.0637
+  ],
+  "light": [
+   12.0,
+   18.0,
+   15.0
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.085,
+   0.1,
+   0.033
+  ],
+  "f_20": -6861364.5,
+  "f_24": 0.0,
+  "f_238": 1.0,
+  "tail": "forest\u0000planet_type_forest\u0000forest_default"
+ },
+ {
+  "id": 7,
+  "str_a": "snowy_forest",
+  "str_b": "planet_type_snowy_forest",
+  "str_c": "arctic_default",
+  "str_d": "",
+  "flag208": 4,
+  "col1": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "light": [
+   48.0,
+   48.0,
+   48.0
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.1,
+   0.1,
+   0.1
+  ],
+  "f_20": -0.0,
+  "f_24": -0.0,
+  "f_238": 1.0,
+  "tail": "snowy_forest\u0000planet_type_snowy_forest\u0000arctic_default"
+ },
+ {
+  "id": 11,
+  "str_a": "bug_hiveworld",
+  "str_b": "planet_type_bug_hiveworld",
+  "str_c": "desert_default",
+  "str_d": "",
+  "flag208": 0,
+  "col1": [
+   0.1686,
+   0.1137,
+   0.0588
+  ],
+  "light": [
+   15.0,
+   12.0,
+   7.5
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.1,
+   0.067,
+   0.033
+  ],
+  "f_20": -0.0,
+  "f_24": -0.0017,
+  "f_238": 1.0,
+  "tail": "bug_hiveworld\u0000planet_type_bug_hiveworld\u0000desert_default"
+ },
+ {
+  "id": 12,
+  "str_a": "magma",
+  "str_b": "planet_type_magma",
+  "str_c": "desert_default",
+  "str_d": "",
+  "flag208": 0,
+  "col1": [
+   0.1686,
+   0.1137,
+   0.0588
+  ],
+  "light": [
+   15.0,
+   12.0,
+   7.5
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.1,
+   0.067,
+   0.033
+  ],
+  "f_20": 0.8737,
+  "f_24": 7.215539867500674e+26,
+  "f_238": 1.0,
+  "tail": "magma\u0000planet_type_magma\u0000desert_default"
+ },
+ {
+  "id": 13,
+  "str_a": "oasis",
+  "str_b": "planet_type_oasis",
+  "str_c": "oasis_default",
+  "str_d": "",
+  "flag208": 0,
+  "col1": [
+   0.1686,
+   0.1137,
+   0.0588
+  ],
+  "light": [
+   15.0,
+   12.0,
+   7.5
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.1,
+   0.067,
+   0.033
+  ],
+  "f_20": -6928069.0,
+  "f_24": 0.0,
+  "f_238": 1.0,
+  "tail": "oasis\u0000planet_type_oasis\u0000oasis_default"
+ },
+ {
+  "id": 5,
+  "str_a": "rocky",
+  "str_b": "planet_type_rocky",
+  "str_c": "rocky_default",
+  "str_d": "",
+  "flag208": 2,
+  "col1": [
+   0.1686,
+   0.1137,
+   0.0588
+  ],
+  "light": [
+   15.0,
+   12.0,
+   7.5
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.1,
+   0.067,
+   0.033
+  ],
+  "f_20": 2.5607815859933343e+38,
+  "f_24": 4.436541945837422e+28,
+  "f_238": 1.0,
+  "tail": "rocky\u0000planet_type_rocky\u0000rocky_default"
+ },
+ {
+  "id": 3,
+  "str_a": "sandy",
+  "str_b": "planet_type_sandy",
+  "str_c": "desert_default",
+  "str_d": "",
+  "flag208": 2,
+  "col1": [
+   0.1686,
+   0.1137,
+   0.0588
+  ],
+  "light": [
+   15.0,
+   12.0,
+   7.5
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.1,
+   0.067,
+   0.033
+  ],
+  "f_20": 0.0,
+  "f_24": -0.0,
+  "f_238": 1.0,
+  "tail": "sandy\u0000planet_type_sandy\u0000desert_default"
+ },
+ {
+  "id": 4,
+  "str_a": "savanna",
+  "str_b": "planet_type_savanna",
+  "str_c": "savanna_default",
+  "str_d": "",
+  "flag208": 2,
+  "col1": [
+   0.1686,
+   0.1137,
+   0.0588
+  ],
+  "light": [
+   15.0,
+   12.0,
+   7.5
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.1,
+   0.067,
+   0.033
+  ],
+  "f_20": 0.0,
+  "f_24": 3.5904040241388143e+31,
+  "f_238": 1.0,
+  "tail": "savanna\u0000planet_type_savanna\u0000savanna_default"
+ },
+ {
+  "id": 15,
+  "str_a": "coniferous",
+  "str_b": "planet_type_coniferous",
+  "str_c": "coniferous_default",
+  "str_d": "",
+  "flag208": 0,
+  "col1": [
+   0.1486,
+   0.1437,
+   0.0637
+  ],
+  "light": [
+   12.0,
+   18.0,
+   15.0
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.085,
+   0.1,
+   0.033
+  ],
+  "f_20": 0.0,
+  "f_24": -319417536.0,
+  "f_238": 1.0,
+  "tail": "coniferous\u0000planet_type_coniferous\u0000coniferous_default"
+ },
+ {
+  "id": 14,
+  "str_a": "deciduous",
+  "str_b": "planet_type_deciduous",
+  "str_c": "deciduous_default",
+  "str_d": "",
+  "flag208": 0,
+  "col1": [
+   0.1486,
+   0.1437,
+   0.0637
+  ],
+  "light": [
+   12.0,
+   18.0,
+   15.0
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.085,
+   0.1,
+   0.033
+  ],
+  "f_20": 5.2732754682646415e+34,
+  "f_24": -2.0030206682038676e+27,
+  "f_238": 1.0,
+  "tail": "deciduous\u0000planet_type_deciduous\u0000deciduous_default"
+ },
+ {
+  "id": 9,
+  "str_a": "moor",
+  "str_b": "planet_type_moor",
+  "str_c": "moor_default",
+  "str_d": "",
+  "flag208": 32,
+  "col1": [
+   0.1486,
+   0.1437,
+   0.0637
+  ],
+  "light": [
+   12.0,
+   18.0,
+   15.0
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.085,
+   0.1,
+   0.033
+  ],
+  "f_20": -0.0,
+  "f_24": 63976.8203,
+  "f_238": 1.0,
+  "tail": "moor\u0000planet_type_moor\u0000moor_default"
+ },
+ {
+  "id": 8,
+  "str_a": "primordial",
+  "str_b": "planet_type_primordial",
+  "str_c": "primordial_default",
+  "str_d": "",
+  "flag208": 16,
+  "col1": [
+   0.1486,
+   0.1437,
+   0.0637
+  ],
+  "light": [
+   12.0,
+   18.0,
+   15.0
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.085,
+   0.1,
+   0.033
+  ],
+  "f_20": 0.0,
+  "f_24": 63976.8203,
+  "f_238": 1.0,
+  "tail": "primordial\u0000planet_type_primordial\u0000primordial_default"
+ },
+ {
+  "id": 16,
+  "str_a": "rift",
+  "str_b": "planet_type_rift",
+  "str_c": "rift_default",
+  "str_d": "",
+  "flag208": 0,
+  "col1": [
+   0.1486,
+   0.1437,
+   0.0637
+  ],
+  "light": [
+   15.0,
+   12.0,
+   18.0
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.085,
+   0.1,
+   0.033
+  ],
+  "f_20": 0.0,
+  "f_24": 0.0,
+  "f_238": 1.0,
+  "tail": "rift\u0000planet_type_rift\u0000rift_default"
+ },
+ {
+  "id": 6,
+  "str_a": "swamp",
+  "str_b": "planet_type_swamp",
+  "str_c": "forest_default",
+  "str_d": "",
+  "flag208": 8,
+  "col1": [
+   0.1486,
+   0.1437,
+   0.0637
+  ],
+  "light": [
+   12.0,
+   18.0,
+   15.0
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.085,
+   0.1,
+   0.033
+  ],
+  "f_20": -0.0,
+  "f_24": -0.0,
+  "f_238": 1.0,
+  "tail": "swamp\u0000planet_type_swamp\u0000forest_default"
+ },
+ {
+  "id": 10,
+  "str_a": "superearth",
+  "str_b": "planet_type_superearth",
+  "str_c": "moor_default",
+  "str_d": "",
+  "flag208": 1,
+  "col1": [
+   0.1486,
+   0.1437,
+   0.0637
+  ],
+  "light": [
+   12.0,
+   18.0,
+   15.0
+  ],
+  "const6c": [
+   0.15,
+   0.75,
+   1.0
+  ],
+  "col2": [
+   0.085,
+   0.1,
+   0.033
+  ],
+  "f_20": 0.0,
+  "f_24": 63976.8203,
+  "f_238": 1.0,
+  "tail": "superearth\u0000planet_type_superearth\u0000moor_default"
+ }
+]
