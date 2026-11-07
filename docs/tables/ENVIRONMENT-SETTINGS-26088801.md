@@ -73,6 +73,32 @@
 
 → 与 [PLANET-DATA-FIELDS](PLANET-DATA-FIELDS-26088801.md) §4 的 12 值分布**逐值一致**（独立复算）。
 
+### 3.1 使用情况：本地无引用 vs 本季未上线（2026-11-07 补）
+
+三个口径要分开（数据源：`planet_data` 438 组 + 最新 `api_WarSeason_801_Status.json` 抓包）：
+
+| 口径 | 数量 | 生态 |
+|---|---:|---|
+| 有 `environment_settings` 行 | 17 | `0..16` 全部 |
+| **被任一星球行引用** | **12** | 见上表 |
+| **本季在线（`planetStatus` 里）** | **9** | sandy(72) moor(66) primordial(61) arctic(34) swamp(29) magma(6) bug_hiveworld(3) superearth(1) rift(1) |
+| 本地无任何星球引用 | **5** | `forest` `desert` `savanna` `rocky` `snowy_forest` |
+| 有星球但本季 0 颗在线 | **3** | `oasis`(15 颗全休眠) `deciduous`(25) `coniferous`(10) |
+
+补充事实：
+
+- 本季 `Status` 返回 **273** 颗星球（`index` 0–273），本地 **438** 行 ⇒ **165 颗休眠**（未进入本季战况）；
+  休眠星球里恰含 `deciduous 25 / oasis 15 / coniferous 10` 的全部行星。
+- `PlanetType` 枚举共 **18** 个值（filediver 枚举 `0..17`），而本表只有 **17 行**（`0..16`）
+  ⇒ **值 `17` 既无着色定义、也无星球引用**（纯悬空枚举；本机 filediver 串表里没有 `planet_type_17` 之类名字）。
+- 那 5 个无引用生态被"细分生态"取代：本 build 被引用的 setup 家族全是细分型
+  （`forest_swamp / forest_primordial / forest_moor / forest_deciduous / forest_coniferous / forest_rift`、
+  `desert_sandy* / desert_magma / desert_oasis*`），**没有任何行星引用过 `forest_base` / `desert_base` 这类通用 setup**。
+  ⇒ 这 5 行更像"旧版通用生态的残留着色预设"，⚠ 资源包里是否还留着对应地形 setup 未验。
+
+⇒ 想在本季看到"新生态"：只能选 `oasis / deciduous / coniferous`（它们仍有星球行与 setup 资产，改 `PlanetType` 才有意义）；
+拿 `forest / desert / savanna / rocky / snowy_forest` 去指，可能只剩着色差异（⚠ 未验）。
+
 ## 4. 语义自证：颜色怎么和生态对上
 
 | 聚类 | 成员 | 颜色特征 | 讲得通吗 |
