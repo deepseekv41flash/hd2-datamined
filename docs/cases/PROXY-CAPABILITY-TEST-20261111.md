@@ -67,3 +67,26 @@ powershell -ExecutionPolicy Bypass -File .\run-capability-test.ps1
 - 启动器 `D:\Downloads\variant_mod\run-capability-test.ps1`
 - spec `D:\Downloads\variant_mod\runtime\capability_test.json`
 - 抓包目录 `D:\mod\out\gwe\capture-20261111\`（`status_pre/post.json`、`warinfo_pre/post.json` + 本次全部响应体）
+
+## 6. 实机结果（2026-11-11 晚，两轮）
+
+| 项 | 结果 | 说明 |
+|---|---|---|
+| A 全局燃烧加特林 | **✓ 生效** | `globalEvents[1501113].effectIds += 1346`，局内轨道加特林变燃烧弹 |
+| B 星球级变种 | **✓ 生效（换通道后）** | selection 通道在 TERREK 上被阵营过滤（owner=1 vs terminid）；改用 **`planet_effects` 原始注入**后，TERREK 卡面出现 **PREDATOR STRAIN** 词条（用户截图确认）|
+| C 战备试用 | **✓ 生效** | MG-43 / M-105 出现在战备栏 |
+| D 解锁注入 | **✓ 生效** | `INV REWRITE +197`、`ITEMS REWRITE +3`；LAS-22 出现在物品栏 |
+| F owner 翻转 | **✓ 生效** | 158 CHOEPESSA IV 3→1，星图变色 |
+| I 生态借用 | **✓ 生效** | 100 TRANDOR → 落叶林 |
+| E 休眠星节点 | 待复测 | 第一轮只有 Status 节点（无 warinfo planetInfo）→ 不显示；第二轮已补 `planet_infos`，待实机 |
+| G 攻击箭头 | 待复测 | 第一轮只加 `planetAttacks` 不画；第二轮已补 campaign type=4 + planetEvents 9002 |
+| H 分区条 | 待复测 | 76 无 warinfo 分区定义；第二轮换 16 号星（4 个分区）|
+
+### 6.1 新结论：阵营过滤是**我们代理侧**的限制，不是客户端限制
+
+`planet_effects` 把 terminid 的 tag(1243)+mechanic(1245) 直接挂到人类星 TERREK（owner=1）上，
+客户端照样渲染出 PREDATOR STRAIN 卡面。说明 `selection.json` 那条「按 owner 过滤」只是我们为了避免
+跨阵营出错加的保护，客户端并不拒绝「人类星 + 虫族变种」。代价是语义上不合理（人类星为何有虫族变种），
+但作为注入通道它更通用。
+
+对应代码：`war_proxy.py` 的 `_gwe_apply_extra()` 新增 `planet_effects` 键（`DSH-PLANET-EFFECTS-V1`）。
