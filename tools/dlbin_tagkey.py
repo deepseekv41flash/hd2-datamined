@@ -142,6 +142,17 @@ def keystream_tail(key: bytes, nonce24: bytes, length: int) -> bytes:
     return bindings.crypto_secretbox_easy(b"\x00" * length, nonce24, key)[16:]
 
 
+def box_body(plain: bytes, key: bytes, nonce24: bytes) -> bytes:
+    """``MAC(16) || ciphertext`` exactly as libsodium's sealed box carries it.
+
+    ``crypto_secretbox_easy`` already is XSalsa20-Poly1305 over this key/nonce and
+    puts the 16-byte MAC first, so the tag comes from libsodium itself (no
+    pure-Python Poly1305 over 500 KB) and the layout matches the on-disk blob.
+    """
+    from nacl import bindings
+    return bindings.crypto_secretbox_easy(plain, nonce24, key)
+
+
 def poly_key_for(key: bytes, nonce24: bytes) -> bytes:
     """keystream[0:32] - the absent-from-libsodium-API half of block 0."""
     return xsalsa20_stream(key, nonce24, 32)
@@ -333,9 +344,9 @@ def cmd_reseal(args) -> int:
     plain = read(args.file)
     key = shared_key(epk, sk)
     nonce = seal_nonce(epk, pk)
-    cipher = xor(plain, keystream_tail(key, nonce, len(plain)))
-    tag = poly1305(cipher, poly_key_for(key, nonce))
-    blob = epk + tag + cipher
+    body = box_body(plain, key, nonce)
+    tag, cipher = body[:TAG_LEN], body[TAG_LEN:]
+    blob = epk + body
     out = args.out or (os.path.splitext(args.file)[0] + ".sealed.dl_bin")
     print(f"  epk  {epk.hex()}  (reused: minimal on-disk diff vs that file)")
     print(f"  tag  {tag.hex()}  (valid MAC)")
