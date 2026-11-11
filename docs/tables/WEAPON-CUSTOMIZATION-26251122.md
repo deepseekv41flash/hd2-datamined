@@ -1177,7 +1177,90 @@ LAS-13 的目录记录本来就有所以只加拥有行）：
 | 库存 | 1 行 `{mixId: 0xF1410000, amount: 1}` |
 
 离线预检：目录 `3020 → 3024`（+4 = 3 武器行 + 1 伪造附件行）；库存 `965 → 1130`（+165 = 24 武器行 + 141 附件行）。
-若这一轮仍不行，则类别②确认不可救（改装页另需 manager 槽位），转 dl_bin/内存路线；LAS-22 同理。
 
-**回滚**：`runtime/items_inject.json` 删掉 38 条 `parentId: 4050324431` 的记录、
-`runtime/inventory_attach_inject.json` 删掉 38 条 `0xF1400000..0xF1400025`（或整体 `enabled:false`），重启游戏即恢复。
+**判读（2026-11-06 已出，此前只落在会话记忆里、文档没写）**：R/40-K 第二轮**仍 CANNOT EDIT**，
+且注入确认送达（`ITEMS REWRITE +41` / `INV REWRITE +202`）⇒ **类别② 判定不可救**：
+改装页能否编辑不由服务端目录行/库存行决定，另有**本地 manager 槽位**那一层。
+要可编辑只剩 dl_bin（本 build 已被 EAC 封死）或运行时内存 / Lua 路线。
+
+**第三个样本（2026-11-11，LAS-22）**：按同一「只伪造该枪自己的 optionId」正解，给 LAS-22 伪造三个散热器
+（`0x5672E4B7` Standard / `0x53120A73` Rapid / `0x3D0687C6` Extended，`parentId=2112173638`，
+目录 4 行 + 库存 4 行；离线预检目录 `3020 → 3027`、库存 +201），实机**仍然 CANNOT EDIT**
+⇒ 类别② 的否证对**未发布武器**同样成立。
+
+**回滚**：`runtime/items_inject.json` 删掉 `id ∈ {0xF1420000..2, 0xF1410000}` 的 4 条、
+`runtime/inventory_attach_inject.json` 删掉同 4 个 `mixId`，重启游戏即恢复。
+
+### 15.7 L2（`/api/Progression/Items/Customize/v2`）实测：它是 L0 的回写快照，不是出生挂载的权威
+
+既然 L0 只能改文件、而文件路线已封死，2026-11-11 直接把目标转向**服务端 L2**：L2 就是
+`GET /api/Progression/Items/Customize/v2`，结构
+`{items:[{mixId32, modes[4], activeIndex, customizations:[{index, slots[8]}]}]}`，
+`slots[i]` = 附件 optionId（与 L0 同一 id 空间），**槽下标 = 槽号 − 1**。
+
+**槽位映射（由 LAS-22 的 L0 行反推，逐位吻合）**：
+
+| 槽号 | 槽类型 | LAS-22 官方 L0 | L2 下标 |
+|---|---|---|---|
+| 1 | Underbarrel | `0xD9A3531E` Laser Sight Flashlight | 0 |
+| 2 | Optics | `0x322A9233` TUBE REDDOT 2x | 1 |
+| 3 | PaintScheme | `0x80FBE63D` Default | 2 |
+| 4 | Muzzle | `0xD65DC159` Laser. Charge Standard | 3 |
+| 5 | Magazine | `0x5672E4B7` Standard Heatsink | 4 |
+
+**实验**：`tools/war_proxy.py` 新增 `DSH-GWE-CUSTOMIZE-V1` 钩子（`runtime/customize_inject.json` 每请求现读），
+把 LAS-22（`mixId32=2112173638`）的**光学槽改成 4x**（`0xE8C28B34`）。
+代理日志确认送达：`CUSTOMIZE plan applied to mixId(s) 2112173638` + `CUSTOMIZE REWRITE 1 slot(s) [from gzip]`。
+
+**结果：游戏内毫无变化**（军械库与枪上仍是原样）。
+
+**原因（数据结构直接给出）**：抓到的 L2 里 LAS-22 的 4 个槽**逐位等于官方 L0 默认值**，
+只有 `slots[4]`（弹匣）是 `0x53120A73` Rapid Heatsink —— 那是 2026-11-05 我们改 L0 后被客户端
+PUT 上去的历史痕迹（官方 L0 是 `0x5672E4B7` Standard）。
+⇒ **L2 = 客户端把本地 L0 派生状态回写服务器的快照**，服务端改它不会反过来驱动出生挂载。
+
+**结论**：L2 不是"玩家当前选择覆盖 L0"的层，而是 L0 的投影。
+`能否通过改 L2 改配件`：**不能**（对无 L1 的武器必然无效）；配合 §15.6 的结论，
+**LAS-22 这类武器的默认配件在代理侧无路可走**，只剩运行时内存 / Lua 路线。
+
+### 15.8 结项（2026-11-11）：LAS-22 改默认配件 —— 代理侧无路；运行时线等 MDL3 正式版
+
+**目标**：dl_bin 路线被 EAC 封死（`docs/cases/EAC-TABLE-GATE-26568081.md` 四变体否证 + 不可能性论证）后，
+为**未发布武器 LAS-22 Shear** 找一条"改默认配件"的替代入口。
+
+**三层逐一否证（时间序）**：
+
+| 层 | 手段 | 结果 | 证据 |
+|---|---|---|---|
+| **L0** 出生挂载（本地 `generated_entities.dl_bin` 的 `WeaponCustomizationComponentData`） | 改文件后装盘 | ❌ EAC 拦「未知的文件版本」；连最小差分（1 bit tag）都被判 | `EAC-TABLE-GATE-26568081.md` §1–§3 |
+| **L1** 解锁清单（服务端 `Progression/items` 父子行 + `inventory` 行） | 类别①：注入 inventory 行 | ✅ **已实机 5 把**（SMG-203/MP-98/R-4/LAS-13/R-40，140 行） | §15.1（2026-11-06 17:53） |
+| | 类别②：伪造目录行（该枪 0 行） | ❌ **3 个样本全否**：R/40-K 借 LAS-5 38 个 optionId（11-06）、R/40-K 自己的 `0xA10F7D9D`（11-06）、**LAS-22 自己三个散热器（11-11）** | §15.6、§15.6.1、§15.6.2、本报告上一段 |
+| **L2** 当前选择（服务端 `Progression/Items/Customize/v2`） | 代理改写 L2 槽位 | ❌ 送达却不生效；L2 逐槽等于官方 L0 ⇒ 只是 L0 的回写快照 | §15.7（2026-11-11） |
+
+**结论**：`CANNOT EDIT` 的类别②由**本地 manager 槽位**决定，服务端目录/库存补不进去；
+L0 文件被 EAC 封死、L2 只是投影 ⇒ **代理侧对 LAS-22 这类武器没有任何可用入口**。
+
+**唯一剩余路线 = 运行时内存**（进程内改已解析的 `WeaponCustomizationComponentData`）。
+当前**不可行**：需要可写的进程内桥，而 MDL3 目前是**只读预览版**（`PREVIEW=true`，ffi stub，可写 API 只在 MDL 2.1.1 Pro 文档里）。
+**重启触发条件：MDL3 正式版发布（提供 `ctx.write` 等可写后端）**，届时把 memmod 主线按 MDL3 mod 格式移植（见 `memmod-restart-brief.md`）。
+
+**本轮留下的可复用成果（不浪费）**：
+
+1. **类别①配件解锁配方**（已实机）：`/api/Progression/items` 的 `cat=2` 行给出 `(itemId=optionId, parentId=武器, mixId=库存键)`；
+   往 `inventory.items[]` 注入 `{mixId, amount:1}` 即解锁，客户端不看等级/货币/包进度。
+2. **L2 结构与槽位映射**：`slots[8]`，下标 = 槽号−1（0 下挂 / 1 光学 / 2 涂装 / 3 枪口 / 4 弹匣）；钩子 `DSH-GWE-CUSTOMIZE-V1` 留在 `war_proxy.py`（默认 `enabled:false`）。
+3. **LAS-22 官方 L0 行**（`refs/weapon-customization-l0-26251122.json`）：muzzle `0xD65DC159` / optics `0x322A9233`（TUBE REDDOT 2x）/ underbarrel `0xD9A3531E` / magazine `0x5672E4B7`（Standard Heatsink）/ paint `0x80FBE63D`。
+4. 工具：`tools/attach_items.py`（类别①注入）、`runtime/{items,inventory_attach,inventory,stratagems,customize}_inject.json`（全部每请求现读，改配置不用重启代理）。
+
+**环境状态（收口时）**：
+
+| 项 | 状态 |
+|---|---|
+| 代理进程 | 已 `stop.ps1`（重启：管理员 `run.ps1`；`run.ps1 -Passthrough` 为纯转发） |
+| `hosts` | **保留** `100.67.169.17 api.live.prod.thehelldiversgame.com # variant-mod`（彻底卸载走 `teardown.ps1`，需管理员） |
+| 证书 | ⚠️ **2026-11-13 18:27 (+08) 到期**，之后必须续期（`anchor.pem` / `server.pem` 同批），否则游戏登录会失败 |
+| 注入配置 | 已回滚到 11-06 基线：`items_inject` 4 条武器行、`inventory_attach_inject` 140 条附件行；L2/战备/变种全关 |
+| 游戏目录 | 全部官方文件（`data/game/*.dl_bin` 与 26568081 基线一致），`data/` 无 patch 文件 |
+| 孤儿进程 | 已清（含崩溃时派生的 `runtime.dll` 映像进程，它会锁住转储并持续吃 CPU） |
+
+

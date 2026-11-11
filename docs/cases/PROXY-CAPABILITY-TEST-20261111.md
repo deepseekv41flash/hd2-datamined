@@ -105,3 +105,30 @@ powershell -ExecutionPolicy Bypass -File .\run-capability-test.ps1
 
 > 第一次失败的两个原因（都记在这里避免复犯）：把**行 315（LAMB'S PATCH，落叶林）**的 settingsHash 当成 BICEP 的
 > （行 300 才是 BICEP，哈希 `2995599666`），以及 `waypoints` 指向了 0.41 距离外的 TERREK。
+
+### 6.3 冒烟复测（2026-11-11 22:2x）：**伪造星球真的能开局、地形对、有敌人**
+
+配置：`run-planet300.ps1`——**只**注入 300 号星四件套（`planet_infos` 300 / `planet_nodes` 300 / `campaigns` 300 /
+`owner{"300":2}`），其它 GWE 改写全关，定向抓 `Status/warinfo/Operation/Mission`。
+
+服务端**整条 op 链路全部接受**（抓包 `out/gwe/planet300-20261111/`）：
+
+| 时刻 | 端点 | 关键内容 | 服务端回应 |
+|---|---|---|---|
+| 22:24:43 | `POST /api/Operation/Create` | `planetIndex:300, campaignId:51999, race:2, type:0, difficulty:1, id:1281, seed:1904442439` | `{"operations":[{"id":1281,"rewards":[],"backupRewards":[]}]}` **接受** |
+| 22:26:07 | `POST /api/Operation/Mission/Start` | `planetIndex:300, operationId:1281, regionIndex:-1, territoryIndex:44` | `{"missionId":"32ba0833-…"}` **接受** |
+| 22:37:11 | `POST /api/Operation/Mission/end` | `planetIndex:300, campaignId:51999, healthAtStartPlanet:1000000, missionSuccess:true` | 结算：`experience:193, campaignWon:true, impact:4, othersImpactPlanet:999999`，奖励 `842` 货币 + 1 件 |
+
+**实机（用户回报）**：能开局、**落地是岩浆地貌**、**有敌人**（`race:2` = 终结族）。
+
+两条必须记下的边界：
+
+1. **服务端在 op 生命周期上信任客户端上报的 campaign/planet 状态**（`campaignId:51999` 与
+   `healthAtStartPlanet:1000000` 都原样进结算，`othersImpactPlanet = 1000000 − 1`），
+   但**不是全链路放行**——同一次会话里
+   `GET /api/Mission/Session` 返回 `{"errorCode":8012016,"message":"PlanetIndex is invalid in this context"}`。
+   ⇒ 校验点**存在但覆盖不全**；重连 / 会话恢复这类走 `Mission/Session` 的路径会失败。
+2. **战局层面仍是幻影**：同时段抓到的**上游** `Status` 只有 273 个节点、没有 300
+   （抓包点在改写之前），说明服务端没有把 300 写进银河战局；`campaignWon:true` 只是本次 op 的结算回执。
+   要确认"影响力有没有落到服务端别的星"需要事后拉一次**上游** Status 对比（未做）。
+
