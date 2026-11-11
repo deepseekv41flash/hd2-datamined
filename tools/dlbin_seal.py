@@ -13,6 +13,13 @@ What the format is (build 25988413, from FOUR-SEALABLE-TABLES.md + our own check
     and also why recovering the stream is *not* enough to produce a new valid
     Poly1305 tag: the tag key is keystream[0:32], which no pair reveals.
 
+    BUT the tag key is not out of reach: it is ``XSalsa20(crypto_box_beforenm(epk, sk),
+    blake2b24(epk||pk))[0:32]``, so holding the recipient secret key is enough.
+    See ``tools/dlbin_tagkey.py`` - it derives that key for any file from ``epk`` +
+    ``recipient.sk`` (verified 55/55 against the official tag, and resealing the
+    official plaintext reproduces the official bytes exactly).  Use it whenever a
+    *valid* MAC is wanted; the paths below are the pair-only fallbacks.
+
 So this tool can, without the sealing material:
     * decryption (read the tables)                          -- fully usable
     * re-encryption with the file's own stream + a supplied tag
