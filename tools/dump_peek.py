@@ -29,6 +29,33 @@ def read_utf16(buf, rva):
     return buf[rva + 4:rva + 4 + length].decode("utf-16-le", "replace")
 
 
+def find_mem(buf, streams, addr, size=8):
+    """Return bytes at virtual address ``addr`` if the dump carries that memory."""
+    for _size, rva in streams.get(STREAM_MEMORY_LIST, []):
+        (n,) = struct.unpack_from("<I", buf, rva)
+        pos = rva + 4
+        for _ in range(n):
+            start, dsize, drva = struct.unpack_from("<QII", buf, pos)
+            if start <= addr and addr + size <= start + dsize:
+                off = addr - start
+                return buf[drva + off:drva + off + size]
+            pos += 16
+    return None
+
+
+def walk_stack(buf, streams, modules, resolve, rsp, max_words=96):
+    frames = []
+    for i in range(max_words):
+        raw = find_mem(buf, streams, rsp + 8 * i)
+        if raw is None or len(raw) < 8:
+            continue
+        (word,) = struct.unpack("<Q", raw)
+        where = resolve(word)
+        if "(unmapped)" not in where:
+            frames.append((i, word, where))
+    return frames
+
+
 def main() -> int:
     path = sys.argv[1]
     show_modules = "--modules" in sys.argv
@@ -82,6 +109,32 @@ def main() -> int:
         _size, rva = streams[STREAM_MEMORY_LIST][0]
         (n,) = struct.unpack_from("<I", buf, rva)
         print(f"memory descriptors: {n}")
+
+    if "--stack" in sys.argv and STREAM_THREAD_LIST in streams:
+        _size, rva = streams[STREAM_THREAD_LIST][0]
+        (nth,) = struct.unpack_from("<I", buf, rva)
+        pos = rva + 4
+        threads = []
+        for _ in range(nth):
+            tid, _sc, _pc, _pr, _teb = struct.unpack_from("<IIIIQ", buf, pos)
+            stk_start, stk_size, stk_rva = struct.unpack_from("<QII", buf, pos + 24)
+            ctx_size, ctx_rva = struct.unpack_from("<II", buf, pos + 40)
+            threads.append({"tid": tid, "rsp_rva": ctx_rva + 0x98, "rip_rva": ctx_rva + 0xF8,
+                            "ctx_rva": ctx_rva, "stack": (stk_start, stk_size, stk_rva)})
+            pos += 48
+        print(f"threads: {len(threads)}")
+        pick = None
+        if STREAM_EXCEPTION in streams:
+            size, erva = streams[STREAM_EXCEPTION][0]
+            (etid,) = struct.unpack_from("<I", buf, erva)
+            pick = next((t for t in threads if t["tid"] == etid), None)
+        for t in ([pick] if pick else threads[:1]):
+            rsp, = struct.unpack_from("<Q", buf, t["rsp_rva"])
+            rip, = struct.unpack_from("<Q", buf, t["rip_rva"])
+            print(f"\nthread {t['tid']}  rip {rip:#x} -> {resolve(rip)}  rsp {rsp:#x}")
+            print("  stack scan (frame#, value, module+offset):")
+            for i, word, where in walk_stack(buf, streams, modules, resolve, rsp, 128):
+                print(f"   #{i:02d}  {word:#018x}  {where}")
 
     if show_modules:
         print("\nmodules (base .. end  name):")
