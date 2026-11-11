@@ -1225,14 +1225,14 @@ PUT 上去的历史痕迹（官方 L0 是 `0x5672E4B7` Standard）。
 
 ### 15.8 结项（2026-11-11）：LAS-22 改默认配件 —— 代理侧无路；运行时线等 MDL3 正式版
 
-**目标**：dl_bin 路线被 EAC 封死（`docs/cases/EAC-TABLE-GATE-26568081.md` 四变体否证 + 不可能性论证）后，
+**目标**：dl_bin 路线被 EAC 封死（替换官方散表会被判「未知的文件版本」，连 1 bit 的最小差分也一样）后，
 为**未发布武器 LAS-22 Shear** 找一条"改默认配件"的替代入口。
 
 **三层逐一否证（时间序）**：
 
 | 层 | 手段 | 结果 | 证据 |
 |---|---|---|---|
-| **L0** 出生挂载（本地 `generated_entities.dl_bin` 的 `WeaponCustomizationComponentData`） | 改文件后装盘 | ❌ EAC 拦「未知的文件版本」；连最小差分（1 bit tag）都被判 | `EAC-TABLE-GATE-26568081.md` §1–§3 |
+| **L0** 出生挂载（本地 `generated_entities.dl_bin` 的 `WeaponCustomizationComponentData`） | 改文件后装盘 | ❌ EAC 拦「未知的文件版本」；连最小差分（1 bit tag）都被判 | 本仓库 `data/game/*.dl_bin` 替换实验（2026-11-11）|
 | **L1** 解锁清单（服务端 `Progression/items` 父子行 + `inventory` 行） | 类别①：注入 inventory 行 | ✅ **已实机 5 把**（SMG-203/MP-98/R-4/LAS-13/R-40，140 行） | §15.1（2026-11-06 17:53） |
 | | 类别②：伪造目录行（该枪 0 行） | ❌ **3 个样本全否**：R/40-K 借 LAS-5 38 个 optionId（11-06）、R/40-K 自己的 `0xA10F7D9D`（11-06）、**LAS-22 自己三个散热器（11-11）** | §15.6、§15.6.1、§15.6.2、本报告上一段 |
 | **L2** 当前选择（服务端 `Progression/Items/Customize/v2`） | 代理改写 L2 槽位 | ❌ 送达却不生效；L2 逐槽等于官方 L0 ⇒ 只是 L0 的回写快照 | §15.7（2026-11-11） |
