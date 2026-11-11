@@ -68,7 +68,7 @@ powershell -ExecutionPolicy Bypass -File .\run-capability-test.ps1
 - spec `D:\Downloads\variant_mod\runtime\capability_test.json`
 - 抓包目录 `D:\mod\out\gwe\capture-20261111\`（`status_pre/post.json`、`warinfo_pre/post.json` + 本次全部响应体）
 
-## 6. 实机结果（2026-11-11 晚，两轮）
+## 6. 实机结果（2026-11-11 晚，多轮）
 
 | 项 | 结果 | 说明 |
 |---|---|---|
@@ -78,7 +78,7 @@ powershell -ExecutionPolicy Bypass -File .\run-capability-test.ps1
 | D 解锁注入 | **✓ 生效** | `INV REWRITE +197`、`ITEMS REWRITE +3`；LAS-22 出现在物品栏 |
 | F owner 翻转 | **✓ 生效** | 158 CHOEPESSA IV 3→1，星图变色 |
 | I 生态借用 | **✓ 生效** | 100 TRANDOR → 落叶林 |
-| E 休眠星节点 | 待复测 | 第一轮只有 Status 节点（无 warinfo planetInfo）→ 不显示；第二轮已补 `planet_infos`，待实机 |
+| E 休眠星节点 | **✓ 生效** | 4 个条件缺一不可：① warinfo 追加 `planetInfo`（index+settingsHash，**settingsHash 必须取对行**）② Status 追加 `planetStatus` 节点 ③ `campaigns` ④ 追加 `owner`；实机卡面显示 **BICEP**（岩浆地貌、LIBERATION 进度条、RESISTANCE 1.50%、SELECT CAMPAIGN）|
 | G 攻击箭头 | 待复测 | 第一轮只加 `planetAttacks` 不画；第二轮已补 campaign type=4 + planetEvents 9002 |
 | H 分区条 | 待复测 | 76 无 warinfo 分区定义；第二轮换 16 号星（4 个分区）|
 
@@ -90,3 +90,18 @@ powershell -ExecutionPolicy Bypass -File .\run-capability-test.ps1
 但作为注入通道它更通用。
 
 对应代码：`war_proxy.py` 的 `_gwe_apply_extra()` 新增 `planet_effects` 键（`DSH-PLANET-EFFECTS-V1`）。
+
+### 6.2 休眠星可玩化的完整配方（实机验证：BICEP）
+
+一个「本季休眠的星球」要变成星图上可点、可打的目标，缺任何一条都不显示或不完整：
+
+1. **warinfo `planetInfos` 追加条目**（`planet_infos` 键）：`index`（自选，如 300）、
+   `settingsHash`（**取目标行的 settingsHash，不是行号**）、`position`、`initialOwner`、`sector`、`waypoints`；
+2. **Status `planetStatus` 追加节点**（`planet_nodes` 键）：同 index、owner、health、position；
+3. **Status `campaigns` 追加战役**（`campaigns` 键）：`planet`、`type=0`（进攻/解放）、`race`；
+4. **Status `owner` 覆盖**（`owner` 键）：`{"300": 2}` 让归属与战役语义一致；
+5. **`waypoints` 用就近星球**：按坐标算最近的两三颗（BICEP 用 180/7），否则连线会跨半张图；
+6. **解放目标不要注入 `planetEvents`**：否则卡面出现 DEFEND 倒计时，与 LIBERATION 自相矛盾。
+
+> 第一次失败的两个原因（都记在这里避免复犯）：把**行 315（LAMB'S PATCH，落叶林）**的 settingsHash 当成 BICEP 的
+> （行 300 才是 BICEP，哈希 `2995599666`），以及 `waypoints` 指向了 0.41 距离外的 TERREK。
