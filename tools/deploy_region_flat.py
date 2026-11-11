@@ -21,6 +21,12 @@ import shutil
 import struct
 import subprocess
 import sys
+
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:                                        # noqa: BLE001
+        pass
 import time
 
 GAME = pathlib.Path(r"D:\SteamLibrary\steamapps\common\Helldivers 2")

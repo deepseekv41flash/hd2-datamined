@@ -81,6 +81,12 @@ def main() -> int:
     ap.add_argument("--plain", required=True)
     ap.add_argument("--amplitude", type=float, default=0.01, help="amplitude 目标值（默认 0.01）")
     ap.add_argument("--also-noise-scale", type=float, default=None, help="可选：同时改 noise_scale")
+    ap.add_argument("--zero-curves", action="store_true",
+                    help="把所有 zone 的 HeightModificationCurve(0x0F0) 采样值清零")
+    ap.add_argument("--zero-height-offset", action="store_true",
+                    help="把所有 zone 的 LocationHeightOffset(0x158) 归零")
+    ap.add_argument("--clear-generators", action="store_true",
+                    help="把所有 zone 的 height_generators 数组头改成 (-1, 0)（= 复刻城市 zone 的「无生成器」）")
     ap.add_argument("--host-zone", type=int, default=0, help="校正字宿主 zone（须为无主 zone）")
     ap.add_argument("--out", required=True)
     ap.add_argument("--seal")
@@ -108,6 +114,27 @@ def main() -> int:
                     edits[so + SET_STRIDE * j + 4] = (4, struct.pack("<f", args.also_noise_scale), f"zone{z}.noise_scale")
         if n:
             per_zone[z] = n
+
+        if args.zero_curves:
+            co, cc = struct.unpack_from("<qQ", original, payload + 0x0F0)
+            if 0 <= co and cc and co + 4 * cc <= size:
+                for k in range(cc):
+                    off = payload + co + 4 * k
+                    old = struct.unpack_from("<f", original, off)[0]
+                    if old != 0.0:
+                        edits[off] = (4, struct.pack("<f", 0.0), f"zone{z}.curve{k}")
+
+        if args.zero_height_offset:
+            off = payload + 0x158
+            old = struct.unpack_from("<f", original, off)[0]
+            if old != 0.0:
+                edits[off] = (4, struct.pack("<f", 0.0), f"zone{z}.location_height_offset")
+
+        if args.clear_generators:
+            off = payload + HEIGHT_ARRAY
+            cur_off, cur_cnt = struct.unpack_from("<qQ", original, off)
+            if cur_cnt:
+                edits[off] = (16, struct.pack("<qQ", -1, 0), f"zone{z}.height_generators_cleared")
 
     edited = bytearray(original)
     for off, (width, blob, _) in edits.items():
