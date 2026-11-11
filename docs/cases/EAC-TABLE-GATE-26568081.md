@@ -150,7 +150,37 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\rollback-A.ps1
 精确测量只能靠文件系统审计（SACL + auditpol）拿逐文件读取时间线。
 即便窗口被证实宽裕，**本仓库不提供抢占该窗口的工具**（= 反作弊规避）。
 
-## 7. 未了项
+## 7. 文件审计：逐次读取时间线（决定性数据）
+
+方法：`auditpol` 打开 File System 成功/失败审计 + 给 55 个 `data\game\*.dl_bin` 挂 `ReadData` 的 SACL，
+读安全日志 4663 事件（`tools\eac_audit_*.ps1`）。本次运行用 **aggressive** 变体（加载成功 → EAC 才出判决）。
+
+窗口出现：`21:13:22.460`；EAC 弹窗：`21:14:02.085`（+39.62 s）。
+
+| 相对窗口 | 事件 | 读次数 |
+|---|---|---|
+| **+11.42 → +11.61 s** | **引擎加载第一波**（status_effect / hit_effect / explosion / projectile / beam / arc / damage …） | 23 |
+| **+14.18 → +14.22 s** | 引擎加载第二波（add_resource_dependencies / video_flow / body_settings / armor_sets / passive_bonuses …） | 6 |
+| **+16.05 → +16.54 s** | 引擎加载第三波（含 **`generated_zone_data` @ +16.44 s**、region_settings、planet_data、entity_deltas …） | 23 |
+| **+34.41 → +37.06 s** | **第二轮全量读取**：同一批 51 张表全被再读一遍（48 次 + 4 次，集中在 2.6 s 内） | 52 |
+| **+39.62 s** | **EAC 弹窗「未知的文件版本」** | — |
+
+合计 104 次读取 = **加载 52 次 + 校验 52 次**；51 张表全部被读 ≥2 次（zone_data、animation_event_trigger 各 3 次）。
+**4 张表启动时完全不读**（懒加载）：`generated_candidate_descs`、`generated_corporation_logos`、
+`generated_credits_settings`、`generated_policy_settings`。
+
+### 由数据直接得出的结论
+
+1. **引擎在 EAC 校验之前 18 秒就把所有表读完了**：
+   加载在 +16.54 s 结束，完整性扫描 +34.41 s 才开始 → **窗口 ≈ 17.9 s**（到判决 ≈ 23.1 s）。
+2. **EAC/完整性扫描确实自己把文件重读一遍**（第二轮 52 次读取，2.6 s 内完成），判决在扫描开始后 **5.2 s** 出现。
+   —— 注意：引擎与 EAC 在同一进程（PID `0xe98`），PID 分不开二者；这个归属是由"与加载批次完全同构的第二轮 + 判决紧随其后"判定的，
+   不是直接观测。
+3. 所以此前"EAC 是不是只查一次"有了答案：**是两次独立的整轮读取，第二轮才是校验**。
+4. 窗口存在且宽约 18 s —— **但本仓库仍然不提供抢占该窗口的工具**（= 反作弊规避）。
+   这份数据的正当用途是理解机制与负责任披露。
+
+## 8. 未了项
 
 1. 崩溃转储解析（确认崩溃点落在解封/表加载路径）—— 文件当时被独占锁，稍后重试；
 2. 「tag 是否也在 EAC 覆盖范围」—— 需要一个「tag 变了但游戏不崩」的样本，目前构造不出
