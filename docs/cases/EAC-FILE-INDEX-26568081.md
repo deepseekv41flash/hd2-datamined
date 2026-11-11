@@ -75,3 +75,29 @@ meta sha1=62526a9b200397ba2015f2ff2985bcd1b18c8871  etag=96bb93bce4dd642da9744bd
 sys  40,189,592 B  mtime 2026-11-11 19:32
 base.bin mtime 2026-11-11 18:31
 ```
+
+## 6. 为什么"明文一字不改、只重新封包"也会被拦
+
+`.dl_bin` 是 libsodium 的 sealed box：
+
+```
+文件 = epk(32) || tag(16) || ciphertext
+keystream = XSalsa20( X25519(esk, recipient_pk), nonce = blake2b(epk || recipient_pk) )
+ciphertext = plaintext XOR keystream[32:]
+tag        = Poly1305(ciphertext, key = keystream[0:32])
+```
+
+1. **每次封包 `esk` 都是随机的** ⇒ `epk` 不同 ⇒ nonce 不同 ⇒ keystream 不同 ⇒ **密文和 tag 全变**。
+   所以"明文相同"根本推不出"文件相同"：同一份明文重封两次，磁盘字节必不相同。
+2. **EAC 索引的是磁盘上的 blob**（路径 → 大小 + 哈希），不是解密后的明文。
+   明文 sha256 与官版完全一致也没用——EAC 看到的是一份它没见过的 blob ⇒ `error_file_version`。
+3. **想改内容就必须改密文**，而密文的 Poly1305 tag 需要 `keystream[0:32]` 这个 tag 密钥；
+   它无法从"明文/密文对"里反推（这正是我们给 dl_bin 出流的同一套推导），所以**无法伪造合法 tag**。
+   能产出合法 tag 的只有接收方公钥 + 自己随机 ephemeral（我们手上的 `seal-key`），
+   而那条路产出的是**新 blob**，又被 EAC 索引拦下。
+4. 每次游戏更新官方会把全部表**重新封一遍**（本次 57 张表全部重封），所以也不存在
+   "沿用上个 build 的官方 blob"这种跨版本巧合。
+
+结论：两条闸门的要求互相矛盾——**引擎要"明文内容哈希不变"，EAC 要"磁盘 blob 逐字节等于官方"**。
+同时满足的唯一方式是"这一字节都别碰"。要改内容，只能走**不在 EAC 索引里**的通道：
+新增补丁文件（本仓库正在测）、运行时、或网络代理。
