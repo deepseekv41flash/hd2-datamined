@@ -160,12 +160,15 @@ Railgun 是 **1.0× → 2.5×**（涨 150%），Epoch 是 **1.0× → 2.0×**。
 
 蓄力行 `+0xC8` = `ExplodeType`，指向爆炸表里的行。**逐武器实测 + wiki 对照**：
 
-| 武器 | `AutoFireInSafety` `+0xB8` | `ExplodesOnOvercharged` `+0xB9` | `ExplodeType` `+0xC8` | 爆炸行 | 半径（内/中/外） | 伤害类型 | 伤害 / 耐久 |
+| 武器 | `AutoFireInSafety` `+0xB8` | `ExplodesOnOvercharged` `+0xB9` | `ExplodeType` `+0xC8` | 爆炸行 | 半径（内 / 外 / 冲击波） | 伤害类型 | 伤害 / 耐久 |
 |---|---:|---:|---:|---:|---|---:|---:|
 | **RS-422 Railgun** | 0 | **1** | **326** | 209 | **0.4 / 2 / 3 m** | 362 | **300 / 300** |
 | **PLAS-45 Epoch** | 0 | 0 | **321** | 107 | 3 / 4 / 5 m | 68 | **800 / 800** |
 | PLAS-39 Accelerator | 0 | 1 | 326 | 209 | 0.4 / 2 / 3 m | 362 | 300 / 300 |
 | Purifier / ARC-3 / Loyalist | 0 | 1 | 269 | 208 | 0.4 / 2 / 3 m | 362 | 300 / 300 |
+
+> 半径列按 **内 / 外 / 冲击波**（`+0x10/+0x14/+0x18`）排列：**判定边界看中间值（外圈）**，
+> 末值是视觉冲击波。参见 `docs/explosions/EXPLOSION-VISUAL-26088801.md` §1。
 
 **★ 关键：爆炸行 `+0x4` 是「伤害类型 id」，不是「伤害行号」。**
 `type 362` → damage 表 **行 350**，逐字段与 wiki 的 *Railgun Overcharge E* 完全吻合：
